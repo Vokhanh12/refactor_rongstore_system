@@ -1,8 +1,7 @@
-package domain
+package ports
 
 import (
 	"context"
-	pkg "server/pkg/apperrors"
 	"time"
 )
 
