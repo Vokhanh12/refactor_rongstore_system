@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package iam.v1;
+
+option go_package = "api/iam/v1/resources;resourcespb";
+option java_package = "com.aliasadi.iam.v1.resources";
+option java_multiple_files = true;
+
+import "validate/v1/validate.proto";
+import "common/v1/base_request.proto";
+import "common/v1/auth_options.proto";
+import "google/protobuf/timestamp.proto";
+
+
+// ============================================================
+// ENTITY
+// ============================================================
+
+message RolePermission {
+
+  string id = 1;              
+  
+  double lat = 2;              
+  double lng = 3;       
+
+  int32 tile_x = 4;    
+  int32 tile_y = 5;            
+
+  string create_by = 14;
+  string update_by = 15;
+
+  google.protobuf.Timestamp create_date = 16;
+  google.protobuf.Timestamp update_date = 17;
+}
+
+
+// ============================================================
+// MUTATION (COMMAND)
+// ============================================================
+
+message RolePermissionMutation {
+
+  string op_id = 1 [
+    (validate.rules).string = {min_len: 1}
+  ];
+
+  oneof action {
+    option (validate.required) = true;
+
+    Create create = 2;
+    Update update = 3;
+    Delete delete = 5;
+  }
+
+  // ---------------- CREATE ----------------
+  message Create {
+
+    option (auth.resource) = "ROLE_PERMISSION";
+    option (auth.action) = "CREATE";
+    option (auth.require_tenant) = true;
+
+    double lat = 1;
+    double lng = 2;
+    int32 tile_x = 3;
+    int32 tile_y = 4;
+
+    message Data {
+      string resource_id = 1;
+    }
+  }
+
+
+  // ---------------- UPDATE ----------------
+  message Update {
+
+    option (auth.resource) = "ROLE_PERMISSION";
+    option (auth.action) = "UPDATE";
+    option (auth.resource_id_field) = "id";
+    option (auth.require_tenant) = true;
+
+    string id = 1 [
+      (validate.rules).string = {min_len: 1}
+    ];
+
+    double lat = 2;
+    double lng = 3;
+    int32 tile_x = 4;
+    int32 tile_y = 5;
+
+    message Data {}
+  }
+
+  // ---------------- DELETE ----------------
+  message Delete {
+
+    option (auth.resource) = "ROLE_PERMISSION";
+    option (auth.action) = "DELETE";
+    option (auth.resource_id_field) = "id";
+    option (auth.require_tenant) = true;
+
+    string id = 1 [
+      (validate.rules).string = {min_len: 1}
+    ];
+
+    message Data {}
+  }
+}
+
+
+message RolePermissionMutateRequest {
+  repeated RolePermissionMutation mutations = 1 [
+    (validate.rules).repeated = {min_items: 1}
+  ];
+}
+
+
+// ============================================================
+// QUERY (VIEW)
+// ============================================================
+
+message RolePermissionView {
+
+  string op_id = 1 [
+    (validate.rules).string = {min_len: 1}
+  ];
+
+  oneof action {
+    option (validate.required) = true;
+
+    Search search = 2;
+  }
+
+
+  // ---------------- SEARCH ----------------
+  message Search {
+
+    option (auth.resource) = "ROLE_PERMISSION";
+    option (auth.action) = "READ";
+    option (auth.require_tenant) = true;
+
+    common.v1.SearchRequest common = 1 [
+      (validate.rules).message = {required: true}
+    ];
+
+    message Data {
+      repeated RolePermission results = 1;
+      int64 total = 2;
+    }
+  }
+}

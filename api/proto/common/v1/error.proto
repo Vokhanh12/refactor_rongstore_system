@@ -1,0 +1,23 @@
+syntax = "proto3";
+package common.v1;
+option go_package = "api/common/v1;commonv1";
+
+message ErrorDetail {
+  string field = 1;
+  string message = 2;
+  string code = 3;
+}
+
+message Error {
+  string code = 1;         // AUTH-HAND-001
+  string key = 2;          // HANDSHAKE_INVALID_CLIENT_KEY
+  string message = 3;      // "Invalid client public key"
+  string severity = 4;     // S1/S2/S3
+  bool retryable = 5;      // true/false
+  string source = 6;       // iam-service, gateway,...
+  string grpc_code = 7;    // InvalidArgument
+  int32 http_status = 8;   // 400, 401, 500...
+  string client_action = 9;
+  string server_action = 10;
+  repeated ErrorDetail details = 11;
+}
