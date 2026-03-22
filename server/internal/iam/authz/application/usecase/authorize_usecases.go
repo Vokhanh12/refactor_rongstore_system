@@ -1,59 +1,71 @@
-package application
+package usecase
 
 import (
 	"context"
 	"fmt"
-	rpdomain "server/internal/iam/authz/role_permission/domain"
-	"server/pkg/errors"
+	"time"
+
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+
+	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
+	ce "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/cache"
+	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 )
 
 type AuthorizeUsecase struct {
-	rolePermissionCache      rpdomain.RolePermissionCache
-	rolePermissionRepository rpdomain.RolePermissionRepository
+	rolePermissionCache      ce.RolePermissionCache
+	rolePermissionRepository re.RolePermissionRepository
 }
 
-func NewAuthorizeUsecase(rpCache rpdomain.RolePermissionCache, rpPepository rpdomain.RolePermissionRepository) *AuthorizeUsecase {
+func NewAuthorizeUsecase(rpCache ce.RolePermissionCache, rpRepository re.RolePermissionRepository) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
 		rolePermissionCache:      rpCache,
-		rolePermissionRepository: rpPepository,
+		rolePermissionRepository: rpRepository,
 	}
 }
 
-func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd c.AuthorizeCommand) (*c.AuthorizeResult, *errors.AppError) {
+func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd com.AuthorizeCommand) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
-	if len(cmd.Roles) == 0 {
-		return &c.AuthorizeResult{Allowed: false},
+	if len(cmd.RoleCodes) == 0 {
+		return &com.AuthorizeCommandResult{Allowed: false},
 			errors.New(iamErrors.AUTHORIZATION_ROLE_REQUIRED)
 	}
 
-	if cmd.Resource == "" || cmd.Action == "" {
-		return &c.AuthorizeResult{Allowed: false},
+	if cmd.ResourceCheck == "" || cmd.ActionCheck == "" {
+		return &com.AuthorizeCommandResult{Allowed: false},
 			errors.New(iamErrors.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
 	}
 
-	permKey := fmt.Sprintf("%s:%s", cmd.Resource, cmd.Action)
+	permKey := fmt.Sprintf("%s:%s", cmd.ResourceCheck, cmd.ActionCheck)
 
-	for _, role := range cmd.Roles {
-
-		perms, found, err := u.rolePermissionCache.GetPermissions(ctx, role)
+	for _, code := range cmd.RoleCodes {
+		perms, found, err := u.rolePermissionCache.GetPermissions(ctx, code)
 		if err != nil {
 			return nil, err
 		}
 
 		if !found {
-			continue
+			rolePermissions, err := u.rolePermissionRepository.FindAllByRoleCode(code)
+			if err != nil {
+				return nil, err
+			}
+
+			perms = make([]string, 0, len(rolePermissions))
+			for _, rp := range rolePermissions {
+				key := fmt.Sprintf("%s:%s", rp.Permission.Resource, rp.Permission.Action)
+				perms = append(perms, key)
+			}
+
+			u.rolePermissionCache.SetPermissions(ctx, code, perms, 1000*time.Second)
 		}
 
 		for _, p := range perms {
 			if p == permKey {
-				return &c.AuthorizeResult{
-					Allowed: true,
-				}, nil
+				return &com.AuthorizeCommandResult{Allowed: true}, nil
 			}
 		}
 	}
 
-	return &c.AuthorizeResult{
-		Allowed: false,
-	}, nil
+	return &com.AuthorizeCommandResult{Allowed: false}, nil
 }

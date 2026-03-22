@@ -10,4 +10,5 @@ type RolePermissionRepository interface {
 	Create(rolePermission *entities.RolePermission) (*entities.RolePermission, *aerrs.AppError)
 	Update(rolePermission *entities.RolePermission) (*entities.RolePermission, *aerrs.AppError)
 	Delete(id uuid.UUID) *aerrs.AppError
+	FindAllByRoleCode(roleCode string) ([]*entities.RolePermission, *aerrs.AppError)
 }

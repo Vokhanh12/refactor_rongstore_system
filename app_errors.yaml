@@ -1,0 +1,386 @@
+version: 1
+updated_at: "2025-08-17"
+owner: platform-auth
+
+# ------------------------------------------------------------
+# COMPONENT CONVENTION
+#
+# component = hệ thống hoặc module chịu trách nhiệm gây lỗi
+#
+# api        → API layer / request validation
+# domain     → business/domain logic
+# auth       → authentication logic
+# authz      → authorization logic
+# jwt        → token generation/validation
+# redis      → redis cache / session storage
+# postgres   → postgres database
+# keycloak   → external identity provider
+# crypto     → cryptographic operations
+# handshake  → protocol handshake layer
+# ------------------------------------------------------------
+
+# ------------------------------------------------------------
+# TAG CONVENTION
+#
+# tags giúp phân loại lỗi theo category để:
+# - monitoring
+# - alert routing
+# - observability dashboard
+#
+# validation → client input errors
+# auth       → authentication related
+# authz      → authorization related
+# security   → security related
+# infra      → infrastructure failure
+# database   → database related
+# cache      → caching layer
+# protocol   → protocol handshake
+# crypto     → cryptography operations
+# external   → external service dependency
+# client     → client misuse / invalid request
+# ------------------------------------------------------------
+
+services:
+  iam:
+    conventions:
+      code_format: "<DOMAIN>-<CATEGORY>-<NNN>"
+      domain: "AUTH"
+
+      severity_scale:
+        S1: "Critical outage/security risk"
+        S2: "Degraded experience or important failure"
+        S3: "Minor / client input issue"
+
+      retry_policy:
+        retryable_statuses_http: [408, 429, 500, 502, 503, 504]
+        grpc_retryable: ["Unavailable", "DeadlineExceeded"]
+
+    errors:
+
+# ------------------------------------------------------------
+# VALIDATION (client input errors)
+# ------------------------------------------------------------
+
+      VAL:
+        - code: AUTH-VAL-001
+          key: LOGIN_EMAIL_EMPTY
+          component: api
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Email is required"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-002
+          key: LOGIN_EMAIL_INVALID
+          component: api
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid email format"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-003
+          key: LOGIN_PASSWORD_EMPTY
+          component: api
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Password is required"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-004
+          key: LOGIN_PAYLOAD_INVALID
+          component: api
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid request payload"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-005
+          key: STORE_OWNER_INVALID
+          component: domain
+          tags: [validation]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Store owner contains invalid references"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-006
+          key: STORE_OWNER_VALIDATE
+          component: domain
+          tags: [validation]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid store owner data"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-011
+          key: VIEW_OPERATION_UNSUPPORTED
+          component: api
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Unsupported view operation"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-012
+          key: MUTATE_OPERATION_UNSUPPORTED
+          component: api
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Unsupported mutate operation"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-VAL-013
+          key: AUTHORIZATION_REQUEST_INVALID
+          component: authz
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid authorization request"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-VAL-014
+          key: AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED
+          component: authz
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Resource and action are required"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-VAL-015
+          key: AUTHORIZATION_ROLE_REQUIRED
+          component: authz
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Role is required for authorization"
+          severity: S3
+          retryable: false
+
+
+# ------------------------------------------------------------
+# DOMAIN
+# ------------------------------------------------------------
+
+      DOM:
+        - code: AUTH-DOM-001
+          key: INVALID_CREDENTIALS
+          component: auth
+          tags: [auth, security]
+          http_status: 401
+          grpc_code: Unauthenticated
+          message: "Invalid email or password"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-DOM-002
+          key: STORE_OWNER_NOT_FOUND
+          component: domain
+          tags: [domain]
+          http_status: 404
+          grpc_code: NotFound
+          message: "Store owner not found"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-DOM-003
+          key: STORE_OWNER_CONFLICT
+          component: domain
+          tags: [domain]
+          http_status: 409
+          grpc_code: AlreadyExists
+          message: "Store owner already exists"
+          severity: S3
+          retryable: false
+
+
+# ------------------------------------------------------------
+# SECURITY
+# ------------------------------------------------------------
+
+      SEC:
+        - code: AUTH-SEC-001
+          key: TOKEN_EXPIRED
+          component: jwt
+          tags: [security, auth]
+          http_status: 401
+          grpc_code: Unauthenticated
+          message: "Token expired"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-SEC-002
+          key: UNAUTHORIZED
+          component: auth
+          tags: [security, auth]
+          http_status: 401
+          grpc_code: Unauthenticated
+          message: "Authentication required"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-SEC-003
+          key: ROLE_FORBIDDEN
+          component: authz
+          tags: [security, authz]
+          http_status: 403
+          grpc_code: PermissionDenied
+          message: "Permission denied"
+          severity: S3
+          retryable: false
+
+
+# ------------------------------------------------------------
+# PROTOCOL
+# ------------------------------------------------------------
+
+      PROTO:
+        - code: AUTH-PROTO-001
+          key: HANDSHAKE_INVALID_CLIENT_KEY
+          component: handshake
+          tags: [protocol, security]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid client public key"
+          severity: S3
+          retryable: false
+
+        - code: AUTH-PROTO-002
+          key: HANDSHAKE_KEY_AGREEMENT_FAIL
+          component: handshake
+          tags: [protocol, crypto]
+          http_status: 422
+          grpc_code: FailedPrecondition
+          message: "Key agreement failed"
+          severity: S3
+          retryable: false
+
+
+# ------------------------------------------------------------
+# INFRASTRUCTURE
+# ------------------------------------------------------------
+
+      INFRA:
+        - code: AUTH-INFRA-001
+          key: DB_TIMEOUT
+          component: postgres
+          tags: [infra, database]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Database service temporarily unavailable"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-002
+          key: DB_CONFLICT_RETRYABLE
+          component: postgres
+          tags: [infra, database]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Concurrent update conflict"
+          severity: S2
+          retryable: true
+
+        - code: AUTH-INFRA-003
+          key: REDIS_UNAVAILABLE
+          component: redis
+          tags: [infra, cache]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Redis unavailable"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-004
+          key: KEYCLOAK_UNAVAILABLE
+          component: keycloak
+          tags: [infra, external, auth]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Keycloak unavailable"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-005
+          key: POSTGRES_UNAVAILABLE
+          component: postgres
+          tags: [infra, database]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Postgres unavailable"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-006
+          key: HANDSHAKE_RNG_FAIL
+          component: crypto
+          tags: [infra, crypto]
+          http_status: 500
+          grpc_code: Internal
+          message: "Random generation failed"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-007
+          key: HANDSHAKE_KEY_DERIVE_FAIL
+          component: crypto
+          tags: [infra, crypto]
+          http_status: 500
+          grpc_code: Internal
+          message: "Key derivation failed"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-008
+          key: HANDSHAKE_STORAGE_FAIL
+          component: redis
+          tags: [infra, cache]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to store session"
+          severity: S1
+          retryable: true
+
+    errors_detail: 
+      - code: OUT_OF_RANGE
+        message: "Out of range"
+
+      - code: REQUIRED
+        message: "Required"
+
+      - code: INVALID_FORMAT
+        message: "Invalid format"
+      
+      - code: DUPLICATE
+        message: "Duplicate"
+
+      - code: NOT_FOUND
+        message: "Not found"
+
+defaults:
+  UNKNOWN_DOMAIN_KEY:
+    code: AUTH-VAL-999
+    http_status: 400
+    grpc_code: InvalidArgument
+    message: "Unknown domain error"
+
+  INTERNAL_FALLBACK:
+    code: CORE-INF-000
+    http_status: 500
+    grpc_code: Internal
+    message: "Internal server error"

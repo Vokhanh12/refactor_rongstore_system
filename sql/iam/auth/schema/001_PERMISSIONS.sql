@@ -1,0 +1,44 @@
+-- +goose Up
+-- +goose StatementBegin
+
+CREATE TABLE PERMISSIONS (
+  ID UUID PRIMARY KEY,
+
+  CODE VARCHAR(150) UNIQUE NOT NULL,
+
+  NAME VARCHAR(255),
+  DESCRIPTION TEXT,
+
+  RESOURCE VARCHAR(100) NOT NULL,
+  ACTION VARCHAR(50) NOT NULL,
+
+  IS_ACTIVE BOOLEAN DEFAULT TRUE,
+
+  CREATED_AT TIMESTAMP DEFAULT NOW(),
+  UPDATED_AT TIMESTAMP DEFAULT NOW(),
+  CREATED_BY UUID,
+  UPDATED_BY UUID,
+
+  CONSTRAINT UQ_PERMISSION_RESOURCE_ACTION
+  UNIQUE (RESOURCE, ACTION)
+);
+
+CREATE INDEX IDX_PERMISSION_RESOURCE
+ON PERMISSIONS(RESOURCE);
+
+
+INSERT INTO PERMISSIONS (
+  ID, CODE, NAME, DESCRIPTION, RESOURCE, ACTION
+) VALUES
+  (gen_random_uuid(), 'PERMISSION_CREATE', 'Create Permission', 'Create a new permission', 'PERMISSION', 'CREATE'),
+  (gen_random_uuid(), 'PERMISSION_UPDATE', 'Update Permission', 'Update permission info', 'PERMISSION', 'UPDATE'),
+  (gen_random_uuid(), 'PERMISSION_DELETE', 'Delete Permission', 'Delete a permission', 'PERMISSION', 'DELETE'),
+
+-- +goose StatementEnd
+
+
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE IF EXISTS PERMISSIONS;
+-- +goose StatementEnd
