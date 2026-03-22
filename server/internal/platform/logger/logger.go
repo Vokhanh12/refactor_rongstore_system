@@ -7,7 +7,8 @@ import (
 )
 
 type Logger interface {
-	Log(ctx context.Context, level string, msg string, entry LogEntry, extra map[string]interface{})
-	LogError(ctx context.Context, msg string, err *aerrs.AppError, extra map[string]interface{})
-	LogAccess(ctx context.Context, msg string, access AccessLog)
+	Info(ctx context.Context, msg string, entry LogEntry, extra map[string]interface{})
+	Error(ctx context.Context, msg string, err *aerrs.AppError, extra map[string]interface{})
+	Warn(ctx context.Context, msg string, entry LogEntry, extra map[string]interface{})
+	Access(ctx context.Context, msg string, access AccessLog)
 }
