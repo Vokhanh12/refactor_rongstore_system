@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
+	domerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
@@ -29,12 +29,12 @@ func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd com.AuthorizeCommand
 
 	if len(cmd.RoleCodes) == 0 {
 		return &com.AuthorizeCommandResult{Allowed: false},
-			errors.New(iamErrors.AUTHORIZATION_ROLE_REQUIRED)
+			aerrs.New(domerrs.AUTHORIZATION_ROLE_REQUIRED)
 	}
 
 	if cmd.ResourceCheck == "" || cmd.ActionCheck == "" {
 		return &com.AuthorizeCommandResult{Allowed: false},
-			errors.New(iamErrors.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
+			aerrs.New(domerrs.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
 	}
 
 	permKey := fmt.Sprintf("%s:%s", cmd.ResourceCheck, cmd.ActionCheck)
