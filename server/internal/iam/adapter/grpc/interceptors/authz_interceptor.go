@@ -3,20 +3,15 @@ package grpc
 import (
 	"context"
 
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/domain/ports"
+	ucs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/jwt"
-
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/util/ctxutil"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
 )
 
 func AuthZUnaryInterceptor(
-	store ports.IRedisCache,
-	authz ports.IAuthzUsecase,
+	authzUc ucs.AuthorizeUsecase,
 ) grpc.UnaryServerInterceptor {
 
 	return func(

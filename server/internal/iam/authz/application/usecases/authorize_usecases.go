@@ -1,4 +1,4 @@
-package usecase
+package usecases
 
 import (
 	"context"
@@ -9,16 +9,16 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	ce "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/cache"
-	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	cs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
+	rs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 )
 
 type AuthorizeUsecase struct {
-	rolePermissionCache      ce.RolePermissionCache
-	rolePermissionRepository re.RolePermissionRepository
+	rolePermissionCache      cs.RolePermissionCache
+	rolePermissionRepository rs.RolePermissionRepository
 }
 
-func NewAuthorizeUsecase(rpCache ce.RolePermissionCache, rpRepository re.RolePermissionRepository) *AuthorizeUsecase {
+func NewAuthorizeUsecase(rpCache cs.RolePermissionCache, rpRepository rs.RolePermissionRepository) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
 		rolePermissionCache:      rpCache,
 		rolePermissionRepository: rpRepository,
@@ -32,12 +32,12 @@ func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd com.AuthorizeCommand
 			aerrs.New(domerrs.AUTHORIZATION_ROLE_REQUIRED)
 	}
 
-	if cmd.ResourceCheck == "" || cmd.ActionCheck == "" {
+	if cmd.Resource == "" || cmd.Action == "" {
 		return &com.AuthorizeCommandResult{Allowed: false},
 			aerrs.New(domerrs.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
 	}
 
-	permKey := fmt.Sprintf("%s:%s", cmd.ResourceCheck, cmd.ActionCheck)
+	permKey := fmt.Sprintf("%s:%s", cmd.Resource, cmd.Action)
 
 	for _, code := range cmd.RoleCodes {
 		perms, found, err := u.rolePermissionCache.GetPermissions(ctx, code)

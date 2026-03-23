@@ -1,9 +1,10 @@
-package usecase
+package usecases
 
 import (
 	"context"
 	"server/pkg/errors"
 
+	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )

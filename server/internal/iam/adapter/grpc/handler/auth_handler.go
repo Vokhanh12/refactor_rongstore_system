@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/handler"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/grpc"
 )
 
-var _ handler.AuthPort = (*AuthHandler)(nil)
+var _ grpc.AuthPort = (*AuthHandler)(nil)
 
 type AuthHandler struct{}
 
