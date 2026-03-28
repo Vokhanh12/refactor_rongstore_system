@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package common.v1;
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1"; 
+
+import "google/protobuf/any.proto";
+import "common/v1/error.proto";
+import "common/v1/pagination.proto";
+import "common/v1/warning.proto";
+
+message ViewResult {
+  string op_id = 1;
+  string resource_id = 2;
+  bool success = 3;
+  google.protobuf.Any items = 4;
+  Error error = 7;               
+  Pagination pagination = 8;     
+  repeated Warning warnings = 9; 
+  map<string, string> details = 10; 
+}

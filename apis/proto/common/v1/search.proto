@@ -1,0 +1,9 @@
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1";
+
+import "validate/v1/validate.proto";
+
+message Search {
+    string keyword = 1 [(validate.rules).string = {min_len: 1}];
+}

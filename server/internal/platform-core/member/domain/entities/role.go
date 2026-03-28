@@ -3,7 +3,6 @@ package entities
 type RoleType string
 
 const (
-	RoleTypePlatform     RoleType = "PLATFORM"
 	RoleTypeOrganization RoleType = "ORGANIZATION"
 	RoleTypeUnit         RoleType = "UNIT"
 )

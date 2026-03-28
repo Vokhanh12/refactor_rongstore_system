@@ -4,31 +4,32 @@
 
 Member Domain thuộc **Platform Core Layer**.
 
-Member đại diện cho mối quan hệ giữa:
+Member đại diện cho **quan hệ giữa User và Organization trong một context cụ thể**.
 
-User (IAM) ↔ Organization ↔ Unit
+User (IAM) ↔ Member ↔ Organization ↔ Unit
 
-Member KHÔNG phải là User.
-User là danh tính toàn hệ thống.
-Member là vai trò của User trong một Organization cụ thể.
+
+- **User** = danh tính toàn hệ thống (global identity)  
+- **Member** = danh tính trong tenant (tenant identity)  
+
+👉 Một User có thể có nhiều Member (mỗi Organization là 1 Member)
 
 ---
 
-## 2. Tại sao cần Member Domain?
+## 2. Mục đích của Member Domain
 
-Một User có thể:
+Giải quyết bài toán:
 
-- Thuộc nhiều Organization
-- Có role khác nhau ở mỗi Organization
-- Có quyền khác nhau ở mỗi Unit
+- Multi-tenant authorization  
+- User thuộc nhiều Organization  
+- Phân quyền theo Organization / Unit / Domain  
 
 Ví dụ:
 
-User A:
-- OWNER ở Organization A
-- STAFF ở Organization B
-
-Member Domain giải quyết bài toán multi-tenant authorization.
+- User A:
+   + OWNER ở Organization A
+   + STAFF ở Organization B
+   + MANAGER ở Unit X (thuộc Organization A)
 
 ---
 
@@ -36,195 +37,207 @@ Member Domain giải quyết bài toán multi-tenant authorization.
 
 | User (IAM) | Member |
 |------------|--------|
-| Danh tính toàn hệ thống | Quan hệ trong Organization |
-| Có email / password | Có role |
-| Không biết business | Biết context Organization |
 | Global identity | Tenant identity |
+| Email / Password | Role / Permission |
+| Không biết Organization | Biết Organization / Unit |
+| Auth (xác thực) | AuthZ (phân quyền) |
 
 ---
 
-## 4. Entity bên trong Member Context
+## 4. Aggregate Design
 
-### 4.1 Member (Aggregate Root)
-
-Thuộc tính ví dụ:
-
-- id
-- userId
-- organizationId
-- role (OWNER / ADMIN / STAFF)
-- status (ACTIVE / INVITED / SUSPENDED)
-- joinedAt
+👉 **Member là Aggregate Root**
+Member (Aggregate Root)
+├── RoleAssignment
+├── UnitScopedRole (optional)
+└── Invitation (có thể tách riêng nếu cần scale)
 
 ---
 
-### 4.2 UnitAssignment (Optional)
+## 5. Entity trong Member Context
 
-Nếu phân quyền theo Unit:
+### 5.1 Member (Aggregate Root)
+id
+userId
+organizationId
+status (ACTIVE / INVITED / SUSPENDED)
+joinedAt
 
-- memberId
-- unitId
-- unitRole (MANAGER / CASHIER / WAITER)
 
----
-
-### 4.3 Invitation
-
-Dùng khi mời user vào Organization:
-
-- email
-- organizationId
-- role
-- token
-- expiredAt
+❗ Không nên đặt role trực tiếp tại đây.
 
 ---
 
-## 5. Trách nhiệm (Responsibilities)
+### 5.2 RoleAssignment
+id
+memberId
+scopeType (ORG / UNIT)
+scopeId (organizationId / unitId)
+role (OWNER / ADMIN / STAFF / MANAGER / ...)
+domain (optional: F&B / HR / ...)
 
-Member Domain chịu trách nhiệm:
 
-### ✔ Thêm user vào Organization
+👉 Cho phép:
 
-- Kiểm tra Subscription limit
-- Gán role
-- Tạo Member record
-
----
-
-### ✔ Xóa member khỏi Organization
-
-- Kiểm tra quyền người thực hiện
-- Soft delete member
-
----
-
-### ✔ Thay đổi role
-
-- OWNER không thể bị xóa nếu là owner cuối cùng
-- Validate quyền
+- 1 Member có nhiều role  
+- Role theo Organization  
+- Role theo Unit  
+- Role theo domain  
 
 ---
 
-### ✔ Gán quyền theo Unit
+### 5.3 UnitScopedRole (Optional)
 
-- Assign member vào Unit
-- Giới hạn phạm vi thao tác
-
----
-
-## 6. Hành vi chính (Core Behaviors)
-
-### 6.1 Add Member
-addMember(userId, organizationId, role)
-
-
-- Validate Organization
-- Validate subscription
-- Tạo Member
+- Có thể bỏ nếu RoleAssignment đã đủ  
+- Dùng khi muốn optimize read model  
 
 ---
 
-### 6.2 Change Role
-changeRole(memberId, newRole)
-
-- Validate permission
-- Update role
-
----
-
-### 6.3 Assign Unit
-assignToUnit(memberId, unitId, unitRole)
-
-- Validate unit thuộc organization
-- Lưu assignment
+### 5.4 Invitation
+id
+email
+organizationId
+role (initial role)
+token
+expiredAt
 
 ---
 
-### 6.4 Remove Member
+## 6. Responsibilities
+
+### ✔ Manage Membership
+
+- Add member vào Organization  
+- Remove member  
+- Suspend / activate member  
+
+---
+
+### ✔ Manage Role & Permission
+
+- Gán role theo Organization  
+- Gán role theo Unit  
+- Gán role theo domain  
+
+---
+
+### ✔ Authorization
+
+- Kiểm tra quyền user  
+- Scope theo Organization / Unit / Domain  
+
+---
+
+### ✔ Invitation Flow
+
+- Tạo invitation  
+- Accept / reject  
+
+---
+
+## 7. Core Behaviors
+
+### 7.1 Add Member
+addMember(userId, organizationId)
+
+- Validate Organization  
+- Check subscription limit  
+- Tạo Member  
+
+---
+
+### 7.2 Assign Role
+assignRole(memberId, scopeType, scopeId, role, domain)
+
+- Validate scope  
+- Validate permission  
+- Tạo RoleAssignment  
+
+---
+
+### 7.3 Remove Member
 removeMember(memberId)
 
-- Không cho phép xóa owner cuối cùng
-- Update status
+- Không xóa owner cuối cùng  
+- Soft delete  
 
 ---
 
-## 7. Member KHÔNG làm gì
+### 7.4 Authorize
+canPerform(userId, orgId, unitId, action, domain)
 
-- Không xác thực user (IAM làm)
-- Không xử lý business F&B
-- Không quản lý Subscription
-- Không xử lý thanh toán
 
-Member chỉ xử lý tenant-level relationship.
+- Lookup Member  
+- Lookup RoleAssignment  
+- Check permission  
 
 ---
 
-## 8. Quan hệ với Domain khác
+## 8. Member KHÔNG làm gì
+
+- Không authenticate user (IAM làm)  
+- Không quản lý Organization lifecycle  
+- Không xử lý Subscription billing  
+- Không chứa logic business (F&B, HR)  
+
+---
+
+## 9. Quan hệ với Domain khác
 
 | Domain | Quan hệ |
-|--------|---------|
-| IAM | Member liên kết tới User |
+|--------|--------|
+| IAM | dùng userId |
 | Organization | Member thuộc Organization |
-| Unit | Member có thể được assign vào Unit |
-| Subscription | Giới hạn số member |
-| Business Vertical | Kiểm tra role khi thao tác |
-
----
-
-## 9. Flow ví dụ thực tế
-
-### Case: Owner mời nhân viên
-
-1. Owner gọi addMember
-2. Member Domain kiểm tra subscription limit
-3. Tạo Invitation
-4. Khi user accept → tạo Member ACTIVE
-
----
-
-### Case: Nhân viên thao tác trong Unit
-
-1. Hệ thống check:
-   (userId, organizationId, unitId, action)
-2. IAM xác thực
-3. Member Domain kiểm tra role
-4. Nếu hợp lệ → cho phép
+| Unit | RoleAssignment scoped theo Unit |
+| Subscription | giới hạn số member |
+| Business Modules | check permission qua Member |
 
 ---
 
 ## 10. Boundary quan trọng
 
-Member:
+- Không cross Organization  
+- Role luôn có scope rõ ràng  
+- Không truy cập data ngoài tenant  
 
-- Không truy cập Organization khác
-- Không cho phép user thao tác ngoài Organization của mình
-- Không cho phép vượt subscription limit
-
-Member là lớp kiểm soát tenant-level access.
+👉 Member = security boundary của tenant  
 
 ---
 
-## 11. Vì sao Member thuộc Platform Core
+## 11. Insight quan trọng
 
-Vì:
+### 1. Role không nằm trong Member
 
-- Không phụ thuộc ngành nghề
-- Dùng chung cho F&B, Retail, Service
-- Là phần bắt buộc của hệ thống multi-tenant
+Role phải là entity riêng (RoleAssignment)
 
-Nếu mai bạn thêm vertical mới → Member không đổi.
+---
+
+### 2. Member không thuộc Unit
+
+Member thuộc Organization  
+Unit chỉ là scope của Role  
+
+---
+
+### 3. Không có sub-root
+
+- Member là Aggregate Root  
+- Unit là Aggregate Root  
+- Liên kết bằng ID  
 
 ---
 
 ## 12. Tóm tắt
 
-Member Domain là:
+Member Domain:
 
-- Cầu nối giữa User và Organization
-- Quản lý role tenant-level
-- Hỗ trợ phân quyền theo Unit
-- Giải quyết bài toán multi-tenant
-- Không chứa business logic ngành
+- Cầu nối giữa User và Organization  
+- Quản lý Authorization (AuthZ)  
+- Quản lý Role theo Organization / Unit / Domain  
+- Là nền tảng multi-tenant SaaS  
 
-Không có Member → không thể phân quyền đúng trong SaaS multi-tenant.
+---
+
+## 🔥 Một câu chốt
+
+**Member là trung tâm của Authorization trong hệ thống multi-tenant**

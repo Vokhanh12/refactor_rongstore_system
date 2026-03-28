@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package iam.v1;
+
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespb"; 
+option java_package = "com.aliasadi.iam.v1.resources";
+option java_multiple_files = true;
+message HandshakeRequest {
+    string client_public_key = 1; 
+  }
+  
+  message HandshakeResponse {
+    string server_public_key = 1;
+    string session_id = 2;
+    string hkdf_salt_b64 = 3;
+    int32 expires_at = 4;
+    string encrypted_session_data = 5;
+  }
+  

@@ -3,15 +3,17 @@ package grpc
 import (
 	"context"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	ucs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/jwt"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
 )
 
 func AuthZUnaryInterceptor(
-	authzUc ucs.AuthorizeUsecase,
+	authorize ucs.AuthorizeUsecase,
 ) grpc.UnaryServerInterceptor {
 
 	return func(
@@ -27,10 +29,12 @@ func AuthZUnaryInterceptor(
 		if len(values) > 0 {
 
 			payload, err := jwt.DecodePayload(values[0])
-			if err == nil {
 
-				userCtx := auth.ToUserContext(payload)
-				ctx = auth.WithUserContext(ctx, userCtx)
+			if err == nil {
+				_ = ctxutil.WithUser(ctx, ctxutil.UserContext{
+					UserID: payload.UserID,
+					Roles:  payload.Roles,
+				})
 			}
 		}
 
@@ -49,11 +53,12 @@ func AuthZUnaryInterceptor(
 			resourceID, _ = extractResourceID(protoReq, authOpt.ResourceIDField)
 		}
 
-		if ctxutil.UserIDFromContext != nil && ctxutil.TenantIDFromContext != nil && ctxutil.RolesFromContext != nil {
+		userctx, ok := ctxutil.User(ctx)
+		if ok && userctx.UserID != "" && userctx.Roles != nil {
 
-			err := authz.Authorize(ctx, ports.AuthorizeInput{
-				UserID:     ctxutil.UserIDFromContext,
-				TenantID:   ctxutil.TenantIDFromContext,
+			allowed, err := authorize.Execute(ctx, command.AuthorizeCommand{
+				UserID:     userctx.UserID,
+				TenantID:   userctx.,
 				Roles:      ctxutil.RolesFromContext,
 				Resource:   authOpt.Resource,
 				Action:     authOpt.Action,
