@@ -3,7 +3,7 @@ package command
 type AuthorizeCommand struct {
 	UserID     string
 	TenantID   string
-	RoleCodes  []string
+	Roles      []string
 	Resource   string
 	Action     string
 	ResourceID string

@@ -27,7 +27,7 @@ func NewAuthorizeUsecase(rpCache cs.RolePermissionCache, rpRepository rs.RolePer
 
 func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd com.AuthorizeCommand) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
-	if len(cmd.RoleCodes) == 0 {
+	if len(cmd.Roles) == 0 {
 		return &com.AuthorizeCommandResult{Allowed: false},
 			aerrs.New(domerrs.AUTHORIZATION_ROLE_REQUIRED)
 	}
@@ -39,7 +39,7 @@ func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd com.AuthorizeCommand
 
 	permKey := fmt.Sprintf("%s:%s", cmd.Resource, cmd.Action)
 
-	for _, code := range cmd.RoleCodes {
+	for _, code := range cmd.Roles {
 		perms, found, err := u.rolePermissionCache.GetPermissions(ctx, code)
 		if err != nil {
 			return nil, err
@@ -53,6 +53,11 @@ func (u *AuthorizeUsecase) Execute(ctx context.Context, cmd com.AuthorizeCommand
 
 			perms = make([]string, 0, len(rolePermissions))
 			for _, rp := range rolePermissions {
+
+				if rp.Role.IsSuper {
+					return &com.AuthorizeCommandResult{Allowed: true}, nil
+				}
+
 				key := fmt.Sprintf("%s:%s", rp.Permission.Resource, rp.Permission.Action)
 				perms = append(perms, key)
 			}

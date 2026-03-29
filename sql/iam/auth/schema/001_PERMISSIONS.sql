@@ -26,17 +26,18 @@ CREATE TABLE PERMISSIONS (
 CREATE INDEX IDX_PERMISSION_RESOURCE
 ON PERMISSIONS(RESOURCE);
 
-
-INSERT INTO PERMISSIONS (
-  ID, CODE, NAME, DESCRIPTION, RESOURCE, ACTION
-) VALUES
-  (gen_random_uuid(), 'PERMISSION_CREATE', 'Create Permission', 'Create a new permission', 'PERMISSION', 'CREATE'),
-  (gen_random_uuid(), 'PERMISSION_UPDATE', 'Update Permission', 'Update permission info', 'PERMISSION', 'UPDATE'),
-  (gen_random_uuid(), 'PERMISSION_DELETE', 'Delete Permission', 'Delete a permission', 'PERMISSION', 'DELETE'),
-
--- +goose StatementEnd
-
-
+--   -- PERMISSIONS
+-- INSERT INTO PERMISSIONS (ID, CODE, NAME, DESCRIPTION, RESOURCE, ACTION)
+-- VALUES
+--   (gen_random_uuid(), 'PERMISSION_CREATE', 'Create Permission', 'Create a new permission', 'PERMISSION', 'CREATE'),
+--   (gen_random_uuid(), 'PERMISSION_UPDATE', 'Update Permission', 'Update permission info', 'PERMISSION', 'UPDATE'),
+--   (gen_random_uuid(), 'PERMISSION_DELETE', 'Delete Permission', 'Delete a permission', 'PERMISSION', 'DELETE'),
+--   (gen_random_uuid(), 'ORDER_CREATE', 'Create Order', 'User can create new orders', 'ORDER', 'CREATE'),
+--   (gen_random_uuid(), 'ORDER_UPDATE', 'Update Order', 'User can update orders', 'ORDER', 'UPDATE'),
+--   (gen_random_uuid(), 'ORDER_COMPLETE', 'Complete Order', 'User can mark order as complete', 'ORDER', 'COMPLETE'),
+--   (gen_random_uuid(), 'PRODUCT_MANAGE', 'Manage Product', 'User can create/update products', 'PRODUCT', 'MANAGE'),
+--   (gen_random_uuid(), 'PAYMENT_COLLECT', 'Collect Payment', 'User can collect payments', 'PAYMENT', 'COLLECT'),
+--   (gen_random_uuid(), 'POST_CREATE', 'Create Post', 'User can create social posts', 'POST', 'CREATE');
 
 -- +goose Down
 -- +goose StatementBegin

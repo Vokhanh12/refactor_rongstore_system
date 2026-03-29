@@ -23,24 +23,16 @@ CREATE TABLE ROLES (
 CREATE INDEX IDX_ROLES_TYPE
 ON ROLES(TYPE);
 
--- Seed data
-INSERT INTO ROLES (
-  ID, CODE, NAME, TYPE, DESCRIPTION, IS_SYSTEM, IS_SUPER
-) VALUES
-  (
-    gen_random_uuid(),
-    'SUPER_ADMIN',
-    'Super Admin',
-    'PLATFORM',
-    'Full access to entire system',
-    TRUE,
-    TRUE
-  ),
+
+-- -- ROLES
+-- INSERT INTO ROLES (ID, CODE, NAME, TYPE, DESCRIPTION, IS_SYSTEM, IS_SUPER)
+-- VALUES
+--   (gen_random_uuid(), 'SUPER_ADMIN', 'Super Admin', 'PLATFORM', 'Full access to system', TRUE, TRUE),
+--   (gen_random_uuid(), 'RESTAURANT_MANAGER', 'Restaurant Manager', 'ORGANIZATION', 'Manage a restaurant unit', FALSE, FALSE),
+--   (gen_random_uuid(), 'CAFE_OPERATOR', 'Café Operator', 'ORGANIZATION', 'Operate a café', FALSE, FALSE),
+--   (gen_random_uuid(), 'FB_VENDOR', 'Street Vendor', 'ORGANIZATION', 'Operate a mobile/outlet vendor', FALSE, FALSE);
 
 ON CONFLICT (CODE) DO NOTHING;
--- +goose StatementEnd
-
-
 
 -- +goose Down
 -- +goose StatementBegin

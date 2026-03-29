@@ -39,8 +39,27 @@ ON ROLE_ASSIGNEMENTS(USER_ID);
 CREATE INDEX IDX_RA_SCOPE
 ON ROLE_ASSIGNEMENTS(SCOPE_ID);
 
--- +goose StatementEnd
+-- -- ROLE_ASSIGNEMENTS
+-- -- User1 là super admin toàn hệ thống
+-- INSERT INTO ROLE_ASSIGNEMENTS (USER_ID, ROLE_ID, SCOPE_ID, SCOPE_TYPE, ASSIGNED_BY)
+-- SELECT u.ID, r.ID, NULL, 'GLOBAL', u.ID
+-- FROM USERS u, ROLES r
+-- WHERE u.ID = 'user1-uuid' -- thay bằng UUID thực tế
+--   AND r.CODE = 'SUPER_ADMIN';
 
+-- -- User2 là manager một unit nhà hàng
+-- INSERT INTO ROLE_ASSIGNEMENTS (USER_ID, ROLE_ID, SCOPE_ID, SCOPE_TYPE, ASSIGNED_BY)
+-- SELECT u.ID, r.ID, 'unit-uuid-123', 'UNIT', 'user1-uuid'
+-- FROM USERS u, ROLES r
+-- WHERE u.ID = 'user2-uuid'
+--   AND r.CODE = 'RESTAURANT_MANAGER';
+
+-- -- User3 là street vendor
+-- INSERT INTO ROLE_ASSIGNEMENTS (USER_ID, ROLE_ID, SCOPE_ID, SCOPE_TYPE, ASSIGNED_BY)
+-- SELECT u.ID, r.ID, 'vendor-unit-uuid', 'OWN', 'user1-uuid'
+-- FROM USERS u, ROLES r
+-- WHERE u.ID = 'user3-uuid'
+--   AND r.CODE = 'FB_VENDOR';
 
 -- +goose Down
 -- +goose StatementBegin
