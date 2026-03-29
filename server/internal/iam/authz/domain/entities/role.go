@@ -20,6 +20,9 @@ type Role struct {
 	IsSuper  bool
 	IsActive bool
 
-	// Aggregate relation (optional, nếu load full)
 	Permissions []Permission
+}
+
+func (r Role) IsElevated() bool {
+	return r.IsSuper
 }
