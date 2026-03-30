@@ -4,7 +4,7 @@ import (
 	"context"
 
 	repos "github.com/vokhanh12/refactor-rongstore-system/server/iam/authz/repositoies"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 // ==================== Create RolePermission ====================

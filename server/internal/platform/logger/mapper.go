@@ -1,6 +1,6 @@
 package logger
 
-import aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+import aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
 func FromAppError(err *aerrs.AppError) LogEntry {
 	if err == nil {

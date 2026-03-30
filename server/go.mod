@@ -11,6 +11,9 @@ require (
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.3.3 // indirect
 	github.com/iancoleman/strcase v0.3.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/pgx/v5 v5.9.1 // indirect
 	github.com/lyft/protoc-gen-star/v2 v2.0.4 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
 	golang.org/x/mod v0.32.0 // indirect

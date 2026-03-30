@@ -5,7 +5,7 @@ import (
 	"time"
 
 	domerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	cs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
@@ -28,75 +28,65 @@ func NewAuthorizeUsecase(
 		rolePermissionRepository: rpRepository,
 	}
 }
+
 func (u *AuthorizeUsecase) Execute(
 	ctx context.Context,
 	cmd com.AuthorizeCommand,
 ) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
-	// 1. Validate
 	if len(cmd.Roles) == 0 {
 		return deny(domerrs.AUTHORIZATION_ROLE_REQUIRED)
 	}
-
 	if cmd.Resource == "" || cmd.Action == "" {
 		return deny(domerrs.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
 	}
 
-	// 2. Try cache ALL roles (best effort)
-	allCached := true
+	targetKey := cmd.Resource + ":" + cmd.Action
+
 	rolePermsMap := make(map[string][]string, len(cmd.Roles))
+	var rolesMissCache []string
 
 	for _, role := range cmd.Roles {
 		perms, found, err := u.rolePermissionCache.GetPermissions(ctx, role)
 		if err != nil {
 			return nil, err
 		}
-		if !found {
-			allCached = false
-			break
+		if found {
+			rolePermsMap[role] = perms
+		} else {
+			rolesMissCache = append(rolesMissCache, role)
 		}
-		rolePermsMap[role] = perms
 	}
 
-	// 3. Nếu cache miss → fetch 1 lần DB
-	if !allCached {
-
-		rolePermissions, err := u.rolePermissionRepository.FindAllByRoles(ctx, cmd.Roles)
+	if len(rolesMissCache) > 0 {
+		rolePermissions, err := u.rolePermissionRepository.FindAllByRoles(ctx, rolesMissCache)
 		if err != nil {
 			return nil, err
 		}
 
-		// group theo role
-		group := make(map[string][]string)
-
 		for _, rp := range rolePermissions {
-
-			// Fast path
+			// fast path
 			if rp.Role.IsElevated() {
 				return allow()
 			}
-
-			key := rp.Permission.Key()
-			group[rp.Role.Code] = append(group[rp.Role.Code], key)
+			rolePermsMap[rp.Role.Code] = append(rolePermsMap[rp.Role.Code], rp.Permission.Key())
 		}
 
-		// set cache từng role
-		for roleCode, perms := range group {
-			u.rolePermissionCache.SetPermissions(ctx, roleCode, perms, permissionCacheTTL)
+		for _, role := range rolesMissCache {
+			perms := rolePermsMap[role]
+			u.rolePermissionCache.SetPermissions(ctx, role, perms, permissionCacheTTL)
 		}
-
-		rolePermsMap = group
 	}
 
-	// 4. Check permission (fast)
-	targetKey := cmd.Resource + ":" + cmd.Action
-
+	globalPerms := make(map[string]struct{})
 	for _, perms := range rolePermsMap {
 		for _, p := range perms {
-			if p == targetKey {
-				return allow()
-			}
+			globalPerms[p] = struct{}{}
 		}
+	}
+
+	if _, ok := globalPerms[targetKey]; ok {
+		return allow()
 	}
 
 	return &com.AuthorizeCommandResult{Allowed: false}, nil
@@ -108,15 +98,4 @@ func allow() (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
 func deny(code aerrs.AppError) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 	return &com.AuthorizeCommandResult{Allowed: false}, aerrs.New(code)
-}
-
-// chỉ dùng cho cache (technical concern)
-func hasPermission(perms []string, resource, action string) bool {
-	key := resource + ":" + action
-	for _, p := range perms {
-		if p == key {
-			return true
-		}
-	}
-	return false
 }

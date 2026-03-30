@@ -1,6 +1,6 @@
 package apperrors
 
-import commonv1 "server/api/common/v1"
+import commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
 
 func ToInternalError(err *AppError) *commonv1.Error {
 	if err == nil {

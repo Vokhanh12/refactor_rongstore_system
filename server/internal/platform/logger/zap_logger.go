@@ -3,7 +3,7 @@ package logger
 import (
 	"context"
 
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
