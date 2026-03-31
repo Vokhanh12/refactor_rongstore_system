@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	GetPermissionByCode(ctx context.Context, code string) (GetPermissionByCodeRow, error)
-	GetRolePermissions(ctx context.Context, code string) (GetRolePermissionsRow, error)
+	GetRolePermissions(ctx context.Context, code string) ([]string, error)
 }
 
 var _ Querier = (*Queries)(nil)

@@ -7,10 +7,9 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	dberrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
-	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 )
 
-var _ caches.RolePermissionCache = (*SqlcRolePermissionRepository)(nil)
+var _ caches.RolePermissionCache = (*RolePermissionRepository)(nil)
 
 type SqlcRolePermissionRepository struct {
 	queries *db.Queries

@@ -5,29 +5,29 @@ import (
 	"database/sql"
 	"errors"
 
-	"server/internal/iam/domain"
-	pkgerrors "server/pkg/errors"
+	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type DBError struct {
-	InvalidCatalog  pkgerrors.AppError
-	NotfoundCatalog pkgerrors.AppError
-	ConflictCatalog pkgerrors.AppError
-	PersistCatalog  pkgerrors.AppError
+	InvalidCatalog  aerrs.AppError
+	NotfoundCatalog aerrs.AppError
+	ConflictCatalog aerrs.AppError
+	PersistCatalog  aerrs.AppError
 }
 
-func TranslateDBError(err error, catalogs DBError) *pkgerrors.AppError {
+func TranslateDBError(err error, catalogs DBError) *aerrs.AppError {
 	if err == nil {
 		return nil
 	}
 
 	// ---------- Not found ----------
 	if errors.Is(err, sql.ErrNoRows) {
-		return pkgerrors.New(
+		return aerrs.New(
 			catalogs.NotfoundCatalog,
-			pkgerrors.WithCauseDetail(err),
+			aerrs.WithCauseDetail(err),
 		)
 	}
 
@@ -38,30 +38,30 @@ func TranslateDBError(err error, catalogs DBError) *pkgerrors.AppError {
 		switch pgErr.Code {
 
 		case "23505": // unique_violation
-			return pkgerrors.New(
+			return aerrs.New(
 				catalogs.ConflictCatalog,
-				pkgerrors.WithCauseDetail(err),
+				aerrs.WithCauseDetail(err),
 			)
 
 		case "23503", "23514": // FK, CHECK
-			return pkgerrors.New(
+			return aerrs.New(
 				catalogs.InvalidCatalog,
-				pkgerrors.WithCauseDetail(err),
+				aerrs.WithCauseDetail(err),
 			)
 		}
 	}
 
 	// ---------- Timeout ----------
 	if errors.Is(err, context.DeadlineExceeded) {
-		return pkgerrors.New(
+		return aerrs.New(
 			domain.DB_TIMEOUT,
-			pkgerrors.WithCauseDetail(err),
+			aerrs.WithCauseDetail(err),
 		)
 	}
 
 	// ---------- Default ----------
-	return pkgerrors.New(
+	return aerrs.New(
 		catalogs.PersistCatalog,
-		pkgerrors.WithCauseDetail(err),
+		aerrs.WithCauseDetail(err),
 	)
 }

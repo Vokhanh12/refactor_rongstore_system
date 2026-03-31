@@ -7,30 +7,35 @@ package iam_sqlc
 
 import (
 	"context"
-	"database/sql"
 )
 
-const getRolePermissions = `-- name: GetRolePermissions :one
-SELECT 
-  r.code AS role_code,
-  COALESCE(json_agg(p.code), '[]') AS permissions,
-  NULL::timestamp AS expired_at
+const getRolePermissions = `-- name: GetRolePermissions :many
+SELECT p.code
 FROM roles r
 JOIN role_permissions rp ON rp.role_id = r.id
 JOIN permissions p ON p.id = rp.permission_id
 WHERE r.code = $1
-GROUP BY r.code
 `
 
-type GetRolePermissionsRow struct {
-	RoleCode    string       `json:"role_code"`
-	Permissions interface{}  `json:"permissions"`
-	ExpiredAt   sql.NullTime `json:"expired_at"`
-}
-
-func (q *Queries) GetRolePermissions(ctx context.Context, code string) (GetRolePermissionsRow, error) {
-	row := q.db.QueryRowContext(ctx, getRolePermissions, code)
-	var i GetRolePermissionsRow
-	err := row.Scan(&i.RoleCode, &i.Permissions, &i.ExpiredAt)
-	return i, err
+func (q *Queries) GetRolePermissions(ctx context.Context, code string) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getRolePermissions, code)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var code string
+		if err := rows.Scan(&code); err != nil {
+			return nil, err
+		}
+		items = append(items, code)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

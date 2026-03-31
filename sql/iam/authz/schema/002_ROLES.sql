@@ -32,8 +32,6 @@ ON ROLES(TYPE);
 --   (gen_random_uuid(), 'CAFE_OPERATOR', 'Café Operator', 'ORGANIZATION', 'Operate a café', FALSE, FALSE),
 --   (gen_random_uuid(), 'FB_VENDOR', 'Street Vendor', 'ORGANIZATION', 'Operate a mobile/outlet vendor', FALSE, FALSE);
 
-ON CONFLICT (CODE) DO NOTHING;
-
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE IF EXISTS ROLES;
