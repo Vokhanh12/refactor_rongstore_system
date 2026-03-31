@@ -1,13 +1,11 @@
 package commonv1
 
-// ErrorDetail tương ứng với proto ErrorDetail
 type AppErrorDetail struct {
 	Field   string `json:"field,omitempty"`
 	Message string `json:"message,omitempty"`
 	Code    string `json:"code,omitempty"`
 }
 
-// Error tương ứng với proto Error
 type AppError struct {
 	Code         string           `json:"code,omitempty"`        // AUTH-HAND-001
 	Key          string           `json:"key,omitempty"`         // HANDSHAKE_INVALID_CLIENT_KEY

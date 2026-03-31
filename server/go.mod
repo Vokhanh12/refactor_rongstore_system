@@ -31,6 +31,7 @@ require (
 )
 
 require (
+	github.com/golang/protobuf v1.5.4
 	github.com/redis/go-redis/v9 v9.18.0
 	go.uber.org/multierr v1.10.0 // indirect
 	google.golang.org/grpc v1.79.3

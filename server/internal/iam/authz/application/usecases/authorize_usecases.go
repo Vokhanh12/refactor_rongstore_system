@@ -35,10 +35,18 @@ func (u *AuthorizeUsecase) Execute(
 ) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
 	if len(cmd.Roles) == 0 {
-		return deny(domerrs.AUTHORIZATION_ROLE_REQUIRED)
+		return deny(aerrs.New(
+			domerrs.AUTHORIZATION_REQUIRED, aerrs.WithAppendErrorDetail(*aerrs.NewDetail(
+				domerrs.REASON_REQUIRED, aerrs.WithField("role"),
+				aerrs.WithMessageDetail("role is required")))))
 	}
+
 	if cmd.Resource == "" || cmd.Action == "" {
-		return deny(domerrs.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
+		return deny(aerrs.New(
+			domerrs.AUTHORIZATION_REQUIRED,
+			aerrs.WithAppendErrorDetail(*aerrs.NewDetail(domerrs.REASON_REQUIRED, aerrs.WithField("resouce"), aerrs.WithMessageDetail("resouce is required"))),
+			aerrs.WithAppendErrorDetail(*aerrs.NewDetail(domerrs.REASON_REQUIRED, aerrs.WithField("action"), aerrs.WithMessageDetail("action is required"))),
+		))
 	}
 
 	targetKey := cmd.Resource + ":" + cmd.Action
@@ -47,11 +55,12 @@ func (u *AuthorizeUsecase) Execute(
 	var rolesMissCache []string
 
 	for _, role := range cmd.Roles {
-		perms, found, err := u.rolePermissionCache.GetPermissions(ctx, role)
+		perms, err := u.rolePermissionCache.GetPermissions(ctx, role)
 		if err != nil {
 			return nil, err
 		}
-		if found {
+
+		if len(perms) > 0 {
 			rolePermsMap[role] = perms
 		} else {
 			rolesMissCache = append(rolesMissCache, role)
@@ -65,7 +74,6 @@ func (u *AuthorizeUsecase) Execute(
 		}
 
 		for _, rp := range rolePermissions {
-			// fast path
 			if rp.Role.IsElevated() {
 				return allow()
 			}
@@ -96,6 +104,6 @@ func allow() (*com.AuthorizeCommandResult, *aerrs.AppError) {
 	return &com.AuthorizeCommandResult{Allowed: true}, nil
 }
 
-func deny(code aerrs.AppError) (*com.AuthorizeCommandResult, *aerrs.AppError) {
-	return &com.AuthorizeCommandResult{Allowed: false}, aerrs.New(code)
+func deny(err *aerrs.AppError) (*com.AuthorizeCommandResult, *aerrs.AppError) {
+	return &com.AuthorizeCommandResult{Allowed: false}, err
 }

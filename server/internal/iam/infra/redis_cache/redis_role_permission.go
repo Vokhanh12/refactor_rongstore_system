@@ -22,7 +22,6 @@ func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleCode 
 	val, err := r.client.Get(ctx, r.key(roleCode)).Result()
 	if err != nil {
 		if err == redis.Nil {
-			// cache miss → không phải lỗi
 			return nil, nil
 		}
 		return nil, aerrs.New(errs.REDIS_UNAVAILABLE,

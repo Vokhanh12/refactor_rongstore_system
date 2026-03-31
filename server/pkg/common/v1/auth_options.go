@@ -1,6 +1,5 @@
 package commonv1
 
-// ResourceOptions chứa các annotation/proto extension
 type ResourceOptions struct {
 	Resource           string
 	Action             string
@@ -11,7 +10,6 @@ type ResourceOptions struct {
 	RequiredPermission string
 }
 
-// Key constants cho annotation nếu muốn attach vào struct gRPC message
 const (
 	OptionResource           = "resource"
 	OptionAction             = "action"

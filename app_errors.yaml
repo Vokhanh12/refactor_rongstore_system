@@ -143,36 +143,25 @@ services:
           retryable: false
 
         - code: AUTH-VAL-013
-          key: AUTHORIZATION_REQUEST_INVALID
+          key: AUTHORIZATION_INVALID
           component: authz
           tags: [validation, authz]
           http_status: 400
           grpc_code: InvalidArgument
-          message: "Invalid authorization request"
+          message: "Invalid authorization"
           severity: S3
           retryable: false
 
         - code: AUTHZ-VAL-014
-          key: AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED
+          key: AUTHORIZATION_REQUIRED
           component: authz
           tags: [validation, authz]
           http_status: 400
           grpc_code: InvalidArgument
-          message: "Resource and action are required"
+          message: "Authorization information is required"
           severity: S3
           retryable: false
-
-        - code: AUTHZ-VAL-015
-          key: AUTHORIZATION_ROLE_REQUIRED
-          component: authz
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Role is required for authorization"
-          severity: S3
-          retryable: false
-
-
+    
 # ------------------------------------------------------------
 # DOMAIN
 # ------------------------------------------------------------
