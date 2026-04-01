@@ -8,10 +8,21 @@ const (
 	RoleTypeUnit         RoleType = "UNIT"
 )
 
+type ScopeType string
+
+const (
+	ScopeTypeGobal  ScopeType = "GOBAL"
+	ScopeTypeTenant ScopeType = "TENANT"
+	ScopeTypeUnit   ScopeType = "UNIT"
+	ScopeTypeOwn    ScopeType = "OWN"
+)
+
 type Role struct {
-	ID   string
-	Code string
-	Name string
+	ID        string
+	ScopeID   string
+	ScopeType ScopeType
+	Code      string
+	Name      string
 
 	Type        RoleType
 	Description *string
@@ -25,4 +36,8 @@ type Role struct {
 
 func (r Role) IsElevated() bool {
 	return r.IsSuper
+}
+
+func (p Permission) Key() string {
+	return p.Resource + ":" + p.Action
 }

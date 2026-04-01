@@ -60,7 +60,6 @@ services:
 # ------------------------------------------------------------
 # VALIDATION (client input errors)
 # ------------------------------------------------------------
-
       VAL:
         - code: AUTH-VAL-001
           key: LOGIN_EMAIL_EMPTY
@@ -153,15 +152,25 @@ services:
           retryable: false
 
         - code: AUTHZ-VAL-014
-          key: AUTHORIZATION_REQUIRED
+          key: AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED
           component: authz
           tags: [validation, authz]
           http_status: 400
           grpc_code: InvalidArgument
-          message: "Authorization information is required"
+          message: "Resource and action are required"
           severity: S3
           retryable: false
-    
+
+        - code: AUTHZ-VAL-015
+          key: AUTHORIZATION_ROLE_REQUIRED
+          component: authz
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Role is required for authorization"
+          severity: S3
+          retryable: false
+          
 # ------------------------------------------------------------
 # DOMAIN
 # ------------------------------------------------------------

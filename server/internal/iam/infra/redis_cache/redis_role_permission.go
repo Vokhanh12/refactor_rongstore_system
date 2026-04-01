@@ -17,9 +17,9 @@ type RedisRolePermissionCache struct {
 	client *redis.Client
 }
 
-func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleCode string) ([]string, *aerrs.AppError) {
+func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleCode string, roleScopeId string) ([]string, *aerrs.AppError) {
 
-	val, err := r.client.Get(ctx, r.key(roleCode)).Result()
+	val, err := r.client.Get(ctx, r.key(roleCode, roleScopeId)).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return nil, nil
@@ -37,7 +37,7 @@ func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleCode 
 	return perms, nil
 }
 
-func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleCode string, perms []string, ttl time.Duration) *aerrs.AppError {
+func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleCode string, roleScopeId string, perms []string, ttl time.Duration) *aerrs.AppError {
 
 	data, err := json.Marshal(perms)
 	if err != nil {
@@ -45,7 +45,7 @@ func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleCode 
 			aerrs.WithCauseDetail(err))
 	}
 
-	if err := r.client.Set(ctx, r.key(roleCode), data, ttl).Err(); err != nil {
+	if err := r.client.Set(ctx, r.key(roleCode, roleScopeId), data, ttl).Err(); err != nil {
 		return aerrs.New(errs.REDIS_UNAVAILABLE,
 			aerrs.WithCauseDetail(err))
 	}
@@ -53,6 +53,6 @@ func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleCode 
 	return nil
 }
 
-func (r *RedisRolePermissionCache) key(roleCode string) string {
-	return "authz:role_permission:" + roleCode
+func (r *RedisRolePermissionCache) key(roleCode string, roleScopeId string) string {
+	return "authz:role_permission:" + roleCode + ":" + roleScopeId
 }

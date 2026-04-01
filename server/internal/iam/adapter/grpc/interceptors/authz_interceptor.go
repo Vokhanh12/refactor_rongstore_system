@@ -7,6 +7,8 @@ import (
 	ucs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -22,23 +24,17 @@ func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInter
 			return handler(ctx, req)
 		}
 
-		resourceID := ""
-		if authOpt.ResourceIDField != "" {
-			resourceID, _ = extractResourceID(protoReq, authOpt.ResourceIDField)
-		}
-
 		userctx, ok := ctxutil.User(ctx)
 		if !ok || userctx.UserID == "" || userctx.Roles == nil {
-			return nil, grpc.Errorf(grpc.Code(grpc.PermissionDenied), "unauthenticated")
+			return nil, status.Errorf(codes.PermissionDenied, "unauthenticated")
 		}
 
 		result, err := authorize.Execute(ctx, command.AuthorizeCommand{
 			UserID:     userctx.UserID,
-			TenantID:   userctx.TenantID,
 			Roles:      userctx.Roles,
 			Resource:   authOpt.Resource,
 			Action:     authOpt.Action,
-			ResourceID: resourceID,
+			ResourceID: extractResourceID(protoReq, authOpt.ResourceIDField),
 		})
 
 		if err != nil {
@@ -46,7 +42,7 @@ func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInter
 		}
 
 		if !result.Allowed {
-			return nil, grpc.Errorf(grpc.Code(grpc.PermissionDenied), "unauthorized")
+			return nil, status.Errorf(codes.PermissionDenied, "unauthorized")
 		}
 
 		return handler(ctx, req)

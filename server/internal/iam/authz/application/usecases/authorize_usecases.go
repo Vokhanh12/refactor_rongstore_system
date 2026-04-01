@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	domerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
@@ -35,18 +36,11 @@ func (u *AuthorizeUsecase) Execute(
 ) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
 	if len(cmd.Roles) == 0 {
-		return deny(aerrs.New(
-			domerrs.AUTHORIZATION_REQUIRED, aerrs.WithAppendErrorDetail(*aerrs.NewDetail(
-				domerrs.REASON_REQUIRED, aerrs.WithField("role"),
-				aerrs.WithMessageDetail("role is required")))))
+		return deny(&domerrs.AUTHORIZATION_ROLE_REQUIRED)
 	}
 
 	if cmd.Resource == "" || cmd.Action == "" {
-		return deny(aerrs.New(
-			domerrs.AUTHORIZATION_REQUIRED,
-			aerrs.WithAppendErrorDetail(*aerrs.NewDetail(domerrs.REASON_REQUIRED, aerrs.WithField("resouce"), aerrs.WithMessageDetail("resouce is required"))),
-			aerrs.WithAppendErrorDetail(*aerrs.NewDetail(domerrs.REASON_REQUIRED, aerrs.WithField("action"), aerrs.WithMessageDetail("action is required"))),
-		))
+		return deny(&domerrs.AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED)
 	}
 
 	targetKey := cmd.Resource + ":" + cmd.Action
@@ -55,7 +49,13 @@ func (u *AuthorizeUsecase) Execute(
 	var rolesMissCache []string
 
 	for _, role := range cmd.Roles {
-		perms, err := u.rolePermissionCache.GetPermissions(ctx, role)
+
+		parts := strings.Split(role, ":")
+
+		roleCode := parts[0]
+		roleScopeID := parts[1]
+
+		perms, err := u.rolePermissionCache.GetPermissions(ctx, roleCode, roleScopeID)
 		if err != nil {
 			return nil, err
 		}
@@ -77,12 +77,19 @@ func (u *AuthorizeUsecase) Execute(
 			if rp.Role.IsElevated() {
 				return allow()
 			}
+
 			rolePermsMap[rp.Role.Code] = append(rolePermsMap[rp.Role.Code], rp.Permission.Key())
 		}
 
 		for _, role := range rolesMissCache {
+
+			parts := strings.Split(role, ":")
+
+			roleCode := parts[0]
+			roleScopeID := parts[1]
+
 			perms := rolePermsMap[role]
-			u.rolePermissionCache.SetPermissions(ctx, role, perms, permissionCacheTTL)
+			u.rolePermissionCache.SetPermissions(ctx, roleCode, roleScopeID, perms, permissionCacheTTL)
 		}
 	}
 

@@ -8,11 +8,12 @@ import (
 )
 
 type RolePermissionCache interface {
-	GetPermissions(ctx context.Context, roleCode string) ([]string, *aerrs.AppError)
+	GetPermissions(ctx context.Context, roleCode string, roleScopeId string) ([]string, *aerrs.AppError)
 
 	SetPermissions(
 		ctx context.Context,
 		roleCode string,
+		roleScopeId string,
 		perms []string,
 		ttl time.Duration,
 	) *aerrs.AppError

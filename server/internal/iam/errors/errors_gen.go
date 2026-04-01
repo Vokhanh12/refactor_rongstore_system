@@ -139,14 +139,29 @@ var (
 		ServerAction: "",
 	}
 
-	AUTHORIZATION_REQUIRED = apperrors.AppError{
-		Key: "AUTHORIZATION_REQUIRED",
+	AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED = apperrors.AppError{
+		Key: "AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED",
 		Code: "AUTHZ-VAL-014",
 		Component: "authz",
 		Tags: []string{"validation","authz"},
 		Status: 400,
 		GRPCCode: "InvalidArgument",
-		Message: "Authorization information is required",
+		Message: "Resource and action are required",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	AUTHORIZATION_ROLE_REQUIRED = apperrors.AppError{
+		Key: "AUTHORIZATION_ROLE_REQUIRED",
+		Code: "AUTHZ-VAL-015",
+		Component: "authz",
+		Tags: []string{"validation","authz"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Role is required for authorization",
 		Severity: "S3",
 		Retryable: false,
 		Cause: "",
@@ -435,7 +450,8 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"AUTH-VAL-011": VIEW_OPERATION_UNSUPPORTED,
 	"AUTH-VAL-012": MUTATE_OPERATION_UNSUPPORTED,
 	"AUTH-VAL-013": AUTHORIZATION_INVALID,
-	"AUTHZ-VAL-014": AUTHORIZATION_REQUIRED,
+	"AUTHZ-VAL-014": AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED,
+	"AUTHZ-VAL-015": AUTHORIZATION_ROLE_REQUIRED,
 	"AUTH-DOM-001": INVALID_CREDENTIALS,
 	"AUTH-DOM-002": STORE_OWNER_NOT_FOUND,
 	"AUTH-DOM-003": STORE_OWNER_CONFLICT,
