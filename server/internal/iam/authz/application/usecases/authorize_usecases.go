@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	domerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
@@ -11,6 +10,7 @@ import (
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	cs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
 	rs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 )
 
 const permissionCacheTTL = 15 * time.Minute
@@ -45,30 +45,30 @@ func (u *AuthorizeUsecase) Execute(
 
 	targetKey := cmd.Resource + ":" + cmd.Action
 
-	rolePermsMap := make(map[string][]string, len(cmd.Roles))
-	var rolesMissCache []string
+	rolePermKeysMap := make(map[string][]vo.PermissionKey, len(cmd.Roles))
+	var roleKeysMissCache []vo.RoleKey
 
 	for _, role := range cmd.Roles {
 
-		parts := strings.Split(role, ":")
+		roleKey, errdetails := vo.NewRoleKey(role)
+		if errdetails != nil {
+			return nil, aerrs.New(domerrs.UNAUTHORIZED, aerrs.WithAppendErrorDetails(errdetails))
+		}
 
-		roleCode := parts[0]
-		roleScopeID := parts[1]
-
-		perms, err := u.rolePermissionCache.GetPermissions(ctx, roleCode, roleScopeID)
+		perms, err := u.rolePermissionCache.GetPermissions(ctx, *roleKey)
 		if err != nil {
 			return nil, err
 		}
 
 		if len(perms) > 0 {
-			rolePermsMap[role] = perms
+			rolePermKeysMap[role] = perms
 		} else {
-			rolesMissCache = append(rolesMissCache, role)
+			roleKeysMissCache = append(roleKeysMissCache, *roleKey)
 		}
 	}
 
-	if len(rolesMissCache) > 0 {
-		rolePermissions, err := u.rolePermissionRepository.FindAllByRoles(ctx, rolesMissCache)
+	if len(roleKeysMissCache) > 0 {
+		rolePermissions, err := u.rolePermissionRepository.FindAllByRoles(ctx, roleKeysMissCache)
 		if err != nil {
 			return nil, err
 		}
@@ -78,23 +78,22 @@ func (u *AuthorizeUsecase) Execute(
 				return allow()
 			}
 
-			rolePermsMap[rp.Role.Code] = append(rolePermsMap[rp.Role.Code], rp.Permission.Key())
+			rolePermKeysMap[rp.Role.Code] = append(rolePermKeysMap[rp.Role.Code], rp.Permission.Key())
 		}
 
-		for _, role := range rolesMissCache {
+		for _, role := range roleKeysMissCache {
 
-			parts := strings.Split(role, ":")
+			if errdetails != nil {
+				return nil, aerrs.New(domerrs.UNAUTHORIZED, aerrs.WithAppendErrorDetails(errdetails))
+			}
 
-			roleCode := parts[0]
-			roleScopeID := parts[1]
-
-			perms := rolePermsMap[role]
+			perms := rolePermKeysMap[role]
 			u.rolePermissionCache.SetPermissions(ctx, roleCode, roleScopeID, perms, permissionCacheTTL)
 		}
 	}
 
 	globalPerms := make(map[string]struct{})
-	for _, perms := range rolePermsMap {
+	for _, perms := range rolePermKeysMap {
 		for _, p := range perms {
 			globalPerms[p] = struct{}{}
 		}

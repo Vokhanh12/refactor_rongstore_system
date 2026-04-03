@@ -1,5 +1,7 @@
 package entities
 
+import vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+
 type RoleType string
 
 const (
@@ -18,26 +20,25 @@ const (
 )
 
 type Role struct {
-	ID        string
-	ScopeID   string
-	ScopeType ScopeType
-	Code      string
-	Name      string
+	id        string
+	roleRef   vo.RoleRef
+	scopeType ScopeType
+	name      string
 
-	Type        RoleType
-	Description *string
+	roleType    RoleType
+	description *string
 
-	IsSystem bool
-	IsSuper  bool
-	IsActive bool
+	isSystem bool
+	isSuper  bool
+	isActive bool
 
-	Permissions []Permission
+	permissions []Permission
 }
 
 func (r Role) IsElevated() bool {
-	return r.IsSuper
+	return r.isSuper
 }
 
-func (p Permission) Key() string {
-	return p.Resource + ":" + p.Action
+func (p Role) Key() string {
+	return p.roleRef.Role() + ":" + p.Action
 }

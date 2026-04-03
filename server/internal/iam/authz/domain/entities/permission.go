@@ -1,22 +1,23 @@
 package entities
 
+import vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+
 type Permission struct {
-	ID   string
-	Code string
+	id   string
+	code string
 
-	Name        *string
-	Description *string
+	name        *string
+	description *string
 
-	Resource string
-	Action   string
+	resourceAction vo.ResourceAction
 
-	IsActive bool
+	isActive bool
 }
 
 func (p Permission) Key() string {
-	return p.Resource + ":" + p.Action
+	return p.resourceAction.Resource() + ":" + p.resourceAction.Action()
 }
 
 func (p Permission) Match(resource, action string) bool {
-	return p.Resource == resource && p.Action == action
+	return p.resourceAction.Resource() == resource && p.resourceAction.Action() == action
 }
