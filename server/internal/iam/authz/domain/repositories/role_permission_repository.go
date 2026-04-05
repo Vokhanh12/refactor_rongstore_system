@@ -13,5 +13,5 @@ type RolePermissionRepository interface {
 	Create(ctx context.Context, rolePermission *entities.RolePermission) (*entities.RolePermission, *aerrs.AppError)
 	Update(ctx context.Context, rolePermission *entities.RolePermission) (*entities.RolePermission, *aerrs.AppError)
 	Delete(ctx context.Context, id uuid.UUID) *aerrs.AppError
-	FindAllByRoles(ctx context.Context, roleKeys []vo.RoleRef) ([]*entities.RolePermission, *aerrs.AppError)
+	FindAllByRoleRefs(ctx context.Context, roleRefs []vo.RoleRef) ([]*entities.RolePermission, *aerrs.AppError)
 }

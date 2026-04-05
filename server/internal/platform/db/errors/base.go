@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"strings"
 
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
@@ -48,13 +49,29 @@ func TranslateDBError(err error, catalogs DBError) *aerrs.AppError {
 				catalogs.InvalidCatalog,
 				aerrs.WithCauseDetail(err),
 			)
+
+		case "57014": // query_canceled (statement_timeout)
+			return aerrs.New(
+				domain.DB_QUERY_TIMEOUT,
+				aerrs.WithCauseDetail(err),
+			)
 		}
 	}
 
-	// ---------- Timeout ----------
+	// ---------- Timeout (context) ----------
 	if errors.Is(err, context.DeadlineExceeded) {
+		// ⚠️ tricky: không biết chắc là query hay connect
+		// => assume là DB unavailable (an toàn hơn)
 		return aerrs.New(
 			domain.DB_TIMEOUT,
+			aerrs.WithCauseDetail(err),
+		)
+	}
+
+	// ---------- Connection issues ----------
+	if isConnectionError(err) {
+		return aerrs.New(
+			domain.POSTGRES_UNAVAILABLE,
 			aerrs.WithCauseDetail(err),
 		)
 	}
@@ -64,4 +81,11 @@ func TranslateDBError(err error, catalogs DBError) *aerrs.AppError {
 		catalogs.PersistCatalog,
 		aerrs.WithCauseDetail(err),
 	)
+}
+
+func isConnectionError(err error) bool {
+	return errors.Is(err, context.Canceled) ||
+		strings.Contains(err.Error(), "connection refused") ||
+		strings.Contains(err.Error(), "connection reset") ||
+		strings.Contains(err.Error(), "broken pipe")
 }

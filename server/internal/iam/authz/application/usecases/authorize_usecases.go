@@ -45,12 +45,12 @@ func (u *AuthorizeUsecase) Execute(
 
 	targetKey := cmd.Resource + ":" + cmd.Action
 
-	rolePermKeysMap := make(map[string][]vo.PermissionKey, len(cmd.Roles))
-	var roleKeysMissCache []vo.RoleKey
+	rolePermKeysMap := make(map[string][]vo.ResourceAction, len(cmd.Roles))
+	var roleKeysMissCache []vo.RoleRef
 
 	for _, role := range cmd.Roles {
 
-		roleKey, errdetails := vo.NewRoleKey(role)
+		roleKey, errdetails := vo.NewRoleRef(role)
 		if errdetails != nil {
 			return nil, aerrs.New(domerrs.UNAUTHORIZED, aerrs.WithAppendErrorDetails(errdetails))
 		}
@@ -68,7 +68,7 @@ func (u *AuthorizeUsecase) Execute(
 	}
 
 	if len(roleKeysMissCache) > 0 {
-		rolePermissions, err := u.rolePermissionRepository.FindAllByRoles(ctx, roleKeysMissCache)
+		rolePermissions, err := u.rolePermissionRepository.FindAllByRoleRefs(ctx, roleKeysMissCache)
 		if err != nil {
 			return nil, err
 		}
@@ -78,24 +78,20 @@ func (u *AuthorizeUsecase) Execute(
 				return allow()
 			}
 
-			rolePermKeysMap[rp.Role.Code] = append(rolePermKeysMap[rp.Role.Code], rp.Permission.Key())
+			rolePermKeysMap[rp.Role.RoleRef().String()] = append(rolePermKeysMap[rp.Role.RoleRef().String()], rp.Permission.ResourceAction())
 		}
 
-		for _, role := range roleKeysMissCache {
+		for _, roleRef := range roleKeysMissCache {
 
-			if errdetails != nil {
-				return nil, aerrs.New(domerrs.UNAUTHORIZED, aerrs.WithAppendErrorDetails(errdetails))
-			}
-
-			perms := rolePermKeysMap[role]
-			u.rolePermissionCache.SetPermissions(ctx, roleCode, roleScopeID, perms, permissionCacheTTL)
+			perms := rolePermKeysMap[roleRef.String()]
+			u.rolePermissionCache.SetPermissions(ctx, roleRef, perms, permissionCacheTTL)
 		}
 	}
 
 	globalPerms := make(map[string]struct{})
 	for _, perms := range rolePermKeysMap {
 		for _, p := range perms {
-			globalPerms[p] = struct{}{}
+			globalPerms[p.String()] = struct{}{}
 		}
 	}
 

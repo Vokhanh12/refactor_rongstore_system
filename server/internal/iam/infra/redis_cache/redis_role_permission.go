@@ -7,6 +7,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
@@ -17,9 +18,9 @@ type RedisRolePermissionCache struct {
 	client *redis.Client
 }
 
-func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleCode string, roleScopeId string) ([]string, *aerrs.AppError) {
+func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleRef vo.RoleRef) ([]vo.ResourceAction, *aerrs.AppError) {
 
-	val, err := r.client.Get(ctx, r.key(roleCode, roleScopeId)).Result()
+	val, err := r.client.Get(ctx, r.cacheKey(roleRef.String())).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return nil, nil
@@ -28,24 +29,24 @@ func (r *RedisRolePermissionCache) GetPermissions(ctx context.Context, roleCode 
 			aerrs.WithCauseDetail(err))
 	}
 
-	var perms []string
-	if err := json.Unmarshal([]byte(val), &perms); err != nil {
+	var resourceActions []vo.ResourceAction
+	if err := json.Unmarshal([]byte(val), &resourceActions); err != nil {
 		return nil, aerrs.New(errs.REDIS_UNAVAILABLE,
 			aerrs.WithCauseDetail(err))
 	}
 
-	return perms, nil
+	return resourceActions, nil
 }
 
-func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleCode string, roleScopeId string, perms []string, ttl time.Duration) *aerrs.AppError {
+func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleRef vo.RoleRef, resourceActions []vo.ResourceAction, ttl time.Duration) *aerrs.AppError {
 
-	data, err := json.Marshal(perms)
+	data, err := json.Marshal(resourceActions)
 	if err != nil {
 		return aerrs.New(errs.REDIS_UNAVAILABLE,
 			aerrs.WithCauseDetail(err))
 	}
 
-	if err := r.client.Set(ctx, r.key(roleCode, roleScopeId), data, ttl).Err(); err != nil {
+	if err := r.client.Set(ctx, r.cacheKey(roleRef.String()), data, ttl).Err(); err != nil {
 		return aerrs.New(errs.REDIS_UNAVAILABLE,
 			aerrs.WithCauseDetail(err))
 	}
@@ -53,6 +54,6 @@ func (r *RedisRolePermissionCache) SetPermissions(ctx context.Context, roleCode 
 	return nil
 }
 
-func (r *RedisRolePermissionCache) key(roleCode string, roleScopeId string) string {
-	return "authz:role_permission:" + roleCode + ":" + roleScopeId
+func (r *RedisRolePermissionCache) cacheKey(value string) string {
+	return "authz:role_permission:" + value
 }

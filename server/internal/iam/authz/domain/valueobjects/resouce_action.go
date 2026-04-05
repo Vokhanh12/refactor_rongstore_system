@@ -13,6 +13,13 @@ type ResourceAction struct {
 	action   string
 }
 
+func NewResourceActionFromPersistence(resource, action string) ResourceAction {
+	return ResourceAction{
+		resource: resource,
+		action:   action,
+	}
+}
+
 func NewResourceAction(value string) (*ResourceAction, []aerrs.AppErrorDetail) {
 	var details []aerrs.AppErrorDetail
 
@@ -85,4 +92,8 @@ func (p ResourceAction) Action() string {
 
 func (p ResourceAction) Resource() string {
 	return p.resource
+}
+
+func (p ResourceAction) String() string {
+	return p.resource + ":" + p.action
 }

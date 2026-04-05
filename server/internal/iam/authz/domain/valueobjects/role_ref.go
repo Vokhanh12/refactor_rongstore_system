@@ -12,6 +12,13 @@ type RoleRef struct {
 	scopeID  string
 }
 
+func NewRoleRefFromPersistence(roleCode string, scopeID string) RoleRef {
+	return RoleRef{
+		roleCode: roleCode,
+		scopeID:  scopeID,
+	}
+}
+
 func NewRoleRef(value string) (*RoleRef, []aerrs.AppErrorDetail) {
 	var details []aerrs.AppErrorDetail
 
@@ -55,6 +62,6 @@ func NewRoleRef(value string) (*RoleRef, []aerrs.AppErrorDetail) {
 func (r RoleRef) RoleCode() string { return r.roleCode }
 func (r RoleRef) ScopeID() string  { return r.scopeID }
 
-func (r RoleRef) Key() string {
+func (r RoleRef) String() string {
 	return r.roleCode + ":" + r.scopeID
 }

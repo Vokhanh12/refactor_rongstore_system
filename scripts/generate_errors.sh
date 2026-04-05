@@ -21,11 +21,41 @@ echo "var (" >> "$OUTPUT_FILE"
 error_keys=()
 error_detail_keys=()
 
+seen_keys=""
+seen_codes=""
+seen_detail_codes=""
+
 # ------------------------------------------------------------
 # Flatten all category errors
 # ------------------------------------------------------------
 
 while IFS="|" read -r key code component tags status grpc_code message severity retryable cause client_action server_action; do
+
+# ---------- Validate key ----------
+if echo "$seen_keys" | grep -wq "$key"; then
+	echo "❌ Duplicate error key detected: $key"
+	exit 1
+fi
+seen_keys="$seen_keys $key"
+
+# ---------- Validate code ----------
+if echo "$seen_codes" | grep -wq "$code"; then
+	echo "❌ Duplicate error code detected: $code (key: $key)"
+	exit 1
+fi
+seen_codes="$seen_codes $code"
+
+# ---------- Validate key format ----------
+if ! [[ "$key" =~ ^[A-Z0-9_]+$ ]]; then
+	echo "❌ Invalid key format: $key"
+	exit 1
+fi
+
+# ---------- Validate code format ----------
+if ! [[ "$code" =~ ^[A-Z]+-[A-Z]+-[0-9]+$ ]]; then
+	echo "❌ Invalid code format: $code"
+	exit 1
+fi
 
 error_keys+=("$key:$code")
 
@@ -48,7 +78,6 @@ echo ""
 } >> "$OUTPUT_FILE"
 
 done < <(
-
 yq e ".services.$svc.errors.*[]" -o=json "$YAML_FILE" |
 jq -r '
 [
@@ -66,7 +95,6 @@ jq -r '
 (.server_action // "")
 ] | join("|")
 '
-
 )
 
 echo ")" >> "$OUTPUT_FILE"
@@ -82,6 +110,12 @@ echo "var (" >> "$OUTPUT_FILE"
 
 while IFS="|" read -r code message; do
 
+if echo "$seen_detail_codes" | grep -wq "$code"; then
+	echo "❌ Duplicate error detail code detected: $code"
+	exit 1
+fi
+seen_detail_codes="$seen_detail_codes $code"
+
 const_name="REASON_${code}"
 error_detail_keys+=("$const_name:$code")
 
@@ -94,10 +128,8 @@ echo ""
 } >> "$OUTPUT_FILE"
 
 done < <(
-
 yq e ".services.$svc.errors_detail[]" -o=json "$YAML_FILE" |
 jq -r '[.code,.message] | join("|")'
-
 )
 
 echo ")" >> "$OUTPUT_FILE"
@@ -153,6 +185,7 @@ echo "" >> "$OUTPUT_DEFAULT_FILE"
 echo "var (" >> "$OUTPUT_DEFAULT_FILE"
 
 default_keys=()
+seen_default_codes=""
 
 defaults_data=$(yq e ".defaults" -o=json "$YAML_FILE" |
 jq -r '
@@ -171,6 +204,12 @@ to_entries[]
 )
 
 while IFS="|" read -r key code status grpc_code message severity retryable; do
+
+if echo "$seen_default_codes" | grep -wq "$code"; then
+	echo "❌ Duplicate default error code detected: $code"
+	exit 1
+fi
+seen_default_codes="$seen_default_codes $code"
 
 default_keys+=("$key:$code")
 

@@ -10,35 +10,55 @@ const (
 	RoleTypeUnit         RoleType = "UNIT"
 )
 
-type ScopeType string
+type RoleScopeType string
 
 const (
-	ScopeTypeGobal  ScopeType = "GOBAL"
-	ScopeTypeTenant ScopeType = "TENANT"
-	ScopeTypeUnit   ScopeType = "UNIT"
-	ScopeTypeOwn    ScopeType = "OWN"
+	ScopeTypeGobal  RoleScopeType = "GOBAL"
+	ScopeTypeTenant RoleScopeType = "TENANT"
+	ScopeTypeUnit   RoleScopeType = "UNIT"
+	ScopeTypeOwn    RoleScopeType = "OWN"
 )
 
 type Role struct {
 	id        string
 	roleRef   vo.RoleRef
-	scopeType ScopeType
+	scopeType RoleScopeType
 	name      string
 
 	roleType    RoleType
-	description *string
+	description string
 
 	isSystem bool
 	isSuper  bool
 	isActive bool
+}
 
-	permissions []Permission
+func NewRoleFromPersistence(
+	id string,
+	roleRef vo.RoleRef,
+	scopeType RoleScopeType,
+	name string,
+	roleType RoleType,
+	description string,
+	isSystem, isSuper, isActive bool,
+) Role {
+	return Role{
+		id:          id,
+		roleRef:     roleRef,
+		scopeType:   scopeType,
+		name:        name,
+		roleType:    roleType,
+		description: description,
+		isSystem:    isSystem,
+		isSuper:     isSuper,
+		isActive:    isActive,
+	}
 }
 
 func (r Role) IsElevated() bool {
 	return r.isSuper
 }
 
-func (p Role) Key() string {
-	return p.roleRef.Role() + ":" + p.Action
+func (p Role) RoleRef() vo.RoleRef {
+	return p.roleRef
 }

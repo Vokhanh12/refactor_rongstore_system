@@ -9,3 +9,10 @@ type RolePermission struct {
 	GrantedAt time.Time
 	GrantedBy *string
 }
+
+func NewRolePermission(role Role, perm Permission) *RolePermission {
+	return &RolePermission{
+		Role:       role,
+		Permission: perm,
+	}
+}

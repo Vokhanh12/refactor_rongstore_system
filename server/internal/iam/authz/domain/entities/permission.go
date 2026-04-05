@@ -6,12 +6,38 @@ type Permission struct {
 	id   string
 	code string
 
-	name        *string
-	description *string
+	name        string
+	description string
 
 	resourceAction vo.ResourceAction
 
 	isActive bool
+}
+
+func NewPermissionFromPersistence(
+	id string,
+	code string,
+	name string,
+	description string,
+	resource string,
+	action string,
+	isActive bool,
+) Permission {
+
+	ra := vo.NewResourceActionFromPersistence(resource, action)
+
+	return Permission{
+		id:             id,
+		code:           code,
+		name:           name,
+		description:    description,
+		resourceAction: ra,
+		isActive:       isActive,
+	}
+}
+
+func (p Permission) ResourceAction() vo.ResourceAction {
+	return p.resourceAction
 }
 
 func (p Permission) Key() string {

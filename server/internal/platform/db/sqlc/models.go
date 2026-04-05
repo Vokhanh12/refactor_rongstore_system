@@ -6,9 +6,96 @@ package iam_sqlc
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
 
 	"github.com/google/uuid"
 )
+
+type AccessScope string
+
+const (
+	AccessScopeALL AccessScope = "ALL"
+	AccessScopeOWN AccessScope = "OWN"
+)
+
+func (e *AccessScope) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = AccessScope(s)
+	case string:
+		*e = AccessScope(s)
+	default:
+		return fmt.Errorf("unsupported scan type for AccessScope: %T", src)
+	}
+	return nil
+}
+
+type NullAccessScope struct {
+	AccessScope AccessScope `json:"access_scope"`
+	Valid       bool        `json:"valid"` // Valid is true if AccessScope is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullAccessScope) Scan(value interface{}) error {
+	if value == nil {
+		ns.AccessScope, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.AccessScope.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullAccessScope) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.AccessScope), nil
+}
+
+type ScopeType string
+
+const (
+	ScopeTypeGLOBAL ScopeType = "GLOBAL"
+	ScopeTypeTENANT ScopeType = "TENANT"
+	ScopeTypeUNIT   ScopeType = "UNIT"
+)
+
+func (e *ScopeType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ScopeType(s)
+	case string:
+		*e = ScopeType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ScopeType: %T", src)
+	}
+	return nil
+}
+
+type NullScopeType struct {
+	ScopeType ScopeType `json:"scope_type"`
+	Valid     bool      `json:"valid"` // Valid is true if ScopeType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullScopeType) Scan(value interface{}) error {
+	if value == nil {
+		ns.ScopeType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.ScopeType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullScopeType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.ScopeType), nil
+}
 
 type Permission struct {
 	ID          uuid.UUID      `json:"id"`
@@ -25,31 +112,20 @@ type Permission struct {
 }
 
 type Role struct {
-	ID          uuid.UUID      `json:"id"`
-	Code        string         `json:"code"`
-	Name        sql.NullString `json:"name"`
-	Type        string         `json:"type"`
-	Description sql.NullString `json:"description"`
-	IsSystem    sql.NullBool   `json:"is_system"`
-	IsSuper     sql.NullBool   `json:"is_super"`
-	IsActive    sql.NullBool   `json:"is_active"`
-	CreatedAt   sql.NullTime   `json:"created_at"`
-	UpdatedAt   sql.NullTime   `json:"updated_at"`
-	CreatedBy   uuid.NullUUID  `json:"created_by"`
-	UpdatedBy   uuid.NullUUID  `json:"updated_by"`
-}
-
-type RoleAssignement struct {
-	UserID     uuid.UUID     `json:"user_id"`
-	RoleID     uuid.UUID     `json:"role_id"`
-	ScopeID    uuid.UUID     `json:"scope_id"`
-	ScopeType  string        `json:"scope_type"`
-	AssignedAt sql.NullTime  `json:"assigned_at"`
-	AssignedBy uuid.NullUUID `json:"assigned_by"`
-	CreatedAt  sql.NullTime  `json:"created_at"`
-	UpdatedAt  sql.NullTime  `json:"updated_at"`
-	CreatedBy  uuid.NullUUID `json:"created_by"`
-	UpdatedBy  uuid.NullUUID `json:"updated_by"`
+	ID          uuid.UUID       `json:"id"`
+	ScopeType   ScopeType       `json:"scope_type"`
+	ScopeID     uuid.NullUUID   `json:"scope_id"`
+	Code        string          `json:"code"`
+	Name        sql.NullString  `json:"name"`
+	Description sql.NullString  `json:"description"`
+	AccessScope NullAccessScope `json:"access_scope"`
+	Level       sql.NullInt32   `json:"level"`
+	IsSystem    sql.NullBool    `json:"is_system"`
+	IsActive    sql.NullBool    `json:"is_active"`
+	CreatedAt   sql.NullTime    `json:"created_at"`
+	UpdatedAt   sql.NullTime    `json:"updated_at"`
+	CreatedBy   uuid.NullUUID   `json:"created_by"`
+	UpdatedBy   uuid.NullUUID   `json:"updated_by"`
 }
 
 type RolePermission struct {

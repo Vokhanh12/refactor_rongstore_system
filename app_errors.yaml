@@ -101,16 +101,6 @@ services:
           severity: S3
           retryable: false
 
-        - code: AUTH-VAL-005
-          key: STORE_OWNER_INVALID
-          component: domain
-          tags: [validation]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Store owner contains invalid references"
-          severity: S3
-          retryable: false
-
         - code: AUTH-VAL-006
           key: STORE_OWNER_VALIDATE
           component: domain
@@ -152,12 +142,22 @@ services:
           retryable: false
 
         - code: AUTHZ-VAL-014
-          key: AUTHORIZATION_REQUIRED
+          key: AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED
           component: authz
           tags: [validation, authz]
           http_status: 400
           grpc_code: InvalidArgument
           message: "Resource and action are required"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-VAL-015
+          key: AUTHORIZATION_ROLE_REQUIRED
+          component: authz
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Role is required for authorization"
           severity: S3
           retryable: false
         
@@ -167,16 +167,6 @@ services:
 
       DOM:
         - code: AUTH-DOM-001
-          key: INVALID_CREDENTIALS
-          component: auth
-          tags: [auth, security]
-          http_status: 401
-          grpc_code: Unauthenticated
-          message: "Invalid email or password"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-DOM-002
           key: STORE_OWNER_NOT_FOUND
           component: domain
           tags: [domain]
@@ -186,7 +176,7 @@ services:
           severity: S3
           retryable: false
 
-        - code: AUTH-DOM-003
+        - code: AUTH-DOM-002
           key: STORE_OWNER_CONFLICT
           component: domain
           tags: [domain]
@@ -195,6 +185,106 @@ services:
           message: "Store owner already exists"
           severity: S3
           retryable: false
+
+        - code: AUTH-DOM-003
+          key: STORE_OWNER_INVALID
+          component: domain
+          tags: [domain]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Store owner contains invalid references"
+          severity: S3
+          retryable: false   
+
+        - code: AUTH-DOM-004
+          key: STORE_OWNER_PERSIST_FAILED
+          component: domain
+          tags: [domain]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to persist store owner"
+          severity: S2
+          retryable: false
+
+        - code: AUTHZ-DOM-001
+          key: ROLE_NOT_FOUND
+          component: domain
+          tags: [domain]
+          http_status: 404
+          grpc_code: NotFound
+          message: "Role not found"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-002
+          key: ROLE_CONFLICT
+          component: domain
+          tags: [domain]
+          http_status: 409
+          grpc_code: AlreadyExists
+          message: "Role already exists"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-003
+          key: ROLE_INVALID
+          component: domain
+          tags: [domain]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Role contains invalid references"
+          severity: S3
+          retryable: false   
+
+        - code: AUTHZ-DOM-004
+          key: ROLE_PERSIST_FAILED
+          component: domain
+          tags: [domain]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to persist role"
+          severity: S2
+          retryable: false
+
+        - code: AUTHZ-DOM-005
+          key: PERMISSION_NOT_FOUND
+          component: domain
+          tags: [domain]
+          http_status: 404
+          grpc_code: NotFound
+          message: "Permission not found"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-006
+          key: PERMISSION_CONFLICT
+          component: domain
+          tags: [domain]
+          http_status: 409
+          grpc_code: AlreadyExists
+          message: "Permission already exists"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-007
+          key: PERMISSION_INVALID
+          component: domain
+          tags: [domain]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Permission contains invalid references"
+          severity: S3
+          retryable: false   
+
+        - code: AUTHZ-DOM-008
+          key: PERMISSION_PERSIST_FAILED
+          component: domain
+          tags: [domain]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to persist permission"
+          severity: S2
+          retryable: false 
 
 
 # ------------------------------------------------------------
@@ -274,6 +364,26 @@ services:
           severity: S1
           retryable: true
 
+        - code: AUTH-INFRA-010
+          key: DB_QUERY_TIMEOUT
+          component: postgres
+          tags: [infra, database]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Database query timeout"
+          severity: S1
+          retryable: true
+
+        - code: AUTH-INFRA-011
+          key: DB_QUERY_FAILED
+          component: postgres
+          tags: [infra, database]
+          http_status: 500
+          grpc_code: Internal
+          message: "Database query failed"
+          severity: S2
+          retryable: false  
+
         - code: AUTH-INFRA-002
           key: DB_CONFLICT_RETRYABLE
           component: postgres
@@ -343,6 +453,16 @@ services:
           message: "Failed to store session"
           severity: S1
           retryable: true
+
+        - code: AUTH-INFRA-009
+          key: JSON_SERIALIZATION_FAILED
+          component: api
+          tags: [infra]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to serialize request payload"
+          severity: S2
+          retryable: false
 
     errors_detail: 
       - code: OUT_OF_RANGE

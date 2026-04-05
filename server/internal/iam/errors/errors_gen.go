@@ -64,21 +64,6 @@ var (
 		ServerAction: "",
 	}
 
-	STORE_OWNER_INVALID = apperrors.AppError{
-		Key: "STORE_OWNER_INVALID",
-		Code: "AUTH-VAL-005",
-		Component: "domain",
-		Tags: []string{"validation"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Store owner contains invalid references",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
-		ClientAction: "",
-		ServerAction: "",
-	}
-
 	STORE_OWNER_VALIDATE = apperrors.AppError{
 		Key: "STORE_OWNER_VALIDATE",
 		Code: "AUTH-VAL-006",
@@ -139,8 +124,8 @@ var (
 		ServerAction: "",
 	}
 
-	AUTHORIZATION_REQUIRED = apperrors.AppError{
-		Key: "AUTHORIZATION_REQUIRED",
+	AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED = apperrors.AppError{
+		Key: "AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED",
 		Code: "AUTHZ-VAL-014",
 		Component: "authz",
 		Tags: []string{"validation","authz"},
@@ -154,14 +139,14 @@ var (
 		ServerAction: "",
 	}
 
-	INVALID_CREDENTIALS = apperrors.AppError{
-		Key: "INVALID_CREDENTIALS",
-		Code: "AUTH-DOM-001",
-		Component: "auth",
-		Tags: []string{"auth","security"},
-		Status: 401,
-		GRPCCode: "Unauthenticated",
-		Message: "Invalid email or password",
+	AUTHORIZATION_ROLE_REQUIRED = apperrors.AppError{
+		Key: "AUTHORIZATION_ROLE_REQUIRED",
+		Code: "AUTHZ-VAL-015",
+		Component: "authz",
+		Tags: []string{"validation","authz"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Role is required for authorization",
 		Severity: "S3",
 		Retryable: false,
 		Cause: "",
@@ -171,7 +156,7 @@ var (
 
 	STORE_OWNER_NOT_FOUND = apperrors.AppError{
 		Key: "STORE_OWNER_NOT_FOUND",
-		Code: "AUTH-DOM-002",
+		Code: "AUTH-DOM-001",
 		Component: "domain",
 		Tags: []string{"domain"},
 		Status: 404,
@@ -186,13 +171,163 @@ var (
 
 	STORE_OWNER_CONFLICT = apperrors.AppError{
 		Key: "STORE_OWNER_CONFLICT",
-		Code: "AUTH-DOM-003",
+		Code: "AUTH-DOM-002",
 		Component: "domain",
 		Tags: []string{"domain"},
 		Status: 409,
 		GRPCCode: "AlreadyExists",
 		Message: "Store owner already exists",
 		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	STORE_OWNER_INVALID = apperrors.AppError{
+		Key: "STORE_OWNER_INVALID",
+		Code: "AUTH-DOM-003",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Store owner contains invalid references",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	STORE_OWNER_PERSIST_FAILED = apperrors.AppError{
+		Key: "STORE_OWNER_PERSIST_FAILED",
+		Code: "AUTH-DOM-004",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 500,
+		GRPCCode: "Internal",
+		Message: "Failed to persist store owner",
+		Severity: "S2",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	ROLE_NOT_FOUND = apperrors.AppError{
+		Key: "ROLE_NOT_FOUND",
+		Code: "AUTHZ-DOM-001",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 404,
+		GRPCCode: "NotFound",
+		Message: "Role not found",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	ROLE_CONFLICT = apperrors.AppError{
+		Key: "ROLE_CONFLICT",
+		Code: "AUTHZ-DOM-002",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 409,
+		GRPCCode: "AlreadyExists",
+		Message: "Role already exists",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	ROLE_INVALID = apperrors.AppError{
+		Key: "ROLE_INVALID",
+		Code: "AUTHZ-DOM-003",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Role contains invalid references",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	ROLE_PERSIST_FAILED = apperrors.AppError{
+		Key: "ROLE_PERSIST_FAILED",
+		Code: "AUTHZ-DOM-004",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 500,
+		GRPCCode: "Internal",
+		Message: "Failed to persist role",
+		Severity: "S2",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	PERMISSION_NOT_FOUND = apperrors.AppError{
+		Key: "PERMISSION_NOT_FOUND",
+		Code: "AUTHZ-DOM-005",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 404,
+		GRPCCode: "NotFound",
+		Message: "Permission not found",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	PERMISSION_CONFLICT = apperrors.AppError{
+		Key: "PERMISSION_CONFLICT",
+		Code: "AUTHZ-DOM-006",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 409,
+		GRPCCode: "AlreadyExists",
+		Message: "Permission already exists",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	PERMISSION_INVALID = apperrors.AppError{
+		Key: "PERMISSION_INVALID",
+		Code: "AUTHZ-DOM-007",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Permission contains invalid references",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	PERMISSION_PERSIST_FAILED = apperrors.AppError{
+		Key: "PERMISSION_PERSIST_FAILED",
+		Code: "AUTHZ-DOM-008",
+		Component: "domain",
+		Tags: []string{"domain"},
+		Status: 500,
+		GRPCCode: "Internal",
+		Message: "Failed to persist permission",
+		Severity: "S2",
 		Retryable: false,
 		Cause: "",
 		ClientAction: "",
@@ -284,6 +419,36 @@ var (
 		Message: "Database service temporarily unavailable",
 		Severity: "S1",
 		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_QUERY_TIMEOUT = apperrors.AppError{
+		Key: "DB_QUERY_TIMEOUT",
+		Code: "AUTH-INFRA-010",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 503,
+		GRPCCode: "Unavailable",
+		Message: "Database query timeout",
+		Severity: "S1",
+		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_QUERY_FAILED = apperrors.AppError{
+		Key: "DB_QUERY_FAILED",
+		Code: "AUTH-INFRA-011",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 500,
+		GRPCCode: "Internal",
+		Message: "Database query failed",
+		Severity: "S2",
+		Retryable: false,
 		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
@@ -394,6 +559,21 @@ var (
 		ServerAction: "",
 	}
 
+	JSON_SERIALIZATION_FAILED = apperrors.AppError{
+		Key: "JSON_SERIALIZATION_FAILED",
+		Code: "AUTH-INFRA-009",
+		Component: "api",
+		Tags: []string{"infra"},
+		Status: 500,
+		GRPCCode: "Internal",
+		Message: "Failed to serialize request payload",
+		Severity: "S2",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 )
 
 var (
@@ -430,21 +610,32 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"AUTH-VAL-002": LOGIN_EMAIL_INVALID,
 	"AUTH-VAL-003": LOGIN_PASSWORD_EMPTY,
 	"AUTH-VAL-004": LOGIN_PAYLOAD_INVALID,
-	"AUTH-VAL-005": STORE_OWNER_INVALID,
 	"AUTH-VAL-006": STORE_OWNER_VALIDATE,
 	"AUTH-VAL-011": VIEW_OPERATION_UNSUPPORTED,
 	"AUTH-VAL-012": MUTATE_OPERATION_UNSUPPORTED,
 	"AUTH-VAL-013": AUTHORIZATION_INVALID,
-	"AUTHZ-VAL-014": AUTHORIZATION_REQUIRED,
-	"AUTH-DOM-001": INVALID_CREDENTIALS,
-	"AUTH-DOM-002": STORE_OWNER_NOT_FOUND,
-	"AUTH-DOM-003": STORE_OWNER_CONFLICT,
+	"AUTHZ-VAL-014": AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED,
+	"AUTHZ-VAL-015": AUTHORIZATION_ROLE_REQUIRED,
+	"AUTH-DOM-001": STORE_OWNER_NOT_FOUND,
+	"AUTH-DOM-002": STORE_OWNER_CONFLICT,
+	"AUTH-DOM-003": STORE_OWNER_INVALID,
+	"AUTH-DOM-004": STORE_OWNER_PERSIST_FAILED,
+	"AUTHZ-DOM-001": ROLE_NOT_FOUND,
+	"AUTHZ-DOM-002": ROLE_CONFLICT,
+	"AUTHZ-DOM-003": ROLE_INVALID,
+	"AUTHZ-DOM-004": ROLE_PERSIST_FAILED,
+	"AUTHZ-DOM-005": PERMISSION_NOT_FOUND,
+	"AUTHZ-DOM-006": PERMISSION_CONFLICT,
+	"AUTHZ-DOM-007": PERMISSION_INVALID,
+	"AUTHZ-DOM-008": PERMISSION_PERSIST_FAILED,
 	"AUTH-SEC-001": TOKEN_EXPIRED,
 	"AUTH-SEC-002": UNAUTHORIZED,
 	"AUTH-SEC-003": ROLE_FORBIDDEN,
 	"AUTH-PROTO-001": HANDSHAKE_INVALID_CLIENT_KEY,
 	"AUTH-PROTO-002": HANDSHAKE_KEY_AGREEMENT_FAIL,
 	"AUTH-INFRA-001": DB_TIMEOUT,
+	"AUTH-INFRA-010": DB_QUERY_TIMEOUT,
+	"AUTH-INFRA-011": DB_QUERY_FAILED,
 	"AUTH-INFRA-002": DB_CONFLICT_RETRYABLE,
 	"AUTH-INFRA-003": REDIS_UNAVAILABLE,
 	"AUTH-INFRA-004": KEYCLOAK_UNAVAILABLE,
@@ -452,6 +643,7 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"AUTH-INFRA-006": HANDSHAKE_RNG_FAIL,
 	"AUTH-INFRA-007": HANDSHAKE_KEY_DERIVE_FAIL,
 	"AUTH-INFRA-008": HANDSHAKE_STORAGE_FAIL,
+	"AUTH-INFRA-009": JSON_SERIALIZATION_FAILED,
 }
 
 // ErrorDetailByCode maps detail codes to AppErrorDetail

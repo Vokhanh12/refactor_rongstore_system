@@ -7,29 +7,96 @@ package iam_sqlc
 
 import (
 	"context"
+	"database/sql"
+	"encoding/json"
+
+	"github.com/google/uuid"
 )
 
-const getRolePermissions = `-- name: GetRolePermissions :many
-SELECT p.code
+const getRolePermissionsByRoleRefs = `-- name: GetRolePermissionsByRoleRefs :many
+SELECT 
+    -- ROLE
+    r.id            AS role_id,
+    r.code          AS role_code,
+    r.scope_id      AS role_scope_id,
+    r.scope_type    AS role_scope_type,
+    r.name          AS role_name,
+    r.description   AS role_description,
+    r.access_scope  AS role_access_scope,
+    r.level         AS role_level,
+    r.is_system     AS role_is_system,
+    r.is_active     AS role_is_active,
+
+    -- PERMISSION
+    p.id            AS permission_id,       
+    p.code          AS permission_code,
+    p.name          AS permission_name,
+    p.description   AS permission_description,
+    p.resource      AS permission_resource,
+    p.action        AS permission_action,
+    p.is_active     AS permission_is_active
+
 FROM roles r
 JOIN role_permissions rp ON rp.role_id = r.id
 JOIN permissions p ON p.id = rp.permission_id
-WHERE r.code = $1
+
+JOIN jsonb_to_recordset($1::jsonb)
+    AS x(role_code text, scope_id uuid)
+ON r.code = x.role_code
+AND r.scope_id = x.scope_id
 `
 
-func (q *Queries) GetRolePermissions(ctx context.Context, code string) ([]string, error) {
-	rows, err := q.db.QueryContext(ctx, getRolePermissions, code)
+type GetRolePermissionsByRoleRefsRow struct {
+	RoleID                uuid.UUID       `json:"role_id"`
+	RoleCode              string          `json:"role_code"`
+	RoleScopeID           uuid.NullUUID   `json:"role_scope_id"`
+	RoleScopeType         ScopeType       `json:"role_scope_type"`
+	RoleName              sql.NullString  `json:"role_name"`
+	RoleDescription       sql.NullString  `json:"role_description"`
+	RoleAccessScope       NullAccessScope `json:"role_access_scope"`
+	RoleLevel             sql.NullInt32   `json:"role_level"`
+	RoleIsSystem          sql.NullBool    `json:"role_is_system"`
+	RoleIsActive          sql.NullBool    `json:"role_is_active"`
+	PermissionID          uuid.UUID       `json:"permission_id"`
+	PermissionCode        string          `json:"permission_code"`
+	PermissionName        sql.NullString  `json:"permission_name"`
+	PermissionDescription sql.NullString  `json:"permission_description"`
+	PermissionResource    string          `json:"permission_resource"`
+	PermissionAction      string          `json:"permission_action"`
+	PermissionIsActive    sql.NullBool    `json:"permission_is_active"`
+}
+
+func (q *Queries) GetRolePermissionsByRoleRefs(ctx context.Context, dollar_1 json.RawMessage) ([]GetRolePermissionsByRoleRefsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getRolePermissionsByRoleRefs, dollar_1)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []string
+	var items []GetRolePermissionsByRoleRefsRow
 	for rows.Next() {
-		var code string
-		if err := rows.Scan(&code); err != nil {
+		var i GetRolePermissionsByRoleRefsRow
+		if err := rows.Scan(
+			&i.RoleID,
+			&i.RoleCode,
+			&i.RoleScopeID,
+			&i.RoleScopeType,
+			&i.RoleName,
+			&i.RoleDescription,
+			&i.RoleAccessScope,
+			&i.RoleLevel,
+			&i.RoleIsSystem,
+			&i.RoleIsActive,
+			&i.PermissionID,
+			&i.PermissionCode,
+			&i.PermissionName,
+			&i.PermissionDescription,
+			&i.PermissionResource,
+			&i.PermissionAction,
+			&i.PermissionIsActive,
+		); err != nil {
 			return nil, err
 		}
-		items = append(items, code)
+		items = append(items, i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

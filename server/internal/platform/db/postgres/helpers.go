@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -30,4 +31,19 @@ func numericFromFloat64(f float64) pgtype.Numeric {
 func float64FromNumeric(n pgtype.Numeric) float64 {
 	f, _ := n.Float64Value()
 	return f.Float64
+}
+
+func UUIDToStringPtr(u uuid.NullUUID) *string {
+	if !u.Valid {
+		return nil
+	}
+	s := u.UUID.String()
+	return &s
+}
+
+func UUIDToString(u uuid.NullUUID) string {
+	if !u.Valid {
+		return ""
+	}
+	return u.UUID.String()
 }
