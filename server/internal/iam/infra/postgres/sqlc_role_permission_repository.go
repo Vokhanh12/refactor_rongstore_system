@@ -83,15 +83,15 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 			entities.RoleAcessScope(row.RoleAccessScope),
 			pg.StringPtrFromText(row.RoleDescription),
 			row.RoleIsSystem,
-			row.RoleIsSystem,
+			row.RoleIsSuper,
 			row.RoleIsActive,
 		)
 
 		perm := entities.NewPermissionFromPersistence(
 			row.PermissionID.String(),
 			row.PermissionCode,
-			row.PermissionName,
-			row.PermissionDescription,
+			pg.StringPtrFromText(row.PermissionName),
+			pg.StringPtrFromText(row.PermissionDescription),
 			row.PermissionResource,
 			row.PermissionAction,
 			row.PermissionIsActive,
@@ -99,6 +99,8 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 
 		result = append(result, entities.NewRolePermission(role, perm))
 	}
+
+	return result, nil
 }
 
 // Update implements [repositories.RolePermissionRepository].

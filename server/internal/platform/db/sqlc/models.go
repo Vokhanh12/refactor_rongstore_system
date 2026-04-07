@@ -104,7 +104,7 @@ type Permission struct {
 	Description pgtype.Text      `json:"description"`
 	Resource    string           `json:"resource"`
 	Action      string           `json:"action"`
-	IsActive    pgtype.Bool      `json:"is_active"`
+	IsActive    bool             `json:"is_active"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
 	CreatedBy   pgtype.UUID      `json:"created_by"`
@@ -122,6 +122,7 @@ type Role struct {
 	Level           pgtype.Int4        `json:"level"`
 	IsSystem        bool               `json:"is_system"`
 	IsActive        bool               `json:"is_active"`
+	IsSuper         bool               `json:"is_super"`
 	CreatedAt       pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
 	CreatedBy       pgtype.UUID        `json:"created_by"`
