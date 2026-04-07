@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5"
-	db "github.com/sklinkert/go-ddd/internal/infrastructure/db/sqlc"
+	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 )
 
 func NewConnection(ctx context.Context, dsn string) (*pgx.Conn, error) {
