@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"server/internal/iam/domain"
+	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 )
 
 var StoreOwnerDbError = DBError{

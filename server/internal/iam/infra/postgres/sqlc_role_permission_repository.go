@@ -72,18 +72,18 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 
 		roleRef := valueobjects.NewRoleRefFromPersistence(
 			row.RoleCode,
-			pg.UUIDToString(row.RoleScopeID),
+			pg.StringPtrFromUUID(row.RoleScopeID),
 		)
 
 		role := entities.NewRoleFromPersistence(
 			row.RoleID.String(),
 			roleRef,
 			entities.RoleScopeType(row.RoleScopeType),
-			row.RoleName.String,
-			entities.RoleType(row.RoleType),
-			row.RoleDescription.String,
-			row.RoleIsSystem.Bool,
-			row.RoleIsSuper.Bool,
+			row.RoleName,
+			entities.RoleAcessScope(row.RoleAccessScope),
+			pg.StringPtrFromText(row.RoleDescription),
+			row.RoleIsSystem,
+			row.RoleIsSystem,
 			row.RoleIsActive,
 		)
 

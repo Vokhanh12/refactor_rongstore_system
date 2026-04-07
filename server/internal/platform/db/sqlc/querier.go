@@ -6,12 +6,11 @@ package iam_sqlc
 
 import (
 	"context"
-	"encoding/json"
 )
 
 type Querier interface {
 	GetPermissionByCode(ctx context.Context, code string) (GetPermissionByCodeRow, error)
-	GetRolePermissionsByRoleRefs(ctx context.Context, dollar_1 json.RawMessage) ([]GetRolePermissionsByRoleRefsRow, error)
+	GetRolePermissionsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]GetRolePermissionsByRoleRefsRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

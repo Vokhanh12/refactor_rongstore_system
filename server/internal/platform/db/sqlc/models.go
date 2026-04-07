@@ -5,136 +5,136 @@
 package iam_sqlc
 
 import (
-	"database/sql"
 	"database/sql/driver"
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type AccessScope string
+type RoleAccessScope string
 
 const (
-	AccessScopeALL AccessScope = "ALL"
-	AccessScopeOWN AccessScope = "OWN"
+	RoleAccessScopeALL RoleAccessScope = "ALL"
+	RoleAccessScopeOWN RoleAccessScope = "OWN"
 )
 
-func (e *AccessScope) Scan(src interface{}) error {
+func (e *RoleAccessScope) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = AccessScope(s)
+		*e = RoleAccessScope(s)
 	case string:
-		*e = AccessScope(s)
+		*e = RoleAccessScope(s)
 	default:
-		return fmt.Errorf("unsupported scan type for AccessScope: %T", src)
+		return fmt.Errorf("unsupported scan type for RoleAccessScope: %T", src)
 	}
 	return nil
 }
 
-type NullAccessScope struct {
-	AccessScope AccessScope `json:"access_scope"`
-	Valid       bool        `json:"valid"` // Valid is true if AccessScope is not NULL
+type NullRoleAccessScope struct {
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Valid           bool            `json:"valid"` // Valid is true if RoleAccessScope is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullAccessScope) Scan(value interface{}) error {
+func (ns *NullRoleAccessScope) Scan(value interface{}) error {
 	if value == nil {
-		ns.AccessScope, ns.Valid = "", false
+		ns.RoleAccessScope, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.AccessScope.Scan(value)
+	return ns.RoleAccessScope.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullAccessScope) Value() (driver.Value, error) {
+func (ns NullRoleAccessScope) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.AccessScope), nil
+	return string(ns.RoleAccessScope), nil
 }
 
-type ScopeType string
+type RoleScopeType string
 
 const (
-	ScopeTypeGLOBAL ScopeType = "GLOBAL"
-	ScopeTypeTENANT ScopeType = "TENANT"
-	ScopeTypeUNIT   ScopeType = "UNIT"
+	RoleScopeTypeGLOBAL RoleScopeType = "GLOBAL"
+	RoleScopeTypeTENANT RoleScopeType = "TENANT"
+	RoleScopeTypeUNIT   RoleScopeType = "UNIT"
 )
 
-func (e *ScopeType) Scan(src interface{}) error {
+func (e *RoleScopeType) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = ScopeType(s)
+		*e = RoleScopeType(s)
 	case string:
-		*e = ScopeType(s)
+		*e = RoleScopeType(s)
 	default:
-		return fmt.Errorf("unsupported scan type for ScopeType: %T", src)
+		return fmt.Errorf("unsupported scan type for RoleScopeType: %T", src)
 	}
 	return nil
 }
 
-type NullScopeType struct {
-	ScopeType ScopeType `json:"scope_type"`
-	Valid     bool      `json:"valid"` // Valid is true if ScopeType is not NULL
+type NullRoleScopeType struct {
+	RoleScopeType RoleScopeType `json:"role_scope_type"`
+	Valid         bool          `json:"valid"` // Valid is true if RoleScopeType is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullScopeType) Scan(value interface{}) error {
+func (ns *NullRoleScopeType) Scan(value interface{}) error {
 	if value == nil {
-		ns.ScopeType, ns.Valid = "", false
+		ns.RoleScopeType, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.ScopeType.Scan(value)
+	return ns.RoleScopeType.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullScopeType) Value() (driver.Value, error) {
+func (ns NullRoleScopeType) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.ScopeType), nil
+	return string(ns.RoleScopeType), nil
 }
 
 type Permission struct {
-	ID          uuid.UUID      `json:"id"`
-	Code        string         `json:"code"`
-	Name        sql.NullString `json:"name"`
-	Description sql.NullString `json:"description"`
-	Resource    string         `json:"resource"`
-	Action      string         `json:"action"`
-	IsActive    sql.NullBool   `json:"is_active"`
-	CreatedAt   sql.NullTime   `json:"created_at"`
-	UpdatedAt   sql.NullTime   `json:"updated_at"`
-	CreatedBy   uuid.NullUUID  `json:"created_by"`
-	UpdatedBy   uuid.NullUUID  `json:"updated_by"`
+	ID          uuid.UUID        `json:"id"`
+	Code        string           `json:"code"`
+	Name        pgtype.Text      `json:"name"`
+	Description pgtype.Text      `json:"description"`
+	Resource    string           `json:"resource"`
+	Action      string           `json:"action"`
+	IsActive    pgtype.Bool      `json:"is_active"`
+	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
+	CreatedBy   pgtype.UUID      `json:"created_by"`
+	UpdatedBy   pgtype.UUID      `json:"updated_by"`
 }
 
 type Role struct {
-	ID          uuid.UUID       `json:"id"`
-	ScopeType   ScopeType       `json:"scope_type"`
-	ScopeID     uuid.NullUUID   `json:"scope_id"`
-	Code        string          `json:"code"`
-	Name        sql.NullString  `json:"name"`
-	Description sql.NullString  `json:"description"`
-	AccessScope NullAccessScope `json:"access_scope"`
-	Level       sql.NullInt32   `json:"level"`
-	IsSystem    sql.NullBool    `json:"is_system"`
-	IsActive    sql.NullBool    `json:"is_active"`
-	CreatedAt   sql.NullTime    `json:"created_at"`
-	UpdatedAt   sql.NullTime    `json:"updated_at"`
-	CreatedBy   uuid.NullUUID   `json:"created_by"`
-	UpdatedBy   uuid.NullUUID   `json:"updated_by"`
+	ID              uuid.UUID          `json:"id"`
+	ScopeID         pgtype.UUID        `json:"scope_id"`
+	RoleScopeType   RoleScopeType      `json:"role_scope_type"`
+	Code            string             `json:"code"`
+	Name            string             `json:"name"`
+	Description     pgtype.Text        `json:"description"`
+	RoleAccessScope RoleAccessScope    `json:"role_access_scope"`
+	Level           pgtype.Int4        `json:"level"`
+	IsSystem        bool               `json:"is_system"`
+	IsActive        bool               `json:"is_active"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
+	CreatedBy       pgtype.UUID        `json:"created_by"`
+	UpdatedBy       pgtype.UUID        `json:"updated_by"`
 }
 
 type RolePermission struct {
-	RoleID       uuid.UUID     `json:"role_id"`
-	PermissionID uuid.UUID     `json:"permission_id"`
-	GrantedAt    sql.NullTime  `json:"granted_at"`
-	GrantedBy    uuid.NullUUID `json:"granted_by"`
-	CreatedAt    sql.NullTime  `json:"created_at"`
-	UpdatedAt    sql.NullTime  `json:"updated_at"`
-	CreatedBy    uuid.NullUUID `json:"created_by"`
-	UpdatedBy    uuid.NullUUID `json:"updated_by"`
+	RoleID       uuid.UUID        `json:"role_id"`
+	PermissionID uuid.UUID        `json:"permission_id"`
+	GrantedAt    pgtype.Timestamp `json:"granted_at"`
+	GrantedBy    pgtype.UUID      `json:"granted_by"`
+	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+	CreatedBy    pgtype.UUID      `json:"created_by"`
+	UpdatedBy    pgtype.UUID      `json:"updated_by"`
 }

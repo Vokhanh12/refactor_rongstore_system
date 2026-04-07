@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -33,17 +32,112 @@ func float64FromNumeric(n pgtype.Numeric) float64 {
 	return f.Float64
 }
 
-func UUIDToStringPtr(u uuid.NullUUID) *string {
-	if !u.Valid {
-		return nil
-	}
-	s := u.UUID.String()
-	return &s
+func TimestamptzFromTime(t time.Time) pgtype.Timestamptz {
+	var ts pgtype.Timestamptz
+	_ = ts.Scan(t)
+	return ts
 }
 
-func UUIDToString(u uuid.NullUUID) string {
+func TimeFromTimestamptz(ts pgtype.Timestamptz) time.Time {
+	if ts.Valid {
+		return ts.Time
+	}
+	return time.Time{}
+}
+
+func TimePtrFromTimestamptz(ts pgtype.Timestamptz) *time.Time {
+	if !ts.Valid {
+		return nil
+	}
+	return &ts.Time
+}
+
+func NumericFromFloat64(f float64) pgtype.Numeric {
+	var n pgtype.Numeric
+	_ = n.Scan(fmt.Sprintf("%.2f", f))
+	return n
+}
+
+func Float64FromNumeric(n pgtype.Numeric) float64 {
+	f, _ := n.Float64Value()
+	return f.Float64
+}
+
+func Float64PtrFromNumeric(n pgtype.Numeric) *float64 {
+	if !n.Valid {
+		return nil
+	}
+	f, _ := n.Float64Value()
+	return &f.Float64
+}
+
+func StringFromUUID(u pgtype.UUID) string {
 	if !u.Valid {
 		return ""
 	}
-	return u.UUID.String()
+	return u.String()
+}
+
+func StringPtrFromUUID(u pgtype.UUID) *string {
+	if !u.Valid {
+		return nil
+	}
+	s := u.String()
+	return &s
+}
+
+func StringFromText(t pgtype.Text) string {
+	if !t.Valid {
+		return ""
+	}
+	return t.String
+}
+
+func StringPtrFromText(t pgtype.Text) *string {
+	if !t.Valid {
+		return nil
+	}
+	return &t.String
+}
+
+func BoolFromBool(b pgtype.Bool) bool {
+	if !b.Valid {
+		return false
+	}
+	return b.Bool
+}
+
+func BoolPtrFromBool(b pgtype.Bool) *bool {
+	if !b.Valid {
+		return nil
+	}
+	return &b.Bool
+}
+
+func Int32FromInt(i pgtype.Int4) int32 {
+	if !i.Valid {
+		return 0
+	}
+	return i.Int32
+}
+
+func Int32PtrFromInt(i pgtype.Int4) *int32 {
+	if !i.Valid {
+		return nil
+	}
+	return &i.Int32
+}
+
+func Int64FromInt(i pgtype.Int8) int64 {
+	if !i.Valid {
+		return 0
+	}
+	return i.Int64
+}
+
+func Int64PtrFromInt(i pgtype.Int8) *int64 {
+	if !i.Valid {
+		return nil
+	}
+	return &i.Int64
 }

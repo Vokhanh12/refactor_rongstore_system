@@ -7,9 +7,9 @@ package iam_sqlc
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const getPermissionByCode = `-- name: GetPermissionByCode :one
@@ -19,15 +19,15 @@ WHERE code = $1
 `
 
 type GetPermissionByCodeRow struct {
-	ID       uuid.UUID      `json:"id"`
-	Code     string         `json:"code"`
-	Name     sql.NullString `json:"name"`
-	Resource string         `json:"resource"`
-	Action   string         `json:"action"`
+	ID       uuid.UUID   `json:"id"`
+	Code     string      `json:"code"`
+	Name     pgtype.Text `json:"name"`
+	Resource string      `json:"resource"`
+	Action   string      `json:"action"`
 }
 
 func (q *Queries) GetPermissionByCode(ctx context.Context, code string) (GetPermissionByCodeRow, error) {
-	row := q.db.QueryRowContext(ctx, getPermissionByCode, code)
+	row := q.db.QueryRow(ctx, getPermissionByCode, code)
 	var i GetPermissionByCodeRow
 	err := row.Scan(
 		&i.ID,

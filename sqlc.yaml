@@ -11,11 +11,11 @@ sql:
       - sql/iam/authz/queries
     gen:
       go:
-        package: iam_sqlc               # package tên go
-        out: server/internal/platform/db/sqlc  # đường dẫn generate code
-        sql_package: "database/sql"     # sql package chuẩn
-        emit_interface: true            # tạo interface
-        emit_json_tags: true            # emit json tags cho struct
+        package: iam_sqlc               
+        out: server/internal/platform/db/sqlc  
+        sql_package: "pgx/v5"     
+        emit_interface: true           
+        emit_json_tags: true      
         overrides:
           - db_type: "uuid"
             go_type: "github.com/google/uuid.UUID"

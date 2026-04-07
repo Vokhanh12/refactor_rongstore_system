@@ -9,10 +9,10 @@ import (
 
 type RoleRef struct {
 	roleCode string
-	scopeID  string
+	scopeID  *string
 }
 
-func NewRoleRefFromPersistence(roleCode string, scopeID string) RoleRef {
+func NewRoleRefFromPersistence(roleCode string, scopeID *string) RoleRef {
 	return RoleRef{
 		roleCode: roleCode,
 		scopeID:  scopeID,

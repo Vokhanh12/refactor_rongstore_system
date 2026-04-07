@@ -6,8 +6,8 @@ type Permission struct {
 	id   string
 	code string
 
-	name        string
-	description string
+	name        *string
+	description *string
 
 	resourceAction vo.ResourceAction
 
@@ -17,8 +17,8 @@ type Permission struct {
 func NewPermissionFromPersistence(
 	id string,
 	code string,
-	name string,
-	description string,
+	name *string,
+	description *string,
 	resource string,
 	action string,
 	isActive bool,
