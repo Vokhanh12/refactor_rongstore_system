@@ -1,16 +1,17 @@
 -- name: GetRolePermissionsByRoleRefs :many
 SELECT 
     -- ROLE
-    r.id            AS role_id,
-    r.code          AS role_code,
-    r.scope_id      AS role_scope_id,
+    r.id                 AS role_id,
+    r.code               AS role_code,
+    r.scope_id           AS role_scope_id,
     r.role_scope_type    AS role_scope_type,
-    r.name          AS role_name,
-    r.description   AS role_description,
+    r.name               AS role_name,
+    r.description        AS role_description,
     r.role_access_scope  AS role_access_scope,
-    r.level         AS role_level,
-    r.is_system     AS role_is_system,
-    r.is_active     AS role_is_active,
+    r.level              AS role_level,
+    r.is_system          AS role_is_system,
+    r.is_super           AS role_is_super,
+    r.is_active          AS role_is_active,
 
     -- PERMISSION
     p.id            AS permission_id,       
@@ -28,4 +29,7 @@ JOIN permissions p ON p.id = rp.permission_id
 JOIN jsonb_to_recordset($1::jsonb)
     AS x(role_code text, scope_id uuid)
 ON r.code = x.role_code
-AND r.scope_id = x.scope_id;
+AND (
+    r.scope_id = x.scope_id
+    OR (r.scope_id IS NULL AND x.scope_id IS NULL)
+);
