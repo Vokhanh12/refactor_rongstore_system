@@ -20,13 +20,11 @@ func TestSqlcRolePermissionRepository_FindAllByRoleRefs(t *testing.T) {
 	testDB := testhelpers.SetupTestDB(t)
 	defer testDB.Close(t)
 
-	queries := iam_sqlc.New(testDB.DB)
-	repo := NewSqlcRolePermissionRepository(queries)
+	repo := NewSqlcRolePermissionRepository(testDB.Queries)
 
 	// ===== Seed data =====
 	roleID := uuid.New()
 	permID := uuid.New()
-
 	scopeID := uuid.New()
 
 	// insert role
@@ -110,4 +108,16 @@ func TestSqlcRolePermissionRepository_FindAllByRoleRefs_NotFound(t *testing.T) {
 
 	require.Nil(t, err)
 	assert.Empty(t, results)
+}
+
+func TestSqlcRolePermissionRepository_Create(t *testing.T) {
+
+}
+
+func TestSqlcRolePermissionRepository_Update(t *testing.T) {
+
+}
+
+func TestSqlcRolePermissionRepository_Delete(t *testing.T) {
+
 }
