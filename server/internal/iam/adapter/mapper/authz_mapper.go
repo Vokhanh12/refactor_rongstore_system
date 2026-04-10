@@ -4,8 +4,18 @@ import (
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
+	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
+	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 	"google.golang.org/protobuf/types/known/anypb"
 )
+
+// ============================================================
+// API
+// ============================================================
 
 func RolePermissionMutateProtoToCommand(
 	req *iamv1.RolePermissionMutateRequest,
@@ -147,4 +157,96 @@ func marshalAny(
 	}
 
 	return anyMsg, nil
+}
+
+// ============================================================
+// DATABASE
+// ============================================================
+
+var roleScopeTypeToDBMap = map[enu.RoleScopeType]db.RoleScopeType{
+	enu.RoleScopeGobal:  db.RoleScopeType("GLOBAL"),
+	enu.RoleScopeTenant: db.RoleScopeType("TENANT"),
+	enu.RoleScopeUnit:   db.RoleScopeType("UNIT"),
+}
+
+var roleScopeTypeToEntityMap = map[db.RoleScopeType]enu.RoleScopeType{
+	db.RoleScopeType("GLOBAL"): enu.RoleScopeGobal,
+	db.RoleScopeType("TENANT"): enu.RoleScopeTenant,
+	db.RoleScopeType("UNIT"):   enu.RoleScopeUnit,
+}
+
+func roleScopeTypeToDB(t enu.RoleScopeType) db.RoleScopeType {
+	if v, ok := roleScopeTypeToDBMap[t]; ok {
+		return v
+	}
+	panic(fmt.Sprintf("invalid RoleScopeType: %v", t))
+}
+
+func roleScopeTypeFromDB(t db.RoleScopeType) enu.RoleScopeType {
+	if v, ok := roleScopeTypeToEntityMap[t]; ok {
+		return v
+	}
+	panic(fmt.Sprintf("invalid RoleScopeType: %v", t))
+}
+
+var roleAccessScopeToDBMap = map[enu.RoleAccessScope]db.RoleAccessScope{
+	enu.RoleAccessAll: db.RoleAccessScope("ALL"),
+	enu.RoleAccessOwn: db.RoleAccessScope("OWN"),
+}
+
+var roleAccessScopeToEntityMap = map[db.RoleAccessScope]enu.RoleAccessScope{
+	db.RoleAccessScope("ALL"): enu.RoleAccessAll,
+	db.RoleAccessScope("OWN"): enu.RoleAccessOwn,
+}
+
+func roleAccessScopeToDB(t enu.RoleAccessScope) db.RoleAccessScope {
+	if v, ok := roleAccessScopeToDBMap[t]; ok {
+		return v
+	}
+	panic(fmt.Sprintf("invalid RoleAccessScope: %v", t))
+}
+
+func roleAccessScopeFromDB(t db.RoleAccessScope) enu.RoleAccessScope {
+	if v, ok := roleAccessScopeToEntityMap[t]; ok {
+		return v
+	}
+	panic(fmt.Sprintf("invalid RoleAccessScope: %v", t))
+}
+
+func CreateRoleToDBParams(role *entities.Role) db.CreateRoleParams {
+	return db.CreateRoleParams{
+		ID:              role.ID(),
+		ScopeID:         pg.PgUUIDFromUUIDPtr(role.RoleRef().ScopeID()),
+		RoleScopeType:   roleScopeTypeToDB(role.RoleScopeType()),
+		Code:            role.RoleRef().RoleCode(),
+		Name:            role.Name(),
+		Description:     pg.TextFromStringPtr(role.Description()),
+		RoleAccessScope: roleAccessScopeToDB(role.RoleAccessScope()),
+		Level:           pg.Int4FromUint8(role.Level()),
+		IsSystem:        role.IsSystem(),
+		IsActive:        role.IsActive(),
+		IsSuper:         role.IsSuper(),
+	}
+}
+
+func CreateRoleDBToRoleEntity(row db.CreateRoleRow) entities.Role {
+	return entities.NewRoleFromPersistence(
+		entities.NewRoleParams{
+			ID: row.ID,
+			RoleRef: vo.NewRoleRefFromPersistence(
+				vo.NewRoleRefParms{
+					RoleCode: row.Code,
+					ScopeID:  pg.UUIDPtrFromPgUUID(row.ScopeID),
+				},
+			),
+			RoleScopeType:   roleScopeTypeFromDB(row.RoleScopeType),
+			Name:            row.Name,
+			RoleAccessScope: roleAccessScopeFromDB(row.RoleAccessScope),
+			Level:           uint8(row.Level.Int32),
+			Description:     pg.StringPtrFromText(row.Description),
+			IsSystem:        row.IsSystem,
+			IsSuper:         row.IsSuper,
+			IsActive:        row.IsActive,
+		},
+	)
 }

@@ -2,6 +2,7 @@ package entities
 
 import (
 	"github.com/google/uuid"
+
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 )
 
@@ -17,25 +18,27 @@ type Permission struct {
 	isActive bool
 }
 
-func NewPermissionFromPersistence(
-	id uuid.UUID,
-	code string,
-	name *string,
-	description *string,
-	resource string,
-	action string,
-	isActive bool,
-) Permission {
+type NewPermissionParams struct {
+	ID   uuid.UUID
+	Code string
 
-	ra := vo.NewResourceActionFromPersistence(resource, action)
+	Name        *string
+	Description *string
 
+	Resource string
+	Action   string
+
+	IsActive bool
+}
+
+func NewPermissionFromPersistence(p NewPermissionParams) Permission {
 	return Permission{
-		id:             id,
-		code:           code,
-		name:           name,
-		description:    description,
-		resourceAction: ra,
-		isActive:       isActive,
+		id:             p.ID,
+		code:           p.Code,
+		name:           p.Name,
+		description:    p.Description,
+		resourceAction: vo.NewResourceActionFromPersistence(p.Resource, p.Action),
+		isActive:       p.IsActive,
 	}
 }
 

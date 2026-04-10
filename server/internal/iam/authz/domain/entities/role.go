@@ -2,20 +2,11 @@ package entities
 
 import (
 	"github.com/google/uuid"
+
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
-)
-
-type RoleScopeType string
-type RoleAcessScope string
-
-const (
-	RoleTypeGobal    RoleScopeType  = "GOBAL"
-	RoleTypeTenant   RoleScopeType  = "TENANT"
-	RoleTypeUNit     RoleScopeType  = "UNIT"
-	AcessScopeGobal  RoleAcessScope = "ALL"
-	AcessScopeTenant RoleAcessScope = "OWN"
 )
 
 type Role struct {
@@ -23,9 +14,9 @@ type Role struct {
 	roleRef vo.RoleRef
 	name    string
 
-	roleScopeType   RoleScopeType
-	roleAccessScope RoleAcessScope
-	level           int
+	roleScopeType   enu.RoleScopeType
+	roleAccessScope enu.RoleAccessScope
+	level           uint8
 	description     *string
 
 	isSystem bool
@@ -33,20 +24,25 @@ type Role struct {
 	isActive bool
 }
 
-func NewRole(
-	id uuid.UUID,
-	roleRef vo.RoleRef,
-	roleScopeType RoleScopeType,
-	name string,
-	roleAccessScope RoleAcessScope,
-	level int,
-	description *string,
-	isSystem, isSuper, isActive bool,
-) (Role, []aerrs.AppErrorDetail) {
+type NewRoleParams struct {
+	ID              uuid.UUID
+	RoleRef         vo.RoleRef
+	RoleScopeType   enu.RoleScopeType
+	Name            string
+	RoleAccessScope enu.RoleAccessScope
+	Level           uint8
+	Description     *string
+	IsSystem        bool
+	IsSuper         bool
+	IsActive        bool
+}
 
+func NewRole(p NewRoleParams) (Role, []aerrs.AppErrorDetail) {
 	var details []aerrs.AppErrorDetail
 
-	if roleScopeType == RoleTypeGobal && roleRef.ScopeID() != "" {
+	scopeID := p.RoleRef.ScopeID()
+
+	if p.RoleScopeType == enu.RoleScopeGobal && scopeID != nil {
 		details = append(details, *aerrs.NewDetail(
 			domain.REASON_INVALID_FORMAT,
 			aerrs.WithField("scope_id"),
@@ -54,7 +50,7 @@ func NewRole(
 		))
 	}
 
-	if (roleScopeType == RoleTypeTenant || roleScopeType == RoleTypeUNit) && roleRef.ScopeID() == "" {
+	if (p.RoleScopeType == enu.RoleScopeTenant || p.RoleScopeType == enu.RoleScopeUnit) && scopeID == nil {
 		details = append(details, *aerrs.NewDetail(
 			domain.REASON_REQUIRED,
 			aerrs.WithField("scope_id"),
@@ -62,7 +58,14 @@ func NewRole(
 		))
 	}
 
-	if level < 0 {
+	if p.Name == "" {
+		details = append(details, *aerrs.NewDetail(
+			domain.REASON_REQUIRED,
+			aerrs.WithField("name"),
+		))
+	}
+
+	if p.Level > 255 {
 		details = append(details, *aerrs.NewDetail(
 			domain.REASON_OUT_OF_RANGE,
 			aerrs.WithField("level"),
@@ -74,37 +77,31 @@ func NewRole(
 	}
 
 	return Role{
-		id:              id,
-		roleRef:         roleRef,
-		roleScopeType:   roleScopeType,
-		roleAccessScope: roleAccessScope,
-		level:           level,
-		description:     description,
-		isSystem:        isSystem,
-		isSuper:         isSuper,
-		isActive:        isActive,
+		id:              p.ID,
+		roleRef:         p.RoleRef,
+		name:            p.Name,
+		roleScopeType:   p.RoleScopeType,
+		roleAccessScope: p.RoleAccessScope,
+		level:           p.Level,
+		description:     p.Description,
+		isSystem:        p.IsSystem,
+		isSuper:         p.IsSuper,
+		isActive:        p.IsActive,
 	}, nil
 }
 
-func NewRoleFromPersistence(
-	id uuid.UUID,
-	roleRef vo.RoleRef,
-	roleScopeType RoleScopeType,
-	name string,
-	roleAccessScope RoleAcessScope,
-	description *string,
-	isSystem, isSuper, isActive bool,
-) Role {
+func NewRoleFromPersistence(p NewRoleParams) Role {
 	return Role{
-		id:              id,
-		roleRef:         roleRef,
-		roleScopeType:   roleScopeType,
-		name:            name,
-		roleAccessScope: roleAccessScope,
-		description:     description,
-		isSystem:        isSystem,
-		isSuper:         isSuper,
-		isActive:        isActive,
+		id:              p.ID,
+		roleRef:         p.RoleRef,
+		name:            p.Name,
+		roleScopeType:   p.RoleScopeType,
+		roleAccessScope: p.RoleAccessScope,
+		level:           p.Level,
+		description:     p.Description,
+		isSystem:        p.IsSystem,
+		isSuper:         p.IsSuper,
+		isActive:        p.IsActive,
 	}
 }
 
@@ -114,4 +111,40 @@ func (r Role) IsElevated() bool {
 
 func (p Role) RoleRef() vo.RoleRef {
 	return p.roleRef
+}
+
+func (r Role) ID() uuid.UUID {
+	return r.id
+}
+
+func (r Role) Name() string {
+	return r.name
+}
+
+func (r Role) RoleScopeType() enu.RoleScopeType {
+	return r.roleScopeType
+}
+
+func (r Role) RoleAccessScope() enu.RoleAccessScope {
+	return r.roleAccessScope
+}
+
+func (r Role) Level() uint8 {
+	return r.level
+}
+
+func (r Role) Description() *string {
+	return r.description
+}
+
+func (r Role) IsSystem() bool {
+	return r.isSystem
+}
+
+func (r Role) IsSuper() bool {
+	return r.isSuper
+}
+
+func (r Role) IsActive() bool {
+	return r.isActive
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -86,6 +87,26 @@ func StringPtrFromUUID(u pgtype.UUID) *string {
 	return &s
 }
 
+func PgUUIDFromUUIDPtr(u *uuid.UUID) pgtype.UUID {
+	if u == nil {
+		return pgtype.UUID{Valid: false}
+	}
+
+	return pgtype.UUID{
+		Bytes: *u,
+		Valid: true,
+	}
+}
+
+func UUIDPtrFromPgUUID(u pgtype.UUID) *uuid.UUID {
+	if !u.Valid {
+		return nil
+	}
+
+	id := uuid.UUID(u.Bytes)
+	return &id
+}
+
 func StringFromText(t pgtype.Text) string {
 	if !t.Valid {
 		return ""
@@ -140,4 +161,28 @@ func Int64PtrFromInt(i pgtype.Int8) *int64 {
 		return nil
 	}
 	return &i.Int64
+}
+
+func TextFromStringPtr(s *string) pgtype.Text {
+	if s == nil {
+		return pgtype.Text{Valid: false}
+	}
+	return pgtype.Text{
+		String: *s,
+		Valid:  true,
+	}
+}
+
+func Int4FromInt32(i int32) pgtype.Int4 {
+	return pgtype.Int4{
+		Int32: i,
+		Valid: true,
+	}
+}
+
+func Int4FromUint8(i uint8) pgtype.Int4 {
+	return pgtype.Int4{
+		Int32: int32(i),
+		Valid: true,
+	}
 }

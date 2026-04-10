@@ -10,13 +10,10 @@ INSERT INTO roles (
     level,
     is_system,
     is_active,
-    is_super,
-    created_by,
-    updated_by
+    is_super
 ) VALUES (
     $1, $2, $3, $4, $5, $6,
-    $7, $8, $9, $10, $11,
-    $12, $13
+    $7, $8, $9, $10, $11
 )
 RETURNING 
     id,
@@ -29,8 +26,5 @@ RETURNING
     level,
     is_system,
     is_active,
-    is_super,
-    created_at,
-    updated_at,
-    created_by,
-    updated_by;
+    is_super
+;

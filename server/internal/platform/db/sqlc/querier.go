@@ -9,6 +9,7 @@ import (
 )
 
 type Querier interface {
+	CreateRole(ctx context.Context, arg CreateRoleParams) (CreateRoleRow, error)
 	GetPermissionByCode(ctx context.Context, code string) (GetPermissionByCodeRow, error)
 	GetRolePermissionsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]GetRolePermissionsByRoleRefsRow, error)
 }

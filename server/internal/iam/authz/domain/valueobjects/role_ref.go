@@ -13,10 +13,15 @@ type RoleRef struct {
 	scopeID  *uuid.UUID
 }
 
-func NewRoleRefFromPersistence(roleCode string, scopeID *uuid.UUID) RoleRef {
+type NewRoleRefParms struct {
+	RoleCode string
+	ScopeID  *uuid.UUID
+}
+
+func NewRoleRefFromPersistence(p NewRoleRefParms) RoleRef {
 	return RoleRef{
-		roleCode: roleCode,
-		scopeID:  scopeID,
+		roleCode: p.RoleCode,
+		scopeID:  p.ScopeID,
 	}
 }
 

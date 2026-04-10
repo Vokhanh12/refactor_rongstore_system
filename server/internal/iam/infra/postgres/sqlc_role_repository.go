@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
@@ -26,16 +27,18 @@ func NewSqlcRoleRepository(queries *db.Queries, dberr dberr.DBError) repositorie
 // Create implements [repositories.RoleRepository].
 func (s *SqlcRoleRepository) Create(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 
-	createdRecord, err := r.queries.CreateRole(ctx, db.C{
-		ID:         record.Id,
-		Key:        record.Key,
-		Request:    record.Request,
-		Response:   record.Response,
-		StatusCode: int32(record.StatusCode),
-		CreatedAt:  timestamptzFromTime(record.CreatedAt),
-	})
+	createdRecord, err := s.queries.CreateRole(
+		ctx, mapper.CreateRoleToDBParams(role),
+	)
 
-	panic("unimplemented")
+	if err != nil {
+		return nil, dberr.TranslateDBError(err, s.dberr)
+	}
+
+	entity := mapper.CreateRoleDBToRoleEntity(createdRecord)
+
+	return &entity, nil
+
 }
 
 // Delete implements [repositories.RoleRepository].

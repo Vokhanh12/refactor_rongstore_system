@@ -13,10 +13,15 @@ type ResourceAction struct {
 	action   string
 }
 
-func NewResourceActionFromPersistence(resource, action string) ResourceAction {
+type NewResourceActionParms struct {
+	Resource string
+	Action   string
+}
+
+func NewResourceActionFromPersistence(p NewResourceActionParms) ResourceAction {
 	return ResourceAction{
-		resource: resource,
-		action:   action,
+		resource: p.Resource,
+		action:   p.Action,
 	}
 }
 
