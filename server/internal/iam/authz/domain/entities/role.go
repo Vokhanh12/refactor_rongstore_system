@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"github.com/google/uuid"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
@@ -18,7 +19,7 @@ const (
 )
 
 type Role struct {
-	id      string
+	id      uuid.UUID
 	roleRef vo.RoleRef
 	name    string
 
@@ -33,7 +34,7 @@ type Role struct {
 }
 
 func NewRole(
-	id string,
+	id uuid.UUID,
 	roleRef vo.RoleRef,
 	roleScopeType RoleScopeType,
 	name string,
@@ -86,7 +87,7 @@ func NewRole(
 }
 
 func NewRoleFromPersistence(
-	id string,
+	id uuid.UUID,
 	roleRef vo.RoleRef,
 	roleScopeType RoleScopeType,
 	name string,

@@ -3,16 +3,17 @@ package valueobjects
 import (
 	"strings"
 
+	"github.com/google/uuid"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 type RoleRef struct {
 	roleCode string
-	scopeID  *string
+	scopeID  *uuid.UUID
 }
 
-func NewRoleRefFromPersistence(roleCode string, scopeID *string) RoleRef {
+func NewRoleRefFromPersistence(roleCode string, scopeID *uuid.UUID) RoleRef {
 	return RoleRef{
 		roleCode: roleCode,
 		scopeID:  scopeID,
@@ -59,9 +60,9 @@ func NewRoleRef(value string) (*RoleRef, []aerrs.AppErrorDetail) {
 	}, nil
 }
 
-func (r RoleRef) RoleCode() string { return r.roleCode }
-func (r RoleRef) ScopeID() string  { return r.scopeID }
+func (r RoleRef) RoleCode() string    { return r.roleCode }
+func (r RoleRef) ScopeID() *uuid.UUID { return r.scopeID }
 
 func (r RoleRef) String() string {
-	return r.roleCode + ":" + r.scopeID
+	return r.roleCode + ":" + r.scopeID.String()
 }

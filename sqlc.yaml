@@ -1,7 +1,6 @@
 version: "2"
 
 sql:
-  # ===== IAM =====
   - engine: postgresql
     schema:
       - sql/iam/auth/schema

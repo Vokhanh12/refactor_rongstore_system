@@ -1,14 +1,14 @@
 package errors
 
 import (
-	pkgerrors "server/pkg/errors"
+	aerr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 type BaseRepository struct {
 	DbError DBError
 }
 
-func (b *BaseRepository) HandleError(err error) *pkgerrors.AppError {
+func (b *BaseRepository) HandleError(err error) *aerr.AppError {
 	if err != nil {
 		return TranslateDBError(err, b.DbError)
 	}

@@ -1,9 +1,12 @@
 package entities
 
-import vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+import (
+	"github.com/google/uuid"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+)
 
 type Permission struct {
-	id   string
+	id   uuid.UUID
 	code string
 
 	name        *string
@@ -15,7 +18,7 @@ type Permission struct {
 }
 
 func NewPermissionFromPersistence(
-	id string,
+	id uuid.UUID,
 	code string,
 	name *string,
 	description *string,
