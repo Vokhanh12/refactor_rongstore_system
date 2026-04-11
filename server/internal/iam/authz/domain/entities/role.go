@@ -14,14 +14,55 @@ type Role struct {
 	roleRef vo.RoleRef
 	name    string
 
-	roleScopeType   enu.RoleScopeType
-	roleAccessScope enu.RoleAccessScope
-	level           uint8
-	description     *string
+	scopeType   enu.RoleScopeType
+	accessScope enu.RoleAccessScope
+	level       uint8
+	description *string
 
 	isSystem bool
 	isSuper  bool
 	isActive bool
+}
+
+func NewRole(vldRoleRef vo.ValidatedRoleRef, name string, roleScopeType enu.RoleScopeType,
+	roleAccessScope enu.RoleAccessScope, level uint8, description *string, isSystem bool, isSuper bool, isActive bool) Role {
+
+	return Role{
+		id:          uuid.Must(uuid.NewV7()),
+		roleRef:     vldRoleRef.RoleRef,
+		name:        name,
+		scopeType:   roleScopeType,
+		accessScope: roleAccessScope,
+		level:       level,
+		description: description,
+		isSystem:    isSystem,
+		isSuper:     isSuper,
+		isActive:    isActive,
+	}
+}
+
+func (p *Role) validate() []aerrs.AppErrorDetail {
+	var details []aerrs.AppErrorDetail
+
+	if p.name == "" {
+		details = append(details, *aerrs.NewDetail(
+			domain.REASON_REQUIRED,
+			aerrs.WithField("name"),
+		))
+	}
+
+	if p.level > 255 {
+		details = append(details, *aerrs.NewDetail(
+			domain.REASON_OUT_OF_RANGE,
+			aerrs.WithField("level"),
+		))
+	}
+
+	if len(details) > 0 {
+		return details
+	}
+
+	return nil
 }
 
 type NewRoleParams struct {
@@ -35,59 +76,6 @@ type NewRoleParams struct {
 	IsSystem        bool
 	IsSuper         bool
 	IsActive        bool
-}
-
-func NewRole(p NewRoleParams) (Role, []aerrs.AppErrorDetail) {
-	var details []aerrs.AppErrorDetail
-
-	scopeID := p.RoleRef.ScopeID()
-
-	if p.RoleScopeType == enu.RoleScopeGobal && scopeID != nil {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_INVALID_FORMAT,
-			aerrs.WithField("scope_id"),
-			aerrs.WithMessageDetail("GLOBAL role must not have scope_id"),
-		))
-	}
-
-	if (p.RoleScopeType == enu.RoleScopeTenant || p.RoleScopeType == enu.RoleScopeUnit) && scopeID == nil {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_REQUIRED,
-			aerrs.WithField("scope_id"),
-			aerrs.WithMessageDetail("scope_id is required for tenant/unit role"),
-		))
-	}
-
-	if p.Name == "" {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_REQUIRED,
-			aerrs.WithField("name"),
-		))
-	}
-
-	if p.Level > 255 {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_OUT_OF_RANGE,
-			aerrs.WithField("level"),
-		))
-	}
-
-	if len(details) > 0 {
-		return Role{}, details
-	}
-
-	return Role{
-		id:              p.ID,
-		roleRef:         p.RoleRef,
-		name:            p.Name,
-		roleScopeType:   p.RoleScopeType,
-		roleAccessScope: p.RoleAccessScope,
-		level:           p.Level,
-		description:     p.Description,
-		isSystem:        p.IsSystem,
-		isSuper:         p.IsSuper,
-		isActive:        p.IsActive,
-	}, nil
 }
 
 func NewRoleFromPersistence(p NewRoleParams) Role {

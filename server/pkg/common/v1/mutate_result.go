@@ -1,13 +1,10 @@
 package commonv1
 
-import (
-	"github.com/golang/protobuf/ptypes/any"
-)
-
-type MutateResult struct {
+type MutateResultItem struct {
 	OpID            string              `json:"op_id,omitempty"`
-	Data            *any.Any            `json:"data,omitempty"` // google.protobuf.Any
+	Data            any                 `json:"data,omitempty"`
 	Success         bool                `json:"success,omitempty"`
-	MutateOperation MutateOperationEnum `json:"mutate_operation,omitempty"` // từ MutateOperation.proto
-	Error           *AppError           `json:"error,omitempty"`            // từ error.proto
+	Code            string              `json:"code,omitempty"`
+	MutateOperation MutateOperationEnum `json:"mutate_operation,omitempty"`
+	Error           *AppError           `json:"error,omitempty"`
 }
