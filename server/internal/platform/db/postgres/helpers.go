@@ -186,3 +186,19 @@ func Int4FromUint8(i uint8) pgtype.Int4 {
 		Valid: true,
 	}
 }
+
+func Uint8FromInt4(i pgtype.Int4) uint8 {
+	if !i.Valid {
+		return 0
+	}
+
+	if i.Int32 < 0 {
+		return 0
+	}
+
+	if i.Int32 > 255 {
+		return 255
+	}
+
+	return uint8(i.Int32)
+}

@@ -80,16 +80,16 @@ type NewRoleParams struct {
 
 func NewRoleFromPersistence(p NewRoleParams) Role {
 	return Role{
-		id:              p.ID,
-		roleRef:         p.RoleRef,
-		name:            p.Name,
-		roleScopeType:   p.RoleScopeType,
-		roleAccessScope: p.RoleAccessScope,
-		level:           p.Level,
-		description:     p.Description,
-		isSystem:        p.IsSystem,
-		isSuper:         p.IsSuper,
-		isActive:        p.IsActive,
+		id:          p.ID,
+		roleRef:     p.RoleRef,
+		name:        p.Name,
+		scopeType:   p.RoleScopeType,
+		accessScope: p.RoleAccessScope,
+		level:       p.Level,
+		description: p.Description,
+		isSystem:    p.IsSystem,
+		isSuper:     p.IsSuper,
+		isActive:    p.IsActive,
 	}
 }
 
@@ -110,11 +110,11 @@ func (r Role) Name() string {
 }
 
 func (r Role) RoleScopeType() enu.RoleScopeType {
-	return r.roleScopeType
+	return r.scopeType
 }
 
 func (r Role) RoleAccessScope() enu.RoleAccessScope {
-	return r.roleAccessScope
+	return r.accessScope
 }
 
 func (r Role) Level() uint8 {

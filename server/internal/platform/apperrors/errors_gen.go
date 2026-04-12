@@ -4,7 +4,7 @@ package apperrors
 var (
 	UNKNOWN_DOMAIN_KEY = AppError{
 		Key:       "UNKNOWN_DOMAIN_KEY",
-		Code:      "AUTH-VAL-999",
+		Code:      "CORE-VAL-999",
 		Status:    400,
 		GRPCCode:  "InvalidArgument",
 		Message:   "Unknown domain error",
@@ -25,6 +25,6 @@ var (
 
 // ErrorByCode maps default error codes to AppError definitions
 var ErrorByCode = map[string]AppError{
-	"AUTH-VAL-999": UNKNOWN_DOMAIN_KEY,
+	"CORE-VAL-999": UNKNOWN_DOMAIN_KEY,
 	"CORE-INF-000": INTERNAL_FALLBACK,
 }

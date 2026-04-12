@@ -44,7 +44,7 @@ func WithMessageDetail(msg string) func(*AppErrorDetail) {
 
 func WithData(data map[string]interface{}) func(*AppError) {
 	return func(e *AppError) {
-		e.Data = data
+		e.Data = copyDataMap(data)
 	}
 }
 
@@ -56,7 +56,7 @@ func WithCauseDetail(err error) func(*AppError) {
 
 func WithErrorDetails(errors []AppErrorDetail) func(*AppError) {
 	return func(e *AppError) {
-		e.errorDetails = errors
+		e.errorDetails = copyDetails(errors)
 	}
 }
 
@@ -76,16 +76,37 @@ func WithAppendErrorDetail(detail AppErrorDetail) func(*AppError) {
 
 func copyError(src AppError) *AppError {
 	dst := src
-	if src.Data != nil {
-		dst.Data = make(map[string]interface{}, len(src.Data))
-		for k, v := range src.Data {
-			dst.Data[k] = v
-		}
+	dst.Data = copyDataMap(src.Data)
+	if src.Tags != nil {
+		dst.Tags = append([]string(nil), src.Tags...)
 	}
+	dst.errorDetails = copyDetails(src.errorDetails)
 	return &dst
 }
 
 func copyDetail(src AppErrorDetail) *AppErrorDetail {
 	dst := src
 	return &dst
+}
+
+func copyDataMap(src map[string]interface{}) map[string]interface{} {
+	if src == nil {
+		return nil
+	}
+
+	dst := make(map[string]interface{}, len(src))
+	for k, v := range src {
+		dst[k] = v
+	}
+	return dst
+}
+
+func copyDetails(src []AppErrorDetail) []AppErrorDetail {
+	if src == nil {
+		return nil
+	}
+
+	dst := make([]AppErrorDetail, len(src))
+	copy(dst, src)
+	return dst
 }

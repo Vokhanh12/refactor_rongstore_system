@@ -17,6 +17,7 @@ func ToInternalError(err *AppError) *commonv1.Error {
 		Source:       err.Source,
 		ClientAction: err.ClientAction,
 		ServerAction: err.ServerAction,
+		Details:      MapAppErrorDetailsToProto(err.GetErrorDetails()),
 	}
 }
 
@@ -28,6 +29,7 @@ func ToPublicError(err *AppError) *commonv1.Error {
 		Message:    err.Message,
 		HttpStatus: int32(err.Status),
 		GrpcCode:   err.GRPCCode,
+		Details:    MapAppErrorDetailsToProto(err.GetErrorDetails()),
 	}
 }
 
