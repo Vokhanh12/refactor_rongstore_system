@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: iam/authz/v1/role_permission.proto
+// source: iam/authz/v1/resources/role_permission.proto
 
 package resourcespb
 
@@ -41,7 +41,7 @@ type RolePermission struct {
 
 func (x *RolePermission) Reset() {
 	*x = RolePermission{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[0]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -53,7 +53,7 @@ func (x *RolePermission) String() string {
 func (*RolePermission) ProtoMessage() {}
 
 func (x *RolePermission) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[0]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -66,7 +66,7 @@ func (x *RolePermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermission.ProtoReflect.Descriptor instead.
 func (*RolePermission) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *RolePermission) GetId() string {
@@ -147,7 +147,7 @@ type RolePermissionMutation struct {
 
 func (x *RolePermissionMutation) Reset() {
 	*x = RolePermissionMutation{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[1]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -159,7 +159,7 @@ func (x *RolePermissionMutation) String() string {
 func (*RolePermissionMutation) ProtoMessage() {}
 
 func (x *RolePermissionMutation) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[1]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -172,7 +172,7 @@ func (x *RolePermissionMutation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionMutation.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *RolePermissionMutation) GetOpId() string {
@@ -238,50 +238,6 @@ func (*RolePermissionMutation_Update_) isRolePermissionMutation_Action() {}
 
 func (*RolePermissionMutation_Delete_) isRolePermissionMutation_Action() {}
 
-type RolePermissionMutateRequest struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Mutations     []*RolePermissionMutation `protobuf:"bytes,1,rep,name=mutations,proto3" json:"mutations,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RolePermissionMutateRequest) Reset() {
-	*x = RolePermissionMutateRequest{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RolePermissionMutateRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RolePermissionMutateRequest) ProtoMessage() {}
-
-func (x *RolePermissionMutateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RolePermissionMutateRequest.ProtoReflect.Descriptor instead.
-func (*RolePermissionMutateRequest) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *RolePermissionMutateRequest) GetMutations() []*RolePermissionMutation {
-	if x != nil {
-		return x.Mutations
-	}
-	return nil
-}
-
 type RolePermissionView struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	OpId  string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
@@ -295,7 +251,7 @@ type RolePermissionView struct {
 
 func (x *RolePermissionView) Reset() {
 	*x = RolePermissionView{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[3]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -307,7 +263,7 @@ func (x *RolePermissionView) String() string {
 func (*RolePermissionView) ProtoMessage() {}
 
 func (x *RolePermissionView) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[3]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -320,7 +276,7 @@ func (x *RolePermissionView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionView.ProtoReflect.Descriptor instead.
 func (*RolePermissionView) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{3}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *RolePermissionView) GetOpId() string {
@@ -356,6 +312,86 @@ type RolePermissionView_Search_ struct {
 
 func (*RolePermissionView_Search_) isRolePermissionView_Action() {}
 
+type RolePermissionMutateRequest struct {
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Mutations     []*RolePermissionMutation `protobuf:"bytes,1,rep,name=mutations,proto3" json:"mutations,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RolePermissionMutateRequest) Reset() {
+	*x = RolePermissionMutateRequest{}
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolePermissionMutateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolePermissionMutateRequest) ProtoMessage() {}
+
+func (x *RolePermissionMutateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolePermissionMutateRequest.ProtoReflect.Descriptor instead.
+func (*RolePermissionMutateRequest) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RolePermissionMutateRequest) GetMutations() []*RolePermissionMutation {
+	if x != nil {
+		return x.Mutations
+	}
+	return nil
+}
+
+type RolePermissionViewRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RolePermissionViewRequest) Reset() {
+	*x = RolePermissionViewRequest{}
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolePermissionViewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolePermissionViewRequest) ProtoMessage() {}
+
+func (x *RolePermissionViewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolePermissionViewRequest.ProtoReflect.Descriptor instead.
+func (*RolePermissionViewRequest) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{4}
+}
+
 // ---------------- CREATE ----------------
 type RolePermissionMutation_Create struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -369,7 +405,7 @@ type RolePermissionMutation_Create struct {
 
 func (x *RolePermissionMutation_Create) Reset() {
 	*x = RolePermissionMutation_Create{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[4]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -381,7 +417,7 @@ func (x *RolePermissionMutation_Create) String() string {
 func (*RolePermissionMutation_Create) ProtoMessage() {}
 
 func (x *RolePermissionMutation_Create) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[4]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -394,7 +430,7 @@ func (x *RolePermissionMutation_Create) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionMutation_Create.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation_Create) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1, 0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1, 0}
 }
 
 func (x *RolePermissionMutation_Create) GetLat() float64 {
@@ -439,7 +475,7 @@ type RolePermissionMutation_Update struct {
 
 func (x *RolePermissionMutation_Update) Reset() {
 	*x = RolePermissionMutation_Update{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[5]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -451,7 +487,7 @@ func (x *RolePermissionMutation_Update) String() string {
 func (*RolePermissionMutation_Update) ProtoMessage() {}
 
 func (x *RolePermissionMutation_Update) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[5]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -464,7 +500,7 @@ func (x *RolePermissionMutation_Update) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionMutation_Update.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation_Update) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1, 1}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1, 1}
 }
 
 func (x *RolePermissionMutation_Update) GetId() string {
@@ -512,7 +548,7 @@ type RolePermissionMutation_Delete struct {
 
 func (x *RolePermissionMutation_Delete) Reset() {
 	*x = RolePermissionMutation_Delete{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[6]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -524,7 +560,7 @@ func (x *RolePermissionMutation_Delete) String() string {
 func (*RolePermissionMutation_Delete) ProtoMessage() {}
 
 func (x *RolePermissionMutation_Delete) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[6]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -537,7 +573,7 @@ func (x *RolePermissionMutation_Delete) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionMutation_Delete.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation_Delete) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1, 2}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1, 2}
 }
 
 func (x *RolePermissionMutation_Delete) GetId() string {
@@ -556,7 +592,7 @@ type RolePermissionMutation_Create_Data struct {
 
 func (x *RolePermissionMutation_Create_Data) Reset() {
 	*x = RolePermissionMutation_Create_Data{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[7]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -568,7 +604,7 @@ func (x *RolePermissionMutation_Create_Data) String() string {
 func (*RolePermissionMutation_Create_Data) ProtoMessage() {}
 
 func (x *RolePermissionMutation_Create_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[7]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -581,7 +617,7 @@ func (x *RolePermissionMutation_Create_Data) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use RolePermissionMutation_Create_Data.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation_Create_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1, 0, 0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1, 0, 0}
 }
 
 func (x *RolePermissionMutation_Create_Data) GetResourceId() string {
@@ -599,7 +635,7 @@ type RolePermissionMutation_Update_Data struct {
 
 func (x *RolePermissionMutation_Update_Data) Reset() {
 	*x = RolePermissionMutation_Update_Data{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[8]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -611,7 +647,7 @@ func (x *RolePermissionMutation_Update_Data) String() string {
 func (*RolePermissionMutation_Update_Data) ProtoMessage() {}
 
 func (x *RolePermissionMutation_Update_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[8]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -624,7 +660,7 @@ func (x *RolePermissionMutation_Update_Data) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use RolePermissionMutation_Update_Data.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation_Update_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1, 1, 0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1, 1, 0}
 }
 
 type RolePermissionMutation_Delete_Data struct {
@@ -635,7 +671,7 @@ type RolePermissionMutation_Delete_Data struct {
 
 func (x *RolePermissionMutation_Delete_Data) Reset() {
 	*x = RolePermissionMutation_Delete_Data{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[9]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -647,7 +683,7 @@ func (x *RolePermissionMutation_Delete_Data) String() string {
 func (*RolePermissionMutation_Delete_Data) ProtoMessage() {}
 
 func (x *RolePermissionMutation_Delete_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[9]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -660,7 +696,7 @@ func (x *RolePermissionMutation_Delete_Data) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use RolePermissionMutation_Delete_Data.ProtoReflect.Descriptor instead.
 func (*RolePermissionMutation_Delete_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{1, 2, 0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{1, 2, 0}
 }
 
 // ---------------- SEARCH ----------------
@@ -673,7 +709,7 @@ type RolePermissionView_Search struct {
 
 func (x *RolePermissionView_Search) Reset() {
 	*x = RolePermissionView_Search{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[10]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -685,7 +721,7 @@ func (x *RolePermissionView_Search) String() string {
 func (*RolePermissionView_Search) ProtoMessage() {}
 
 func (x *RolePermissionView_Search) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[10]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -698,7 +734,7 @@ func (x *RolePermissionView_Search) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionView_Search.ProtoReflect.Descriptor instead.
 func (*RolePermissionView_Search) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{3, 0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{2, 0}
 }
 
 func (x *RolePermissionView_Search) GetCommon() *v1.SearchRequest {
@@ -718,7 +754,7 @@ type RolePermissionView_Search_Data struct {
 
 func (x *RolePermissionView_Search_Data) Reset() {
 	*x = RolePermissionView_Search_Data{}
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[11]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -730,7 +766,7 @@ func (x *RolePermissionView_Search_Data) String() string {
 func (*RolePermissionView_Search_Data) ProtoMessage() {}
 
 func (x *RolePermissionView_Search_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_role_permission_proto_msgTypes[11]
+	mi := &file_iam_authz_v1_resources_role_permission_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -743,7 +779,7 @@ func (x *RolePermissionView_Search_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionView_Search_Data.ProtoReflect.Descriptor instead.
 func (*RolePermissionView_Search_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_role_permission_proto_rawDescGZIP(), []int{3, 0, 0}
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{2, 0, 0}
 }
 
 func (x *RolePermissionView_Search_Data) GetResults() []*RolePermission {
@@ -760,11 +796,11 @@ func (x *RolePermissionView_Search_Data) GetTotal() int64 {
 	return 0
 }
 
-var File_iam_authz_v1_role_permission_proto protoreflect.FileDescriptor
+var File_iam_authz_v1_resources_role_permission_proto protoreflect.FileDescriptor
 
-const file_iam_authz_v1_role_permission_proto_rawDesc = "" +
+const file_iam_authz_v1_resources_role_permission_proto_rawDesc = "" +
 	"\n" +
-	"\"iam/authz/v1/role_permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a\x1ccommon/v1/base_request.proto\x1a\x1ccommon/v1/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x02\n" +
+	",iam/authz/v1/resources/role_permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a\x1ccommon/v1/base_request.proto\x1a\x1ccommon/v1/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x02\n" +
 	"\x0eRolePermission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03lat\x18\x02 \x01(\x01R\x03lat\x12\x10\n" +
@@ -800,9 +836,7 @@ const file_iam_authz_v1_role_permission_proto_rawDesc = "" +
 	"\x06Delete\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x1a\x06\n" +
 	"\x04Data:'\x8a\xb5\x18\x0fROLE_PERMISSION\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01B\r\n" +
-	"\x06action\x12\x03\xf8B\x01\"e\n" +
-	"\x1bRolePermissionMutateRequest\x12F\n" +
-	"\tmutations\x18\x01 \x03(\v2\x1e.iam.v1.RolePermissionMutationB\b\xfaB\x05\x92\x01\x02\b\x01R\tmutations\"\xb6\x02\n" +
+	"\x06action\x12\x03\xf8B\x01\"\xb6\x02\n" +
 	"\x12RolePermissionView\x12\x1c\n" +
 	"\x05op_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04opId\x12;\n" +
 	"\x06search\x18\x02 \x01(\v2!.iam.v1.RolePermissionView.SearchH\x00R\x06search\x1a\xb5\x01\n" +
@@ -811,47 +845,51 @@ const file_iam_authz_v1_role_permission_proto_rawDesc = "" +
 	"\x04Data\x120\n" +
 	"\aresults\x18\x01 \x03(\v2\x16.iam.v1.RolePermissionR\aresults\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total:\x1f\x8a\xb5\x18\x0fROLE_PERMISSION\x92\xb5\x18\x04READ\xa8\xb5\x18\x01B\r\n" +
-	"\x06action\x12\x03\xf8B\x01B\x7f\n" +
+	"\x06action\x12\x03\xf8B\x01\"e\n" +
+	"\x1bRolePermissionMutateRequest\x12F\n" +
+	"\tmutations\x18\x01 \x03(\v2\x1e.iam.v1.RolePermissionMutationB\b\xfaB\x05\x92\x01\x02\b\x01R\tmutations\"\x1b\n" +
+	"\x19RolePermissionViewRequestB\x7f\n" +
 	"\x1dcom.aliasadi.iam.v1.resourcesP\x01Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
 
 var (
-	file_iam_authz_v1_role_permission_proto_rawDescOnce sync.Once
-	file_iam_authz_v1_role_permission_proto_rawDescData []byte
+	file_iam_authz_v1_resources_role_permission_proto_rawDescOnce sync.Once
+	file_iam_authz_v1_resources_role_permission_proto_rawDescData []byte
 )
 
-func file_iam_authz_v1_role_permission_proto_rawDescGZIP() []byte {
-	file_iam_authz_v1_role_permission_proto_rawDescOnce.Do(func() {
-		file_iam_authz_v1_role_permission_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_iam_authz_v1_role_permission_proto_rawDesc), len(file_iam_authz_v1_role_permission_proto_rawDesc)))
+func file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP() []byte {
+	file_iam_authz_v1_resources_role_permission_proto_rawDescOnce.Do(func() {
+		file_iam_authz_v1_resources_role_permission_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_iam_authz_v1_resources_role_permission_proto_rawDesc), len(file_iam_authz_v1_resources_role_permission_proto_rawDesc)))
 	})
-	return file_iam_authz_v1_role_permission_proto_rawDescData
+	return file_iam_authz_v1_resources_role_permission_proto_rawDescData
 }
 
-var file_iam_authz_v1_role_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
-var file_iam_authz_v1_role_permission_proto_goTypes = []any{
+var file_iam_authz_v1_resources_role_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_iam_authz_v1_resources_role_permission_proto_goTypes = []any{
 	(*RolePermission)(nil),                     // 0: iam.v1.RolePermission
 	(*RolePermissionMutation)(nil),             // 1: iam.v1.RolePermissionMutation
-	(*RolePermissionMutateRequest)(nil),        // 2: iam.v1.RolePermissionMutateRequest
-	(*RolePermissionView)(nil),                 // 3: iam.v1.RolePermissionView
-	(*RolePermissionMutation_Create)(nil),      // 4: iam.v1.RolePermissionMutation.Create
-	(*RolePermissionMutation_Update)(nil),      // 5: iam.v1.RolePermissionMutation.Update
-	(*RolePermissionMutation_Delete)(nil),      // 6: iam.v1.RolePermissionMutation.Delete
-	(*RolePermissionMutation_Create_Data)(nil), // 7: iam.v1.RolePermissionMutation.Create.Data
-	(*RolePermissionMutation_Update_Data)(nil), // 8: iam.v1.RolePermissionMutation.Update.Data
-	(*RolePermissionMutation_Delete_Data)(nil), // 9: iam.v1.RolePermissionMutation.Delete.Data
-	(*RolePermissionView_Search)(nil),          // 10: iam.v1.RolePermissionView.Search
-	(*RolePermissionView_Search_Data)(nil),     // 11: iam.v1.RolePermissionView.Search.Data
-	(*timestamppb.Timestamp)(nil),              // 12: google.protobuf.Timestamp
-	(*v1.SearchRequest)(nil),                   // 13: common.v1.SearchRequest
+	(*RolePermissionView)(nil),                 // 2: iam.v1.RolePermissionView
+	(*RolePermissionMutateRequest)(nil),        // 3: iam.v1.RolePermissionMutateRequest
+	(*RolePermissionViewRequest)(nil),          // 4: iam.v1.RolePermissionViewRequest
+	(*RolePermissionMutation_Create)(nil),      // 5: iam.v1.RolePermissionMutation.Create
+	(*RolePermissionMutation_Update)(nil),      // 6: iam.v1.RolePermissionMutation.Update
+	(*RolePermissionMutation_Delete)(nil),      // 7: iam.v1.RolePermissionMutation.Delete
+	(*RolePermissionMutation_Create_Data)(nil), // 8: iam.v1.RolePermissionMutation.Create.Data
+	(*RolePermissionMutation_Update_Data)(nil), // 9: iam.v1.RolePermissionMutation.Update.Data
+	(*RolePermissionMutation_Delete_Data)(nil), // 10: iam.v1.RolePermissionMutation.Delete.Data
+	(*RolePermissionView_Search)(nil),          // 11: iam.v1.RolePermissionView.Search
+	(*RolePermissionView_Search_Data)(nil),     // 12: iam.v1.RolePermissionView.Search.Data
+	(*timestamppb.Timestamp)(nil),              // 13: google.protobuf.Timestamp
+	(*v1.SearchRequest)(nil),                   // 14: common.v1.SearchRequest
 }
-var file_iam_authz_v1_role_permission_proto_depIdxs = []int32{
-	12, // 0: iam.v1.RolePermission.create_date:type_name -> google.protobuf.Timestamp
-	12, // 1: iam.v1.RolePermission.update_date:type_name -> google.protobuf.Timestamp
-	4,  // 2: iam.v1.RolePermissionMutation.create:type_name -> iam.v1.RolePermissionMutation.Create
-	5,  // 3: iam.v1.RolePermissionMutation.update:type_name -> iam.v1.RolePermissionMutation.Update
-	6,  // 4: iam.v1.RolePermissionMutation.delete:type_name -> iam.v1.RolePermissionMutation.Delete
-	1,  // 5: iam.v1.RolePermissionMutateRequest.mutations:type_name -> iam.v1.RolePermissionMutation
-	10, // 6: iam.v1.RolePermissionView.search:type_name -> iam.v1.RolePermissionView.Search
-	13, // 7: iam.v1.RolePermissionView.Search.common:type_name -> common.v1.SearchRequest
+var file_iam_authz_v1_resources_role_permission_proto_depIdxs = []int32{
+	13, // 0: iam.v1.RolePermission.create_date:type_name -> google.protobuf.Timestamp
+	13, // 1: iam.v1.RolePermission.update_date:type_name -> google.protobuf.Timestamp
+	5,  // 2: iam.v1.RolePermissionMutation.create:type_name -> iam.v1.RolePermissionMutation.Create
+	6,  // 3: iam.v1.RolePermissionMutation.update:type_name -> iam.v1.RolePermissionMutation.Update
+	7,  // 4: iam.v1.RolePermissionMutation.delete:type_name -> iam.v1.RolePermissionMutation.Delete
+	11, // 5: iam.v1.RolePermissionView.search:type_name -> iam.v1.RolePermissionView.Search
+	1,  // 6: iam.v1.RolePermissionMutateRequest.mutations:type_name -> iam.v1.RolePermissionMutation
+	14, // 7: iam.v1.RolePermissionView.Search.common:type_name -> common.v1.SearchRequest
 	0,  // 8: iam.v1.RolePermissionView.Search.Data.results:type_name -> iam.v1.RolePermission
 	9,  // [9:9] is the sub-list for method output_type
 	9,  // [9:9] is the sub-list for method input_type
@@ -860,34 +898,34 @@ var file_iam_authz_v1_role_permission_proto_depIdxs = []int32{
 	0,  // [0:9] is the sub-list for field type_name
 }
 
-func init() { file_iam_authz_v1_role_permission_proto_init() }
-func file_iam_authz_v1_role_permission_proto_init() {
-	if File_iam_authz_v1_role_permission_proto != nil {
+func init() { file_iam_authz_v1_resources_role_permission_proto_init() }
+func file_iam_authz_v1_resources_role_permission_proto_init() {
+	if File_iam_authz_v1_resources_role_permission_proto != nil {
 		return
 	}
-	file_iam_authz_v1_role_permission_proto_msgTypes[1].OneofWrappers = []any{
+	file_iam_authz_v1_resources_role_permission_proto_msgTypes[1].OneofWrappers = []any{
 		(*RolePermissionMutation_Create_)(nil),
 		(*RolePermissionMutation_Update_)(nil),
 		(*RolePermissionMutation_Delete_)(nil),
 	}
-	file_iam_authz_v1_role_permission_proto_msgTypes[3].OneofWrappers = []any{
+	file_iam_authz_v1_resources_role_permission_proto_msgTypes[2].OneofWrappers = []any{
 		(*RolePermissionView_Search_)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_authz_v1_role_permission_proto_rawDesc), len(file_iam_authz_v1_role_permission_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_authz_v1_resources_role_permission_proto_rawDesc), len(file_iam_authz_v1_resources_role_permission_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_iam_authz_v1_role_permission_proto_goTypes,
-		DependencyIndexes: file_iam_authz_v1_role_permission_proto_depIdxs,
-		MessageInfos:      file_iam_authz_v1_role_permission_proto_msgTypes,
+		GoTypes:           file_iam_authz_v1_resources_role_permission_proto_goTypes,
+		DependencyIndexes: file_iam_authz_v1_resources_role_permission_proto_depIdxs,
+		MessageInfos:      file_iam_authz_v1_resources_role_permission_proto_msgTypes,
 	}.Build()
-	File_iam_authz_v1_role_permission_proto = out.File
-	file_iam_authz_v1_role_permission_proto_goTypes = nil
-	file_iam_authz_v1_role_permission_proto_depIdxs = nil
+	File_iam_authz_v1_resources_role_permission_proto = out.File
+	file_iam_authz_v1_resources_role_permission_proto_goTypes = nil
+	file_iam_authz_v1_resources_role_permission_proto_depIdxs = nil
 }

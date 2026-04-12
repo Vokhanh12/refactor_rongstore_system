@@ -2,13 +2,14 @@ package usecases
 
 import (
 	"context"
-	"server/pkg/errors"
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 )
@@ -24,17 +25,11 @@ type RoleMutationBatch struct {
 }
 
 type MutateRoleUsecase struct {
-	Create *c.CreateRoleHandler
-	Delete *c.DeleteRoleHandler
-	Update *c.UpdateRoleHandler
+	repo re.RoleRepository
 }
 
-func NewMutateRoleUsecase(roleRepo re.RoleRepository) *MutateRoleUsecase {
-	return &MutateRoleUsecase{
-		Create: c.NewCreateRoleHandler(roleRepo),
-		Delete: c.NewDeleteRoleHandler(roleRepo),
-		Update: c.NewUpdateRoleHandler(roleRepo),
-	}
+func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
+	return &MutateRoleUsecase{repo: repo}
 }
 
 func (u *MutateRoleUsecase) Execute(
@@ -42,35 +37,34 @@ func (u *MutateRoleUsecase) Execute(
 	batch RoleMutationBatch,
 ) *common.MutateResult {
 
-	ctx, span := otel.Tracer("usecase").Start(ctx, "MutateUsecase")
+	ctx, span := otel.Tracer("usecase").Start(ctx, "MutateRoleUsecase.Execute")
 	defer span.End()
 
 	results := make([]common.MutateResultItem, 0, len(batch.Items))
 
 	for _, item := range batch.Items {
 		var (
-			err  *errors.AppError
+			err  *aerrs.AppError
 			data any
 		)
 
 		switch {
 		case item.Payload.Create != nil:
-			data, err = u.Create.Handle(ctx, *item.Payload.Create)
+			data, err = u.handleCreate(ctx, *item.Payload.Create)
 
 		case item.Payload.Update != nil:
-			data, err = u.Update.Handle(ctx, *item.Payload.Update)
+			data, err = u.handleUpdate(ctx, *item.Payload.Update)
 
 		case item.Payload.Delete != nil:
-			data, err = u.Delete.Handle(ctx, *item.Payload.Delete)
+			data, err = u.handleDelete(ctx, *item.Payload.Delete)
 
 		default:
-			err = errors.New(domain.MUTATE_OPERATION_UNSUPPORTED)
+			err = aerrs.New(domain.MUTATE_OPERATION_UNSUPPORTED)
 		}
 
 		var code string
 		if err != nil {
 			code = err.Code
-
 			span.SetAttributes(attribute.Bool("mutate.partial_failure", true))
 		}
 
@@ -83,4 +77,28 @@ func (u *MutateRoleUsecase) Execute(
 	}
 
 	return &common.MutateResult{Items: results}
+}
+
+func (u *MutateRoleUsecase) handleCreate(
+	ctx context.Context,
+	cmd c.CreateRoleCommand,
+) (any, *aerrs.AppError) {
+
+	return nil, nil
+}
+
+func (u *MutateRoleUsecase) handleUpdate(
+	ctx context.Context,
+	cmd c.UpdateRoleCommand,
+) (any, *aerrs.AppError) {
+
+	return nil, nil
+}
+
+func (u *MutateRoleUsecase) handleDelete(
+	ctx context.Context,
+	cmd c.DeleteRoleCommand,
+) (any, *aerrs.AppError) {
+
+	return nil, nil
 }

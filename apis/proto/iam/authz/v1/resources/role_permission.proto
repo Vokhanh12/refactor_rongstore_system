@@ -107,13 +107,6 @@ message RolePermissionMutation {
 }
 
 
-message RolePermissionMutateRequest {
-  repeated RolePermissionMutation mutations = 1 [
-    (validate.rules).repeated = {min_items: 1}
-  ];
-}
-
-
 // ============================================================
 // QUERY (VIEW)
 // ============================================================
@@ -148,3 +141,15 @@ message RolePermissionView {
     }
   }
 }
+
+// ============================================================
+// API
+// ============================================================
+
+message RolePermissionMutateRequest {
+  repeated RolePermissionMutation mutations = 1 [
+    (validate.rules).repeated = {min_items: 1}
+  ];
+}
+
+message RolePermissionViewRequest {}

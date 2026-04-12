@@ -1,8 +1,12 @@
 package grpc
 
-import "context"
+import (
+	"context"
+
+	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	iamv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources"
+)
 
 type AuthzPort interface {
-	Login(ctx context.Context, username, password string) (token string, err error)
-	Handshake(ctx context.Context, clientKey string) (session string, err error)
+	RoleMutate(ctx context.Context, req *iamv1rs.StoreOwnerMutateRequest) (*commonv1.BaseResponse, error)
 }
