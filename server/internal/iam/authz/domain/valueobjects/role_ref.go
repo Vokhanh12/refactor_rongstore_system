@@ -2,53 +2,80 @@ package valueobjects
 
 import (
 	"github.com/google/uuid"
+
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
+
+// ============================================================
+// VALUE OBJECT
+// ============================================================
 
 type RoleRef struct {
 	roleCode string
 	scopeID  *uuid.UUID
 }
 
-func NewRoleRef(scopeID *uuid.UUID, roleCode string) *RoleRef {
-	return &RoleRef{
+// ============================================================
+// CONSTRUCTOR (domain - có validate)
+// ============================================================
+
+func NewRoleRef(scopeID *uuid.UUID, roleCode string) (*RoleRef, []aerrs.AppErrorDetail) {
+	r := &RoleRef{
+		roleCode: roleCode,
+		scopeID:  scopeID,
+	}
+
+	if errs := r.validate(); len(errs) > 0 {
+		return nil, errs
+	}
+
+	return r, nil
+}
+
+// ============================================================
+// RESTORE (persistence - trust data)
+// ============================================================
+
+func RestoreRoleRef(roleCode string, scopeID *uuid.UUID) RoleRef {
+	return RoleRef{
 		roleCode: roleCode,
 		scopeID:  scopeID,
 	}
 }
 
-func (p *RoleRef) validate() []aerrs.AppErrorDetail {
+// ============================================================
+// VALIDATION
+// ============================================================
 
+func (r *RoleRef) validate() []aerrs.AppErrorDetail {
 	var details []aerrs.AppErrorDetail
 
-	if p.roleCode == "" {
+	if r.roleCode == "" {
 		details = append(details, *aerrs.NewDetail(
 			domain.REASON_REQUIRED,
 			aerrs.WithField("roleCode"),
 			aerrs.WithMessageDetail("role code is required"),
 		))
-		return details
 	}
 
 	return details
 }
 
+// ============================================================
+// GETTERS
+// ============================================================
+
 func (r RoleRef) RoleCode() string    { return r.roleCode }
 func (r RoleRef) ScopeID() *uuid.UUID { return r.scopeID }
 
+// ============================================================
+// UTILS
+// ============================================================
+
 func (r RoleRef) String() string {
-	return r.roleCode + ":" + r.scopeID.String()
-}
-
-type NewRoleRefParms struct {
-	RoleCode string
-	ScopeID  *uuid.UUID
-}
-
-func NewRoleRefFromPersistence(p NewRoleRefParms) RoleRef {
-	return RoleRef{
-		roleCode: p.RoleCode,
-		scopeID:  p.ScopeID,
+	if r.scopeID == nil {
+		return r.roleCode + ":<nil>"
 	}
+	return r.roleCode + ":" + r.scopeID.String()
 }

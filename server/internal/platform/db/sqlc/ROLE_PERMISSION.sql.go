@@ -57,7 +57,7 @@ type GetRolePermissionsByRoleRefsRow struct {
 	RoleName              string          `json:"role_name"`
 	RoleDescription       pgtype.Text     `json:"role_description"`
 	RoleAccessScope       RoleAccessScope `json:"role_access_scope"`
-	RoleLevel             pgtype.Int4     `json:"role_level"`
+	RoleLevel             int32           `json:"role_level"`
 	RoleIsSystem          bool            `json:"role_is_system"`
 	RoleIsSuper           bool            `json:"role_is_super"`
 	RoleIsActive          bool            `json:"role_is_active"`

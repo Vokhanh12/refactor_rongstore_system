@@ -180,14 +180,14 @@ func Int4FromInt32(i int32) pgtype.Int4 {
 	}
 }
 
-func Int4FromUint8(i uint8) pgtype.Int4 {
+func PgInt4FromUint8(i uint8) pgtype.Int4 {
 	return pgtype.Int4{
 		Int32: int32(i),
 		Valid: true,
 	}
 }
 
-func Uint8FromInt4(i pgtype.Int4) uint8 {
+func Uint8FromPgInt4(i pgtype.Int4) uint8 {
 	if !i.Valid {
 		return 0
 	}
@@ -201,4 +201,16 @@ func Uint8FromInt4(i pgtype.Int4) uint8 {
 	}
 
 	return uint8(i.Int32)
+}
+
+func Uint8FromInt32(i int32) uint8 {
+	if i < 0 {
+		return 0
+	}
+
+	if i > 255 {
+		return 255
+	}
+
+	return uint8(i)
 }

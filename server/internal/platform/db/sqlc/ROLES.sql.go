@@ -13,6 +13,7 @@ import (
 )
 
 const createRole = `-- name: CreateRole :one
+
 INSERT INTO roles (
     id,
     scope_id,
@@ -29,7 +30,7 @@ INSERT INTO roles (
     $1, $2, $3, $4, $5, $6,
     $7, $8, $9, $10, $11
 )
-RETURNING 
+RETURNING
     id,
     scope_id,
     role_scope_type,
@@ -51,7 +52,7 @@ type CreateRoleParams struct {
 	Name            string          `json:"name"`
 	Description     pgtype.Text     `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
-	Level           pgtype.Int4     `json:"level"`
+	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
 	IsActive        bool            `json:"is_active"`
 	IsSuper         bool            `json:"is_super"`
@@ -65,12 +66,15 @@ type CreateRoleRow struct {
 	Name            string          `json:"name"`
 	Description     pgtype.Text     `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
-	Level           pgtype.Int4     `json:"level"`
+	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
 	IsActive        bool            `json:"is_active"`
 	IsSuper         bool            `json:"is_super"`
 }
 
+// ============================================================
+// WRITE: ROLE COMMANDS
+// ============================================================
 func (q *Queries) CreateRole(ctx context.Context, arg CreateRoleParams) (CreateRoleRow, error) {
 	row := q.db.QueryRow(ctx, createRole,
 		arg.ID,
@@ -86,6 +90,276 @@ func (q *Queries) CreateRole(ctx context.Context, arg CreateRoleParams) (CreateR
 		arg.IsSuper,
 	)
 	var i CreateRoleRow
+	err := row.Scan(
+		&i.ID,
+		&i.ScopeID,
+		&i.RoleScopeType,
+		&i.Code,
+		&i.Name,
+		&i.Description,
+		&i.RoleAccessScope,
+		&i.Level,
+		&i.IsSystem,
+		&i.IsActive,
+		&i.IsSuper,
+	)
+	return i, err
+}
+
+const deleteRole = `-- name: DeleteRole :exec
+DELETE FROM roles
+WHERE id = $1
+`
+
+func (q *Queries) DeleteRole(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteRole, id)
+	return err
+}
+
+const getRoleByCode = `-- name: GetRoleByCode :one
+SELECT
+    id,
+    scope_id,
+    role_scope_type,
+    code,
+    name,
+    description,
+    role_access_scope,
+    level,
+    is_system,
+    is_active,
+    is_super
+FROM roles
+WHERE code = $1
+`
+
+type GetRoleByCodeRow struct {
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         pgtype.UUID     `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     pgtype.Text     `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+}
+
+func (q *Queries) GetRoleByCode(ctx context.Context, code string) (GetRoleByCodeRow, error) {
+	row := q.db.QueryRow(ctx, getRoleByCode, code)
+	var i GetRoleByCodeRow
+	err := row.Scan(
+		&i.ID,
+		&i.ScopeID,
+		&i.RoleScopeType,
+		&i.Code,
+		&i.Name,
+		&i.Description,
+		&i.RoleAccessScope,
+		&i.Level,
+		&i.IsSystem,
+		&i.IsActive,
+		&i.IsSuper,
+	)
+	return i, err
+}
+
+const getRoleByID = `-- name: GetRoleByID :one
+
+SELECT
+    id,
+    scope_id,
+    role_scope_type,
+    code,
+    name,
+    description,
+    role_access_scope,
+    level,
+    is_system,
+    is_active,
+    is_super
+FROM roles
+WHERE id = $1
+`
+
+type GetRoleByIDRow struct {
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         pgtype.UUID     `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     pgtype.Text     `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+}
+
+// ============================================================
+// READ: ROLE QUERIES
+// ============================================================
+func (q *Queries) GetRoleByID(ctx context.Context, id uuid.UUID) (GetRoleByIDRow, error) {
+	row := q.db.QueryRow(ctx, getRoleByID, id)
+	var i GetRoleByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.ScopeID,
+		&i.RoleScopeType,
+		&i.Code,
+		&i.Name,
+		&i.Description,
+		&i.RoleAccessScope,
+		&i.Level,
+		&i.IsSystem,
+		&i.IsActive,
+		&i.IsSuper,
+	)
+	return i, err
+}
+
+const listRoles = `-- name: ListRoles :many
+SELECT
+    id,
+    scope_id,
+    role_scope_type,
+    code,
+    name,
+    description,
+    role_access_scope,
+    level,
+    is_system,
+    is_active,
+    is_super
+FROM roles
+ORDER BY created_at DESC
+LIMIT $1 OFFSET $2
+`
+
+type ListRolesParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+type ListRolesRow struct {
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         pgtype.UUID     `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     pgtype.Text     `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+}
+
+func (q *Queries) ListRoles(ctx context.Context, arg ListRolesParams) ([]ListRolesRow, error) {
+	rows, err := q.db.Query(ctx, listRoles, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListRolesRow
+	for rows.Next() {
+		var i ListRolesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ScopeID,
+			&i.RoleScopeType,
+			&i.Code,
+			&i.Name,
+			&i.Description,
+			&i.RoleAccessScope,
+			&i.Level,
+			&i.IsSystem,
+			&i.IsActive,
+			&i.IsSuper,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateRole = `-- name: UpdateRole :one
+UPDATE roles
+SET
+    scope_id = $2,
+    role_scope_type = $3,
+    code = $4,
+    name = $5,
+    description = $6,
+    role_access_scope = $7,
+    level = $8,
+    is_system = $9,
+    is_active = $10,
+    is_super = $11
+WHERE id = $1
+RETURNING
+    id,
+    scope_id,
+    role_scope_type,
+    code,
+    name,
+    description,
+    role_access_scope,
+    level,
+    is_system,
+    is_active,
+    is_super
+`
+
+type UpdateRoleParams struct {
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         pgtype.UUID     `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     pgtype.Text     `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+}
+
+type UpdateRoleRow struct {
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         pgtype.UUID     `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     pgtype.Text     `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+}
+
+func (q *Queries) UpdateRole(ctx context.Context, arg UpdateRoleParams) (UpdateRoleRow, error) {
+	row := q.db.QueryRow(ctx, updateRole,
+		arg.ID,
+		arg.ScopeID,
+		arg.RoleScopeType,
+		arg.Code,
+		arg.Name,
+		arg.Description,
+		arg.RoleAccessScope,
+		arg.Level,
+		arg.IsSystem,
+		arg.IsActive,
+		arg.IsSuper,
+	)
+	var i UpdateRoleRow
 	err := row.Scan(
 		&i.ID,
 		&i.ScopeID,

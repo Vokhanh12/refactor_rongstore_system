@@ -6,6 +6,10 @@ import (
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 )
 
+// ============================================================
+// ENTITY DOMAIN
+// ============================================================
+
 type Permission struct {
 	id   uuid.UUID
 	code string
@@ -17,6 +21,26 @@ type Permission struct {
 
 	isActive bool
 }
+
+func (p *Permission) validate() error {
+	return nil
+}
+
+func (p Permission) ResourceAction() vo.ResourceAction {
+	return p.resourceAction
+}
+
+func (p Permission) Key() string {
+	return p.resourceAction.Resource() + ":" + p.resourceAction.Action()
+}
+
+func (p Permission) Match(resource, action string) bool {
+	return p.resourceAction.Resource() == resource && p.resourceAction.Action() == action
+}
+
+// ============================================================
+// ENTITY DATABASE
+// ============================================================
 
 type NewPermissionParams struct {
 	ID   uuid.UUID
@@ -31,25 +55,13 @@ type NewPermissionParams struct {
 	IsActive bool
 }
 
-func NewPermissionFromPersistence(p NewPermissionParams) Permission {
+func NewPermissionFromPersistence(pp NewPermissionParams, rap vo.NewResourceActionParms) Permission {
 	return Permission{
-		id:             p.ID,
-		code:           p.Code,
-		name:           p.Name,
-		description:    p.Description,
-		resourceAction: vo.NewResourceActionFromPersistence(p.Resource, p.Action),
-		isActive:       p.IsActive,
+		id:             pp.ID,
+		code:           pp.Code,
+		name:           pp.Name,
+		description:    pp.Description,
+		resourceAction: vo.NewResourceActionFromPersistence(rap),
+		isActive:       pp.IsActive,
 	}
-}
-
-func (p Permission) ResourceAction() vo.ResourceAction {
-	return p.resourceAction
-}
-
-func (p Permission) Key() string {
-	return p.resourceAction.Resource() + ":" + p.resourceAction.Action()
-}
-
-func (p Permission) Match(resource, action string) bool {
-	return p.resourceAction.Resource() == resource && p.resourceAction.Action() == action
 }

@@ -119,7 +119,7 @@ type Role struct {
 	Name            string             `json:"name"`
 	Description     pgtype.Text        `json:"description"`
 	RoleAccessScope RoleAccessScope    `json:"role_access_scope"`
-	Level           pgtype.Int4        `json:"level"`
+	Level           int32              `json:"level"`
 	IsSystem        bool               `json:"is_system"`
 	IsActive        bool               `json:"is_active"`
 	IsSuper         bool               `json:"is_super"`

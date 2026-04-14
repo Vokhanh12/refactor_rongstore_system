@@ -2,67 +2,36 @@ package valueobjects
 
 import (
 	"strconv"
-	"strings"
 
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
+
+// ============================================================
+// VALUE OBJECT
+// ============================================================
 
 type ResourceAction struct {
 	resource string
 	action   string
 }
 
-type NewResourceActionParms struct {
-	Resource string
-	Action   string
-}
+// ============================================================
+// CONSTRUCTOR (domain - có validate)
+// ============================================================
 
-func NewResourceActionFromPersistence(p NewResourceActionParms) ResourceAction {
-	return ResourceAction{
-		resource: p.Resource,
-		action:   p.Action,
-	}
-}
+func NewResourceAction(resource string, action string) (*ResourceAction, []aerrs.AppErrorDetail) {
 
-func NewResourceAction(value string) (*ResourceAction, []aerrs.AppErrorDetail) {
-	var details []aerrs.AppErrorDetail
-
-	if strings.TrimSpace(value) == "" {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_REQUIRED,
-			aerrs.WithField("ResourceAction"),
-			aerrs.WithMessageDetail("ResourceAction is required"),
-		))
-		return nil, details
-	}
-
-	parts := strings.Split(value, ":")
-	if len(parts) != 2 {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_INVALID_FORMAT,
-			aerrs.WithField("ResourceAction"),
-			aerrs.WithMessageDetail("ResourceAction must be in format resource:action"),
-		))
-		return nil, details
-	}
-
-	resource := strings.TrimSpace(parts[0])
-	action := strings.TrimSpace(parts[1])
-
-	if resource == "" || action == "" {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_INVALID_FORMAT,
-			aerrs.WithField("permission"),
-			aerrs.WithMessageDetail("resource or action is empty"),
-		))
-		return nil, details
-	}
-
-	return &ResourceAction{
+	r := &ResourceAction{
 		resource: resource,
 		action:   action,
-	}, nil
+	}
+
+	if errs := r.validate(); len(errs) > 0 {
+		return nil, errs
+	}
+
+	return r, nil
 }
 
 func NewResourceActions(values []string) ([]ResourceAction, []aerrs.AppErrorDetail) {
@@ -72,16 +41,16 @@ func NewResourceActions(values []string) ([]ResourceAction, []aerrs.AppErrorDeta
 	)
 
 	for i, v := range values {
-		pk, errs := NewResourceAction(v)
+		ra, errs := NewResourceAction(v)
 		if len(errs) > 0 {
 			for _, d := range errs {
-				d.Field = "permissions[" + strconv.Itoa(i) + "]"
+				d.Field = "resourceActions[" + strconv.Itoa(i) + "]"
 				details = append(details, d)
 			}
 			continue
 		}
 
-		result = append(result, *pk)
+		result = append(result, *ra)
 	}
 
 	if len(details) > 0 {
@@ -91,14 +60,54 @@ func NewResourceActions(values []string) ([]ResourceAction, []aerrs.AppErrorDeta
 	return result, nil
 }
 
-func (p ResourceAction) Action() string {
-	return p.action
+// ============================================================
+// RESTORE (persistence - trust data)
+// ============================================================
+
+func RestoreResourceAction(resource, action string) ResourceAction {
+	return ResourceAction{
+		resource: resource,
+		action:   action,
+	}
 }
 
-func (p ResourceAction) Resource() string {
-	return p.resource
+// ============================================================
+// VALIDATION
+// ============================================================
+
+func (r *ResourceAction) validate() []aerrs.AppErrorDetail {
+	var details []aerrs.AppErrorDetail
+
+	if r.resource == "" {
+		details = append(details, *aerrs.NewDetail(
+			domain.REASON_REQUIRED,
+			aerrs.WithField("resource"),
+			aerrs.WithMessageDetail("resource is required"),
+		))
+	}
+
+	if r.action == "" {
+		details = append(details, *aerrs.NewDetail(
+			domain.REASON_REQUIRED,
+			aerrs.WithField("action"),
+			aerrs.WithMessageDetail("action is required"),
+		))
+	}
+
+	return details
 }
 
-func (p ResourceAction) String() string {
-	return p.resource + ":" + p.action
+// ============================================================
+// GETTERS
+// ============================================================
+
+func (r ResourceAction) Resource() string { return r.resource }
+func (r ResourceAction) Action() string   { return r.action }
+
+// ============================================================
+// UTILS
+// ============================================================
+
+func (r ResourceAction) String() string {
+	return r.resource + ":" + r.action
 }
