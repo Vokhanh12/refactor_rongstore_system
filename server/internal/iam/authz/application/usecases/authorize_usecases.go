@@ -2,8 +2,10 @@ package usecases
 
 import (
 	"context"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	domerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
@@ -50,7 +52,14 @@ func (u *AuthorizeUsecase) Execute(
 
 	for _, role := range cmd.Roles {
 
-		roleKey, errdetails := vo.NewRoleRef(role)
+		parts := strings.Split(role, ":")
+		roleCode := parts[0]
+		scopeID, err := uuid.Parse(parts[1])
+		if err != nil {
+			panic(err)
+		}
+
+		roleKey, errdetails := vo.NewRoleRef(&scopeID, roleCode)
 		if errdetails != nil {
 			return nil, aerrs.New(domerrs.UNAUTHORIZED, aerrs.WithAppendErrorDetails(errdetails))
 		}
