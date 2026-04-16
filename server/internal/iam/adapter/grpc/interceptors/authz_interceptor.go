@@ -27,17 +27,6 @@ func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInter
 			return handler(ctx, req)
 		}
 
-		st := status.New(codes.InvalidArgument, "validation error")
-
-		detail := &yourpb.ValidationDetail{
-			Field:   "resource",
-			Code:    "REQUIRED",
-			Message: "resource is required",
-			Hint:    "please provide resource",
-		}
-
-		st, _ = st.WithDetails(detail)
-
 		userctx, ok := ctxutil.User(ctx)
 		if !ok || userctx.UserID == "" || userctx.Roles == nil {
 

@@ -3,14 +3,18 @@ syntax = "proto3";
 package common.v1;
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1"; 
 
-import "common/v1/mutate_operation.proto";
 import "common/v1/error.proto";
 import "google/protobuf/any.proto";
 
-message MutateResult {
+
+message MutateResult{
+  repeated MutateResultItem items = 1;
+}
+
+message MutateResultItem {
   string op_id = 1;
   google.protobuf.Any data = 2;
   bool success = 3;
-  MutateOperation.MutateOperationEnum mutate_operation = 4;
   Error error = 5;               
 }
+

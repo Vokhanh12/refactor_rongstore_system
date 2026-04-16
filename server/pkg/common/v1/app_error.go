@@ -4,6 +4,7 @@ type AppErrorDetail struct {
 	Field   string `json:"field,omitempty"`
 	Message string `json:"message,omitempty"`
 	Code    string `json:"code,omitempty"`
+	Hint    string `json:"hint,omitempty"`
 }
 
 type AppError struct {

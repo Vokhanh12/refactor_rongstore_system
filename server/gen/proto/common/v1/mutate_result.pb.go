@@ -23,14 +23,10 @@ const (
 )
 
 type MutateResult struct {
-	state           protoimpl.MessageState              `protogen:"open.v1"`
-	OpId            string                              `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
-	Data            *anypb.Any                          `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
-	Success         bool                                `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
-	MutateOperation MutateOperation_MutateOperationEnum `protobuf:"varint,4,opt,name=mutate_operation,json=mutateOperation,proto3,enum=common.v1.MutateOperation_MutateOperationEnum" json:"mutate_operation,omitempty"`
-	Error           *Error                              `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*MutateResultItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MutateResult) Reset() {
@@ -63,35 +59,75 @@ func (*MutateResult) Descriptor() ([]byte, []int) {
 	return file_common_v1_mutate_result_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MutateResult) GetOpId() string {
+func (x *MutateResult) GetItems() []*MutateResultItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type MutateResultItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OpId          string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	Data          *anypb.Any             `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	Success       bool                   `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
+	Error         *Error                 `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MutateResultItem) Reset() {
+	*x = MutateResultItem{}
+	mi := &file_common_v1_mutate_result_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MutateResultItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MutateResultItem) ProtoMessage() {}
+
+func (x *MutateResultItem) ProtoReflect() protoreflect.Message {
+	mi := &file_common_v1_mutate_result_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MutateResultItem.ProtoReflect.Descriptor instead.
+func (*MutateResultItem) Descriptor() ([]byte, []int) {
+	return file_common_v1_mutate_result_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *MutateResultItem) GetOpId() string {
 	if x != nil {
 		return x.OpId
 	}
 	return ""
 }
 
-func (x *MutateResult) GetData() *anypb.Any {
+func (x *MutateResultItem) GetData() *anypb.Any {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-func (x *MutateResult) GetSuccess() bool {
+func (x *MutateResultItem) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *MutateResult) GetMutateOperation() MutateOperation_MutateOperationEnum {
-	if x != nil {
-		return x.MutateOperation
-	}
-	return MutateOperation_UNSPECIFIED
-}
-
-func (x *MutateResult) GetError() *Error {
+func (x *MutateResultItem) GetError() *Error {
 	if x != nil {
 		return x.Error
 	}
@@ -102,12 +138,13 @@ var File_common_v1_mutate_result_proto protoreflect.FileDescriptor
 
 const file_common_v1_mutate_result_proto_rawDesc = "" +
 	"\n" +
-	"\x1dcommon/v1/mutate_result.proto\x12\tcommon.v1\x1a common/v1/mutate_operation.proto\x1a\x15common/v1/error.proto\x1a\x19google/protobuf/any.proto\"\xea\x01\n" +
-	"\fMutateResult\x12\x13\n" +
+	"\x1dcommon/v1/mutate_result.proto\x12\tcommon.v1\x1a\x15common/v1/error.proto\x1a\x19google/protobuf/any.proto\"A\n" +
+	"\fMutateResult\x121\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.common.v1.MutateResultItemR\x05items\"\x93\x01\n" +
+	"\x10MutateResultItem\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opId\x12(\n" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\x12\x18\n" +
-	"\asuccess\x18\x03 \x01(\bR\asuccess\x12Y\n" +
-	"\x10mutate_operation\x18\x04 \x01(\x0e2..common.v1.MutateOperation.MutateOperationEnumR\x0fmutateOperation\x12&\n" +
+	"\asuccess\x18\x03 \x01(\bR\asuccess\x12&\n" +
 	"\x05error\x18\x05 \x01(\v2\x10.common.v1.ErrorR\x05errorBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
 
 var (
@@ -122,17 +159,17 @@ func file_common_v1_mutate_result_proto_rawDescGZIP() []byte {
 	return file_common_v1_mutate_result_proto_rawDescData
 }
 
-var file_common_v1_mutate_result_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_common_v1_mutate_result_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_common_v1_mutate_result_proto_goTypes = []any{
-	(*MutateResult)(nil),                     // 0: common.v1.MutateResult
-	(*anypb.Any)(nil),                        // 1: google.protobuf.Any
-	(MutateOperation_MutateOperationEnum)(0), // 2: common.v1.MutateOperation.MutateOperationEnum
-	(*Error)(nil),                            // 3: common.v1.Error
+	(*MutateResult)(nil),     // 0: common.v1.MutateResult
+	(*MutateResultItem)(nil), // 1: common.v1.MutateResultItem
+	(*anypb.Any)(nil),        // 2: google.protobuf.Any
+	(*Error)(nil),            // 3: common.v1.Error
 }
 var file_common_v1_mutate_result_proto_depIdxs = []int32{
-	1, // 0: common.v1.MutateResult.data:type_name -> google.protobuf.Any
-	2, // 1: common.v1.MutateResult.mutate_operation:type_name -> common.v1.MutateOperation.MutateOperationEnum
-	3, // 2: common.v1.MutateResult.error:type_name -> common.v1.Error
+	1, // 0: common.v1.MutateResult.items:type_name -> common.v1.MutateResultItem
+	2, // 1: common.v1.MutateResultItem.data:type_name -> google.protobuf.Any
+	3, // 2: common.v1.MutateResultItem.error:type_name -> common.v1.Error
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -145,7 +182,6 @@ func file_common_v1_mutate_result_proto_init() {
 	if File_common_v1_mutate_result_proto != nil {
 		return
 	}
-	file_common_v1_mutate_operation_proto_init()
 	file_common_v1_error_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -153,7 +189,7 @@ func file_common_v1_mutate_result_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_mutate_result_proto_rawDesc), len(file_common_v1_mutate_result_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

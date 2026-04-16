@@ -1,6 +1,10 @@
 package apperrors
 
-import commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+import (
+	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
 
 func ToInternalError(err *AppError) *commonv1.Error {
 	if err == nil {
@@ -31,6 +35,53 @@ func ToPublicError(err *AppError) *commonv1.Error {
 		GrpcCode:   err.GRPCCode,
 		Details:    MapAppErrorDetailsToProto(err.GetErrorDetails()),
 	}
+}
+
+func ToGRPCError(appErr *AppError) error {
+
+	var grpcCode codes.Code
+
+	switch appErr.GRPCCode {
+	case "Internal":
+		grpcCode = codes.Internal
+
+	case "Unavailable":
+		grpcCode = codes.Unavailable
+
+	case "InvalidArgument":
+		grpcCode = codes.InvalidArgument
+
+	case "Unauthenticated":
+		grpcCode = codes.Unauthenticated
+
+	case "AlreadyExists":
+		grpcCode = codes.AlreadyExists
+
+	case "NotFound":
+		grpcCode = codes.NotFound
+
+	default:
+		grpcCode = codes.Unknown
+	}
+
+	st := status.New(grpcCode, appErr.Message)
+
+	for _, d := range appErr.GetErrorDetails() {
+		detail := &commonv1.ErrorDetail{
+			Field:   d.Field,
+			Code:    d.Code,
+			Message: d.Message,
+			Hint:    d.Hint,
+		}
+
+		stWithDetails, err := st.WithDetails(detail)
+		if err != nil {
+			continue // không fail toàn bộ vì detail lỗi
+		}
+		st = stWithDetails
+	}
+
+	return st.Err()
 }
 
 func MapAppErrorDetailsToProto(

@@ -6,6 +6,7 @@ message ErrorDetail {
   string field = 1;
   string message = 2;
   string code = 3;
+  string hint = 4;
 }
 
 message Error {

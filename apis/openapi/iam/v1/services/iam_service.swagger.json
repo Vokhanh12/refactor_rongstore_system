@@ -146,16 +146,6 @@
     }
   },
   "definitions": {
-    "MutateOperationMutateOperationEnum": {
-      "type": "string",
-      "enum": [
-        "UNSPECIFIED",
-        "CREATE",
-        "EDIT",
-        "DELETE"
-      ],
-      "default": "UNSPECIFIED"
-    },
     "SearchByTilesTileRange": {
       "type": "object",
       "properties": {
@@ -412,6 +402,9 @@
         },
         "code": {
           "type": "string"
+        },
+        "hint": {
+          "type": "string"
         }
       }
     },
@@ -479,6 +472,18 @@
     "v1MutateResult": {
       "type": "object",
       "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1MutateResultItem"
+          }
+        }
+      }
+    },
+    "v1MutateResultItem": {
+      "type": "object",
+      "properties": {
         "opId": {
           "type": "string"
         },
@@ -487,9 +492,6 @@
         },
         "success": {
           "type": "boolean"
-        },
-        "mutateOperation": {
-          "$ref": "#/definitions/MutateOperationMutateOperationEnum"
         },
         "error": {
           "$ref": "#/definitions/v1Error"

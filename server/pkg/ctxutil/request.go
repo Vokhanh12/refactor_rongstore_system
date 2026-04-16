@@ -32,3 +32,11 @@ func Request(ctx context.Context) (RequestContext, bool) {
 	v, ok := ctx.Value(requestCtxKey).(RequestContext)
 	return v, ok
 }
+
+func MustRequest(ctx context.Context) RequestContext {
+	v, ok := ctx.Value(requestCtxKey).(RequestContext)
+	if !ok {
+		panic("request not found in context")
+	}
+	return v
+}

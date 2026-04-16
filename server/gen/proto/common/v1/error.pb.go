@@ -26,6 +26,7 @@ type ErrorDetail struct {
 	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Hint          string                 `protobuf:"bytes,4,opt,name=hint,proto3" json:"hint,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -77,6 +78,13 @@ func (x *ErrorDetail) GetMessage() string {
 func (x *ErrorDetail) GetCode() string {
 	if x != nil {
 		return x.Code
+	}
+	return ""
+}
+
+func (x *ErrorDetail) GetHint() string {
+	if x != nil {
+		return x.Hint
 	}
 	return ""
 }
@@ -209,11 +217,12 @@ var File_common_v1_error_proto protoreflect.FileDescriptor
 
 const file_common_v1_error_proto_rawDesc = "" +
 	"\n" +
-	"\x15common/v1/error.proto\x12\tcommon.v1\"Q\n" +
+	"\x15common/v1/error.proto\x12\tcommon.v1\"e\n" +
 	"\vErrorDetail\x12\x14\n" +
 	"\x05field\x18\x01 \x01(\tR\x05field\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x12\n" +
-	"\x04code\x18\x03 \x01(\tR\x04code\"\xd3\x02\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\x12\x12\n" +
+	"\x04hint\x18\x04 \x01(\tR\x04hint\"\xd3\x02\n" +
 	"\x05Error\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x10\n" +
 	"\x03key\x18\x02 \x01(\tR\x03key\x12\x18\n" +

@@ -98,7 +98,7 @@ func (u *MutateRoleUsecase) handleUpdate(
 func (u *MutateRoleUsecase) handleDelete(
 	ctx context.Context,
 	cmd c.DeleteRoleCommand,
-) (any, *aerrs.AppError) {
+) (string, *aerrs.AppError) {
 
 	return nil, nil
 }

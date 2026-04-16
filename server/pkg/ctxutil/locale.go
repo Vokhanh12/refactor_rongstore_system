@@ -19,3 +19,11 @@ func Locale(ctx context.Context) (LocaleContext, bool) {
 	v, ok := ctx.Value(localeKey).(LocaleContext)
 	return v, ok
 }
+
+func MustLocale(ctx context.Context) LocaleContext {
+	v, ok := ctx.Value(localeKey).(LocaleContext)
+	if !ok {
+		panic("locale not found in context")
+	}
+	return v
+}

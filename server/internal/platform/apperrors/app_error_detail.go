@@ -6,6 +6,7 @@ type AppErrorDetail struct {
 	Field   string
 	Message string
 	Code    string // OUT_OF_RANGE, REQUIRED, NEGATIVE
+	Hint    string
 }
 
 func (e *AppErrorDetail) Error() string {
