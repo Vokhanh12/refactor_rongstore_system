@@ -9,12 +9,6 @@ import (
 // PROTO → COMMAND / QUERY
 // ============================================================
 
-func RoleMutateRequestToBatch(
-	req *authzrs.RoleMutateRequest,
-) authzuc.RoleMutationBatch {
-	return authzuc.RoleMutationBatch{}
-}
-
 func PermissionMutateRequestToBatch(
 	req *authzrs.PermissionMutateRequest,
 ) authzuc.PermissionMutationBatch {

@@ -7,7 +7,7 @@ import (
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 
 	"go.opentelemetry.io/otel"
@@ -32,10 +32,7 @@ func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
 	return &MutateRoleUsecase{repo: repo}
 }
 
-func (u *MutateRoleUsecase) Execute(
-	ctx context.Context,
-	batch RoleMutationBatch,
-) *common.MutateResult {
+func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) *common.MutateResult {
 
 	ctx, span := otel.Tracer("usecase").Start(ctx, "MutateRoleUsecase.Execute")
 	defer span.End()
@@ -62,43 +59,28 @@ func (u *MutateRoleUsecase) Execute(
 			err = aerrs.New(domain.MUTATE_OPERATION_UNSUPPORTED)
 		}
 
-		var code string
 		if err != nil {
-			code = err.Code
 			span.SetAttributes(attribute.Bool("mutate.partial_failure", true))
 		}
 
 		results = append(results, common.MutateResultItem{
 			OpID:  item.OpID,
 			Data:  data,
-			Code:  code,
-			Error: err,
+			Error: err.ToDTO(),
 		})
 	}
 
 	return &common.MutateResult{Items: results}
 }
 
-func (u *MutateRoleUsecase) handleCreate(
-	ctx context.Context,
-	cmd c.CreateRoleCommand,
-) (any, *aerrs.AppError) {
-
+func (u *MutateRoleUsecase) handleCreate(ctx context.Context, cmd c.CreateRoleCommand) (*c.CreateRoleCommandResult, *aerrs.AppError) {
 	return nil, nil
 }
 
-func (u *MutateRoleUsecase) handleUpdate(
-	ctx context.Context,
-	cmd c.UpdateRoleCommand,
-) (any, *aerrs.AppError) {
-
+func (u *MutateRoleUsecase) handleUpdate(ctx context.Context, cmd c.UpdateRoleCommand) (*c.UpdateRoleCommandResult, *aerrs.AppError) {
 	return nil, nil
 }
 
-func (u *MutateRoleUsecase) handleDelete(
-	ctx context.Context,
-	cmd c.DeleteRoleCommand,
-) (string, *aerrs.AppError) {
-
+func (u *MutateRoleUsecase) handleDelete(ctx context.Context, cmd c.DeleteRoleCommand) (*c.DeleteRoleCommandResult, *aerrs.AppError) {
 	return nil, nil
 }
