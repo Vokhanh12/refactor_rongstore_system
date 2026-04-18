@@ -3,7 +3,8 @@ package usecases
 import (
 	"context"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	coremap "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
@@ -21,7 +22,7 @@ type RoleMutation struct {
 }
 
 type RoleMutationBatch struct {
-	Items []core.Operation[RoleMutation]
+	Items []coreuc.Operation[RoleMutation]
 }
 
 type MutateRoleUsecase struct {
@@ -63,11 +64,8 @@ func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch
 			span.SetAttributes(attribute.Bool("mutate.partial_failure", true))
 		}
 
-		results = append(results, common.MutateResultItem{
-			OpID:  item.OpID,
-			Data:  data,
-			Error: err.ToDTO(),
-		})
+		it := coremap.BuildMutateResult(item.OpID, data, err)
+		results = append(results, it)
 	}
 
 	return &common.MutateResult{Items: results}

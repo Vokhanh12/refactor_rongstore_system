@@ -19,7 +19,7 @@ type AppError struct {
 	Expected     bool                   `json:"expected,omitempty"`
 	Retryable    bool                   `json:"retryable,omitempty"`
 	causeDetail  error
-	errorDetails []AppErrorDetail
+	ErrorDetails *[]AppErrorDetail
 }
 
 func (e *AppError) Error() string {

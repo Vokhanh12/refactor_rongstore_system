@@ -8,12 +8,12 @@ type AppErrorDetail struct {
 }
 
 type AppError struct {
-	Code    string           `json:"code,omitempty"`
-	Message string           `json:"message,omitempty"`
-	Details []AppErrorDetail `json:"details,omitempty"`
+	Code    string            `json:"code,omitempty"`
+	Message string            `json:"message,omitempty"`
+	Details *[]AppErrorDetail `json:"details,omitempty"`
 }
 
-func NewAppError(code string, msg string, aerrdetail []AppErrorDetail) *AppError {
+func NewAppError(code string, msg string, aerrdetail *[]AppErrorDetail) *AppError {
 	return &AppError{
 		Message: msg,
 		Code:    code,
