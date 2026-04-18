@@ -2,68 +2,77 @@ version: 1
 updated_at: "2025-08-17"
 owner: platform-auth
 
-# ------------------------------------------------------------
-# COMPONENT CONVENTION
-#
-# component = hệ thống hoặc module chịu trách nhiệm gây lỗi
-#
-# api        → API layer / request validation
-# domain     → business/domain logic
-# auth       → authentication logic
-# authz      → authorization logic
-# jwt        → token generation/validation
-# redis      → redis cache / session storage
-# postgres   → postgres database
-# keycloak   → external identity provider
-# crypto     → cryptographic operations
-# handshake  → protocol handshake layer
-# ------------------------------------------------------------
+# ============================================================
+# GLOBAL CONVENTIONS
+# ============================================================
 
-# ------------------------------------------------------------
-# TAG CONVENTION
-#
-# tags giúp phân loại lỗi theo category để:
-# - monitoring
-# - alert routing
-# - observability dashboard
-#
-# validation → client input errors
-# auth       → authentication related
-# authz      → authorization related
-# security   → security related
-# infra      → infrastructure failure
-# database   → database related
-# cache      → caching layer
-# protocol   → protocol handshake
-# crypto     → cryptography operations
-# external   → external service dependency
-# client     → client misuse / invalid request
-# ------------------------------------------------------------
+conventions:
+  code_format: "<DOMAIN>-<CATEGORY>-<NNN>"
+
+  severity_scale:
+    S1: "Critical outage / security risk"
+    S2: "Degraded experience / important failure"
+    S3: "Client error / minor issue"
+
+  retry_policy:
+    http_retryable: [408, 429, 500, 502, 503, 504]
+    grpc_retryable: ["Unavailable", "DeadlineExceeded"]
+
+# ============================================================
+# CORE (GENERIC / SHARED ENGINE)
+# ============================================================
 
 services:
-  iam:
-    conventions:
-      code_format: "<DOMAIN>-<CATEGORY>-<NNN>"
-      domain: "AUTH"
-
-      severity_scale:
-        S1: "Critical outage/security risk"
-        S2: "Degraded experience or important failure"
-        S3: "Minor / client input issue"
-
-      retry_policy:
-        retryable_statuses_http: [408, 429, 500, 502, 503, 504]
-        grpc_retryable: ["Unavailable", "DeadlineExceeded"]
+  core:
+    domain: "CORE"
 
     errors:
 
-# ------------------------------------------------------------
-# VALIDATION (client input errors)
-# ------------------------------------------------------------
+      MUT:
+        - code: CORE-MUT-001
+          key: MUTATE_OPERATION_UNSUPPORTED
+          component: mutate_engine
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Unsupported mutate operation"
+          severity: S3
+          retryable: false
+
+        - code: CORE-MUT-002
+          key: MUTATE_PARTIAL_FAILURE
+          component: mutate_engine
+          tags: [system]
+          http_status: 200
+          grpc_code: OK
+          message: "One or more operations failed"
+          severity: S2
+          retryable: false
+
+      INFRA:
+        - code: CORE-INF-001
+          key: JSON_SERIALIZATION_FAILED
+          component: api_gateway
+          tags: [infra]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to serialize request payload"
+          severity: S2
+          retryable: false
+
+# ============================================================
+# IAM - AUTH (AUTHENTICATION)
+# ============================================================
+
+  iam_auth:
+    domain: "AUTH"
+
+    errors:
+
       VAL:
         - code: AUTH-VAL-001
           key: LOGIN_EMAIL_EMPTY
-          component: api
+          component: validator
           tags: [validation, client]
           http_status: 400
           grpc_code: InvalidArgument
@@ -73,7 +82,7 @@ services:
 
         - code: AUTH-VAL-002
           key: LOGIN_EMAIL_INVALID
-          component: api
+          component: validator
           tags: [validation, client]
           http_status: 400
           grpc_code: InvalidArgument
@@ -83,7 +92,7 @@ services:
 
         - code: AUTH-VAL-003
           key: LOGIN_PASSWORD_EMPTY
-          component: api
+          component: validator
           tags: [validation, client]
           http_status: 400
           grpc_code: InvalidArgument
@@ -93,203 +102,13 @@ services:
 
         - code: AUTH-VAL-004
           key: LOGIN_PAYLOAD_INVALID
-          component: api
+          component: validator
           tags: [validation, client]
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid request payload"
           severity: S3
           retryable: false
-
-        - code: AUTH-VAL-006
-          key: STORE_OWNER_VALIDATE
-          component: domain
-          tags: [validation]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Invalid store owner data"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-VAL-011
-          key: VIEW_OPERATION_UNSUPPORTED
-          component: api
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Unsupported view operation"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-VAL-012
-          key: MUTATE_OPERATION_UNSUPPORTED
-          component: api
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Unsupported mutate operation"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-VAL-013
-          key: AUTHORIZATION_INVALID
-          component: authz
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Invalid authorization"
-          severity: S3
-          retryable: false
-
-        - code: AUTHZ-VAL-014
-          key: AUTHORIZATION_RESOURCE_OR_ACTION_REQUIRED
-          component: authz
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Resource and action are required"
-          severity: S3
-          retryable: false
-
-        - code: AUTHZ-VAL-015
-          key: AUTHORIZATION_ROLE_REQUIRED
-          component: authz
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Role is required for authorization"
-          severity: S3
-          retryable: false
-        
-# ------------------------------------------------------------
-# DOMAIN
-# ------------------------------------------------------------
-
-      DOM:
-        - code: AUTH-DOM-001
-          key: STORE_OWNER_NOT_FOUND
-          component: domain
-          tags: [domain]
-          http_status: 404
-          grpc_code: NotFound
-          message: "Store owner not found"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-DOM-002
-          key: STORE_OWNER_CONFLICT
-          component: domain
-          tags: [domain]
-          http_status: 409
-          grpc_code: AlreadyExists
-          message: "Store owner already exists"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-DOM-003
-          key: STORE_OWNER_INVALID
-          component: domain
-          tags: [domain]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Store owner contains invalid references"
-          severity: S3
-          retryable: false   
-
-        - code: AUTH-DOM-004
-          key: STORE_OWNER_PERSIST_FAILED
-          component: domain
-          tags: [domain]
-          http_status: 500
-          grpc_code: Internal
-          message: "Failed to persist store owner"
-          severity: S2
-          retryable: false
-
-        - code: AUTHZ-DOM-001
-          key: ROLE_NOT_FOUND
-          component: domain
-          tags: [domain]
-          http_status: 404
-          grpc_code: NotFound
-          message: "Role not found"
-          severity: S3
-          retryable: false
-
-        - code: AUTHZ-DOM-002
-          key: ROLE_CONFLICT
-          component: domain
-          tags: [domain]
-          http_status: 409
-          grpc_code: AlreadyExists
-          message: "Role already exists"
-          severity: S3
-          retryable: false
-
-        - code: AUTHZ-DOM-003
-          key: ROLE_INVALID
-          component: domain
-          tags: [domain]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Role contains invalid references"
-          severity: S3
-          retryable: false   
-
-        - code: AUTHZ-DOM-004
-          key: ROLE_PERSIST_FAILED
-          component: domain
-          tags: [domain]
-          http_status: 500
-          grpc_code: Internal
-          message: "Failed to persist role"
-          severity: S2
-          retryable: false
-
-        - code: AUTHZ-DOM-005
-          key: PERMISSION_NOT_FOUND
-          component: domain
-          tags: [domain]
-          http_status: 404
-          grpc_code: NotFound
-          message: "Permission not found"
-          severity: S3
-          retryable: false
-
-        - code: AUTHZ-DOM-006
-          key: PERMISSION_CONFLICT
-          component: domain
-          tags: [domain]
-          http_status: 409
-          grpc_code: AlreadyExists
-          message: "Permission already exists"
-          severity: S3
-          retryable: false
-
-        - code: AUTHZ-DOM-007
-          key: PERMISSION_INVALID
-          component: domain
-          tags: [domain]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Permission contains invalid references"
-          severity: S3
-          retryable: false   
-
-        - code: AUTHZ-DOM-008
-          key: PERMISSION_PERSIST_FAILED
-          component: domain
-          tags: [domain]
-          http_status: 500
-          grpc_code: Internal
-          message: "Failed to persist permission"
-          severity: S2
-          retryable: false 
-
-
-# ------------------------------------------------------------
-# SECURITY
-# ------------------------------------------------------------
 
       SEC:
         - code: AUTH-SEC-001
@@ -304,7 +123,7 @@ services:
 
         - code: AUTH-SEC-002
           key: UNAUTHORIZED
-          component: auth
+          component: auth_service
           tags: [security, auth]
           http_status: 401
           grpc_code: Unauthenticated
@@ -312,9 +131,91 @@ services:
           severity: S3
           retryable: false
 
-        - code: AUTH-SEC-003
+# ============================================================
+# IAM - AUTHZ (AUTHORIZATION)
+# ============================================================
+
+  iam_authz:
+    domain: "AUTHZ"
+
+    errors:
+
+      VAL:
+        - code: AUTHZ-VAL-001
+          key: AUTHORIZATION_INVALID
+          component: authz_service
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid authorization"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-VAL-002
+          key: RESOURCE_OR_ACTION_REQUIRED
+          component: authz_service
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Resource and action are required"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-VAL-003
+          key: ROLE_REQUIRED
+          component: authz_service
+          tags: [validation, authz]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Role is required"
+          severity: S3
+          retryable: false
+
+      DOM:
+        - code: AUTHZ-DOM-001
+          key: ROLE_NOT_FOUND
+          component: role_service
+          tags: [domain]
+          http_status: 404
+          grpc_code: NotFound
+          message: "Role not found"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-002
+          key: ROLE_CONFLICT
+          component: role_service
+          tags: [domain]
+          http_status: 409
+          grpc_code: AlreadyExists
+          message: "Role already exists"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-003
+          key: ROLE_INVALID
+          component: role_service
+          tags: [domain]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Role contains invalid references"
+          severity: S3
+          retryable: false
+
+        - code: AUTHZ-DOM-004
+          key: ROLE_PERSIST_FAILED
+          component: role_repository
+          tags: [domain]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to persist role"
+          severity: S2
+          retryable: false
+
+      SEC:
+        - code: AUTHZ-SEC-001
           key: ROLE_FORBIDDEN
-          component: authz
+          component: authz_service
           tags: [security, authz]
           http_status: 403
           grpc_code: PermissionDenied
@@ -322,59 +223,27 @@ services:
           severity: S3
           retryable: false
 
+# ============================================================
+# INFRASTRUCTURE (SHARED)
+# ============================================================
 
-# ------------------------------------------------------------
-# PROTOCOL
-# ------------------------------------------------------------
+  platform:
+    domain: "PLATFORM"
 
-      PROTO:
-        - code: AUTH-PROTO-001
-          key: HANDSHAKE_INVALID_CLIENT_KEY
-          component: handshake
-          tags: [protocol, security]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Invalid client public key"
-          severity: S3
-          retryable: false
-
-        - code: AUTH-PROTO-002
-          key: HANDSHAKE_KEY_AGREEMENT_FAIL
-          component: handshake
-          tags: [protocol, crypto]
-          http_status: 422
-          grpc_code: FailedPrecondition
-          message: "Key agreement failed"
-          severity: S3
-          retryable: false
-
-
-# ------------------------------------------------------------
-# INFRASTRUCTURE
-# ------------------------------------------------------------
+    errors:
 
       INFRA:
-        - code: AUTH-INFRA-001
+        - code: PLATFORM-INF-001
           key: DB_TIMEOUT
           component: postgres
           tags: [infra, database]
           http_status: 503
           grpc_code: Unavailable
-          message: "Database service temporarily unavailable"
+          message: "Database timeout"
           severity: S1
           retryable: true
 
-        - code: AUTH-INFRA-010
-          key: DB_QUERY_TIMEOUT
-          component: postgres
-          tags: [infra, database]
-          http_status: 503
-          grpc_code: Unavailable
-          message: "Database query timeout"
-          severity: S1
-          retryable: true
-
-        - code: AUTH-INFRA-011
+        - code: PLATFORM-INF-002
           key: DB_QUERY_FAILED
           component: postgres
           tags: [infra, database]
@@ -382,19 +251,9 @@ services:
           grpc_code: Internal
           message: "Database query failed"
           severity: S2
-          retryable: false  
+          retryable: false
 
-        - code: AUTH-INFRA-002
-          key: DB_CONFLICT_RETRYABLE
-          component: postgres
-          tags: [infra, database]
-          http_status: 503
-          grpc_code: Unavailable
-          message: "Concurrent update conflict"
-          severity: S2
-          retryable: true
-
-        - code: AUTH-INFRA-003
+        - code: PLATFORM-INF-003
           key: REDIS_UNAVAILABLE
           component: redis
           tags: [infra, cache]
@@ -404,85 +263,43 @@ services:
           severity: S1
           retryable: true
 
-        - code: AUTH-INFRA-004
-          key: KEYCLOAK_UNAVAILABLE
-          component: keycloak
-          tags: [infra, external, auth]
+        - code: PLATFORM-INF-004
+          key: EXTERNAL_SERVICE_UNAVAILABLE
+          component: external_service
+          tags: [infra, external]
           http_status: 503
           grpc_code: Unavailable
-          message: "Keycloak unavailable"
+          message: "External service unavailable"
           severity: S1
           retryable: true
 
-        - code: AUTH-INFRA-005
-          key: POSTGRES_UNAVAILABLE
-          component: postgres
-          tags: [infra, database]
-          http_status: 503
-          grpc_code: Unavailable
-          message: "Postgres unavailable"
-          severity: S1
-          retryable: true
+# ============================================================
+# ERROR DETAILS (VALIDATION LEVEL)
+# ============================================================
 
-        - code: AUTH-INFRA-006
-          key: HANDSHAKE_RNG_FAIL
-          component: crypto
-          tags: [infra, crypto]
-          http_status: 500
-          grpc_code: Internal
-          message: "Random generation failed"
-          severity: S1
-          retryable: true
+error_details:
+  - code: VAL_REQUIRED
+    message: "Field is required"
 
-        - code: AUTH-INFRA-007
-          key: HANDSHAKE_KEY_DERIVE_FAIL
-          component: crypto
-          tags: [infra, crypto]
-          http_status: 500
-          grpc_code: Internal
-          message: "Key derivation failed"
-          severity: S1
-          retryable: true
+  - code: VAL_INVALID_FORMAT
+    message: "Invalid format"
 
-        - code: AUTH-INFRA-008
-          key: HANDSHAKE_STORAGE_FAIL
-          component: redis
-          tags: [infra, cache]
-          http_status: 500
-          grpc_code: Internal
-          message: "Failed to store session"
-          severity: S1
-          retryable: true
+  - code: VAL_OUT_OF_RANGE
+    message: "Out of range"
 
-        - code: AUTH-INFRA-009
-          key: JSON_SERIALIZATION_FAILED
-          component: api
-          tags: [infra]
-          http_status: 500
-          grpc_code: Internal
-          message: "Failed to serialize request payload"
-          severity: S2
-          retryable: false
+  - code: VAL_DUPLICATE
+    message: "Duplicate value"
 
-    errors_detail: 
-      - code: OUT_OF_RANGE
-        message: "Out of range"
+  - code: VAL_NOT_FOUND
+    message: "Not found"
 
-      - code: REQUIRED
-        message: "Required"
-
-      - code: INVALID_FORMAT
-        message: "Invalid format"
-      
-      - code: DUPLICATE
-        message: "Duplicate"
-
-      - code: NOT_FOUND
-        message: "Not found"
+# ============================================================
+# DEFAULTS / FALLBACK
+# ============================================================
 
 defaults:
-  UNKNOWN_DOMAIN_KEY:
-    code: AUTH-VAL-999
+  UNKNOWN_DOMAIN:
+    code: CORE-VAL-999
     http_status: 400
     grpc_code: InvalidArgument
     message: "Unknown domain error"

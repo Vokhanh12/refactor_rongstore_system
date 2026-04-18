@@ -9,32 +9,22 @@ import (
 // PROTO → COMMAND / QUERY
 // ============================================================
 
-func PermissionMutateRequestToBatch(
-	req *authzrs.PermissionMutateRequest,
-) authzuc.PermissionMutationBatch {
+func PermissionMutateRequestToBatch(req *authzrs.PermissionMutateRequest) authzuc.PermissionMutationBatch {
 	return authzuc.PermissionMutationBatch{}
 }
 
-func RolePermissionMutateRequestToBatch(
-	req *authzrs.RolePermissionMutateRequest,
-) authzuc.RolePermissionMutationBatch {
+func RolePermissionMutateRequestToBatch(req *authzrs.RolePermissionMutateRequest) authzuc.RolePermissionMutationBatch {
 	return authzuc.RolePermissionMutationBatch{}
 }
 
-func RoleViewRequestToBatch(
-	req *authzrs.RoleViewRequest,
-) authzuc.RoleViewBatch {
+func RoleViewRequestToBatch(req *authzrs.RoleViewRequest) authzuc.RoleViewBatch {
 	return authzuc.RoleViewBatch{}
 }
 
-func PermissionViewRequestToBatch(
-	req *authzrs.PermissionViewRequest,
-) authzuc.PermissionViewBatch {
+func PermissionViewRequestToBatch(req *authzrs.PermissionViewRequest) authzuc.PermissionViewBatch {
 	return authzuc.PermissionViewBatch{}
 }
 
-func RolePermissionViewRequestToBatch(
-	req *authzrs.RolePermissionViewRequest,
-) authzuc.RolePermissionViewBatch {
+func RolePermissionViewRequestToBatch(req *authzrs.RolePermissionViewRequest) authzuc.RolePermissionViewBatch {
 	return authzuc.RolePermissionViewBatch{}
 }

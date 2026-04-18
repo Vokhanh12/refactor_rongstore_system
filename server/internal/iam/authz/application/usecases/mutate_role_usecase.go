@@ -7,12 +7,8 @@ import (
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
-
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 )
 
 type RoleMutation struct {
@@ -26,47 +22,45 @@ type RoleMutationBatch struct {
 }
 
 type MutateRoleUsecase struct {
-	repo re.RoleRepository
+	repo   re.RoleRepository
+	engine *coreuc.MutateEngine[RoleMutation]
 }
 
 func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
-	return &MutateRoleUsecase{repo: repo}
+
+	u := &MutateRoleUsecase{
+		repo: repo,
+	}
+
+	handlers := []coreuc.Handler[RoleMutation]{
+		{
+			Cond: func(p RoleMutation) bool { return p.Create != nil },
+			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
+				return u.handleCreate(ctx, *p.Create)
+			},
+		},
+		{
+			Cond: func(p RoleMutation) bool { return p.Update != nil },
+			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
+				return u.handleUpdate(ctx, *p.Update)
+			},
+		},
+		{
+			Cond: func(p RoleMutation) bool { return p.Delete != nil },
+			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
+				return u.handleDelete(ctx, *p.Delete)
+			},
+		},
+	}
+
+	u.engine = coreuc.NewMutateEngine(handlers)
+
+	return u
 }
 
 func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) *common.MutateResult {
 
-	ctx, span := otel.Tracer("usecase").Start(ctx, "MutateRoleUsecase.Execute")
-	defer span.End()
-
-	results := make([]common.MutateResultItem, 0, len(batch.Items))
-
-	for _, item := range batch.Items {
-		var (
-			err  *aerrs.AppError
-			data any
-		)
-
-		switch {
-		case item.Payload.Create != nil:
-			data, err = u.handleCreate(ctx, *item.Payload.Create)
-
-		case item.Payload.Update != nil:
-			data, err = u.handleUpdate(ctx, *item.Payload.Update)
-
-		case item.Payload.Delete != nil:
-			data, err = u.handleDelete(ctx, *item.Payload.Delete)
-
-		default:
-			err = aerrs.New(domain.MUTATE_OPERATION_UNSUPPORTED)
-		}
-
-		if err != nil {
-			span.SetAttributes(attribute.Bool("mutate.partial_failure", true))
-		}
-
-		it := coremap.BuildMutateResult(item.OpID, data, err)
-		results = append(results, it)
-	}
+	results := u.engine.Execute(ctx, batch.Items, coremap.BuildMutateResult)
 
 	return &common.MutateResult{Items: results}
 }
