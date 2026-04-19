@@ -1,14 +1,14 @@
 package commonv1
 
-type MutateResultItem struct {
-	OpID    string    `json:"op_id,omitempty"`
-	Data    any       `json:"data,omitempty"`
-	Success bool      `json:"success,omitempty"`
-	Error   *AppError `json:"error,omitempty"`
+type MutateResultItemDTO struct {
+	OpID    string               `json:"op_id,omitempty"`
+	Data    any                  `json:"data,omitempty"`
+	Success bool                 `json:"success,omitempty"`
+	Error   *ExternalAppErrorDTO `json:"error,omitempty"`
 }
 
-func NewMutateResultItem(opID string, data any, aerr AppError) *MutateResultItem {
-	return &MutateResultItem{
+func NewMutateResultItemDTO(opID string, data any, aerr ExternalAppErrorDTO) *MutateResultItemDTO {
+	return &MutateResultItemDTO{
 		OpID:    opID,
 		Data:    data,
 		Success: false,

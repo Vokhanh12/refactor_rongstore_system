@@ -1,12 +1,12 @@
 package commonv1
 
 // LocaleEnum tương ứng với proto Locale.LocaleEnum
-type LocaleEnum int32
+type LocaleEnumDTO int32
 
 const (
-	LocaleEnum_UNSPECIFIED LocaleEnum = 0
-	LocaleEnum_VI          LocaleEnum = 1
-	LocaleEnum_EN          LocaleEnum = 2
+	LocaleEnum_UNSPECIFIED LocaleEnumDTO = 0
+	LocaleEnum_VI          LocaleEnumDTO = 1
+	LocaleEnum_EN          LocaleEnumDTO = 2
 )
 
 // Map string để marshal/unmarshal JSON nếu cần

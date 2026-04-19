@@ -1,6 +1,6 @@
 package commonv1
 
-type ResourceOptions struct {
+type ResourceOptionsDTO struct {
 	Resource           string
 	Action             string
 	ResourceIDField    string

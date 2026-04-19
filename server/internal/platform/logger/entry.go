@@ -19,7 +19,6 @@ type LogEntry struct {
 	ClientAction string
 	ServerAction string
 	Expected     bool
-	HTTPStatus   int
 	GRPCCode     string
 }
 

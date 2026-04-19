@@ -6,7 +6,7 @@ import (
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
 type RolePermissionMutation struct {
@@ -30,6 +30,6 @@ func NewMutateRolePermissionUsecase(repo re.RolePermissionRepository) *MutateRol
 func (u *MutateRolePermissionUsecase) Execute(
 	ctx context.Context,
 	batch RolePermissionMutationBatch,
-) *common.MutateResult {
+) *dtos.MutateResultDTO {
 	return nil
 }

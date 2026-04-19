@@ -49,6 +49,27 @@ services:
           severity: S2
           retryable: false
 
+      VIE:
+        - code: CORE-VIE-001
+          key: VIEW_OPERATION_UNSUPPORTED
+          component: view_engine
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Unsupported view operation"
+          severity: S3
+          retryable: false
+
+        - code: CORE-VIE-002
+          key: VIEW_PARTIAL_FAILURE
+          component: mutate_engine
+          tags: [system]
+          http_status: 200
+          grpc_code: OK
+          message: "One or more operations failed"
+          severity: S2
+          retryable: false    
+
       INFRA:
         - code: CORE-INF-001
           key: JSON_SERIALIZATION_FAILED

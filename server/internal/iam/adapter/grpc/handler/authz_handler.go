@@ -6,35 +6,40 @@ import (
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
-	pkgcommonv1 "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
 
 type AuthzHandler struct {
 	roleMutateUsecase uc.MutateRoleUsecase
+	logger            logger.Logger
 }
 
-func NewAuthzHandler(roleMutateUc uc.MutateRoleUsecase) *AuthzHandler {
+func NewAuthzHandler(roleMutateUc uc.MutateRoleUsecase, logger logger.Logger) *AuthzHandler {
 	return &AuthzHandler{
 		roleMutateUsecase: roleMutateUc,
+		logger:            logger,
 	}
 }
 
 // RoleMutate implements [grpc.AuthzPort].
-func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRequest) (*commonv1.BaseResponse, error) {
+func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRequest) (*commonv1.MutateResponse, error) {
 	batch := mappers.RoleMutateRequestToBatch(req)
 
 	results := a.roleMutateUsecase.Execute(ctx, batch)
 
 	for _, item := range results.Items {
+
 		if item.Error != nil {
-			//logger.LogBySeverity(ctx, "iam_handler.store_owner_mutate", item.Error)
+			// logger.LevelBySeverity(ctx, "iam_handler.store_owner_mutate", item.Error)
+			a.logger.Error(ctx, "iam_handler.store_owner_mutate", item.Error)
 		}
 
 	}
 
 	mapped := core.MutateResultToProto(*results)
 
-	return pkgcommonv1.BuildMutateResponse(ctx, mapped), nil
+	return corem.BuildMutateResponse(ctx, mapped), nil
 }

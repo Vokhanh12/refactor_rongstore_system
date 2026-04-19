@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
-	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mapper"
+	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
@@ -59,12 +59,12 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 	}
 }
 
-func MapRoleActionProto(action any) commonv1.MutateResultItem {
+func MapRoleActionProto(action any) commonv1.MutateResultItemDTO {
 
 	switch v := action.(type) {
 
 	case *cmd.CreateRoleCommandResult:
-		return commonv1.MutateResultItem{
+		return commonv1.MutateResultItemDTO{
 			Data: &authzrs.RoleMutation_Create_{
 				Create: &authzrs.RoleMutation_Create{
 					Data: &authzrs.RoleMutation_Create_Data{
@@ -75,14 +75,14 @@ func MapRoleActionProto(action any) commonv1.MutateResultItem {
 		}
 
 	case *cmd.UpdateRoleCommandResult:
-		return commonv1.MutateResultItem{
+		return commonv1.MutateResultItemDTO{
 			Data: &authzrs.RoleMutation_Update_{
 				Update: &authzrs.RoleMutation_Update{},
 			},
 		}
 
 	case *cmd.DeleteRoleCommandResult:
-		return commonv1.MutateResultItem{
+		return commonv1.MutateResultItemDTO{
 			Data: &authzrs.RoleMutation_Delete_{
 				Delete: &authzrs.RoleMutation_Delete{},
 			},
@@ -90,7 +90,7 @@ func MapRoleActionProto(action any) commonv1.MutateResultItem {
 
 	default:
 		corem.Must(fmt.Sprintf("unknown action type: %T", action))
-		return commonv1.MutateResultItem{}
+		return commonv1.MutateResultItemDTO{}
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ caches.RolePermissionCache = (*RedisRolePermissionCache)(nil)

@@ -1,5 +1,5 @@
 package commonv1
 
-type MutateResult struct {
-	Items []MutateResultItem
+type MutateResultDTO struct {
+	Items []MutateResultItemDTO
 }

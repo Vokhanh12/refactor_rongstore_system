@@ -8,19 +8,19 @@ import (
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
-type MutateEngine[T any] struct {
+type ViewEngine[T any] struct {
 	handlers []Handler[T]
 }
 
-func NewMutateEngine[T any](handlers []Handler[T]) *MutateEngine[T] {
-	return &MutateEngine[T]{handlers: handlers}
+func NewViewEngine[T any](handlers []Handler[T]) *ViewEngine[T] {
+	return &ViewEngine[T]{handlers: handlers}
 }
 
-func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T],
-	buildResult func(opID string, data any, err *aerrs.AppError) dtos.MutateResultItemDTO,
-) []dtos.MutateResultItemDTO {
+func (e *ViewEngine[T]) Execute(ctx context.Context, items []Operation[T],
+	buildResult func(opID string, data any, err *aerrs.AppError) dtos.ViewResultItemDTO,
+) []dtos.ViewResultItemDTO {
 
-	results := make([]dtos.MutateResultItemDTO, 0, len(items))
+	results := make([]dtos.ViewResultItemDTO, 0, len(items))
 
 	for _, item := range items {
 		var (
@@ -36,7 +36,7 @@ func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T],
 		}
 
 		if err == nil && data == nil {
-			err = aerrs.New(errs.MUTATE_OPERATION_UNSUPPORTED)
+			err = aerrs.New(errs.VIEW_OPERATION_UNSUPPORTED)
 		}
 
 		results = append(results, buildResult(item.OpID, data, err))

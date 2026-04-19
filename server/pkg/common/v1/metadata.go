@@ -1,7 +1,7 @@
 package commonv1
 
 // Metadata tương ứng với proto Metadata
-type Metadata struct {
+type MetadataDTO struct {
 	RequestID  string `json:"request_id,omitempty"`
 	TraceID    string `json:"trace_id,omitempty"`
 	ServerTime int64  `json:"server_time,omitempty"` // Unix timestamp hoặc milliseconds

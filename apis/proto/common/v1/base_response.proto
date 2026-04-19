@@ -22,11 +22,11 @@ message BaseResponse {
 
 message MutateResponse {
   Metadata metadata = 1;
-  repeated MutateResult mutate_results = 2;
+  MutateResult mutate_results = 2;
 }
 
 message ViewResponse {
   Metadata metadata = 1;
-  repeated ViewResult view_results = 2;
+  ViewResult view_results = 2;
 }
 

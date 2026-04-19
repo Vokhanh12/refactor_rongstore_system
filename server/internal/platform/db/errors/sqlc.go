@@ -1,7 +1,7 @@
 package errors
 
 import (
-	aerr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type BaseRepository struct {

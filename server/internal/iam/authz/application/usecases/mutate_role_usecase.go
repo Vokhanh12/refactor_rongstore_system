@@ -8,7 +8,7 @@ import (
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
 type RoleMutation struct {
@@ -58,11 +58,11 @@ func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
 	return u
 }
 
-func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) *common.MutateResult {
+func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) *dtos.MutateResultDTO {
 
 	results := u.engine.Execute(ctx, batch.Items, coremap.BuildMutateResult)
 
-	return &common.MutateResult{Items: results}
+	return &dtos.MutateResultDTO{Items: results}
 }
 
 func (u *MutateRoleUsecase) handleCreate(ctx context.Context, cmd c.CreateRoleCommand) (*c.CreateRoleCommandResult, *aerrs.AppError) {

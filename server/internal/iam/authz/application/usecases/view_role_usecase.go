@@ -7,8 +7,8 @@ import (
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
-	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -36,12 +36,12 @@ func NewViewRoleUsecase(repo re.RoleRepository) *ViewRoleUsecase {
 func (u *ViewRoleUsecase) Execute(
 	ctx context.Context,
 	batch RoleViewBatch,
-) *common.ViewResult {
+) *dtos.ViewResultDTO {
 
 	ctx, span := otel.Tracer("usecase").Start(ctx, "ViewRoleUsecase.Execute")
 	defer span.End()
 
-	results := make([]common.ViewResultItem, 0, len(batch.Items))
+	results := make([]dtos.ViewResultItemDTO, 0, len(batch.Items))
 
 	for _, item := range batch.Items {
 		var (
@@ -69,7 +69,7 @@ func (u *ViewRoleUsecase) Execute(
 			span.SetAttributes(attribute.Bool("view.partial_failure", true))
 		}
 
-		results = append(results, common.ViewResultItem{
+		results = append(results, dtos.ViewResultItemDTO{
 			OpID:  item.OpID,
 			Data:  data,
 			Code:  code,
@@ -77,7 +77,7 @@ func (u *ViewRoleUsecase) Execute(
 		})
 	}
 
-	return &common.ViewResult{Items: results}
+	return &dtos.ViewResultDTO{Items: results}
 }
 
 func (u *ViewRoleUsecase) handleGet(ctx context.Context, q q.GetRoleQuery) (any, *aerrs.AppError) {

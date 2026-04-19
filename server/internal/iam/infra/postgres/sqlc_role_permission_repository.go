@@ -10,10 +10,10 @@ import (
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ re.RolePermissionRepository = (*SqlcRolePermissionRepository)(nil)

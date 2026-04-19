@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
@@ -22,14 +22,14 @@ func BuildMutateResult(opID string, data any, err *aerrs.AppError) dtos.MutateRe
 	}
 }
 
-func BuildTransportErrorResponse(ctx context.Context, err *aerrs.AppError) (*commonv1.BaseResponse, error) {
+func BuildTransportErrorResponse(ctx context.Context, err *aerrs.AppError) (*protos.BaseResponse, error) {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
 
-	return &commonv1.BaseResponse{
+	return &protos.BaseResponse{
 		Success: false,
-		Metadata: &commonv1.Metadata{
+		Metadata: &protos.Metadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
 			Locale:     locatectx.Locale,
@@ -39,7 +39,7 @@ func BuildTransportErrorResponse(ctx context.Context, err *aerrs.AppError) (*com
 		},
 		Error: AppErrorToDTO(err),
 
-		// &commonv1.Error{
+		// &protos.Error{
 		// 	//Code:         err.Code,
 		// 	//Key:          err.Key,
 		// 	Message: err.Message,
@@ -56,17 +56,17 @@ func BuildTransportErrorResponse(ctx context.Context, err *aerrs.AppError) (*com
 
 }
 
-func BuildMutateErrorResponse(ctx context.Context, errs []aerrs.AppError) *commonv1.MutateResponse {
+func BuildMutateErrorResponse(ctx context.Context, errs []aerrs.AppError) *protos.MutateResponse {
 
-	results := make([]*commonv1.MutateResult, 0, len(errs))
+	results := make([]*protos.MutateResult, 0, len(errs))
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
 
 	for _, err := range errs {
-		results = append(results, &commonv1.MutateResult{
+		results = append(results, &protos.MutateResult{
 			Success: false,
-			Error: &commonv1.Error{
+			Error: &protos.Error{
 				Code:         err.Code,
 				Key:          err.Key,
 				Message:      err.Message,
@@ -82,8 +82,8 @@ func BuildMutateErrorResponse(ctx context.Context, errs []aerrs.AppError) *commo
 		})
 	}
 
-	return &commonv1.MutateResponse{
-		Metadata: &commonv1.Metadata{
+	return &protos.MutateResponse{
+		Metadata: &protos.Metadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
 			Locale:     locatectx.Locale,
@@ -97,7 +97,7 @@ func BuildMutateErrorResponse(ctx context.Context, errs []aerrs.AppError) *commo
 
 // BuildSuccessResponse builds a BaseResponse representing a successful operation.
 // It converts the provided protobuf message to google.protobuf.Any.
-func BuildSuccessResponse(ctx context.Context, data proto.Message) (*commonv1.BaseResponse, error) {
+func BuildSuccessResponse(ctx context.Context, data proto.Message) (*protos.BaseResponse, error) {
 	anyData, err := anypb.New(data)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to marshal response")
@@ -106,10 +106,10 @@ func BuildSuccessResponse(ctx context.Context, data proto.Message) (*commonv1.Ba
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
 
-	return &commonv1.BaseResponse{
+	return &protos.BaseResponse{
 		Success: true,
 		Data:    anyData,
-		Metadata: &commonv1.Metadata{
+		Metadata: &protos.Metadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
 			Locale:     locatectx.Locale,
@@ -121,21 +121,21 @@ func BuildSuccessResponse(ctx context.Context, data proto.Message) (*commonv1.Ba
 }
 
 // // FromError converts a generic error into a BaseResponse using BusinessError mapping.
-// func FromError(ctx context.Context, err error) *commonv1.BaseResponse {
+// func FromError(ctx context.Context, err error) *protos.BaseResponse {
 // 	be, _ := aerrs.GetBusinessError(err)
 // 	return BuildErrorResponse(ctx, be)
 // }
 
 func BuildMutateResponse(
 	ctx context.Context,
-	items []*commonv1.MutateResult,
-) *commonv1.MutateResponse {
+	result *protos.MutateResult,
+) *protos.MutateResponse {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
 
-	return &commonv1.MutateResponse{
-		Metadata: &commonv1.Metadata{
+	return &protos.MutateResponse{
+		Metadata: &protos.Metadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
 			Locale:     locatectx.Locale,
@@ -143,20 +143,20 @@ func BuildMutateResponse(
 			Degraded:   false,
 			ServerTime: time.Now().UnixMilli(),
 		},
-		MutateResults: items,
+		MutateResults: result,
 	}
 }
 
 func BuildViewResponse(
 	ctx context.Context,
-	items []*commonv1.ViewResult,
-) *commonv1.ViewResponse {
+	items []*protos.ViewResult,
+) *protos.ViewResponse {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
 
-	return &commonv1.ViewResponse{
-		Metadata: &commonv1.Metadata{
+	return &protos.ViewResponse{
+		Metadata: &protos.Metadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
 			Locale:     locatectx.Locale,

@@ -117,7 +117,7 @@ func (x *BaseResponse) GetDetails() map[string]string {
 type MutateResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Metadata      *Metadata              `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	MutateResults []*MutateResult        `protobuf:"bytes,2,rep,name=mutate_results,json=mutateResults,proto3" json:"mutate_results,omitempty"`
+	MutateResults *MutateResult          `protobuf:"bytes,2,opt,name=mutate_results,json=mutateResults,proto3" json:"mutate_results,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -159,7 +159,7 @@ func (x *MutateResponse) GetMetadata() *Metadata {
 	return nil
 }
 
-func (x *MutateResponse) GetMutateResults() []*MutateResult {
+func (x *MutateResponse) GetMutateResults() *MutateResult {
 	if x != nil {
 		return x.MutateResults
 	}
@@ -169,7 +169,7 @@ func (x *MutateResponse) GetMutateResults() []*MutateResult {
 type ViewResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Metadata      *Metadata              `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	ViewResults   []*ViewResult          `protobuf:"bytes,2,rep,name=view_results,json=viewResults,proto3" json:"view_results,omitempty"`
+	ViewResults   *ViewResult            `protobuf:"bytes,2,opt,name=view_results,json=viewResults,proto3" json:"view_results,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -211,7 +211,7 @@ func (x *ViewResponse) GetMetadata() *Metadata {
 	return nil
 }
 
-func (x *ViewResponse) GetViewResults() []*ViewResult {
+func (x *ViewResponse) GetViewResults() *ViewResult {
 	if x != nil {
 		return x.ViewResults
 	}
@@ -238,10 +238,10 @@ const file_common_v1_base_response_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x81\x01\n" +
 	"\x0eMutateResponse\x12/\n" +
 	"\bmetadata\x18\x01 \x01(\v2\x13.common.v1.MetadataR\bmetadata\x12>\n" +
-	"\x0emutate_results\x18\x02 \x03(\v2\x17.common.v1.MutateResultR\rmutateResults\"y\n" +
+	"\x0emutate_results\x18\x02 \x01(\v2\x17.common.v1.MutateResultR\rmutateResults\"y\n" +
 	"\fViewResponse\x12/\n" +
 	"\bmetadata\x18\x01 \x01(\v2\x13.common.v1.MetadataR\bmetadata\x128\n" +
-	"\fview_results\x18\x02 \x03(\v2\x15.common.v1.ViewResultR\vviewResultsBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\fview_results\x18\x02 \x01(\v2\x15.common.v1.ViewResultR\vviewResultsBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
 
 var (
 	file_common_v1_base_response_proto_rawDescOnce sync.Once

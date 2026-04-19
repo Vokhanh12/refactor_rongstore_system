@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	domerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	cs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"

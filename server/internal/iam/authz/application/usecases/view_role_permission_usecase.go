@@ -5,7 +5,7 @@ import (
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	common "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
 type RolePermissionView struct{}
@@ -25,6 +25,6 @@ func NewViewRolePermissionUsecase(repo re.RolePermissionRepository) *ViewRolePer
 func (u *ViewRolePermissionUsecase) Execute(
 	ctx context.Context,
 	batch RolePermissionViewBatch,
-) *common.ViewResult {
+) *dtos.ViewResultDTO {
 	return nil
 }
