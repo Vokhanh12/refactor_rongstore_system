@@ -3,15 +3,12 @@ package usecases
 import (
 	"context"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	coremap "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
-
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
 )
 
 type RoleView struct {
@@ -22,62 +19,57 @@ type RoleView struct {
 }
 
 type RoleViewBatch struct {
-	Items []core.Operation[RoleView]
+	Items []coreuc.Operation[RoleView]
 }
 
 type ViewRoleUsecase struct {
-	repo re.RoleRepository
+	repo   re.RoleRepository
+	engine *coreuc.ViewEngine[RoleView]
 }
 
 func NewViewRoleUsecase(repo re.RoleRepository) *ViewRoleUsecase {
-	return &ViewRoleUsecase{repo: repo}
-}
 
-func (u *ViewRoleUsecase) Execute(
-	ctx context.Context,
-	batch RoleViewBatch,
-) *dtos.ViewResultDTO {
-
-	ctx, span := otel.Tracer("usecase").Start(ctx, "ViewRoleUsecase.Execute")
-	defer span.End()
-
-	results := make([]dtos.ViewResultItemDTO, 0, len(batch.Items))
-
-	for _, item := range batch.Items {
-		var (
-			err  *aerrs.AppError
-			data any
-		)
-
-		switch {
-		case item.Payload.Get != nil:
-			data, err = u.handleGet(ctx, *item.Payload.Get)
-		case item.Payload.List != nil:
-			data, err = u.handleList(ctx, *item.Payload.List)
-		case item.Payload.Search != nil:
-			data, err = u.handleSearch(ctx, *item.Payload.Search)
-		case item.Payload.Export != nil:
-			data, err = u.handleSearch(ctx, *item.Payload.Search)
-
-		default:
-			err = aerrs.New(domain.VIEW_OPERATION_UNSUPPORTED)
-		}
-
-		var code string
-		if err != nil {
-			code = err.Code
-			span.SetAttributes(attribute.Bool("view.partial_failure", true))
-		}
-
-		results = append(results, dtos.ViewResultItemDTO{
-			OpID:  item.OpID,
-			Data:  data,
-			Code:  code,
-			Error: err,
-		})
+	u := &ViewRoleUsecase{
+		repo: repo,
 	}
 
-	return &dtos.ViewResultDTO{Items: results}
+	handlers := []coreuc.Handler[RoleView]{
+		{
+			Cond: func(p RoleView) bool { return p.Export != nil },
+			Exec: func(ctx context.Context, p RoleView) (any, *aerrs.AppError) {
+				return u.handleExport(ctx, *p.Export)
+			},
+		},
+		{
+			Cond: func(p RoleView) bool { return p.Get != nil },
+			Exec: func(ctx context.Context, p RoleView) (any, *aerrs.AppError) {
+				return u.handleGet(ctx, *p.Get)
+			},
+		},
+		{
+			Cond: func(p RoleView) bool { return p.List != nil },
+			Exec: func(ctx context.Context, p RoleView) (any, *aerrs.AppError) {
+				return u.handleList(ctx, *p.List)
+			},
+		},
+		{
+			Cond: func(p RoleView) bool { return p.Search != nil },
+			Exec: func(ctx context.Context, p RoleView) (any, *aerrs.AppError) {
+				return u.handleSearch(ctx, *p.Search)
+			},
+		},
+	}
+
+	u.engine = coreuc.NewViewEngine(handlers)
+
+	return u
+}
+
+func (u *ViewRoleUsecase) Execute(ctx context.Context, batch RoleViewBatch) dtos.ViewResultDTO {
+
+	results := u.engine.Execute(ctx, batch.Items, coremap.BuildViewResult)
+
+	return dtos.ViewResultDTO{Items: results}
 }
 
 func (u *ViewRoleUsecase) handleGet(ctx context.Context, q q.GetRoleQuery) (any, *aerrs.AppError) {
@@ -89,5 +81,9 @@ func (u *ViewRoleUsecase) handleList(ctx context.Context, q q.ListRoleQuery) (an
 }
 
 func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q q.SearchRoleQuery) (any, *aerrs.AppError) {
+	return nil, nil
+}
+
+func (u *ViewRoleUsecase) handleExport(ctx context.Context, q q.ExportRoleQuery) (any, *aerrs.AppError) {
 	return nil, nil
 }

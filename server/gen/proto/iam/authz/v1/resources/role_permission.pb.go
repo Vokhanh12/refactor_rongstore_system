@@ -8,7 +8,8 @@ package resourcespb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -800,7 +801,7 @@ var File_iam_authz_v1_resources_role_permission_proto protoreflect.FileDescripto
 
 const file_iam_authz_v1_resources_role_permission_proto_rawDesc = "" +
 	"\n" +
-	",iam/authz/v1/resources/role_permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a\x1ccommon/v1/base_request.proto\x1a\x1ccommon/v1/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x02\n" +
+	",iam/authz/v1/resources/role_permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x02\n" +
 	"\x0eRolePermission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03lat\x18\x02 \x01(\x01R\x03lat\x12\x10\n" +

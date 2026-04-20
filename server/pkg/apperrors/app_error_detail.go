@@ -3,15 +3,15 @@ package apperrors
 import "fmt"
 
 type AppErrorDetail struct {
-	Field   string
-	Message string
-	Code    string // OUT_OF_RANGE, REQUIRED, NEGATIVE
-	Hint    string
+	Field   string // field bị lỗi
+	Code    string // REQUIRED, INVALID_FORMAT...
+	Message string // message cụ thể
+	Hint    string // optional fix suggestion
 }
 
 func (e *AppErrorDetail) Error() string {
 	if e == nil {
-		return "<nil AppError>"
+		return "<nil AppErrorDetail>"
 	}
-	return fmt.Sprintf("%s : %s", e.Code, e.Message)
+	return fmt.Sprintf("%s: %s", e.Code, e.Message)
 }

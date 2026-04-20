@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 package common.v1;
-option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1"; 
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1"; 
 
 import "validate/v1/validate.proto";
-import "common/v1/search.proto";
-import "common/v1/pagination.proto";
+import "core/common/v1/resources/search.proto";
+import "core/common/v1/resources/pagination.proto";
 
 message BaseRequest {
     string request_date_time = 1 [(validate.rules).string = {

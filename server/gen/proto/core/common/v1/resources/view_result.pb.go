@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/view_result.proto
+// source: core/common/v1/resources/view_result.proto
 
 package commonv1
 
@@ -38,7 +38,7 @@ type ViewResult struct {
 
 func (x *ViewResult) Reset() {
 	*x = ViewResult{}
-	mi := &file_common_v1_view_result_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_view_result_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -50,7 +50,7 @@ func (x *ViewResult) String() string {
 func (*ViewResult) ProtoMessage() {}
 
 func (x *ViewResult) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_view_result_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_view_result_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -63,7 +63,7 @@ func (x *ViewResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ViewResult.ProtoReflect.Descriptor instead.
 func (*ViewResult) Descriptor() ([]byte, []int) {
-	return file_common_v1_view_result_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_view_result_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *ViewResult) GetOpId() string {
@@ -122,11 +122,11 @@ func (x *ViewResult) GetDetails() map[string]string {
 	return nil
 }
 
-var File_common_v1_view_result_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_view_result_proto protoreflect.FileDescriptor
 
-const file_common_v1_view_result_proto_rawDesc = "" +
+const file_core_common_v1_resources_view_result_proto_rawDesc = "" +
 	"\n" +
-	"\x1bcommon/v1/view_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a\x15common/v1/error.proto\x1a\x1acommon/v1/pagination.proto\x1a\x17common/v1/warning.proto\"\x91\x03\n" +
+	"*core/common/v1/resources/view_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a$core/common/v1/resources/error.proto\x1a)core/common/v1/resources/pagination.proto\x1a&core/common/v1/resources/warning.proto\"\x91\x03\n" +
 	"\n" +
 	"ViewResult\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opId\x12\x1f\n" +
@@ -143,22 +143,22 @@ const file_common_v1_view_result_proto_rawDesc = "" +
 	" \x03(\v2\".common.v1.ViewResult.DetailsEntryR\adetails\x1a:\n" +
 	"\fDetailsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_view_result_proto_rawDescOnce sync.Once
-	file_common_v1_view_result_proto_rawDescData []byte
+	file_core_common_v1_resources_view_result_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_view_result_proto_rawDescData []byte
 )
 
-func file_common_v1_view_result_proto_rawDescGZIP() []byte {
-	file_common_v1_view_result_proto_rawDescOnce.Do(func() {
-		file_common_v1_view_result_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_view_result_proto_rawDesc), len(file_common_v1_view_result_proto_rawDesc)))
+func file_core_common_v1_resources_view_result_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_view_result_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_view_result_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_view_result_proto_rawDesc), len(file_core_common_v1_resources_view_result_proto_rawDesc)))
 	})
-	return file_common_v1_view_result_proto_rawDescData
+	return file_core_common_v1_resources_view_result_proto_rawDescData
 }
 
-var file_common_v1_view_result_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_common_v1_view_result_proto_goTypes = []any{
+var file_core_common_v1_resources_view_result_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_common_v1_resources_view_result_proto_goTypes = []any{
 	(*ViewResult)(nil), // 0: common.v1.ViewResult
 	nil,                // 1: common.v1.ViewResult.DetailsEntry
 	(*anypb.Any)(nil),  // 2: google.protobuf.Any
@@ -166,7 +166,7 @@ var file_common_v1_view_result_proto_goTypes = []any{
 	(*Pagination)(nil), // 4: common.v1.Pagination
 	(*Warning)(nil),    // 5: common.v1.Warning
 }
-var file_common_v1_view_result_proto_depIdxs = []int32{
+var file_core_common_v1_resources_view_result_proto_depIdxs = []int32{
 	2, // 0: common.v1.ViewResult.items:type_name -> google.protobuf.Any
 	3, // 1: common.v1.ViewResult.error:type_name -> common.v1.Error
 	4, // 2: common.v1.ViewResult.pagination:type_name -> common.v1.Pagination
@@ -179,29 +179,29 @@ var file_common_v1_view_result_proto_depIdxs = []int32{
 	0, // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_view_result_proto_init() }
-func file_common_v1_view_result_proto_init() {
-	if File_common_v1_view_result_proto != nil {
+func init() { file_core_common_v1_resources_view_result_proto_init() }
+func file_core_common_v1_resources_view_result_proto_init() {
+	if File_core_common_v1_resources_view_result_proto != nil {
 		return
 	}
-	file_common_v1_error_proto_init()
-	file_common_v1_pagination_proto_init()
-	file_common_v1_warning_proto_init()
+	file_core_common_v1_resources_error_proto_init()
+	file_core_common_v1_resources_pagination_proto_init()
+	file_core_common_v1_resources_warning_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_view_result_proto_rawDesc), len(file_common_v1_view_result_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_view_result_proto_rawDesc), len(file_core_common_v1_resources_view_result_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_view_result_proto_goTypes,
-		DependencyIndexes: file_common_v1_view_result_proto_depIdxs,
-		MessageInfos:      file_common_v1_view_result_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_view_result_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_view_result_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_view_result_proto_msgTypes,
 	}.Build()
-	File_common_v1_view_result_proto = out.File
-	file_common_v1_view_result_proto_goTypes = nil
-	file_common_v1_view_result_proto_depIdxs = nil
+	File_core_common_v1_resources_view_result_proto = out.File
+	file_core_common_v1_resources_view_result_proto_goTypes = nil
+	file_core_common_v1_resources_view_result_proto_depIdxs = nil
 }

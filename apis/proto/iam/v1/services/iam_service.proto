@@ -6,7 +6,7 @@ option java_package = "com.aliasadi.iam.v1.services";
 option java_multiple_files = true;
 
 import "google/api/annotations.proto";
-import "common/v1/base_response.proto";
+import "core/common/v1/resources/base_response.proto";
 import "iam/v1/resources/store_owner.proto";
 import "iam/v1/resources/login.proto";
 import "iam/v1/resources/handshake.proto";

@@ -8,7 +8,7 @@ package servicespb
 
 import (
 	context "context"
-	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	resources "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"

@@ -1,14 +1,50 @@
 package mappers
 
 import (
-	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+
+	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 // ============================================================
-// COMMAND / QUERY / DTO → PROTO
+// TO → PROTO
 // ============================================================
+
+func AppErrorToProto(it dtos.ErrorDTO) *protos.Error {
+
+	items := make([]*protos.ErrorDetail, 0, len(it.External.Details))
+
+	for _, d := range it.External.Details {
+		items = append(items, AppErrorDetailToProto(d))
+	}
+
+	return &protos.Error{
+		External: &protos.ExternalError{
+			Code:    it.External.Code,
+			Message: it.External.Message,
+			Details: items,
+		},
+		Internal: &protos.InternalError{
+			Key:          it.Internal.Key,
+			Severity:     it.Internal.Severity,
+			Retryable:    it.Internal.Retryable,
+			Source:       it.Internal.Source,
+			GrpcCode:     it.Internal.GRPCCode,
+			ClientAction: it.Internal.ClientAction,
+			ServerAction: it.Internal.ServerAction,
+		},
+	}
+}
+
+func AppErrorDetailToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
+	return &protos.ErrorDetail{
+		Field:   it.Field,
+		Message: it.Message,
+		Code:    it.Code,
+		Hint:    it.Hint,
+	}
+}
 
 func MutateResultToProto(dto dtos.MutateResultDTO) *protos.MutateResult {
 
@@ -24,151 +60,58 @@ func MutateResultToProto(dto dtos.MutateResultDTO) *protos.MutateResult {
 }
 
 func MutateResultItemToProto(dto dtos.MutateResultItemDTO) *protos.MutateResultItem {
-
 	return &protos.MutateResultItem{
 		OpId:    dto.OpID,
 		Data:    dto.Data,
 		Success: dto.Success,
-		Error:   ErrorToProto(*dto.Error),
+		Error:   AppErrorToProto(dto.Error),
 	}
 }
 
 // ============================================================
-// LIBARY → COMMAND / QUERY / DTO
+// TO → DTO
 // ============================================================
 
-func ExternalAppErrorToDTO(err *aerrs.AppError) *dtos.ExternalAppErrorDTO {
+func AppErrorToDTO(it aerrs.AppError) dtos.ErrorDTO {
 
-	if err == nil {
-		return nil
-	}
+	var items []dtos.ErrorDetailDTO
 
-	if err.ErrorDetails == nil {
-		return &dtos.ExternalAppErrorDTO{
-			Code:    err.Code,
-			Message: err.Message,
-			Details: nil,
+	if it.ErrorDetails != nil {
+		items = make([]dtos.ErrorDetailDTO, 0, len(*it.ErrorDetails))
+
+		for _, d := range *it.ErrorDetails {
+			items = append(items, AppErrorDetailToDTO(d))
 		}
+	} else {
+		items = []dtos.ErrorDetailDTO{}
 	}
 
-	details := make([]dtos.ExternalAppErrorDetailDTO, 0, len(*err.ErrorDetails))
-
-	for _, d := range *err.ErrorDetails {
-		details = append(details, externalErrorDetailToDTO(d))
-	}
-
-	return &dtos.ExternalAppErrorDTO{
-		Code:    err.Code,
-		Message: err.Message,
-		Details: &details,
-	}
-}
-
-func externalErrorDetailToDTO(errdetail aerrs.AppErrorDetail) dtos.ExternalAppErrorDetailDTO {
-	return dtos.ExternalAppErrorDetailDTO{
-		Field:   errdetail.Field,
-		Message: errdetail.Message,
-		Code:    errdetail.Code,
-		Hint:    errdetail.Hint,
-	}
-}
-
-func InternalAppErrorToDTO(err *aerrs.AppError) *dtos.InternalAppErrorDTO {
-
-	if err == nil {
-		return nil
-	}
-
-	if err.ErrorDetails == nil {
-		return &dtos.InternalAppErrorDTO{
-			Code:         err.Code,
-			Status:       err.Status,
-			GRPCCode:     err.GRPCCode,
-			Key:          err.Key,
-			Cause:        err.Cause,
-			ClientAction: err.ClientAction,
-			ServerAction: err.ServerAction,
-			Source:       err.Source,
-			Component:    err.Component,
-			Tags:         err.Tags,
-			Message:      err.Message,
-			Data:         err.Data,
-			Severity:     err.Severity,
-			Expected:     err.Expected,
-			Retryable:    err.Retryable,
-			CauseDetail:  err.CauseDetail,
-			ErrorDetails: nil,
-		}
-	}
-
-	details := make([]dtos.InternalAppErrorDetailDTO, 0, len(*err.ErrorDetails))
-
-	for _, d := range *err.ErrorDetails {
-		details = append(details, internalErrorDetailToDTO(d))
-	}
-
-	return &dtos.InternalAppErrorDTO{
-		Code:         err.Code,
-		Status:       err.Status,
-		GRPCCode:     err.GRPCCode,
-		Key:          err.Key,
-		Cause:        err.Cause,
-		ClientAction: err.ClientAction,
-		ServerAction: err.ServerAction,
-		Source:       err.Source,
-		Component:    err.Component,
-		Tags:         err.Tags,
-		Message:      err.Message,
-		Data:         err.Data,
-		Severity:     err.Severity,
-		Expected:     err.Expected,
-		Retryable:    err.Retryable,
-		CauseDetail:  err.CauseDetail,
-		ErrorDetails: &details,
+	return dtos.ErrorDTO{
+		External: dtos.ExternalErrorDTO{
+			Code:    it.Code,
+			Message: it.Message,
+			Details: items,
+		},
+		Internal: dtos.InternalErrorDTO{
+			Code:         it.Code,
+			Key:          it.Key,
+			Message:      it.Message,
+			Severity:     it.Severity,
+			Retryable:    it.Retryable,
+			Source:       it.Source,
+			Component:    it.Component,
+			GRPCCode:     it.GRPCCode,
+			ClientAction: it.ClientAction,
+			ServerAction: it.ServerAction,
+		},
 	}
 }
 
-func internalErrorDetailToDTO(errdetail aerrs.AppErrorDetail) dtos.InternalAppErrorDetailDTO {
-	return dtos.InternalAppErrorDetailDTO{
-		Field:   errdetail.Field,
-		Message: errdetail.Message,
-		Code:    errdetail.Code,
-		Hint:    errdetail.Hint,
-	}
-}
-
-// ============================================================
-// LIBARY → PROTO
-// ============================================================
-
-func AppErrorToProto(err *aerrs.AppError) *protos.AppError {
-
-	if err == nil {
-		return nil
-	}
-
-	if err.ErrorDetails == nil {
-		return &protos.Error{
-			Code:    err.Code,
-			Message: err.Message,
-			Details: nil,
-		}
-	}
-
-	details := make([]protos.AppErrorDetail, 0, len(*err.ErrorDetails))
-
-	for _, d := range *err.ErrorDetails {
-		details = append(details, protos.AppErrorDetail{
-			Field:   d.Field,
-			Message: d.Message,
-			Code:    d.Code,
-			Hint:    d.Hint,
-		})
-	}
-
-	return &protos.AppError{
-		Code:    err.Code,
-		Message: err.Message,
-		Details: &details,
+func AppErrorDetailToDTO(it aerrs.AppErrorDetail) dtos.ErrorDetailDTO {
+	return dtos.ErrorDetailDTO{
+		Field:   it.Field,
+		Message: it.Message,
+		Code:    it.Code,
+		Hint:    it.Hint,
 	}
 }

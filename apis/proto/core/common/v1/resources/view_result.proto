@@ -1,12 +1,12 @@
 syntax = "proto3";
 
 package common.v1;
-option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1"; 
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1"; 
 
 import "google/protobuf/any.proto";
-import "common/v1/error.proto";
-import "common/v1/pagination.proto";
-import "common/v1/warning.proto";
+import "core/common/v1/resources/error.proto";
+import "core/common/v1/resources/pagination.proto";
+import "core/common/v1/resources/warning.proto";
 
 message ViewResult {
   string op_id = 1;

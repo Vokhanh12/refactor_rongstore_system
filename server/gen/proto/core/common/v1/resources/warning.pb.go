@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/warning.proto
+// source: core/common/v1/resources/warning.proto
 
 package commonv1
 
@@ -32,7 +32,7 @@ type Warning struct {
 
 func (x *Warning) Reset() {
 	*x = Warning{}
-	mi := &file_common_v1_warning_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_warning_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *Warning) String() string {
 func (*Warning) ProtoMessage() {}
 
 func (x *Warning) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_warning_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_warning_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *Warning) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Warning.ProtoReflect.Descriptor instead.
 func (*Warning) Descriptor() ([]byte, []int) {
-	return file_common_v1_warning_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_warning_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Warning) GetCode() string {
@@ -81,37 +81,37 @@ func (x *Warning) GetMetadata() map[string]string {
 	return nil
 }
 
-var File_common_v1_warning_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_warning_proto protoreflect.FileDescriptor
 
-const file_common_v1_warning_proto_rawDesc = "" +
+const file_core_common_v1_resources_warning_proto_rawDesc = "" +
 	"\n" +
-	"\x17common/v1/warning.proto\x12\tcommon.v1\"\xb2\x01\n" +
+	"&core/common/v1/resources/warning.proto\x12\tcommon.v1\"\xb2\x01\n" +
 	"\aWarning\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12<\n" +
 	"\bmetadata\x18\x03 \x03(\v2 .common.v1.Warning.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_warning_proto_rawDescOnce sync.Once
-	file_common_v1_warning_proto_rawDescData []byte
+	file_core_common_v1_resources_warning_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_warning_proto_rawDescData []byte
 )
 
-func file_common_v1_warning_proto_rawDescGZIP() []byte {
-	file_common_v1_warning_proto_rawDescOnce.Do(func() {
-		file_common_v1_warning_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_warning_proto_rawDesc), len(file_common_v1_warning_proto_rawDesc)))
+func file_core_common_v1_resources_warning_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_warning_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_warning_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_warning_proto_rawDesc), len(file_core_common_v1_resources_warning_proto_rawDesc)))
 	})
-	return file_common_v1_warning_proto_rawDescData
+	return file_core_common_v1_resources_warning_proto_rawDescData
 }
 
-var file_common_v1_warning_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_common_v1_warning_proto_goTypes = []any{
+var file_core_common_v1_resources_warning_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_common_v1_resources_warning_proto_goTypes = []any{
 	(*Warning)(nil), // 0: common.v1.Warning
 	nil,             // 1: common.v1.Warning.MetadataEntry
 }
-var file_common_v1_warning_proto_depIdxs = []int32{
+var file_core_common_v1_resources_warning_proto_depIdxs = []int32{
 	1, // 0: common.v1.Warning.metadata:type_name -> common.v1.Warning.MetadataEntry
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
@@ -120,26 +120,26 @@ var file_common_v1_warning_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_warning_proto_init() }
-func file_common_v1_warning_proto_init() {
-	if File_common_v1_warning_proto != nil {
+func init() { file_core_common_v1_resources_warning_proto_init() }
+func file_core_common_v1_resources_warning_proto_init() {
+	if File_core_common_v1_resources_warning_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_warning_proto_rawDesc), len(file_common_v1_warning_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_warning_proto_rawDesc), len(file_core_common_v1_resources_warning_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_warning_proto_goTypes,
-		DependencyIndexes: file_common_v1_warning_proto_depIdxs,
-		MessageInfos:      file_common_v1_warning_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_warning_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_warning_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_warning_proto_msgTypes,
 	}.Build()
-	File_common_v1_warning_proto = out.File
-	file_common_v1_warning_proto_goTypes = nil
-	file_common_v1_warning_proto_depIdxs = nil
+	File_core_common_v1_resources_warning_proto = out.File
+	file_core_common_v1_resources_warning_proto_goTypes = nil
+	file_core_common_v1_resources_warning_proto_depIdxs = nil
 }

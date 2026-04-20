@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/auth_options.proto
+// source: core/common/v1/resources/auth_options.proto
 
 package commonv1
 
@@ -21,14 +21,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
+var file_core_common_v1_resources_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
 		ExtensionType: (*string)(nil),
 		Field:         50001,
 		Name:          "auth.resource",
 		Tag:           "bytes,50001,opt,name=resource",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -36,7 +36,7 @@ var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50002,
 		Name:          "auth.action",
 		Tag:           "bytes,50002,opt,name=action",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -44,7 +44,7 @@ var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50003,
 		Name:          "auth.resource_id_field",
 		Tag:           "bytes,50003,opt,name=resource_id_field",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -52,7 +52,7 @@ var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50004,
 		Name:          "auth.check_ownership",
 		Tag:           "varint,50004,opt,name=check_ownership",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -60,7 +60,7 @@ var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50005,
 		Name:          "auth.require_tenant",
 		Tag:           "varint,50005,opt,name=require_tenant",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -68,7 +68,7 @@ var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50006,
 		Name:          "auth.skip_auth",
 		Tag:           "varint,50006,opt,name=skip_auth",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -76,33 +76,33 @@ var file_common_v1_auth_options_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         50007,
 		Name:          "auth.required_permission",
 		Tag:           "bytes,50007,opt,name=required_permission",
-		Filename:      "common/v1/auth_options.proto",
+		Filename:      "core/common/v1/resources/auth_options.proto",
 	},
 }
 
 // Extension fields to descriptorpb.MessageOptions.
 var (
 	// optional string resource = 50001;
-	E_Resource = &file_common_v1_auth_options_proto_extTypes[0]
+	E_Resource = &file_core_common_v1_resources_auth_options_proto_extTypes[0]
 	// optional string action = 50002;
-	E_Action = &file_common_v1_auth_options_proto_extTypes[1]
+	E_Action = &file_core_common_v1_resources_auth_options_proto_extTypes[1]
 	// optional string resource_id_field = 50003;
-	E_ResourceIdField = &file_common_v1_auth_options_proto_extTypes[2]
+	E_ResourceIdField = &file_core_common_v1_resources_auth_options_proto_extTypes[2]
 	// optional bool check_ownership = 50004;
-	E_CheckOwnership = &file_common_v1_auth_options_proto_extTypes[3]
+	E_CheckOwnership = &file_core_common_v1_resources_auth_options_proto_extTypes[3]
 	// optional bool require_tenant = 50005;
-	E_RequireTenant = &file_common_v1_auth_options_proto_extTypes[4]
+	E_RequireTenant = &file_core_common_v1_resources_auth_options_proto_extTypes[4]
 	// optional bool skip_auth = 50006;
-	E_SkipAuth = &file_common_v1_auth_options_proto_extTypes[5]
+	E_SkipAuth = &file_core_common_v1_resources_auth_options_proto_extTypes[5]
 	// optional string required_permission = 50007;
-	E_RequiredPermission = &file_common_v1_auth_options_proto_extTypes[6]
+	E_RequiredPermission = &file_core_common_v1_resources_auth_options_proto_extTypes[6]
 )
 
-var File_common_v1_auth_options_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_auth_options_proto protoreflect.FileDescriptor
 
-const file_common_v1_auth_options_proto_rawDesc = "" +
+const file_core_common_v1_resources_auth_options_proto_rawDesc = "" +
 	"\n" +
-	"\x1ccommon/v1/auth_options.proto\x12\x04auth\x1a google/protobuf/descriptor.proto:=\n" +
+	"+core/common/v1/resources/auth_options.proto\x12\x04auth\x1a google/protobuf/descriptor.proto:=\n" +
 	"\bresource\x12\x1f.google.protobuf.MessageOptions\x18ц\x03 \x01(\tR\bresource:9\n" +
 	"\x06action\x12\x1f.google.protobuf.MessageOptions\x18҆\x03 \x01(\tR\x06action:M\n" +
 	"\x11resource_id_field\x12\x1f.google.protobuf.MessageOptions\x18ӆ\x03 \x01(\tR\x0fresourceIdField:J\n" +
@@ -111,10 +111,10 @@ const file_common_v1_auth_options_proto_rawDesc = "" +
 	"\tskip_auth\x12\x1f.google.protobuf.MessageOptions\x18ֆ\x03 \x01(\bR\bskipAuth:R\n" +
 	"\x13required_permission\x12\x1f.google.protobuf.MessageOptions\x18׆\x03 \x01(\tR\x12requiredPermissionBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
 
-var file_common_v1_auth_options_proto_goTypes = []any{
+var file_core_common_v1_resources_auth_options_proto_goTypes = []any{
 	(*descriptorpb.MessageOptions)(nil), // 0: google.protobuf.MessageOptions
 }
-var file_common_v1_auth_options_proto_depIdxs = []int32{
+var file_core_common_v1_resources_auth_options_proto_depIdxs = []int32{
 	0, // 0: auth.resource:extendee -> google.protobuf.MessageOptions
 	0, // 1: auth.action:extendee -> google.protobuf.MessageOptions
 	0, // 2: auth.resource_id_field:extendee -> google.protobuf.MessageOptions
@@ -129,26 +129,26 @@ var file_common_v1_auth_options_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_auth_options_proto_init() }
-func file_common_v1_auth_options_proto_init() {
-	if File_common_v1_auth_options_proto != nil {
+func init() { file_core_common_v1_resources_auth_options_proto_init() }
+func file_core_common_v1_resources_auth_options_proto_init() {
+	if File_core_common_v1_resources_auth_options_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_auth_options_proto_rawDesc), len(file_common_v1_auth_options_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_auth_options_proto_rawDesc), len(file_core_common_v1_resources_auth_options_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 7,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_auth_options_proto_goTypes,
-		DependencyIndexes: file_common_v1_auth_options_proto_depIdxs,
-		ExtensionInfos:    file_common_v1_auth_options_proto_extTypes,
+		GoTypes:           file_core_common_v1_resources_auth_options_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_auth_options_proto_depIdxs,
+		ExtensionInfos:    file_core_common_v1_resources_auth_options_proto_extTypes,
 	}.Build()
-	File_common_v1_auth_options_proto = out.File
-	file_common_v1_auth_options_proto_goTypes = nil
-	file_common_v1_auth_options_proto_depIdxs = nil
+	File_core_common_v1_resources_auth_options_proto = out.File
+	file_core_common_v1_resources_auth_options_proto_goTypes = nil
+	file_core_common_v1_resources_auth_options_proto_depIdxs = nil
 }

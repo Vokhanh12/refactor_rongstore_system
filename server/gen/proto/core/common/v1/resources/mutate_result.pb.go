@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/mutate_result.proto
+// source: core/common/v1/resources/mutate_result.proto
 
 package commonv1
 
@@ -31,7 +31,7 @@ type MutateResult struct {
 
 func (x *MutateResult) Reset() {
 	*x = MutateResult{}
-	mi := &file_common_v1_mutate_result_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_mutate_result_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +43,7 @@ func (x *MutateResult) String() string {
 func (*MutateResult) ProtoMessage() {}
 
 func (x *MutateResult) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_mutate_result_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_mutate_result_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +56,7 @@ func (x *MutateResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MutateResult.ProtoReflect.Descriptor instead.
 func (*MutateResult) Descriptor() ([]byte, []int) {
-	return file_common_v1_mutate_result_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_mutate_result_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *MutateResult) GetItems() []*MutateResultItem {
@@ -78,7 +78,7 @@ type MutateResultItem struct {
 
 func (x *MutateResultItem) Reset() {
 	*x = MutateResultItem{}
-	mi := &file_common_v1_mutate_result_proto_msgTypes[1]
+	mi := &file_core_common_v1_resources_mutate_result_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -90,7 +90,7 @@ func (x *MutateResultItem) String() string {
 func (*MutateResultItem) ProtoMessage() {}
 
 func (x *MutateResultItem) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_mutate_result_proto_msgTypes[1]
+	mi := &file_core_common_v1_resources_mutate_result_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -103,7 +103,7 @@ func (x *MutateResultItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MutateResultItem.ProtoReflect.Descriptor instead.
 func (*MutateResultItem) Descriptor() ([]byte, []int) {
-	return file_common_v1_mutate_result_proto_rawDescGZIP(), []int{1}
+	return file_core_common_v1_resources_mutate_result_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *MutateResultItem) GetOpId() string {
@@ -134,39 +134,39 @@ func (x *MutateResultItem) GetError() *Error {
 	return nil
 }
 
-var File_common_v1_mutate_result_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_mutate_result_proto protoreflect.FileDescriptor
 
-const file_common_v1_mutate_result_proto_rawDesc = "" +
+const file_core_common_v1_resources_mutate_result_proto_rawDesc = "" +
 	"\n" +
-	"\x1dcommon/v1/mutate_result.proto\x12\tcommon.v1\x1a\x15common/v1/error.proto\x1a\x19google/protobuf/any.proto\"A\n" +
+	",core/common/v1/resources/mutate_result.proto\x12\tcommon.v1\x1a$core/common/v1/resources/error.proto\x1a\x19google/protobuf/any.proto\"A\n" +
 	"\fMutateResult\x121\n" +
 	"\x05items\x18\x01 \x03(\v2\x1b.common.v1.MutateResultItemR\x05items\"\x93\x01\n" +
 	"\x10MutateResultItem\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opId\x12(\n" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\x12\x18\n" +
 	"\asuccess\x18\x03 \x01(\bR\asuccess\x12&\n" +
-	"\x05error\x18\x05 \x01(\v2\x10.common.v1.ErrorR\x05errorBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x05error\x18\x05 \x01(\v2\x10.common.v1.ErrorR\x05errorBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_mutate_result_proto_rawDescOnce sync.Once
-	file_common_v1_mutate_result_proto_rawDescData []byte
+	file_core_common_v1_resources_mutate_result_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_mutate_result_proto_rawDescData []byte
 )
 
-func file_common_v1_mutate_result_proto_rawDescGZIP() []byte {
-	file_common_v1_mutate_result_proto_rawDescOnce.Do(func() {
-		file_common_v1_mutate_result_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_mutate_result_proto_rawDesc), len(file_common_v1_mutate_result_proto_rawDesc)))
+func file_core_common_v1_resources_mutate_result_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_mutate_result_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_mutate_result_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_mutate_result_proto_rawDesc), len(file_core_common_v1_resources_mutate_result_proto_rawDesc)))
 	})
-	return file_common_v1_mutate_result_proto_rawDescData
+	return file_core_common_v1_resources_mutate_result_proto_rawDescData
 }
 
-var file_common_v1_mutate_result_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_common_v1_mutate_result_proto_goTypes = []any{
+var file_core_common_v1_resources_mutate_result_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_common_v1_resources_mutate_result_proto_goTypes = []any{
 	(*MutateResult)(nil),     // 0: common.v1.MutateResult
 	(*MutateResultItem)(nil), // 1: common.v1.MutateResultItem
 	(*anypb.Any)(nil),        // 2: google.protobuf.Any
 	(*Error)(nil),            // 3: common.v1.Error
 }
-var file_common_v1_mutate_result_proto_depIdxs = []int32{
+var file_core_common_v1_resources_mutate_result_proto_depIdxs = []int32{
 	1, // 0: common.v1.MutateResult.items:type_name -> common.v1.MutateResultItem
 	2, // 1: common.v1.MutateResultItem.data:type_name -> google.protobuf.Any
 	3, // 2: common.v1.MutateResultItem.error:type_name -> common.v1.Error
@@ -177,27 +177,27 @@ var file_common_v1_mutate_result_proto_depIdxs = []int32{
 	0, // [0:3] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_mutate_result_proto_init() }
-func file_common_v1_mutate_result_proto_init() {
-	if File_common_v1_mutate_result_proto != nil {
+func init() { file_core_common_v1_resources_mutate_result_proto_init() }
+func file_core_common_v1_resources_mutate_result_proto_init() {
+	if File_core_common_v1_resources_mutate_result_proto != nil {
 		return
 	}
-	file_common_v1_error_proto_init()
+	file_core_common_v1_resources_error_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_mutate_result_proto_rawDesc), len(file_common_v1_mutate_result_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_mutate_result_proto_rawDesc), len(file_core_common_v1_resources_mutate_result_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_mutate_result_proto_goTypes,
-		DependencyIndexes: file_common_v1_mutate_result_proto_depIdxs,
-		MessageInfos:      file_common_v1_mutate_result_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_mutate_result_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_mutate_result_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_mutate_result_proto_msgTypes,
 	}.Build()
-	File_common_v1_mutate_result_proto = out.File
-	file_common_v1_mutate_result_proto_goTypes = nil
-	file_common_v1_mutate_result_proto_depIdxs = nil
+	File_core_common_v1_resources_mutate_result_proto = out.File
+	file_core_common_v1_resources_mutate_result_proto_goTypes = nil
+	file_core_common_v1_resources_mutate_result_proto_depIdxs = nil
 }

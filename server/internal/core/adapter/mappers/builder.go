@@ -14,8 +14,8 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
-func BuildMutateResult(opID string, data any, err *aerrs.AppError) dtos.MutateResultItem {
-	return dtos.MutateResultItem{
+func BuildMutateResult(opID string, data any, err aerrs.AppError) dtos.MutateResultItemDTO {
+	return dtos.MutateResultItemDTO{
 		OpID:  opID,
 		Data:  data,
 		Error: AppErrorToDTO(err),
@@ -126,10 +126,7 @@ func BuildSuccessResponse(ctx context.Context, data proto.Message) (*protos.Base
 // 	return BuildErrorResponse(ctx, be)
 // }
 
-func BuildMutateResponse(
-	ctx context.Context,
-	result *protos.MutateResult,
-) *protos.MutateResponse {
+func BuildMutateResponse(ctx context.Context, results dtos.MutateResultDTO) *protos.MutateResponse {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
@@ -143,7 +140,7 @@ func BuildMutateResponse(
 			Degraded:   false,
 			ServerTime: time.Now().UnixMilli(),
 		},
-		MutateResults: result,
+		MutateResults: MutateResultToProto(results),
 	}
 }
 

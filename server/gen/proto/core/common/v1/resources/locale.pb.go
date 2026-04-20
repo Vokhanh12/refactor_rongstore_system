@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/locale.proto
+// source: core/common/v1/resources/locale.proto
 
 package commonv1
 
@@ -54,11 +54,11 @@ func (x Locale_LocaleEnum) String() string {
 }
 
 func (Locale_LocaleEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_locale_proto_enumTypes[0].Descriptor()
+	return file_core_common_v1_resources_locale_proto_enumTypes[0].Descriptor()
 }
 
 func (Locale_LocaleEnum) Type() protoreflect.EnumType {
-	return &file_common_v1_locale_proto_enumTypes[0]
+	return &file_core_common_v1_resources_locale_proto_enumTypes[0]
 }
 
 func (x Locale_LocaleEnum) Number() protoreflect.EnumNumber {
@@ -67,7 +67,7 @@ func (x Locale_LocaleEnum) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Locale_LocaleEnum.Descriptor instead.
 func (Locale_LocaleEnum) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_locale_proto_rawDescGZIP(), []int{0, 0}
+	return file_core_common_v1_resources_locale_proto_rawDescGZIP(), []int{0, 0}
 }
 
 type Locale struct {
@@ -78,7 +78,7 @@ type Locale struct {
 
 func (x *Locale) Reset() {
 	*x = Locale{}
-	mi := &file_common_v1_locale_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_locale_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -90,7 +90,7 @@ func (x *Locale) String() string {
 func (*Locale) ProtoMessage() {}
 
 func (x *Locale) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_locale_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_locale_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -103,40 +103,40 @@ func (x *Locale) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Locale.ProtoReflect.Descriptor instead.
 func (*Locale) Descriptor() ([]byte, []int) {
-	return file_common_v1_locale_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_locale_proto_rawDescGZIP(), []int{0}
 }
 
-var File_common_v1_locale_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_locale_proto protoreflect.FileDescriptor
 
-const file_common_v1_locale_proto_rawDesc = "" +
+const file_core_common_v1_resources_locale_proto_rawDesc = "" +
 	"\n" +
-	"\x16common/v1/locale.proto\x12\tcommon.v1\"7\n" +
+	"%core/common/v1/resources/locale.proto\x12\tcommon.v1\"7\n" +
 	"\x06Locale\"-\n" +
 	"\n" +
 	"LocaleEnum\x12\x0f\n" +
 	"\vUNSPECIFIED\x10\x00\x12\x06\n" +
 	"\x02VI\x10\x01\x12\x06\n" +
-	"\x02EN\x10\x02BTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x02EN\x10\x02BYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_locale_proto_rawDescOnce sync.Once
-	file_common_v1_locale_proto_rawDescData []byte
+	file_core_common_v1_resources_locale_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_locale_proto_rawDescData []byte
 )
 
-func file_common_v1_locale_proto_rawDescGZIP() []byte {
-	file_common_v1_locale_proto_rawDescOnce.Do(func() {
-		file_common_v1_locale_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_locale_proto_rawDesc), len(file_common_v1_locale_proto_rawDesc)))
+func file_core_common_v1_resources_locale_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_locale_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_locale_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_locale_proto_rawDesc), len(file_core_common_v1_resources_locale_proto_rawDesc)))
 	})
-	return file_common_v1_locale_proto_rawDescData
+	return file_core_common_v1_resources_locale_proto_rawDescData
 }
 
-var file_common_v1_locale_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_common_v1_locale_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_common_v1_locale_proto_goTypes = []any{
+var file_core_common_v1_resources_locale_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_core_common_v1_resources_locale_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_core_common_v1_resources_locale_proto_goTypes = []any{
 	(Locale_LocaleEnum)(0), // 0: common.v1.Locale.LocaleEnum
 	(*Locale)(nil),         // 1: common.v1.Locale
 }
-var file_common_v1_locale_proto_depIdxs = []int32{
+var file_core_common_v1_resources_locale_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -144,27 +144,27 @@ var file_common_v1_locale_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_locale_proto_init() }
-func file_common_v1_locale_proto_init() {
-	if File_common_v1_locale_proto != nil {
+func init() { file_core_common_v1_resources_locale_proto_init() }
+func file_core_common_v1_resources_locale_proto_init() {
+	if File_core_common_v1_resources_locale_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_locale_proto_rawDesc), len(file_common_v1_locale_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_locale_proto_rawDesc), len(file_core_common_v1_resources_locale_proto_rawDesc)),
 			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_locale_proto_goTypes,
-		DependencyIndexes: file_common_v1_locale_proto_depIdxs,
-		EnumInfos:         file_common_v1_locale_proto_enumTypes,
-		MessageInfos:      file_common_v1_locale_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_locale_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_locale_proto_depIdxs,
+		EnumInfos:         file_core_common_v1_resources_locale_proto_enumTypes,
+		MessageInfos:      file_core_common_v1_resources_locale_proto_msgTypes,
 	}.Build()
-	File_common_v1_locale_proto = out.File
-	file_common_v1_locale_proto_goTypes = nil
-	file_common_v1_locale_proto_depIdxs = nil
+	File_core_common_v1_resources_locale_proto = out.File
+	file_core_common_v1_resources_locale_proto_goTypes = nil
+	file_core_common_v1_resources_locale_proto_depIdxs = nil
 }

@@ -5,7 +5,6 @@ import (
 
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
@@ -32,14 +31,11 @@ func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRe
 
 	for _, item := range results.Items {
 
-		if item.Error != nil {
-			// logger.LevelBySeverity(ctx, "iam_handler.store_owner_mutate", item.Error)
-			a.logger.Error(ctx, "iam_handler.store_owner_mutate", item.Error)
+		if item.Error != nil && item.Error.External != nil {
+			a.logger.Error(ctx, "iam_handler.role_mutate", *item.Error.Internal, nil)
 		}
 
 	}
 
-	mapped := core.MutateResultToProto(*results)
-
-	return corem.BuildMutateResponse(ctx, mapped), nil
+	return corem.BuildMutateResponse(ctx, results), nil
 }

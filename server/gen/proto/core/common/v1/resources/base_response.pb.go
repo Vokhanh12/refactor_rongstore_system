@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/base_response.proto
+// source: core/common/v1/resources/base_response.proto
 
 package commonv1
 
@@ -37,7 +37,7 @@ type BaseResponse struct {
 
 func (x *BaseResponse) Reset() {
 	*x = BaseResponse{}
-	mi := &file_common_v1_base_response_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_base_response_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -49,7 +49,7 @@ func (x *BaseResponse) String() string {
 func (*BaseResponse) ProtoMessage() {}
 
 func (x *BaseResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_base_response_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_base_response_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *BaseResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BaseResponse.ProtoReflect.Descriptor instead.
 func (*BaseResponse) Descriptor() ([]byte, []int) {
-	return file_common_v1_base_response_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_base_response_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *BaseResponse) GetSuccess() bool {
@@ -124,7 +124,7 @@ type MutateResponse struct {
 
 func (x *MutateResponse) Reset() {
 	*x = MutateResponse{}
-	mi := &file_common_v1_base_response_proto_msgTypes[1]
+	mi := &file_core_common_v1_resources_base_response_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -136,7 +136,7 @@ func (x *MutateResponse) String() string {
 func (*MutateResponse) ProtoMessage() {}
 
 func (x *MutateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_base_response_proto_msgTypes[1]
+	mi := &file_core_common_v1_resources_base_response_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -149,7 +149,7 @@ func (x *MutateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MutateResponse.ProtoReflect.Descriptor instead.
 func (*MutateResponse) Descriptor() ([]byte, []int) {
-	return file_common_v1_base_response_proto_rawDescGZIP(), []int{1}
+	return file_core_common_v1_resources_base_response_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *MutateResponse) GetMetadata() *Metadata {
@@ -176,7 +176,7 @@ type ViewResponse struct {
 
 func (x *ViewResponse) Reset() {
 	*x = ViewResponse{}
-	mi := &file_common_v1_base_response_proto_msgTypes[2]
+	mi := &file_core_common_v1_resources_base_response_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -188,7 +188,7 @@ func (x *ViewResponse) String() string {
 func (*ViewResponse) ProtoMessage() {}
 
 func (x *ViewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_base_response_proto_msgTypes[2]
+	mi := &file_core_common_v1_resources_base_response_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -201,7 +201,7 @@ func (x *ViewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ViewResponse.ProtoReflect.Descriptor instead.
 func (*ViewResponse) Descriptor() ([]byte, []int) {
-	return file_common_v1_base_response_proto_rawDescGZIP(), []int{2}
+	return file_core_common_v1_resources_base_response_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ViewResponse) GetMetadata() *Metadata {
@@ -218,11 +218,11 @@ func (x *ViewResponse) GetViewResults() *ViewResult {
 	return nil
 }
 
-var File_common_v1_base_response_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_base_response_proto protoreflect.FileDescriptor
 
-const file_common_v1_base_response_proto_rawDesc = "" +
+const file_core_common_v1_resources_base_response_proto_rawDesc = "" +
 	"\n" +
-	"\x1dcommon/v1/base_response.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a\x18common/v1/metadata.proto\x1a\x15common/v1/error.proto\x1a\x1acommon/v1/pagination.proto\x1a\x17common/v1/warning.proto\x1a\x1dcommon/v1/mutate_result.proto\x1a\x1bcommon/v1/view_result.proto\"\x8e\x03\n" +
+	",core/common/v1/resources/base_response.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a'core/common/v1/resources/metadata.proto\x1a$core/common/v1/resources/error.proto\x1a)core/common/v1/resources/pagination.proto\x1a&core/common/v1/resources/warning.proto\x1a,core/common/v1/resources/mutate_result.proto\x1a*core/common/v1/resources/view_result.proto\"\x8e\x03\n" +
 	"\fBaseResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12(\n" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\x12/\n" +
@@ -241,22 +241,22 @@ const file_common_v1_base_response_proto_rawDesc = "" +
 	"\x0emutate_results\x18\x02 \x01(\v2\x17.common.v1.MutateResultR\rmutateResults\"y\n" +
 	"\fViewResponse\x12/\n" +
 	"\bmetadata\x18\x01 \x01(\v2\x13.common.v1.MetadataR\bmetadata\x128\n" +
-	"\fview_results\x18\x02 \x01(\v2\x15.common.v1.ViewResultR\vviewResultsBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\fview_results\x18\x02 \x01(\v2\x15.common.v1.ViewResultR\vviewResultsBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_base_response_proto_rawDescOnce sync.Once
-	file_common_v1_base_response_proto_rawDescData []byte
+	file_core_common_v1_resources_base_response_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_base_response_proto_rawDescData []byte
 )
 
-func file_common_v1_base_response_proto_rawDescGZIP() []byte {
-	file_common_v1_base_response_proto_rawDescOnce.Do(func() {
-		file_common_v1_base_response_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_base_response_proto_rawDesc), len(file_common_v1_base_response_proto_rawDesc)))
+func file_core_common_v1_resources_base_response_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_base_response_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_base_response_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_base_response_proto_rawDesc), len(file_core_common_v1_resources_base_response_proto_rawDesc)))
 	})
-	return file_common_v1_base_response_proto_rawDescData
+	return file_core_common_v1_resources_base_response_proto_rawDescData
 }
 
-var file_common_v1_base_response_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_common_v1_base_response_proto_goTypes = []any{
+var file_core_common_v1_resources_base_response_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_core_common_v1_resources_base_response_proto_goTypes = []any{
 	(*BaseResponse)(nil),   // 0: common.v1.BaseResponse
 	(*MutateResponse)(nil), // 1: common.v1.MutateResponse
 	(*ViewResponse)(nil),   // 2: common.v1.ViewResponse
@@ -269,7 +269,7 @@ var file_common_v1_base_response_proto_goTypes = []any{
 	(*MutateResult)(nil),   // 9: common.v1.MutateResult
 	(*ViewResult)(nil),     // 10: common.v1.ViewResult
 }
-var file_common_v1_base_response_proto_depIdxs = []int32{
+var file_core_common_v1_resources_base_response_proto_depIdxs = []int32{
 	4,  // 0: common.v1.BaseResponse.data:type_name -> google.protobuf.Any
 	5,  // 1: common.v1.BaseResponse.metadata:type_name -> common.v1.Metadata
 	6,  // 2: common.v1.BaseResponse.error:type_name -> common.v1.Error
@@ -287,32 +287,32 @@ var file_common_v1_base_response_proto_depIdxs = []int32{
 	0,  // [0:10] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_base_response_proto_init() }
-func file_common_v1_base_response_proto_init() {
-	if File_common_v1_base_response_proto != nil {
+func init() { file_core_common_v1_resources_base_response_proto_init() }
+func file_core_common_v1_resources_base_response_proto_init() {
+	if File_core_common_v1_resources_base_response_proto != nil {
 		return
 	}
-	file_common_v1_metadata_proto_init()
-	file_common_v1_error_proto_init()
-	file_common_v1_pagination_proto_init()
-	file_common_v1_warning_proto_init()
-	file_common_v1_mutate_result_proto_init()
-	file_common_v1_view_result_proto_init()
+	file_core_common_v1_resources_metadata_proto_init()
+	file_core_common_v1_resources_error_proto_init()
+	file_core_common_v1_resources_pagination_proto_init()
+	file_core_common_v1_resources_warning_proto_init()
+	file_core_common_v1_resources_mutate_result_proto_init()
+	file_core_common_v1_resources_view_result_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_base_response_proto_rawDesc), len(file_common_v1_base_response_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_base_response_proto_rawDesc), len(file_core_common_v1_resources_base_response_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_base_response_proto_goTypes,
-		DependencyIndexes: file_common_v1_base_response_proto_depIdxs,
-		MessageInfos:      file_common_v1_base_response_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_base_response_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_base_response_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_base_response_proto_msgTypes,
 	}.Build()
-	File_common_v1_base_response_proto = out.File
-	file_common_v1_base_response_proto_goTypes = nil
-	file_common_v1_base_response_proto_depIdxs = nil
+	File_core_common_v1_resources_base_response_proto = out.File
+	file_core_common_v1_resources_base_response_proto_goTypes = nil
+	file_core_common_v1_resources_base_response_proto_depIdxs = nil
 }

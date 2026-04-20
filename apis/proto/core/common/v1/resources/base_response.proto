@@ -1,14 +1,14 @@
 syntax = "proto3";
 package common.v1;
-option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1";
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1";
 
 import "google/protobuf/any.proto";
-import "common/v1/metadata.proto";
-import "common/v1/error.proto";
-import "common/v1/pagination.proto";
-import "common/v1/warning.proto";
-import "common/v1/mutate_result.proto";
-import "common/v1/view_result.proto";
+import "core/common/v1/resources/metadata.proto";
+import "core/common/v1/resources/error.proto";
+import "core/common/v1/resources/pagination.proto";
+import "core/common/v1/resources/warning.proto";
+import "core/common/v1/resources/mutate_result.proto";
+import "core/common/v1/resources/view_result.proto";
 
 message BaseResponse {
   bool success = 1;

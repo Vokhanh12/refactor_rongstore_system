@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/mutate_operation.proto
+// source: core/common/v1/resources/mutate_operation.proto
 
 package commonv1
 
@@ -57,11 +57,11 @@ func (x MutateOperation_MutateOperationEnum) String() string {
 }
 
 func (MutateOperation_MutateOperationEnum) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_mutate_operation_proto_enumTypes[0].Descriptor()
+	return file_core_common_v1_resources_mutate_operation_proto_enumTypes[0].Descriptor()
 }
 
 func (MutateOperation_MutateOperationEnum) Type() protoreflect.EnumType {
-	return &file_common_v1_mutate_operation_proto_enumTypes[0]
+	return &file_core_common_v1_resources_mutate_operation_proto_enumTypes[0]
 }
 
 func (x MutateOperation_MutateOperationEnum) Number() protoreflect.EnumNumber {
@@ -70,7 +70,7 @@ func (x MutateOperation_MutateOperationEnum) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MutateOperation_MutateOperationEnum.Descriptor instead.
 func (MutateOperation_MutateOperationEnum) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_mutate_operation_proto_rawDescGZIP(), []int{0, 0}
+	return file_core_common_v1_resources_mutate_operation_proto_rawDescGZIP(), []int{0, 0}
 }
 
 type MutateOperation struct {
@@ -81,7 +81,7 @@ type MutateOperation struct {
 
 func (x *MutateOperation) Reset() {
 	*x = MutateOperation{}
-	mi := &file_common_v1_mutate_operation_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_mutate_operation_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -93,7 +93,7 @@ func (x *MutateOperation) String() string {
 func (*MutateOperation) ProtoMessage() {}
 
 func (x *MutateOperation) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_mutate_operation_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_mutate_operation_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -106,14 +106,14 @@ func (x *MutateOperation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MutateOperation.ProtoReflect.Descriptor instead.
 func (*MutateOperation) Descriptor() ([]byte, []int) {
-	return file_common_v1_mutate_operation_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_mutate_operation_proto_rawDescGZIP(), []int{0}
 }
 
-var File_common_v1_mutate_operation_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_mutate_operation_proto protoreflect.FileDescriptor
 
-const file_common_v1_mutate_operation_proto_rawDesc = "" +
+const file_core_common_v1_resources_mutate_operation_proto_rawDesc = "" +
 	"\n" +
-	" common/v1/mutate_operation.proto\x12\tcommon.v1\"[\n" +
+	"/core/common/v1/resources/mutate_operation.proto\x12\tcommon.v1\"[\n" +
 	"\x0fMutateOperation\"H\n" +
 	"\x13MutateOperationEnum\x12\x0f\n" +
 	"\vUNSPECIFIED\x10\x00\x12\n" +
@@ -121,27 +121,27 @@ const file_common_v1_mutate_operation_proto_rawDesc = "" +
 	"\x06CREATE\x10\x01\x12\b\n" +
 	"\x04EDIT\x10\x02\x12\n" +
 	"\n" +
-	"\x06DELETE\x10\x03BTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x06DELETE\x10\x03BYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_mutate_operation_proto_rawDescOnce sync.Once
-	file_common_v1_mutate_operation_proto_rawDescData []byte
+	file_core_common_v1_resources_mutate_operation_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_mutate_operation_proto_rawDescData []byte
 )
 
-func file_common_v1_mutate_operation_proto_rawDescGZIP() []byte {
-	file_common_v1_mutate_operation_proto_rawDescOnce.Do(func() {
-		file_common_v1_mutate_operation_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_mutate_operation_proto_rawDesc), len(file_common_v1_mutate_operation_proto_rawDesc)))
+func file_core_common_v1_resources_mutate_operation_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_mutate_operation_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_mutate_operation_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_mutate_operation_proto_rawDesc), len(file_core_common_v1_resources_mutate_operation_proto_rawDesc)))
 	})
-	return file_common_v1_mutate_operation_proto_rawDescData
+	return file_core_common_v1_resources_mutate_operation_proto_rawDescData
 }
 
-var file_common_v1_mutate_operation_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_common_v1_mutate_operation_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_common_v1_mutate_operation_proto_goTypes = []any{
+var file_core_common_v1_resources_mutate_operation_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_core_common_v1_resources_mutate_operation_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_core_common_v1_resources_mutate_operation_proto_goTypes = []any{
 	(MutateOperation_MutateOperationEnum)(0), // 0: common.v1.MutateOperation.MutateOperationEnum
 	(*MutateOperation)(nil),                  // 1: common.v1.MutateOperation
 }
-var file_common_v1_mutate_operation_proto_depIdxs = []int32{
+var file_core_common_v1_resources_mutate_operation_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -149,27 +149,27 @@ var file_common_v1_mutate_operation_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_mutate_operation_proto_init() }
-func file_common_v1_mutate_operation_proto_init() {
-	if File_common_v1_mutate_operation_proto != nil {
+func init() { file_core_common_v1_resources_mutate_operation_proto_init() }
+func file_core_common_v1_resources_mutate_operation_proto_init() {
+	if File_core_common_v1_resources_mutate_operation_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_mutate_operation_proto_rawDesc), len(file_common_v1_mutate_operation_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_mutate_operation_proto_rawDesc), len(file_core_common_v1_resources_mutate_operation_proto_rawDesc)),
 			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_mutate_operation_proto_goTypes,
-		DependencyIndexes: file_common_v1_mutate_operation_proto_depIdxs,
-		EnumInfos:         file_common_v1_mutate_operation_proto_enumTypes,
-		MessageInfos:      file_common_v1_mutate_operation_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_mutate_operation_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_mutate_operation_proto_depIdxs,
+		EnumInfos:         file_core_common_v1_resources_mutate_operation_proto_enumTypes,
+		MessageInfos:      file_core_common_v1_resources_mutate_operation_proto_msgTypes,
 	}.Build()
-	File_common_v1_mutate_operation_proto = out.File
-	file_common_v1_mutate_operation_proto_goTypes = nil
-	file_common_v1_mutate_operation_proto_depIdxs = nil
+	File_core_common_v1_resources_mutate_operation_proto = out.File
+	file_core_common_v1_resources_mutate_operation_proto_goTypes = nil
+	file_core_common_v1_resources_mutate_operation_proto_depIdxs = nil
 }

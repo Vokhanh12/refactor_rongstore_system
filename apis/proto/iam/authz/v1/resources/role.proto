@@ -7,8 +7,8 @@ option java_package = "com.aliasadi.iam.v1.resources";
 option java_multiple_files = true;
 
 import "validate/v1/validate.proto";
-import "common/v1/base_request.proto";
-import "common/v1/auth_options.proto";
+import "core/common/v1/resources/base_request.proto";
+import "core/common/v1/resources/auth_options.proto";
 import "google/protobuf/timestamp.proto";
 
 // ============================================================

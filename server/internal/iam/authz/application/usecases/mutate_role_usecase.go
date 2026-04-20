@@ -58,11 +58,11 @@ func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
 	return u
 }
 
-func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) *dtos.MutateResultDTO {
+func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) dtos.MutateResultDTO {
 
 	results := u.engine.Execute(ctx, batch.Items, coremap.BuildMutateResult)
 
-	return &dtos.MutateResultDTO{Items: results}
+	return dtos.MutateResultDTO{Items: results}
 }
 
 func (u *MutateRoleUsecase) handleCreate(ctx context.Context, cmd c.CreateRoleCommand) (*c.CreateRoleCommandResult, *aerrs.AppError) {

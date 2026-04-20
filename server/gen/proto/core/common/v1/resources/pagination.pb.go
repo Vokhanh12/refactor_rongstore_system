@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/pagination.proto
+// source: core/common/v1/resources/pagination.proto
 
 package commonv1
 
@@ -32,7 +32,7 @@ type Pagination struct {
 
 func (x *Pagination) Reset() {
 	*x = Pagination{}
-	mi := &file_common_v1_pagination_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_pagination_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *Pagination) String() string {
 func (*Pagination) ProtoMessage() {}
 
 func (x *Pagination) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_pagination_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_pagination_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *Pagination) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Pagination.ProtoReflect.Descriptor instead.
 func (*Pagination) Descriptor() ([]byte, []int) {
-	return file_common_v1_pagination_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_pagination_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Pagination) GetLimit() int32 {
@@ -74,33 +74,33 @@ func (x *Pagination) GetOffset() int32 {
 	return 0
 }
 
-var File_common_v1_pagination_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_pagination_proto protoreflect.FileDescriptor
 
-const file_common_v1_pagination_proto_rawDesc = "" +
+const file_core_common_v1_resources_pagination_proto_rawDesc = "" +
 	"\n" +
-	"\x1acommon/v1/pagination.proto\x12\tcommon.v1\x1a\x1avalidate/v1/validate.proto\"L\n" +
+	")core/common/v1/resources/pagination.proto\x12\tcommon.v1\x1a\x1avalidate/v1/validate.proto\"L\n" +
 	"\n" +
 	"Pagination\x12\x1d\n" +
 	"\x05limit\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x05limit\x12\x1f\n" +
-	"\x06offset\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02(\x00R\x06offsetBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x06offset\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02(\x00R\x06offsetBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_pagination_proto_rawDescOnce sync.Once
-	file_common_v1_pagination_proto_rawDescData []byte
+	file_core_common_v1_resources_pagination_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_pagination_proto_rawDescData []byte
 )
 
-func file_common_v1_pagination_proto_rawDescGZIP() []byte {
-	file_common_v1_pagination_proto_rawDescOnce.Do(func() {
-		file_common_v1_pagination_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_pagination_proto_rawDesc), len(file_common_v1_pagination_proto_rawDesc)))
+func file_core_common_v1_resources_pagination_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_pagination_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_pagination_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_pagination_proto_rawDesc), len(file_core_common_v1_resources_pagination_proto_rawDesc)))
 	})
-	return file_common_v1_pagination_proto_rawDescData
+	return file_core_common_v1_resources_pagination_proto_rawDescData
 }
 
-var file_common_v1_pagination_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_common_v1_pagination_proto_goTypes = []any{
+var file_core_common_v1_resources_pagination_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_core_common_v1_resources_pagination_proto_goTypes = []any{
 	(*Pagination)(nil), // 0: common.v1.Pagination
 }
-var file_common_v1_pagination_proto_depIdxs = []int32{
+var file_core_common_v1_resources_pagination_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -108,26 +108,26 @@ var file_common_v1_pagination_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_pagination_proto_init() }
-func file_common_v1_pagination_proto_init() {
-	if File_common_v1_pagination_proto != nil {
+func init() { file_core_common_v1_resources_pagination_proto_init() }
+func file_core_common_v1_resources_pagination_proto_init() {
+	if File_core_common_v1_resources_pagination_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_pagination_proto_rawDesc), len(file_common_v1_pagination_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_pagination_proto_rawDesc), len(file_core_common_v1_resources_pagination_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_pagination_proto_goTypes,
-		DependencyIndexes: file_common_v1_pagination_proto_depIdxs,
-		MessageInfos:      file_common_v1_pagination_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_pagination_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_pagination_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_pagination_proto_msgTypes,
 	}.Build()
-	File_common_v1_pagination_proto = out.File
-	file_common_v1_pagination_proto_goTypes = nil
-	file_common_v1_pagination_proto_depIdxs = nil
+	File_core_common_v1_resources_pagination_proto = out.File
+	file_core_common_v1_resources_pagination_proto_goTypes = nil
+	file_core_common_v1_resources_pagination_proto_depIdxs = nil
 }

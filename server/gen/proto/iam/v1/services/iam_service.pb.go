@@ -7,7 +7,7 @@
 package servicespb
 
 import (
-	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	resources "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -27,7 +27,7 @@ var File_iam_v1_services_iam_service_proto protoreflect.FileDescriptor
 
 const file_iam_v1_services_iam_service_proto_rawDesc = "" +
 	"\n" +
-	"!iam/v1/services/iam_service.proto\x12\x06iam.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1dcommon/v1/base_response.proto\x1a\"iam/v1/resources/store_owner.proto\x1a\x1ciam/v1/resources/login.proto\x1a iam/v1/resources/handshake.proto2\x94\x03\n" +
+	"!iam/v1/services/iam_service.proto\x12\x06iam.v1\x1a\x1cgoogle/api/annotations.proto\x1a,core/common/v1/resources/base_response.proto\x1a\"iam/v1/resources/store_owner.proto\x1a\x1ciam/v1/resources/login.proto\x1a iam/v1/resources/handshake.proto2\x94\x03\n" +
 	"\n" +
 	"IamService\x12L\n" +
 	"\x05Login\x12\x14.iam.v1.LoginRequest\x1a\x17.common.v1.BaseResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12X\n" +

@@ -3,22 +3,39 @@ package apperrors
 import "fmt"
 
 type AppError struct {
-	Code         string
-	Status       int
-	GRPCCode     string
-	Key          string
-	Cause        string
+	// ===== Identity =====
+	Code string // AUTH-VAL-001
+	Key  string // LOGIN_EMAIL_EMPTY
+
+	// ===== Message =====
+	Message string // human readable
+
+	// ===== Protocol =====
+	Status   int    // HTTP status
+	GRPCCode string // gRPC status string
+
+	// ===== Classification =====
+	Component string   // api, domain, infra...
+	Tags      []string // validation, auth, database...
+	Severity  string   // S1, S2, S3
+
+	// ===== Behavior =====
+	Retryable bool
+	Expected  bool
+
+	// ===== Actions =====
 	ClientAction string
 	ServerAction string
-	Source       string
-	Component    string
-	Tags         []string
-	Message      string
-	Data         map[string]interface{}
-	Severity     string
-	Expected     bool
-	Retryable    bool
-	CauseDetail  error
+
+	// ===== Debug =====
+	Source      string // service name
+	Cause       string // short cause (safe)
+	CauseDetail error  // raw error (internal only)
+
+	// ===== Data =====
+	Data map[string]interface{}
+
+	// ===== Validation details =====
 	ErrorDetails *[]AppErrorDetail
 }
 

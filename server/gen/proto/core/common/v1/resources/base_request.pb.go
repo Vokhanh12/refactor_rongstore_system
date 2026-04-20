@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/base_request.proto
+// source: core/common/v1/resources/base_request.proto
 
 package commonv1
 
@@ -34,7 +34,7 @@ type BaseRequest struct {
 
 func (x *BaseRequest) Reset() {
 	*x = BaseRequest{}
-	mi := &file_common_v1_base_request_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_base_request_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -46,7 +46,7 @@ func (x *BaseRequest) String() string {
 func (*BaseRequest) ProtoMessage() {}
 
 func (x *BaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_base_request_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_base_request_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *BaseRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BaseRequest.ProtoReflect.Descriptor instead.
 func (*BaseRequest) Descriptor() ([]byte, []int) {
-	return file_common_v1_base_request_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_base_request_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *BaseRequest) GetRequestDateTime() string {
@@ -100,7 +100,7 @@ type SearchRequest struct {
 
 func (x *SearchRequest) Reset() {
 	*x = SearchRequest{}
-	mi := &file_common_v1_base_request_proto_msgTypes[1]
+	mi := &file_core_common_v1_resources_base_request_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -112,7 +112,7 @@ func (x *SearchRequest) String() string {
 func (*SearchRequest) ProtoMessage() {}
 
 func (x *SearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_base_request_proto_msgTypes[1]
+	mi := &file_core_common_v1_resources_base_request_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -125,7 +125,7 @@ func (x *SearchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchRequest.ProtoReflect.Descriptor instead.
 func (*SearchRequest) Descriptor() ([]byte, []int) {
-	return file_common_v1_base_request_proto_rawDescGZIP(), []int{1}
+	return file_core_common_v1_resources_base_request_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SearchRequest) GetPagination() *Pagination {
@@ -142,11 +142,11 @@ func (x *SearchRequest) GetInput() *Search {
 	return nil
 }
 
-var File_common_v1_base_request_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_base_request_proto protoreflect.FileDescriptor
 
-const file_common_v1_base_request_proto_rawDesc = "" +
+const file_core_common_v1_resources_base_request_proto_rawDesc = "" +
 	"\n" +
-	"\x1ccommon/v1/base_request.proto\x12\tcommon.v1\x1a\x1avalidate/v1/validate.proto\x1a\x16common/v1/search.proto\x1a\x1acommon/v1/pagination.proto\"\xe9\x01\n" +
+	"+core/common/v1/resources/base_request.proto\x12\tcommon.v1\x1a\x1avalidate/v1/validate.proto\x1a%core/common/v1/resources/search.proto\x1a)core/common/v1/resources/pagination.proto\"\xe9\x01\n" +
 	"\vBaseRequest\x12d\n" +
 	"\x11request_date_time\x18\x01 \x01(\tB8\xfaB5r3\x10\x012/^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{2}Z)$R\x0frequestDateTime\x12'\n" +
 	"\n" +
@@ -158,28 +158,28 @@ const file_common_v1_base_request_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x15.common.v1.PaginationB\b\xfaB\x05\x8a\x01\x02\x10\x01R\n" +
 	"pagination\x121\n" +
-	"\x05input\x18\x02 \x01(\v2\x11.common.v1.SearchB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x05inputBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\x05input\x18\x02 \x01(\v2\x11.common.v1.SearchB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x05inputBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_base_request_proto_rawDescOnce sync.Once
-	file_common_v1_base_request_proto_rawDescData []byte
+	file_core_common_v1_resources_base_request_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_base_request_proto_rawDescData []byte
 )
 
-func file_common_v1_base_request_proto_rawDescGZIP() []byte {
-	file_common_v1_base_request_proto_rawDescOnce.Do(func() {
-		file_common_v1_base_request_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_base_request_proto_rawDesc), len(file_common_v1_base_request_proto_rawDesc)))
+func file_core_common_v1_resources_base_request_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_base_request_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_base_request_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_base_request_proto_rawDesc), len(file_core_common_v1_resources_base_request_proto_rawDesc)))
 	})
-	return file_common_v1_base_request_proto_rawDescData
+	return file_core_common_v1_resources_base_request_proto_rawDescData
 }
 
-var file_common_v1_base_request_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_common_v1_base_request_proto_goTypes = []any{
+var file_core_common_v1_resources_base_request_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_common_v1_resources_base_request_proto_goTypes = []any{
 	(*BaseRequest)(nil),   // 0: common.v1.BaseRequest
 	(*SearchRequest)(nil), // 1: common.v1.SearchRequest
 	(*Pagination)(nil),    // 2: common.v1.Pagination
 	(*Search)(nil),        // 3: common.v1.Search
 }
-var file_common_v1_base_request_proto_depIdxs = []int32{
+var file_core_common_v1_resources_base_request_proto_depIdxs = []int32{
 	2, // 0: common.v1.SearchRequest.pagination:type_name -> common.v1.Pagination
 	3, // 1: common.v1.SearchRequest.input:type_name -> common.v1.Search
 	2, // [2:2] is the sub-list for method output_type
@@ -189,28 +189,28 @@ var file_common_v1_base_request_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_base_request_proto_init() }
-func file_common_v1_base_request_proto_init() {
-	if File_common_v1_base_request_proto != nil {
+func init() { file_core_common_v1_resources_base_request_proto_init() }
+func file_core_common_v1_resources_base_request_proto_init() {
+	if File_core_common_v1_resources_base_request_proto != nil {
 		return
 	}
-	file_common_v1_search_proto_init()
-	file_common_v1_pagination_proto_init()
+	file_core_common_v1_resources_search_proto_init()
+	file_core_common_v1_resources_pagination_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_base_request_proto_rawDesc), len(file_common_v1_base_request_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_base_request_proto_rawDesc), len(file_core_common_v1_resources_base_request_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_base_request_proto_goTypes,
-		DependencyIndexes: file_common_v1_base_request_proto_depIdxs,
-		MessageInfos:      file_common_v1_base_request_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_base_request_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_base_request_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_base_request_proto_msgTypes,
 	}.Build()
-	File_common_v1_base_request_proto = out.File
-	file_common_v1_base_request_proto_goTypes = nil
-	file_common_v1_base_request_proto_depIdxs = nil
+	File_core_common_v1_resources_base_request_proto = out.File
+	file_core_common_v1_resources_base_request_proto_goTypes = nil
+	file_core_common_v1_resources_base_request_proto_depIdxs = nil
 }

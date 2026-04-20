@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: common/v1/metadata.proto
+// source: core/common/v1/resources/metadata.proto
 
 package commonv1
 
@@ -36,7 +36,7 @@ type Metadata struct {
 
 func (x *Metadata) Reset() {
 	*x = Metadata{}
-	mi := &file_common_v1_metadata_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -48,7 +48,7 @@ func (x *Metadata) String() string {
 func (*Metadata) ProtoMessage() {}
 
 func (x *Metadata) ProtoReflect() protoreflect.Message {
-	mi := &file_common_v1_metadata_proto_msgTypes[0]
+	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,7 +61,7 @@ func (x *Metadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Metadata.ProtoReflect.Descriptor instead.
 func (*Metadata) Descriptor() ([]byte, []int) {
-	return file_common_v1_metadata_proto_rawDescGZIP(), []int{0}
+	return file_core_common_v1_resources_metadata_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Metadata) GetRequestId() string {
@@ -106,11 +106,11 @@ func (x *Metadata) GetDegraded() bool {
 	return false
 }
 
-var File_common_v1_metadata_proto protoreflect.FileDescriptor
+var File_core_common_v1_resources_metadata_proto protoreflect.FileDescriptor
 
-const file_common_v1_metadata_proto_rawDesc = "" +
+const file_core_common_v1_resources_metadata_proto_rawDesc = "" +
 	"\n" +
-	"\x18common/v1/metadata.proto\x12\tcommon.v1\"\xb1\x01\n" +
+	"'core/common/v1/resources/metadata.proto\x12\tcommon.v1\"\xb1\x01\n" +
 	"\bMetadata\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tR\trequestId\x12\x19\n" +
@@ -119,25 +119,25 @@ const file_common_v1_metadata_proto_rawDesc = "" +
 	"serverTime\x12\x16\n" +
 	"\x06locale\x18\x04 \x01(\tR\x06locale\x12\x16\n" +
 	"\x06region\x18\x05 \x01(\tR\x06region\x12\x1a\n" +
-	"\bdegraded\x18\x06 \x01(\bR\bdegradedBTZRgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1;commonv1b\x06proto3"
+	"\bdegraded\x18\x06 \x01(\bR\bdegradedBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
-	file_common_v1_metadata_proto_rawDescOnce sync.Once
-	file_common_v1_metadata_proto_rawDescData []byte
+	file_core_common_v1_resources_metadata_proto_rawDescOnce sync.Once
+	file_core_common_v1_resources_metadata_proto_rawDescData []byte
 )
 
-func file_common_v1_metadata_proto_rawDescGZIP() []byte {
-	file_common_v1_metadata_proto_rawDescOnce.Do(func() {
-		file_common_v1_metadata_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_common_v1_metadata_proto_rawDesc), len(file_common_v1_metadata_proto_rawDesc)))
+func file_core_common_v1_resources_metadata_proto_rawDescGZIP() []byte {
+	file_core_common_v1_resources_metadata_proto_rawDescOnce.Do(func() {
+		file_core_common_v1_resources_metadata_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_metadata_proto_rawDesc), len(file_core_common_v1_resources_metadata_proto_rawDesc)))
 	})
-	return file_common_v1_metadata_proto_rawDescData
+	return file_core_common_v1_resources_metadata_proto_rawDescData
 }
 
-var file_common_v1_metadata_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_common_v1_metadata_proto_goTypes = []any{
+var file_core_common_v1_resources_metadata_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_core_common_v1_resources_metadata_proto_goTypes = []any{
 	(*Metadata)(nil), // 0: common.v1.Metadata
 }
-var file_common_v1_metadata_proto_depIdxs = []int32{
+var file_core_common_v1_resources_metadata_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -145,26 +145,26 @@ var file_common_v1_metadata_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_common_v1_metadata_proto_init() }
-func file_common_v1_metadata_proto_init() {
-	if File_common_v1_metadata_proto != nil {
+func init() { file_core_common_v1_resources_metadata_proto_init() }
+func file_core_common_v1_resources_metadata_proto_init() {
+	if File_core_common_v1_resources_metadata_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_metadata_proto_rawDesc), len(file_common_v1_metadata_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_metadata_proto_rawDesc), len(file_core_common_v1_resources_metadata_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_common_v1_metadata_proto_goTypes,
-		DependencyIndexes: file_common_v1_metadata_proto_depIdxs,
-		MessageInfos:      file_common_v1_metadata_proto_msgTypes,
+		GoTypes:           file_core_common_v1_resources_metadata_proto_goTypes,
+		DependencyIndexes: file_core_common_v1_resources_metadata_proto_depIdxs,
+		MessageInfos:      file_core_common_v1_resources_metadata_proto_msgTypes,
 	}.Build()
-	File_common_v1_metadata_proto = out.File
-	file_common_v1_metadata_proto_goTypes = nil
-	file_common_v1_metadata_proto_depIdxs = nil
+	File_core_common_v1_resources_metadata_proto = out.File
+	file_core_common_v1_resources_metadata_proto_goTypes = nil
+	file_core_common_v1_resources_metadata_proto_depIdxs = nil
 }
