@@ -36,7 +36,7 @@ type AppError struct {
 	Data map[string]interface{}
 
 	// ===== Validation details =====
-	ErrorDetails *[]AppErrorDetail
+	ErrorDetails []AppErrorDetail
 }
 
 func (e *AppError) Error() string {

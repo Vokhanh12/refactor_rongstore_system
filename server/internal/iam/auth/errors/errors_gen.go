@@ -96,7 +96,34 @@ var (
 
 )
 
-// ErrorByCode maps error codes to AppError
+var (
+	REASON_VAL_REQUIRED = apperrors.AppErrorDetail{
+		Code: "VAL_REQUIRED",
+		Message: "Field is required",
+	}
+
+	REASON_VAL_INVALID_FORMAT = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_FORMAT",
+		Message: "Invalid format",
+	}
+
+	REASON_VAL_OUT_OF_RANGE = apperrors.AppErrorDetail{
+		Code: "VAL_OUT_OF_RANGE",
+		Message: "Out of range",
+	}
+
+	REASON_VAL_DUPLICATE = apperrors.AppErrorDetail{
+		Code: "VAL_DUPLICATE",
+		Message: "Duplicate value",
+	}
+
+	REASON_VAL_NOT_FOUND = apperrors.AppErrorDetail{
+		Code: "VAL_NOT_FOUND",
+		Message: "Not found",
+	}
+
+)
+
 var ErrorByCode = map[string]apperrors.AppError{
 	"AUTH-VAL-001": LOGIN_EMAIL_EMPTY,
 	"AUTH-VAL-002": LOGIN_EMAIL_INVALID,
@@ -104,5 +131,13 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"AUTH-VAL-004": LOGIN_PAYLOAD_INVALID,
 	"AUTH-SEC-001": TOKEN_EXPIRED,
 	"AUTH-SEC-002": UNAUTHORIZED,
+}
+
+var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
+	"VAL_REQUIRED": REASON_VAL_REQUIRED,
+	"VAL_INVALID_FORMAT": REASON_VAL_INVALID_FORMAT,
+	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
+	"VAL_DUPLICATE": REASON_VAL_DUPLICATE,
+	"VAL_NOT_FOUND": REASON_VAL_NOT_FOUND,
 }
 

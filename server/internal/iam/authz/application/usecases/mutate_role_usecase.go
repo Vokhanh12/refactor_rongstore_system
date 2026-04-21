@@ -3,10 +3,12 @@ package usecases
 import (
 	"context"
 
-	coremap "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	coremp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/entities"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -60,12 +62,17 @@ func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
 
 func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) dtos.MutateResultDTO {
 
-	results := u.engine.Execute(ctx, batch.Items, coremap.BuildMutateResult)
+	results := u.engine.Execute(ctx, batch.Items, coremp.BuildMutateResult)
 
 	return dtos.MutateResultDTO{Items: results}
 }
 
 func (u *MutateRoleUsecase) handleCreate(ctx context.Context, cmd c.CreateRoleCommand) (*c.CreateRoleCommandResult, *aerrs.AppError) {
+
+	validatedRole := entities.NewRole()
+
+	_, err := u.repo.Create()
+
 	return nil, nil
 }
 

@@ -25,9 +25,7 @@ conventions:
 services:
   core:
     domain: "CORE"
-
     errors:
-
       MUT:
         - code: CORE-MUT-001
           key: MUTATE_OPERATION_UNSUPPORTED
@@ -68,7 +66,18 @@ services:
           grpc_code: OK
           message: "One or more operations failed"
           severity: S2
-          retryable: false    
+          retryable: false
+
+      VAL:
+        - code: CORE-VAL-001
+          key: VALIDATION_FAILED
+          component: validator
+          tags: [system]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Validation failed"
+          severity: S3
+          retryable: false        
 
       INFRA:
         - code: CORE-INF-001
@@ -84,169 +93,169 @@ services:
 # ============================================================
 # IAM - AUTH (AUTHENTICATION)
 # ============================================================
+  iam:
+    auth:
+      domain: "AUTH"
 
-  iam_auth:
-    domain: "AUTH"
+      errors:
 
-    errors:
+        VAL:
+          - code: AUTH-VAL-001
+            key: LOGIN_EMAIL_EMPTY
+            component: validator
+            tags: [validation, client]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Email is required"
+            severity: S3
+            retryable: false
 
-      VAL:
-        - code: AUTH-VAL-001
-          key: LOGIN_EMAIL_EMPTY
-          component: validator
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Email is required"
-          severity: S3
-          retryable: false
+          - code: AUTH-VAL-002
+            key: LOGIN_EMAIL_INVALID
+            component: validator
+            tags: [validation, client]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Invalid email format"
+            severity: S3
+            retryable: false
 
-        - code: AUTH-VAL-002
-          key: LOGIN_EMAIL_INVALID
-          component: validator
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Invalid email format"
-          severity: S3
-          retryable: false
+          - code: AUTH-VAL-003
+            key: LOGIN_PASSWORD_EMPTY
+            component: validator
+            tags: [validation, client]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Password is required"
+            severity: S3
+            retryable: false
 
-        - code: AUTH-VAL-003
-          key: LOGIN_PASSWORD_EMPTY
-          component: validator
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Password is required"
-          severity: S3
-          retryable: false
+          - code: AUTH-VAL-004
+            key: LOGIN_PAYLOAD_INVALID
+            component: validator
+            tags: [validation, client]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Invalid request payload"
+            severity: S3
+            retryable: false
 
-        - code: AUTH-VAL-004
-          key: LOGIN_PAYLOAD_INVALID
-          component: validator
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Invalid request payload"
-          severity: S3
-          retryable: false
+        SEC:
+          - code: AUTH-SEC-001
+            key: TOKEN_EXPIRED
+            component: jwt
+            tags: [security, auth]
+            http_status: 401
+            grpc_code: Unauthenticated
+            message: "Token expired"
+            severity: S3
+            retryable: false
 
-      SEC:
-        - code: AUTH-SEC-001
-          key: TOKEN_EXPIRED
-          component: jwt
-          tags: [security, auth]
-          http_status: 401
-          grpc_code: Unauthenticated
-          message: "Token expired"
-          severity: S3
-          retryable: false
+          - code: AUTH-SEC-002
+            key: UNAUTHORIZED
+            component: auth_service
+            tags: [security, auth]
+            http_status: 401
+            grpc_code: Unauthenticated
+            message: "Authentication required"
+            severity: S3
+            retryable: false
 
-        - code: AUTH-SEC-002
-          key: UNAUTHORIZED
-          component: auth_service
-          tags: [security, auth]
-          http_status: 401
-          grpc_code: Unauthenticated
-          message: "Authentication required"
-          severity: S3
-          retryable: false
+  # ============================================================
+  # IAM - AUTHZ (AUTHORIZATION)
+  # ============================================================
 
-# ============================================================
-# IAM - AUTHZ (AUTHORIZATION)
-# ============================================================
+    authz:
+      domain: "AUTHZ"
 
-  iam_authz:
-    domain: "AUTHZ"
+      errors:
 
-    errors:
+        VAL:
+          - code: AUTHZ-VAL-001
+            key: AUTHORIZATION_INVALID
+            component: authz_service
+            tags: [validation, authz]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Invalid authorization"
+            severity: S3
+            retryable: false
 
-      VAL:
-        - code: AUTHZ-VAL-001
-          key: AUTHORIZATION_INVALID
-          component: authz_service
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Invalid authorization"
-          severity: S3
-          retryable: false
+          - code: AUTHZ-VAL-002
+            key: RESOURCE_OR_ACTION_REQUIRED
+            component: authz_service
+            tags: [validation, authz]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Resource and action are required"
+            severity: S3
+            retryable: false
 
-        - code: AUTHZ-VAL-002
-          key: RESOURCE_OR_ACTION_REQUIRED
-          component: authz_service
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Resource and action are required"
-          severity: S3
-          retryable: false
+          - code: AUTHZ-VAL-003
+            key: ROLE_REQUIRED
+            component: authz_service
+            tags: [validation, authz]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Role is required"
+            severity: S3
+            retryable: false
 
-        - code: AUTHZ-VAL-003
-          key: ROLE_REQUIRED
-          component: authz_service
-          tags: [validation, authz]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Role is required"
-          severity: S3
-          retryable: false
+        DOM:
+          - code: AUTHZ-DOM-001
+            key: ROLE_NOT_FOUND
+            component: role_service
+            tags: [domain]
+            http_status: 404
+            grpc_code: NotFound
+            message: "Role not found"
+            severity: S3
+            retryable: false
 
-      DOM:
-        - code: AUTHZ-DOM-001
-          key: ROLE_NOT_FOUND
-          component: role_service
-          tags: [domain]
-          http_status: 404
-          grpc_code: NotFound
-          message: "Role not found"
-          severity: S3
-          retryable: false
+          - code: AUTHZ-DOM-002
+            key: ROLE_CONFLICT
+            component: role_service
+            tags: [domain]
+            http_status: 409
+            grpc_code: AlreadyExists
+            message: "Role already exists"
+            severity: S3
+            retryable: false
 
-        - code: AUTHZ-DOM-002
-          key: ROLE_CONFLICT
-          component: role_service
-          tags: [domain]
-          http_status: 409
-          grpc_code: AlreadyExists
-          message: "Role already exists"
-          severity: S3
-          retryable: false
+          - code: AUTHZ-DOM-003
+            key: ROLE_INVALID
+            component: role_service
+            tags: [domain]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Role contains invalid references"
+            severity: S3
+            retryable: false
 
-        - code: AUTHZ-DOM-003
-          key: ROLE_INVALID
-          component: role_service
-          tags: [domain]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Role contains invalid references"
-          severity: S3
-          retryable: false
+          - code: AUTHZ-DOM-004
+            key: ROLE_PERSIST_FAILED
+            component: role_repository
+            tags: [domain]
+            http_status: 500
+            grpc_code: Internal
+            message: "Failed to persist role"
+            severity: S2
+            retryable: false
 
-        - code: AUTHZ-DOM-004
-          key: ROLE_PERSIST_FAILED
-          component: role_repository
-          tags: [domain]
-          http_status: 500
-          grpc_code: Internal
-          message: "Failed to persist role"
-          severity: S2
-          retryable: false
+        SEC:
+          - code: AUTHZ-SEC-001
+            key: ROLE_FORBIDDEN
+            component: authz_service
+            tags: [security, authz]
+            http_status: 403
+            grpc_code: PermissionDenied
+            message: "Permission denied"
+            severity: S3
+            retryable: false
 
-      SEC:
-        - code: AUTHZ-SEC-001
-          key: ROLE_FORBIDDEN
-          component: authz_service
-          tags: [security, authz]
-          http_status: 403
-          grpc_code: PermissionDenied
-          message: "Permission denied"
-          severity: S3
-          retryable: false
-
-# ============================================================
-# INFRASTRUCTURE (SHARED)
-# ============================================================
+  # ============================================================
+  # INFRASTRUCTURE (SHARED)
+  # ============================================================
 
   platform:
     domain: "PLATFORM"

@@ -24,21 +24,20 @@ type Role struct {
 	isActive bool
 }
 
-func NewRole(vldRoleRef vo.ValidatedRoleRef, name string, roleScopeType enu.RoleScopeType,
-	roleAccessScope enu.RoleAccessScope, level uint8, description *string, isSystem bool, isSuper bool, isActive bool) Role {
+func NewRole(id uuid.UUID, scopeID *uuid.UUID, roleCode string, name string, roleScopeType string,
+	roleAccessScope enu.RoleAccessScope, level uint8, description *string, isSystem bool, isSuper bool, isActive bool) (*Role, *aerrs.AppError) {
 
-	return Role{
-		id:          uuid.Must(uuid.NewV7()),
-		roleRef:     vldRoleRef.RoleRef,
-		name:        name,
-		scopeType:   roleScopeType,
-		accessScope: roleAccessScope,
-		level:       level,
-		description: description,
-		isSystem:    isSystem,
-		isSuper:     isSuper,
-		isActive:    isActive,
+	vlRoleRef, err := vo.NewRoleRef(scopeID, roleCode)
+	if err != nil {
+		return nil, err
 	}
+
+	vlRoleScopeType, err := enu.NewRoleScopeType(roleScopeType)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Role{}
 }
 
 func (p *Role) validate() []aerrs.AppErrorDetail {

@@ -64,6 +64,21 @@ var (
 		ServerAction: "",
 	}
 
+	VALIDATION_FAILED = apperrors.AppError{
+		Key: "VALIDATION_FAILED",
+		Code: "CORE-VAL-001",
+		Component: "validator",
+		Tags: []string{"system"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Validation failed",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 	JSON_SERIALIZATION_FAILED = apperrors.AppError{
 		Key: "JSON_SERIALIZATION_FAILED",
 		Code: "CORE-INF-001",
@@ -81,12 +96,48 @@ var (
 
 )
 
-// ErrorByCode maps error codes to AppError
+var (
+	REASON_VAL_REQUIRED = apperrors.AppErrorDetail{
+		Code: "VAL_REQUIRED",
+		Message: "Field is required",
+	}
+
+	REASON_VAL_INVALID_FORMAT = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_FORMAT",
+		Message: "Invalid format",
+	}
+
+	REASON_VAL_OUT_OF_RANGE = apperrors.AppErrorDetail{
+		Code: "VAL_OUT_OF_RANGE",
+		Message: "Out of range",
+	}
+
+	REASON_VAL_DUPLICATE = apperrors.AppErrorDetail{
+		Code: "VAL_DUPLICATE",
+		Message: "Duplicate value",
+	}
+
+	REASON_VAL_NOT_FOUND = apperrors.AppErrorDetail{
+		Code: "VAL_NOT_FOUND",
+		Message: "Not found",
+	}
+
+)
+
 var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-MUT-001": MUTATE_OPERATION_UNSUPPORTED,
 	"CORE-MUT-002": MUTATE_PARTIAL_FAILURE,
 	"CORE-VIE-001": VIEW_OPERATION_UNSUPPORTED,
 	"CORE-VIE-002": VIEW_PARTIAL_FAILURE,
+	"CORE-VAL-001": VALIDATION_FAILED,
 	"CORE-INF-001": JSON_SERIALIZATION_FAILED,
+}
+
+var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
+	"VAL_REQUIRED": REASON_VAL_REQUIRED,
+	"VAL_INVALID_FORMAT": REASON_VAL_INVALID_FORMAT,
+	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
+	"VAL_DUPLICATE": REASON_VAL_DUPLICATE,
+	"VAL_NOT_FOUND": REASON_VAL_NOT_FOUND,
 }
 

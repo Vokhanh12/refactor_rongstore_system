@@ -1,73 +1,69 @@
 package apperrors
 
 import (
-	proto "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
+var grpcCodeMap = map[string]codes.Code{
+	"Internal":         codes.Internal,
+	"Unavailable":      codes.Unavailable,
+	"InvalidArgument":  codes.InvalidArgument,
+	"Unauthenticated":  codes.Unauthenticated,
+	"AlreadyExists":    codes.AlreadyExists,
+	"NotFound":         codes.NotFound,
+	"PermissionDenied": codes.PermissionDenied,
+	"DeadlineExceeded": codes.DeadlineExceeded,
+}
+
 func ToGRPCError(appErr *AppError) error {
-
-	var grpcCode codes.Code
-
-	switch appErr.GRPCCode {
-	case "Internal":
-		grpcCode = codes.Internal
-
-	case "Unavailable":
-		grpcCode = codes.Unavailable
-
-	case "InvalidArgument":
-		grpcCode = codes.InvalidArgument
-
-	case "Unauthenticated":
-		grpcCode = codes.Unauthenticated
-
-	case "AlreadyExists":
-		grpcCode = codes.AlreadyExists
-
-	case "NotFound":
-		grpcCode = codes.NotFound
-
-	default:
-		grpcCode = codes.Unknown
+	if appErr == nil {
+		return status.Error(codes.Internal, "internal error")
 	}
 
-	st := status.New(grpcCode, appErr.Message)
+	st := status.New(
+		toGRPCCode(appErr.GRPCCode),
+		appErr.Message,
+	)
 
-	for _, d := range appErr.GetErrorDetails() {
-		detail := &proto.ErrorDetail{
-			Field:   d.Field,
-			Code:    d.Code,
-			Message: d.Message,
-			Hint:    d.Hint,
-		}
+	// attach details (batch)
+	if len(appErr.ErrorDetails) > 0 {
+		protoDetails := mapDetailsToProto(appErr.ErrorDetails)
 
-		stWithDetails, err := st.WithDetails(detail)
-		if err != nil {
-			continue // không fail toàn bộ vì detail lỗi
+		stWithDetails, err := st.WithDetails(protoDetails...)
+		if err == nil {
+			st = stWithDetails
 		}
-		st = stWithDetails
+		// nếu fail thì ignore (không phá main error)
 	}
 
 	return st.Err()
 }
 
-func MapAppErrorDetailsToProto(
-	details []AppErrorDetail,
-) []*proto.ErrorDetail {
+func toGRPCCode(code string) codes.Code {
+	if c, ok := grpcCodeMap[code]; ok {
+		return c
+	}
+	return codes.Unknown
+}
 
+func mapDetailToProto(d AppErrorDetail) *protos.ErrorDetail {
+	return &protos.ErrorDetail{
+		Field:   d.Field,
+		Code:    d.Code,
+		Message: d.Message,
+		Hint:    d.Hint,
+	}
+}
+
+func mapDetailsToProto(details []AppErrorDetail) []interface{} {
 	if len(details) == 0 {
 		return nil
 	}
 
-	result := make([]*proto.ErrorDetail, 0, len(details))
+	result := make([]interface{}, 0, len(details))
 	for _, d := range details {
-		result = append(result, &proto.ErrorDetail{
-			Code:    d.Code,
-			Field:   d.Field,
-			Message: d.Message,
-		})
+		result = append(result, mapDetailToProto(d))
 	}
 	return result
 }

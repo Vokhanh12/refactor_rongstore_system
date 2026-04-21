@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
@@ -14,7 +14,8 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
-func BuildMutateResult(opID string, data any, err aerrs.AppError) dtos.MutateResultItemDTO {
+func BuildMutateResult(opID string, data any, err *aerrs.AppError) dtos.MutateResultItemDTO {
+
 	return dtos.MutateResultItemDTO{
 		OpID:  opID,
 		Data:  data,

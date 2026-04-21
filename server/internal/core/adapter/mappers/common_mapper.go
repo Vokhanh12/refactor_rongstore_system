@@ -72,7 +72,11 @@ func MutateResultItemToProto(dto dtos.MutateResultItemDTO) *protos.MutateResultI
 // TO → DTO
 // ============================================================
 
-func AppErrorToDTO(it aerrs.AppError) dtos.ErrorDTO {
+func AppErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
+
+	if it == nil {
+		return nil
+	}
 
 	var items []dtos.ErrorDetailDTO
 
@@ -86,7 +90,7 @@ func AppErrorToDTO(it aerrs.AppError) dtos.ErrorDTO {
 		items = []dtos.ErrorDetailDTO{}
 	}
 
-	return dtos.ErrorDTO{
+	return &dtos.ErrorDTO{
 		External: dtos.ExternalErrorDTO{
 			Code:    it.Code,
 			Message: it.Message,
