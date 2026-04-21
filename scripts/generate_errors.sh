@@ -3,19 +3,39 @@ set -euo pipefail
 
 YAML_FILE="../app_errors.yaml"
 
-# Validate YAML tồn tại
+# ============================================================
+# VALIDATE
+# ============================================================
+
 if [ ! -f "$YAML_FILE" ]; then
 	echo "❌ YAML file not found: $YAML_FILE"
 	exit 1
 fi
 
-services=$(yq e '.services | keys | .[]' "$YAML_FILE")
+# ============================================================
+# GET ALL SERVICES (support nested)
+# ============================================================
+
+services=$(yq e -o=json '.services' "$YAML_FILE" | jq -r '
+  paths
+  | select(.[-1] == "errors")
+  | .[0:-1]
+  | map(tostring)
+  | join(".")
+')
+
+# ============================================================
+# LOOP SERVICES
+# ============================================================
 
 for svc in $services; do
 
 	echo "➡️ Generating errors for service: $svc"
 
-	OUTPUT_FILE="../server/internal/$svc/errors/errors_gen.go"
+	# convert iam.auth → iam/auth
+	svc_path=$(echo "$svc" | tr '.' '/')
+
+	OUTPUT_FILE="../server/internal/$svc_path/errors/errors_gen.go"
 	mkdir -p "$(dirname "$OUTPUT_FILE")"
 	rm -f "$OUTPUT_FILE"
 
@@ -44,14 +64,17 @@ var (
 EOF
 
 	# ============================================================
-	# LOAD ERRORS (support both flat + category)
+	# LOAD ERRORS
 	# ============================================================
 
-	errors_json=$(yq e ".services.$svc.errors" -o=json "$YAML_FILE")
+	errors_json=$(yq e ".services.$svc.errors" -o=json "$YAML_FILE" 2>/dev/null || echo "null")
 
-	# Flatten:
-	# - nếu là array → dùng luôn
-	# - nếu là object (VAL, DOM, ...) → flatten hết
+	if [ "$errors_json" = "null" ]; then
+		echo "⚠️ Skip (no errors): $svc"
+		continue
+	fi
+
+	# flatten VAL, DOM...
 	flattened=$(echo "$errors_json" | jq -c '
 		if type == "array" then .[]
 		else to_entries[] | .value[] end
@@ -63,24 +86,23 @@ EOF
 
 	while IFS="|" read -r key code component tags status grpc_code message severity retryable cause client_action server_action; do
 
-		# Skip empty
 		[ -z "$key" ] && continue
 
-		# ---------- Validate key ----------
+		# duplicate key
 		if echo "$seen_keys" | grep -wq "$key"; then
-			echo "❌ Duplicate error key detected: $key"
+			echo "❌ Duplicate key: $key"
 			exit 1
 		fi
 		seen_keys="$seen_keys $key"
 
-		# ---------- Validate code ----------
+		# duplicate code
 		if echo "$seen_codes" | grep -wq "$code"; then
-			echo "❌ Duplicate error code detected: $code (key: $key)"
+			echo "❌ Duplicate code: $code"
 			exit 1
 		fi
 		seen_codes="$seen_codes $code"
 
-		# ---------- Validate format ----------
+		# validate format
 		[[ "$key" =~ ^[A-Z0-9_]+$ ]] || { echo "❌ Invalid key: $key"; exit 1; }
 		[[ "$code" =~ ^[A-Z]+-[A-Z]+-[0-9]+$ ]] || { echo "❌ Invalid code: $code"; exit 1; }
 
@@ -127,31 +149,29 @@ EOF
 	echo "" >> "$OUTPUT_FILE"
 
 	# ============================================================
-	# ERROR DETAILS
+	# ERROR DETAILS (GLOBAL)
 	# ============================================================
 
-	if yq e ".services.$svc.errors_detail" "$YAML_FILE" > /dev/null 2>&1; then
+	details=$(yq e ".error_details[]" -o=json "$YAML_FILE" 2>/dev/null || true)
 
-		details=$(yq e ".services.$svc.errors_detail[]" -o=json "$YAML_FILE" 2>/dev/null || true)
+	if [ -n "$details" ]; then
 
-		if [ -n "$details" ]; then
+		echo "var (" >> "$OUTPUT_FILE"
 
-			echo "var (" >> "$OUTPUT_FILE"
+		while IFS="|" read -r code message; do
 
-			while IFS="|" read -r code message; do
+			[ -z "$code" ] && continue
 
-				[ -z "$code" ] && continue
+			if echo "$seen_detail_codes" | grep -wq "$code"; then
+				echo "❌ Duplicate detail code: $code"
+				exit 1
+			fi
+			seen_detail_codes="$seen_detail_codes $code"
 
-				if echo "$seen_detail_codes" | grep -wq "$code"; then
-					echo "❌ Duplicate error detail code: $code"
-					exit 1
-				fi
-				seen_detail_codes="$seen_detail_codes $code"
+			const_name="REASON_${code}"
+			error_detail_keys+=("$const_name:$code")
 
-				const_name="REASON_${code}"
-				error_detail_keys+=("$const_name:$code")
-
-				cat <<EOF >> "$OUTPUT_FILE"
+			cat <<EOF >> "$OUTPUT_FILE"
 	$const_name = apperrors.AppErrorDetail{
 		Code: "$code",
 		Message: "$message",
@@ -159,23 +179,21 @@ EOF
 
 EOF
 
-			done < <(
-				echo "$details" | jq -r '[.code,.message] | join("|")'
-			)
+		done < <(
+			echo "$details" | jq -r '[.code,.message] | join("|")'
+		)
 
-			echo ")" >> "$OUTPUT_FILE"
-			echo "" >> "$OUTPUT_FILE"
-		fi
+		echo ")" >> "$OUTPUT_FILE"
+		echo "" >> "$OUTPUT_FILE"
 	fi
 
 	# ============================================================
-	# MAP: ErrorByCode
+	# MAP ErrorByCode
 	# ============================================================
 
-	echo "// ErrorByCode maps error codes to AppError" >> "$OUTPUT_FILE"
 	echo "var ErrorByCode = map[string]apperrors.AppError{" >> "$OUTPUT_FILE"
 
-	for pair in "${error_keys[@]:-}"; do
+	for pair in "${error_keys[@]}"; do
 		key="${pair%%:*}"
 		code="${pair##*:}"
 		echo -e "\t\"$code\": $key," >> "$OUTPUT_FILE"
@@ -185,11 +203,10 @@ EOF
 	echo "" >> "$OUTPUT_FILE"
 
 	# ============================================================
-	# MAP: ErrorDetailByCode
+	# MAP ErrorDetailByCode
 	# ============================================================
 
 	if [ ${#error_detail_keys[@]} -gt 0 ]; then
-		echo "// ErrorDetailByCode maps detail codes to AppErrorDetail" >> "$OUTPUT_FILE"
 		echo "var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{" >> "$OUTPUT_FILE"
 
 		for pair in "${error_detail_keys[@]}"; do
@@ -243,7 +260,7 @@ while IFS="|" read -r key code status grpc_code message severity retryable; do
 	[ -z "$key" ] && continue
 
 	if echo "$seen_default_codes" | grep -wq "$code"; then
-		echo "❌ Duplicate default error code: $code"
+		echo "❌ Duplicate default code: $code"
 		exit 1
 	fi
 	seen_default_codes="$seen_default_codes $code"
@@ -270,7 +287,7 @@ echo "" >> "$OUTPUT_DEFAULT_FILE"
 
 echo "var ErrorByCode = map[string]AppError{" >> "$OUTPUT_DEFAULT_FILE"
 
-for pair in "${default_keys[@]:-}"; do
+for pair in "${default_keys[@]}"; do
 	key="${pair%%:*}"
 	code="${pair##*:}"
 	echo -e "\t\"$code\": $key," >> "$OUTPUT_DEFAULT_FILE"
