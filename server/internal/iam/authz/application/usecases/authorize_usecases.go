@@ -22,10 +22,7 @@ type AuthorizeUsecase struct {
 	rolePermissionRepository rs.RolePermissionRepository
 }
 
-func NewAuthorizeUsecase(
-	rpCache cs.RolePermissionCache,
-	rpRepository rs.RolePermissionRepository,
-) *AuthorizeUsecase {
+func NewAuthorizeUsecase(rpCache cs.RolePermissionCacherpRepository, rs.RolePermissionRepository) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
 		rolePermissionCache:      rpCache,
 		rolePermissionRepository: rpRepository,

@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	pgmappers "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mappers"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
@@ -28,14 +28,14 @@ func NewSqlcRoleRepository(queries *db.Queries, dberr dberr.DBError) repositorie
 func (s *SqlcRoleRepository) Create(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 
 	createdRecord, err := s.queries.CreateRole(
-		ctx, mappers.RoleToCreateParams(role),
+		ctx, pgmappers.RoleToCreateParams(role),
 	)
 
 	if err != nil {
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
 
-	entity := mappers.CreateRoleRowToEntity(createdRecord)
+	entity := pgmappers.CreateRoleRowToEntity(createdRecord)
 
 	return &entity, nil
 }
@@ -54,14 +54,14 @@ func (s *SqlcRoleRepository) Delete(ctx context.Context, id uuid.UUID) *apperror
 // Update implements [repositories.RoleRepository].
 func (s *SqlcRoleRepository) Update(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 	updatedRecord, err := s.queries.UpdateRole(
-		ctx, mappers.RoleToUpdateParams(role),
+		ctx, pgmappers.RoleToUpdateParams(role),
 	)
 
 	if err != nil {
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
 
-	entity := mappers.UpdateRoleRowToEntity(updatedRecord)
+	entity := pgmappers.UpdateRoleRowToEntity(updatedRecord)
 
 	return &entity, nil
 }
