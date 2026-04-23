@@ -3,9 +3,9 @@ package entities
 import (
 	"github.com/google/uuid"
 
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -44,15 +44,15 @@ func (p *Role) validate() []aerrs.AppErrorDetail {
 	var details []aerrs.AppErrorDetail
 
 	if p.name == "" {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_REQUIRED,
+		details = append(details, aerrs.NewDetail(
+			core.REASON_VAL_REQUIRED,
 			aerrs.WithField("name"),
 		))
 	}
 
 	if p.level > 255 {
-		details = append(details, *aerrs.NewDetail(
-			domain.REASON_OUT_OF_RANGE,
+		details = append(details, aerrs.NewDetail(
+			core.REASON_VAL_OUT_OF_RANGE,
 			aerrs.WithField("level"),
 		))
 	}
