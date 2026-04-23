@@ -308,21 +308,105 @@ services:
 # ============================================================
 
 error_details:
+
+  # ========================
+  # REQUIRED / NULL
+  # ========================
   - code: VAL_REQUIRED
     message: "Field is required"
 
+  - code: VAL_NULL
+    message: "Field must not be null"
+
+  # ========================
+  # FORMAT / TYPE
+  # ========================
   - code: VAL_INVALID_FORMAT
     message: "Invalid format"
 
+  - code: VAL_INVALID_TYPE
+    message: "Invalid data type"
+
+  - code: VAL_INVALID_ENUM
+    message: "Invalid enum value"
+
+  # ========================
+  # RANGE / SIZE
+  # ========================
   - code: VAL_OUT_OF_RANGE
     message: "Out of range"
 
+  - code: VAL_TOO_SHORT
+    message: "Value is too short"
+
+  - code: VAL_TOO_LONG
+    message: "Value is too long"
+
+  - code: VAL_MIN
+    message: "Value is below minimum"
+
+  - code: VAL_MAX
+    message: "Value exceeds maximum"
+
+  # ========================
+  # STRING / PATTERN
+  # ========================
+  - code: VAL_INVALID_PATTERN
+    message: "Value does not match required pattern"
+
+  # ========================
+  # BUSINESS LOGIC
+  # ========================
   - code: VAL_DUPLICATE
     message: "Duplicate value"
 
+  - code: VAL_CONFLICT
+    message: "Value conflicts with existing data"
+
+  - code: VAL_NOT_ALLOWED
+    message: "Operation not allowed"
+
+  - code: VAL_FORBIDDEN_STATE
+    message: "Invalid state for operation"
+
+  # ========================
+  # EXISTENCE
+  # ========================
   - code: VAL_NOT_FOUND
     message: "Not found"
 
+  - code: VAL_ALREADY_EXISTS
+    message: "Already exists"
+
+  # ========================
+  # RELATION / REFERENCE
+  # ========================
+  - code: VAL_INVALID_REFERENCE
+    message: "Invalid reference"
+
+  - code: VAL_DEPENDENCY_MISSING
+    message: "Required dependency is missing"
+
+  # ========================
+  # TIME / DATE
+  # ========================
+  - code: VAL_INVALID_TIME_RANGE
+    message: "Invalid time range"
+
+  - code: VAL_EXPIRED
+    message: "Value has expired"
+
+  # ========================
+  # SECURITY / INPUT
+  # ========================
+  - code: VAL_UNSAFE_INPUT
+    message: "Unsafe input detected"
+
+  # ========================
+  # GENERIC FALLBACK
+  # ========================
+  - code: VAL_INVALID
+    message: "Invalid value"
 # ============================================================
 # DEFAULTS / FALLBACK
 # ============================================================

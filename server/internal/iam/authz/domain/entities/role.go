@@ -3,13 +3,15 @@ package entities
 import (
 	"github.com/google/uuid"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/entities"
+	crerr "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type Role struct {
+	cren.BaseEntity
 	id      uuid.UUID
 	roleRef vo.RoleRef
 	name    string
@@ -24,44 +26,54 @@ type Role struct {
 	isActive bool
 }
 
-func NewRole(id uuid.UUID, scopeID *uuid.UUID, roleCode string, name string, roleScopeType string,
-	roleAccessScope enu.RoleAccessScope, level uint8, description *string, isSystem bool, isSuper bool, isActive bool) (*Role, *aerrs.AppError) {
+func NewRole(
+	id uuid.UUID,
+	roleRef vo.RoleRef,
+	name string,
+	scopeType enu.RoleScopeType,
+	accessScope enu.RoleAccessScope,
+	level uint8,
+	description *string,
+	isSystem bool,
+	isSuper bool,
+	isActive bool,
+) (*Role, *aerrs.AppError) {
 
-	vlRoleRef, err := vo.NewRoleRef(scopeID, roleCode)
-	if err != nil {
-		return nil, err
-	}
-
-	vlRoleScopeType, err := enu.NewRoleScopeType(roleScopeType)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Role{}
-}
-
-func (p *Role) validate() []aerrs.AppErrorDetail {
 	var details []aerrs.AppErrorDetail
 
-	if p.name == "" {
+	if name == "" {
 		details = append(details, aerrs.NewDetail(
-			core.REASON_VAL_REQUIRED,
+			crerr.REASON_VAL_REQUIRED,
 			aerrs.WithField("name"),
 		))
 	}
 
-	if p.level > 255 {
+	if level > 255 {
 		details = append(details, aerrs.NewDetail(
-			core.REASON_VAL_OUT_OF_RANGE,
+			crerr.REASON_VAL_OUT_OF_RANGE,
 			aerrs.WithField("level"),
 		))
 	}
 
 	if len(details) > 0 {
-		return details
+		return nil, aerrs.New(
+			crerr.VALIDATION_FAILED,
+			aerrs.WithAppendErrorDetails(details),
+		)
 	}
 
-	return nil
+	return &Role{
+		id:          id,
+		roleRef:     roleRef, // đã valid từ VO
+		name:        name,
+		scopeType:   scopeType,
+		accessScope: accessScope,
+		level:       level,
+		description: description,
+		isSystem:    isSystem,
+		isSuper:     isSuper,
+		isActive:    isActive,
+	}, nil
 }
 
 type NewRoleParams struct {

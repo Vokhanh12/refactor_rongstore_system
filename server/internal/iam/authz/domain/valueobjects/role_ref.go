@@ -3,7 +3,7 @@ package valueobjects
 import (
 	"github.com/google/uuid"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -20,19 +20,19 @@ type RoleRef struct {
 // CONSTRUCTOR (domain - có validate)
 // ============================================================
 
-func NewRoleRef(scopeID *uuid.UUID, roleCode string) (RoleRef, *aerrs.AppError) {
+func NewRoleRef(scopeID *uuid.UUID, roleCode string) (*RoleRef, *aerrs.AppError) {
 
-	r := RoleRef{
+	v := validator.New().
+		Required("roleCode", roleCode)
+
+	if err := v.Err(); err != nil {
+		return nil, err
+	}
+
+	return &RoleRef{
 		roleCode: roleCode,
 		scopeID:  scopeID,
-	}
-
-	err := r.validate()
-	if err != nil {
-		return RoleRef{}, err
-	}
-
-	return r, nil
+	}, nil
 }
 
 // ============================================================
@@ -44,24 +44,6 @@ func RestoreRoleRef(roleCode string, scopeID *uuid.UUID) RoleRef {
 		roleCode: roleCode,
 		scopeID:  scopeID,
 	}
-}
-
-// ============================================================
-// VALIDATION
-// ============================================================
-
-func (r *RoleRef) validate() *aerrs.AppError {
-	var details []aerrs.AppErrorDetail
-
-	if r.roleCode == "" {
-		details = append(details, aerrs.NewDetail(
-			core.REASON_VAL_REQUIRED,
-			aerrs.WithField("roleCode"),
-			aerrs.WithMessageDetail("role code is required"),
-		))
-	}
-
-	return aerrs.New(core.VALIDATION_FAILED, aerrs.WithAppendErrorDetails(details))
 }
 
 // ============================================================

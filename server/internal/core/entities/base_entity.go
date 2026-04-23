@@ -1,17 +1,40 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type BaseEntity struct {
-	ID        string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	id        uuid.UUID
+	createdAt time.Time
+	updatedAt time.Time
 }
 
-func NewBaseEntity(id string) BaseEntity {
+func NewBase(id uuid.UUID) BaseEntity {
+	now := time.Now()
 	return BaseEntity{
-		ID:        id,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		id:        id,
+		createdAt: now,
+		updatedAt: now,
 	}
+}
+
+func RestoreBase(id uuid.UUID, createdAt, updatedAt time.Time) BaseEntity {
+	return BaseEntity{
+		id:        id,
+		createdAt: createdAt,
+		updatedAt: updatedAt,
+	}
+}
+
+// getters only
+func (b BaseEntity) ID() uuid.UUID        { return b.id }
+func (b BaseEntity) CreatedAt() time.Time { return b.createdAt }
+func (b BaseEntity) UpdatedAt() time.Time { return b.updatedAt }
+
+// internal only
+func (b *BaseEntity) touch() {
+	b.updatedAt = time.Now()
 }

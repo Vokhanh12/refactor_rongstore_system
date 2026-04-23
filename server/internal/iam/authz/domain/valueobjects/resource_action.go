@@ -20,19 +20,11 @@ type ResourceAction struct {
 // CONSTRUCTOR (domain - có validate)
 // ============================================================
 
-func NewResourceAction(resource string, action string) (*ResourceAction, *aerrs.AppError) {
-
-	r := &ResourceAction{
-		resource: resource,
-		action:   action,
+func NewResourceAction(it ValidatedResourceAction) *ResourceAction {
+	return &ResourceAction{
+		resource: it.ResourceAction.resource,
+		action:   it.ResourceAction.action,
 	}
-
-	err := r.validate()
-	if err != nil {
-		return nil, err
-	}
-
-	return r, nil
 }
 
 func NewResourceActions(values []string) ([]ResourceAction, []aerrs.AppErrorDetail) {

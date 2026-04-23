@@ -72,9 +72,24 @@ var (
 		Message: "Field is required",
 	}
 
+	REASON_VAL_NULL = apperrors.AppErrorDetail{
+		Code: "VAL_NULL",
+		Message: "Field must not be null",
+	}
+
 	REASON_VAL_INVALID_FORMAT = apperrors.AppErrorDetail{
 		Code: "VAL_INVALID_FORMAT",
 		Message: "Invalid format",
+	}
+
+	REASON_VAL_INVALID_TYPE = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_TYPE",
+		Message: "Invalid data type",
+	}
+
+	REASON_VAL_INVALID_ENUM = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_ENUM",
+		Message: "Invalid enum value",
 	}
 
 	REASON_VAL_OUT_OF_RANGE = apperrors.AppErrorDetail{
@@ -82,14 +97,89 @@ var (
 		Message: "Out of range",
 	}
 
+	REASON_VAL_TOO_SHORT = apperrors.AppErrorDetail{
+		Code: "VAL_TOO_SHORT",
+		Message: "Value is too short",
+	}
+
+	REASON_VAL_TOO_LONG = apperrors.AppErrorDetail{
+		Code: "VAL_TOO_LONG",
+		Message: "Value is too long",
+	}
+
+	REASON_VAL_MIN = apperrors.AppErrorDetail{
+		Code: "VAL_MIN",
+		Message: "Value is below minimum",
+	}
+
+	REASON_VAL_MAX = apperrors.AppErrorDetail{
+		Code: "VAL_MAX",
+		Message: "Value exceeds maximum",
+	}
+
+	REASON_VAL_INVALID_PATTERN = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_PATTERN",
+		Message: "Value does not match required pattern",
+	}
+
 	REASON_VAL_DUPLICATE = apperrors.AppErrorDetail{
 		Code: "VAL_DUPLICATE",
 		Message: "Duplicate value",
 	}
 
+	REASON_VAL_CONFLICT = apperrors.AppErrorDetail{
+		Code: "VAL_CONFLICT",
+		Message: "Value conflicts with existing data",
+	}
+
+	REASON_VAL_NOT_ALLOWED = apperrors.AppErrorDetail{
+		Code: "VAL_NOT_ALLOWED",
+		Message: "Operation not allowed",
+	}
+
+	REASON_VAL_FORBIDDEN_STATE = apperrors.AppErrorDetail{
+		Code: "VAL_FORBIDDEN_STATE",
+		Message: "Invalid state for operation",
+	}
+
 	REASON_VAL_NOT_FOUND = apperrors.AppErrorDetail{
 		Code: "VAL_NOT_FOUND",
 		Message: "Not found",
+	}
+
+	REASON_VAL_ALREADY_EXISTS = apperrors.AppErrorDetail{
+		Code: "VAL_ALREADY_EXISTS",
+		Message: "Already exists",
+	}
+
+	REASON_VAL_INVALID_REFERENCE = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_REFERENCE",
+		Message: "Invalid reference",
+	}
+
+	REASON_VAL_DEPENDENCY_MISSING = apperrors.AppErrorDetail{
+		Code: "VAL_DEPENDENCY_MISSING",
+		Message: "Required dependency is missing",
+	}
+
+	REASON_VAL_INVALID_TIME_RANGE = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID_TIME_RANGE",
+		Message: "Invalid time range",
+	}
+
+	REASON_VAL_EXPIRED = apperrors.AppErrorDetail{
+		Code: "VAL_EXPIRED",
+		Message: "Value has expired",
+	}
+
+	REASON_VAL_UNSAFE_INPUT = apperrors.AppErrorDetail{
+		Code: "VAL_UNSAFE_INPUT",
+		Message: "Unsafe input detected",
+	}
+
+	REASON_VAL_INVALID = apperrors.AppErrorDetail{
+		Code: "VAL_INVALID",
+		Message: "Invalid value",
 	}
 
 )
@@ -103,9 +193,27 @@ var ErrorByCode = map[string]apperrors.AppError{
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
 	"VAL_REQUIRED": REASON_VAL_REQUIRED,
+	"VAL_NULL": REASON_VAL_NULL,
 	"VAL_INVALID_FORMAT": REASON_VAL_INVALID_FORMAT,
+	"VAL_INVALID_TYPE": REASON_VAL_INVALID_TYPE,
+	"VAL_INVALID_ENUM": REASON_VAL_INVALID_ENUM,
 	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
+	"VAL_TOO_SHORT": REASON_VAL_TOO_SHORT,
+	"VAL_TOO_LONG": REASON_VAL_TOO_LONG,
+	"VAL_MIN": REASON_VAL_MIN,
+	"VAL_MAX": REASON_VAL_MAX,
+	"VAL_INVALID_PATTERN": REASON_VAL_INVALID_PATTERN,
 	"VAL_DUPLICATE": REASON_VAL_DUPLICATE,
+	"VAL_CONFLICT": REASON_VAL_CONFLICT,
+	"VAL_NOT_ALLOWED": REASON_VAL_NOT_ALLOWED,
+	"VAL_FORBIDDEN_STATE": REASON_VAL_FORBIDDEN_STATE,
 	"VAL_NOT_FOUND": REASON_VAL_NOT_FOUND,
+	"VAL_ALREADY_EXISTS": REASON_VAL_ALREADY_EXISTS,
+	"VAL_INVALID_REFERENCE": REASON_VAL_INVALID_REFERENCE,
+	"VAL_DEPENDENCY_MISSING": REASON_VAL_DEPENDENCY_MISSING,
+	"VAL_INVALID_TIME_RANGE": REASON_VAL_INVALID_TIME_RANGE,
+	"VAL_EXPIRED": REASON_VAL_EXPIRED,
+	"VAL_UNSAFE_INPUT": REASON_VAL_UNSAFE_INPUT,
+	"VAL_INVALID": REASON_VAL_INVALID,
 }
 
