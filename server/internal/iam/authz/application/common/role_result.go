@@ -9,7 +9,7 @@ import (
 type RoleResult struct {
 	Id          uuid.UUID
 	Name        string
-	Description string
+	Description *string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

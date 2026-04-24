@@ -1,7 +1,7 @@
 package enums
 
 import (
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -12,28 +12,22 @@ const (
 	RoleAccessOwn RoleAccessScope = "OWN"
 )
 
-func NewRoleAccessScope(v string) (RoleAccessScope, *aerrs.AppError) {
-	scope := RoleAccessScope(v)
+var validRoleAccessScopes = map[RoleAccessScope]struct{}{
+	RoleAccessAll: {},
+	RoleAccessOwn: {},
+}
 
-	if !scope.IsValid() {
-		return "", aerrs.New(core.VALIDATION_FAILED,
-			aerrs.WithAppendErrorDetail(
-				aerrs.NewDetail(core.REASON_VAL_INVALID_FORMAT,
-					aerrs.WithField("roleAccessScope"),
-					aerrs.WithMessageDetail("invalid role access scope"),
-				),
-			),
-		)
+func NewRoleAccessScope(value string) (RoleAccessScope, *aerrs.AppError) {
+	v := validator.New().
+		Required("roleAccessScope", value)
+
+	scope := RoleAccessScope(value)
+
+	v.Enum("roleAccessScope", validator.InEnum(scope, validRoleAccessScopes))
+
+	if err := v.Err(); err != nil {
+		return "", err
 	}
 
 	return scope, nil
-}
-
-func (r RoleAccessScope) IsValid() bool {
-	switch r {
-	case RoleAccessAll, RoleAccessOwn:
-		return true
-	default:
-		return false
-	}
 }

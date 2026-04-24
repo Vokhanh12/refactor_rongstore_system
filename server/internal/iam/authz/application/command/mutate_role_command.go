@@ -7,19 +7,19 @@ import (
 
 type CreateRoleCommand struct {
 	ID              uuid.UUID
-	scope_id        uuid.UUID
+	ScopeID         *uuid.UUID
 	RoleScopeType   string
 	Code            string
 	Name            string
-	Description     string
+	Description     *string
 	RoleAccessScope string
-	level           unit8
+	Level           unit8
 	IsSystem        bool
 	IsActive        bool
 	IsSuper         bool
 }
 type CreateRoleCommandResult struct {
-	result common.RoleResult
+	Result common.RoleResult
 }
 
 type UpdateRoleCommand struct {

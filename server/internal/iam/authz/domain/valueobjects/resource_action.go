@@ -1,9 +1,7 @@
 package valueobjects
 
 import (
-	"strconv"
-
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -20,37 +18,20 @@ type ResourceAction struct {
 // CONSTRUCTOR (domain - có validate)
 // ============================================================
 
-func NewResourceAction(it ValidatedResourceAction) *ResourceAction {
+func NewResourceAction(resource string, action string) (*ResourceAction, *aerrs.AppError) {
+
+	v := validator.New().
+		Required("resource", resource).
+		Required("action", action)
+
+	if err := v.Err(); err != nil {
+		return nil, err
+	}
+
 	return &ResourceAction{
-		resource: it.ResourceAction.resource,
-		action:   it.ResourceAction.action,
-	}
-}
-
-func NewResourceActions(values []string) ([]ResourceAction, []aerrs.AppErrorDetail) {
-	var (
-		result  = make([]ResourceAction, 0, len(values))
-		details []aerrs.AppErrorDetail
-	)
-
-	for i, v := range values {
-		ra, errs := NewResourceAction(v)
-		if len(errs) > 0 {
-			for _, d := range errs {
-				d.Field = "resourceActions[" + strconv.Itoa(i) + "]"
-				details = append(details, d)
-			}
-			continue
-		}
-
-		result = append(result, *ra)
-	}
-
-	if len(details) > 0 {
-		return nil, details
-	}
-
-	return result, nil
+		resource: resource,
+		action:   action,
+	}, nil
 }
 
 // ============================================================
@@ -62,32 +43,6 @@ func RestoreResourceAction(resource, action string) ResourceAction {
 		resource: resource,
 		action:   action,
 	}
-}
-
-// ============================================================
-// VALIDATION
-// ============================================================
-
-func (r *ResourceAction) validate() *aerrs.AppError {
-	var details []aerrs.AppErrorDetail
-
-	if r.resource == "" {
-		details = append(details, aerrs.NewDetail(
-			core.REASON_VAL_REQUIRED,
-			aerrs.WithField("resource"),
-			aerrs.WithMessageDetail("resource is required"),
-		))
-	}
-
-	if r.action == "" {
-		details = append(details, aerrs.NewDetail(
-			core.REASON_VAL_REQUIRED,
-			aerrs.WithField("action"),
-			aerrs.WithMessageDetail("action is required"),
-		))
-	}
-
-	return aerrs.New(core.VALIDATION_FAILED, aerrs.WithAppendErrorDetails(details))
 }
 
 // ============================================================

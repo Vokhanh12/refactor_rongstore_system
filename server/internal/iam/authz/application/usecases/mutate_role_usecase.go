@@ -6,9 +6,11 @@ import (
 	coremp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/common"
+	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/entities"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -67,13 +69,70 @@ func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch
 	return dtos.MutateResultDTO{Items: results}
 }
 
-func (u *MutateRoleUsecase) handleCreate(ctx context.Context, cmd c.CreateRoleCommand) (*c.CreateRoleCommandResult, *aerrs.AppError) {
+func (u *MutateRoleUsecase) handleCreate(
+	ctx context.Context,
+	cmd c.CreateRoleCommand,
+) (*c.CreateRoleCommandResult, *aerrs.AppError) {
 
-	validatedRole := entities.NewRole()
+	roleRef, err := vo.NewRoleRef(cmd.ScopeID, cmd.Code)
+	if err != nil {
+		return nil, err
+	}
 
-	_, err := u.repo.Create()
+	scope, err := enu.NewRoleAccessScope(cmd.RoleAccessScope)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	scopeType, err := enu.NewRoleScopeType(cmd.RoleScopeType)
+	if err != nil {
+		return nil, err
+	}
+
+	// business check (application layer)
+	exists, err := u.repo.ExistsByRoleRef(ctx, roleRef)
+	if err != nil {
+		return nil, err
+	}
+	if exists {
+		return nil, aerrs.New(
+			core.VALIDATION_FAILED,
+			aerrs.WithAppendErrorDetails([]aerrs.AppErrorDetail{
+				aerrs.NewDetail(core.REASON_VAL_DUPLICATE, aerrs.WithField("code")),
+			}),
+		)
+	}
+
+	role, err := en.NewRole(en.NewRoleParams{
+		ID:              cmd.ID,
+		RoleRef:         roleRef,
+		RoleScopeType:   scopeType,
+		Name:            cmd.Name,
+		RoleAccessScope: scope,
+		Level:           cmd.Level,
+		Description:     cmd.Description,
+		IsSystem:        cmd.IsSystem,
+		IsSuper:         cmd.IsSuper,
+		IsActive:        cmd.IsActive,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	savedRole, err := u.repo.Create(ctx, role)
+	if err != nil {
+		return nil, err
+	}
+
+	return &c.CreateRoleCommandResult{
+		Result: common.RoleResult{
+			Id:          savedRole.ID(),
+			Name:        savedRole.Name(),
+			Description: savedRole.Description(),
+			CreatedAt:   savedRole.CreatedAt(),
+			UpdatedAt:   savedRole.UpdatedAt(),
+		},
+	}, nil
 }
 
 func (u *MutateRoleUsecase) handleUpdate(ctx context.Context, cmd c.UpdateRoleCommand) (*c.UpdateRoleCommandResult, *aerrs.AppError) {

@@ -20,16 +20,16 @@ type RoleRef struct {
 // CONSTRUCTOR (domain - có validate)
 // ============================================================
 
-func NewRoleRef(scopeID *uuid.UUID, roleCode string) (*RoleRef, *aerrs.AppError) {
+func NewRoleRef(scopeID *uuid.UUID, roleCode string) (RoleRef, *aerrs.AppError) {
 
 	v := validator.New().
 		Required("roleCode", roleCode)
 
 	if err := v.Err(); err != nil {
-		return nil, err
+		return RoleRef{}, err
 	}
 
-	return &RoleRef{
+	return RoleRef{
 		roleCode: roleCode,
 		scopeID:  scopeID,
 	}, nil

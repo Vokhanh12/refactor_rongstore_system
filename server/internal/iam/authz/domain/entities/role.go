@@ -4,11 +4,15 @@ import (
 	"github.com/google/uuid"
 
 	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/entities"
-	crerr "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
+
+// ============================================================
+// ENTITY
+// ============================================================
 
 type Role struct {
 	cren.BaseEntity
@@ -26,56 +30,6 @@ type Role struct {
 	isActive bool
 }
 
-func NewRole(
-	id uuid.UUID,
-	roleRef vo.RoleRef,
-	name string,
-	scopeType enu.RoleScopeType,
-	accessScope enu.RoleAccessScope,
-	level uint8,
-	description *string,
-	isSystem bool,
-	isSuper bool,
-	isActive bool,
-) (*Role, *aerrs.AppError) {
-
-	var details []aerrs.AppErrorDetail
-
-	if name == "" {
-		details = append(details, aerrs.NewDetail(
-			crerr.REASON_VAL_REQUIRED,
-			aerrs.WithField("name"),
-		))
-	}
-
-	if level > 255 {
-		details = append(details, aerrs.NewDetail(
-			crerr.REASON_VAL_OUT_OF_RANGE,
-			aerrs.WithField("level"),
-		))
-	}
-
-	if len(details) > 0 {
-		return nil, aerrs.New(
-			crerr.VALIDATION_FAILED,
-			aerrs.WithAppendErrorDetails(details),
-		)
-	}
-
-	return &Role{
-		id:          id,
-		roleRef:     roleRef, // đã valid từ VO
-		name:        name,
-		scopeType:   scopeType,
-		accessScope: accessScope,
-		level:       level,
-		description: description,
-		isSystem:    isSystem,
-		isSuper:     isSuper,
-		isActive:    isActive,
-	}, nil
-}
-
 type NewRoleParams struct {
 	ID              uuid.UUID
 	RoleRef         vo.RoleRef
@@ -89,20 +43,64 @@ type NewRoleParams struct {
 	IsActive        bool
 }
 
-func NewRoleFromPersistence(p NewRoleParams) Role {
+// ============================================================
+// CONSTRUCTOR (domain - có validate)
+// ============================================================
+
+func NewRole(it NewRoleParams) (*Role, *aerrs.AppError) {
+
+	v := validator.New()
+
+	err := v.
+		Required("Name", it.Name).
+		MaxLen("Name", it.Name, 100).
+		RangeInt("level", int(it.Level), 1, 255).
+		Err()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Role{
+		id:          it.ID,
+		roleRef:     it.RoleRef,
+		name:        it.Name,
+		scopeType:   it.RoleScopeType,
+		accessScope: it.RoleAccessScope,
+		level:       it.Level,
+		description: it.Description,
+		isSystem:    it.IsSystem,
+		isSuper:     it.IsSuper,
+		isActive:    it.IsActive,
+	}, nil
+}
+
+// ============================================================
+// RESTORE (persistence - trust data)
+// ============================================================
+
+func RestoreRole(it NewRoleParams) Role {
 	return Role{
-		id:          p.ID,
-		roleRef:     p.RoleRef,
-		name:        p.Name,
-		scopeType:   p.RoleScopeType,
-		accessScope: p.RoleAccessScope,
-		level:       p.Level,
-		description: p.Description,
-		isSystem:    p.IsSystem,
-		isSuper:     p.IsSuper,
-		isActive:    p.IsActive,
+		id:          it.ID,
+		roleRef:     it.RoleRef,
+		name:        it.Name,
+		scopeType:   it.RoleScopeType,
+		accessScope: it.RoleAccessScope,
+		level:       it.Level,
+		description: it.Description,
+		isSystem:    it.IsSystem,
+		isSuper:     it.IsSuper,
+		isActive:    it.IsActive,
 	}
 }
+
+// ============================================================
+// SETTERS (domain - validate)
+// ============================================================
+
+// ============================================================
+// GETTERS
+// ============================================================
 
 func (r Role) IsElevated() bool {
 	return r.isSuper
