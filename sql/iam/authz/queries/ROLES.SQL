@@ -118,3 +118,12 @@ SELECT
 FROM roles
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2;
+
+-- name: ExistsRoleByCodeScope :one
+SELECT EXISTS (
+    SELECT 1
+    FROM roles
+    WHERE code = $1
+      AND role_scope_type = $2
+      AND scope_id IS NOT DISTINCT FROM $3
+) AS exists;

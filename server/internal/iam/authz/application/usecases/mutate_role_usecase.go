@@ -89,18 +89,13 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	// business check (application layer)
-	exists, err := u.repo.ExistsByRoleRef(ctx, roleRef)
+	exists, err := u.repo.ExistsByRoleIdentity(ctx, scopeType, roleRef)
 	if err != nil {
 		return nil, err
 	}
+
 	if exists {
-		return nil, aerrs.New(
-			core.VALIDATION_FAILED,
-			aerrs.WithAppendErrorDetails([]aerrs.AppErrorDetail{
-				aerrs.NewDetail(core.REASON_VAL_DUPLICATE, aerrs.WithField("code")),
-			}),
-		)
+
 	}
 
 	role, err := en.NewRole(en.NewRoleParams{

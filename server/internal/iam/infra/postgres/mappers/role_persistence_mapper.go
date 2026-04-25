@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
@@ -39,8 +40,16 @@ func RoleToUpdateParams(role *entities.Role) db.UpdateRoleParams {
 	}
 }
 
+func RoleToExistsByCodeScopeParams(roleScopeType enu.RoleScopeType, roleRef vo.RoleRef) db.ExistsRoleByCodeScopeParams {
+	return db.ExistsRoleByCodeScopeParams{
+		Code:          roleRef.RoleCode(),
+		RoleScopeType: RoleScopeTypeToDB(roleScopeType),
+		ScopeID:       pg.PgUUIDFromUUIDPtr(roleRef.ScopeID()),
+	}
+}
+
 func CreateRoleRowToEntity(row db.CreateRoleRow) entities.Role {
-	return entities.NewRoleFromPersistence(
+	return entities.RestoreRole(
 		entities.NewRoleParams{
 			ID: row.ID,
 			RoleRef: vo.RestoreRoleRef(
@@ -60,7 +69,7 @@ func CreateRoleRowToEntity(row db.CreateRoleRow) entities.Role {
 }
 
 func UpdateRoleRowToEntity(row db.UpdateRoleRow) entities.Role {
-	return entities.NewRoleFromPersistence(
+	return entities.RestoreRole(
 		entities.NewRoleParams{
 			ID: row.ID,
 			RoleRef: vo.RestoreRoleRef(

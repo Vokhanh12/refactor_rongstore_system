@@ -5,8 +5,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	pgmappers "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mappers"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
@@ -74,4 +76,14 @@ func (s *SqlcRoleRepository) FindByCode(ctx context.Context, code string) (*enti
 // FindById implements [repositories.RoleRepository].
 func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*entities.Role, *apperrors.AppError) {
 	panic("unimplemented")
+}
+
+// ExistsByRoleIdentity implements [repositories.RoleRepository].
+func (s *SqlcRoleRepository) ExistsByRoleIdentity(ctx context.Context, roleScopeType enums.RoleScopeType, roleRef valueobjects.RoleRef) *apperrors.AppError {
+	err := s.queries.ExistsRoleByCodeScope(ctx, pgmappers.RoleToExistsByCodeScopeParams(roleScopeType, roleRef))
+	if err != nil {
+		return dberr.TranslateDBError(err, s.dberr)
+	}
+
+	return nil
 }
