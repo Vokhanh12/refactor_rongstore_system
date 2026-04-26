@@ -16,5 +16,5 @@ type RoleRepository interface {
 	Delete(ctx context.Context, id uuid.UUID) *aerrs.AppError
 	FindById(ctx context.Context, id uuid.UUID) (*entities.Role, *aerrs.AppError)
 	FindByCode(ctx context.Context, code string) (*entities.Role, *aerrs.AppError)
-	ExistsByRoleIdentity(ctx context.Context, roleScopeType enu.RoleScopeType, roleRef vo.RoleRef) (bool, *aerrs.AppError)
+	Exists(ctx context.Context, roleScopeType enu.RoleScopeType, roleRef vo.RoleRef) (bool, *aerrs.AppError)
 }

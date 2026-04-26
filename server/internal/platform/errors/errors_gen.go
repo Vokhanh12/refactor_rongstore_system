@@ -64,6 +64,21 @@ var (
 		ServerAction: "",
 	}
 
+	POSTGRES_UNAVAILABLE = apperrors.AppError{
+		Key: "POSTGRES_UNAVAILABLE",
+		Code: "PLATFORM-INF-005",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 503,
+		GRPCCode: "Unavailable",
+		Message: "postgres unavailable",
+		Severity: "S1",
+		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 )
 
 var (
@@ -189,6 +204,7 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"PLATFORM-INF-002": DB_QUERY_FAILED,
 	"PLATFORM-INF-003": REDIS_UNAVAILABLE,
 	"PLATFORM-INF-004": EXTERNAL_SERVICE_UNAVAILABLE,
+	"PLATFORM-INF-005": POSTGRES_UNAVAILABLE,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{

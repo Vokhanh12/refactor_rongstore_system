@@ -78,12 +78,12 @@ func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*entit
 	panic("unimplemented")
 }
 
-// ExistsByRoleIdentity implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) ExistsByRoleIdentity(ctx context.Context, roleScopeType enums.RoleScopeType, roleRef valueobjects.RoleRef) *apperrors.AppError {
-	err := s.queries.ExistsRoleByCodeScope(ctx, pgmappers.RoleToExistsByCodeScopeParams(roleScopeType, roleRef))
+// Exists implements [repositories.RoleRepository].
+func (s *SqlcRoleRepository) Exists(ctx context.Context, roleScopeType enums.RoleScopeType, roleRef valueobjects.RoleRef) (bool, *apperrors.AppError) {
+	allowed, err := s.queries.ExistsRoleByCodeScope(ctx, pgmappers.RoleToExistsByCodeScopeParams(roleScopeType, roleRef))
 	if err != nil {
-		return dberr.TranslateDBError(err, s.dberr)
+		return false, dberr.TranslateDBError(err, s.dberr)
 	}
 
-	return nil
+	return allowed, nil
 }

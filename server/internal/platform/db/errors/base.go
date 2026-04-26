@@ -6,86 +6,74 @@ import (
 	"errors"
 	"strings"
 
-	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
+	plerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type DBError struct {
-	InvalidCatalog  aerrs.AppError
-	NotfoundCatalog aerrs.AppError
-	ConflictCatalog aerrs.AppError
-	PersistCatalog  aerrs.AppError
+	// ---------- Business-like ----------
+	Conflict aerrs.AppError // 23505 (unique)
+	Invalid  aerrs.AppError // FK, CHECK
+	NotFound aerrs.AppError // sql.ErrNoRows
+
+	// ---------- Infra ----------
+	//Timeout     aerrs.AppError // context deadline
+	//Unavailable aerrs.AppError // connection issue
+	Internal aerrs.AppError // fallback (unknown)
 }
 
-func TranslateDBError(err error, catalogs DBError) *aerrs.AppError {
+func TranslateDBError(err error, e DBError) *aerrs.AppError {
 	if err == nil {
 		return nil
 	}
 
-	// ---------- Not found ----------
+	// ---------- Not Found ----------
 	if errors.Is(err, sql.ErrNoRows) {
-		return aerrs.New(
-			catalogs.NotfoundCatalog,
-			aerrs.WithCauseDetail(err),
-		)
+		return aerrs.New(e.NotFound, aerrs.WithCauseDetail(err))
 	}
 
-	// ---------- Postgres specific ----------
+	// ---------- Postgres ----------
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {
 
 		switch pgErr.Code {
 
 		case "23505": // unique_violation
-			return aerrs.New(
-				catalogs.ConflictCatalog,
-				aerrs.WithCauseDetail(err),
-			)
+			return aerrs.New(e.Conflict, aerrs.WithCauseDetail(err))
 
 		case "23503", "23514": // FK, CHECK
-			return aerrs.New(
-				catalogs.InvalidCatalog,
-				aerrs.WithCauseDetail(err),
-			)
+			return aerrs.New(e.Invalid, aerrs.WithCauseDetail(err))
 
-		case "57014": // query_canceled (statement_timeout)
-			return aerrs.New(
-				domain.DB_QUERY_TIMEOUT,
-				aerrs.WithCauseDetail(err),
-			)
+		case "57014": // query canceled / timeout
+			return aerrs.New(plerrs.DB_TIMEOUT, aerrs.WithCauseDetail(err))
 		}
 	}
 
-	// ---------- Timeout (context) ----------
+	// ---------- Context timeout ----------
 	if errors.Is(err, context.DeadlineExceeded) {
-		// ⚠️ tricky: không biết chắc là query hay connect
-		// => assume là DB unavailable (an toàn hơn)
-		return aerrs.New(
-			domain.DB_TIMEOUT,
-			aerrs.WithCauseDetail(err),
-		)
+		return aerrs.New(plerrs.DB_TIMEOUT, aerrs.WithCauseDetail(err))
 	}
 
-	// ---------- Connection issues ----------
+	// ---------- Connection ----------
 	if isConnectionError(err) {
-		return aerrs.New(
-			domain.POSTGRES_UNAVAILABLE,
-			aerrs.WithCauseDetail(err),
-		)
+		return aerrs.New(plerrs.POSTGRES_UNAVAILABLE, aerrs.WithCauseDetail(err))
 	}
 
-	// ---------- Default ----------
-	return aerrs.New(
-		catalogs.PersistCatalog,
-		aerrs.WithCauseDetail(err),
-	)
+	// ---------- Fallback ----------
+	return aerrs.New(e.Internal, aerrs.WithCauseDetail(err))
 }
 
 func isConnectionError(err error) bool {
-	return errors.Is(err, context.Canceled) ||
-		strings.Contains(err.Error(), "connection refused") ||
-		strings.Contains(err.Error(), "connection reset") ||
-		strings.Contains(err.Error(), "broken pipe")
+	if errors.Is(err, context.Canceled) {
+		return true
+	}
+
+	msg := err.Error()
+
+	return strings.Contains(msg, "connection refused") ||
+		strings.Contains(msg, "connection reset") ||
+		strings.Contains(msg, "broken pipe") ||
+		strings.Contains(msg, "EOF")
 }

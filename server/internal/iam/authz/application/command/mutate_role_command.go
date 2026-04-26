@@ -13,7 +13,7 @@ type CreateRoleCommand struct {
 	Name            string
 	Description     *string
 	RoleAccessScope string
-	Level           unit8
+	Level           uint8
 	IsSystem        bool
 	IsActive        bool
 	IsSuper         bool
@@ -30,7 +30,7 @@ type UpdateRoleCommand struct {
 	Name            string
 	Description     string
 	RoleAccessScope string
-	level           unit8
+	level           uint8
 	IsSystem        bool
 	IsActive        bool
 	IsSuper         bool

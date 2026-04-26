@@ -77,7 +77,27 @@ services:
           grpc_code: InvalidArgument
           message: "Validation failed"
           severity: S3
-          retryable: false        
+          retryable: false   
+
+        - code: CORE-VAL-002
+          key: STRING_SPLIT_INVALID
+          component: api_gateway
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid string format"
+          severity: S3
+          retryable: false    
+
+        - code: CORE-VAL-003
+          key: UUID_INVALID
+          component: api_gateway
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid UUID format"
+          severity: S3
+          retryable: false
 
       INFRA:
         - code: CORE-INF-001
@@ -302,6 +322,17 @@ services:
           message: "External service unavailable"
           severity: S1
           retryable: true
+
+        - code: PLATFORM-INF-005
+          key: POSTGRES_UNAVAILABLE
+          component: postgres
+          tags: [infra, database]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "postgres unavailable"
+          severity: S1
+          retryable: true
+ 
 
 # ============================================================
 # ERROR DETAILS (VALIDATION LEVEL)

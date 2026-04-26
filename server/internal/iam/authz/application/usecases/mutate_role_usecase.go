@@ -11,6 +11,7 @@ import (
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+	merrors "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -89,13 +90,13 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	exists, err := u.repo.ExistsByRoleIdentity(ctx, scopeType, roleRef)
+	exists, err := u.repo.Exists(ctx, scopeType, roleRef)
 	if err != nil {
 		return nil, err
 	}
 
 	if exists {
-
+		return nil, aerrs.New(merrors.ROLE_CONFLICT)
 	}
 
 	role, err := en.NewRole(en.NewRoleParams{

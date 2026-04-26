@@ -79,6 +79,36 @@ var (
 		ServerAction: "",
 	}
 
+	STRING_SPLIT_INVALID = apperrors.AppError{
+		Key: "STRING_SPLIT_INVALID",
+		Code: "CORE-VAL-002",
+		Component: "api_gateway",
+		Tags: []string{"validation","client"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid string format",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	UUID_INVALID = apperrors.AppError{
+		Key: "UUID_INVALID",
+		Code: "CORE-VAL-003",
+		Component: "api_gateway",
+		Tags: []string{"validation","client"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid UUID format",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 	JSON_SERIALIZATION_FAILED = apperrors.AppError{
 		Key: "JSON_SERIALIZATION_FAILED",
 		Code: "CORE-INF-001",
@@ -220,6 +250,8 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-VIE-001": VIEW_OPERATION_UNSUPPORTED,
 	"CORE-VIE-002": VIEW_PARTIAL_FAILURE,
 	"CORE-VAL-001": VALIDATION_FAILED,
+	"CORE-VAL-002": STRING_SPLIT_INVALID,
+	"CORE-VAL-003": UUID_INVALID,
 	"CORE-INF-001": JSON_SERIALIZATION_FAILED,
 }
 
