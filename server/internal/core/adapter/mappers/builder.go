@@ -136,7 +136,7 @@ func BuildSuccessResponse(ctx context.Context, data proto.Message) (*protos.Base
 // 	return BuildErrorResponse(ctx, be)
 // }
 
-func BuildMutateResponse(ctx context.Context, results dtos.MutateResultDTO) *protos.MutateResponse {
+func BuildMutateResponse(ctx context.Context, results dtos.MutateResultDTO, MutateResultItemToProto func(action any) *protos.MutateResultItem) *protos.MutateResponse {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
@@ -150,7 +150,7 @@ func BuildMutateResponse(ctx context.Context, results dtos.MutateResultDTO) *pro
 			Degraded:   false,
 			ServerTime: time.Now().UnixMilli(),
 		},
-		MutateResults: MutateResultToProto(results),
+		MutateResults: MutateResultToProto(results, MutateResultItemToProto),
 	}
 }
 

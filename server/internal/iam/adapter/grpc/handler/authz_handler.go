@@ -37,5 +37,5 @@ func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRe
 
 	}
 
-	return corem.BuildMutateResponse(ctx, results), nil
+	return corem.BuildMutateResponse(ctx, results, mappers.MapRoleActionProto(results.Items)), nil
 }

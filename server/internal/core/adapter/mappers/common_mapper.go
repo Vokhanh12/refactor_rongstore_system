@@ -11,7 +11,11 @@ import (
 // TO → PROTO
 // ============================================================
 
-func AppErrorToProto(it dtos.ErrorDTO) *protos.Error {
+func AppErrorToProto(it *dtos.ErrorDTO) *protos.Error {
+
+	if it == nil {
+		return nil
+	}
 
 	items := make([]*protos.ErrorDetail, 0, len(it.External.Details))
 
@@ -46,7 +50,7 @@ func AppErrorDetailToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
 	}
 }
 
-func MutateResultToProto(dto dtos.MutateResultDTO) *protos.MutateResult {
+func MutateResultToProto(dto dtos.MutateResultDTO, MutateResultItemToProto func(action any) *protos.MutateResultItem) *protos.MutateResult {
 
 	items := make([]*protos.MutateResultItem, 0, len(dto.Items))
 
@@ -59,42 +63,27 @@ func MutateResultToProto(dto dtos.MutateResultDTO) *protos.MutateResult {
 	}
 }
 
-func MutateResultItemToProto(dto dtos.MutateResultItemDTO) *protos.MutateResultItem {
-	return &protos.MutateResultItem{
-		OpId:    dto.OpID,
-		Data:    dto.Data,
-		Success: dto.Success,
-		Error:   AppErrorToProto(dto.Error),
-	}
-}
-
 // ============================================================
 // TO → DTO
 // ============================================================
 
 func AppErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
-
 	if it == nil {
 		return nil
 	}
 
-	var items []dtos.ErrorDetailDTO
-
+	details := make([]dtos.ErrorDetailDTO, 0)
 	if it.ErrorDetails != nil {
-		items = make([]dtos.ErrorDetailDTO, 0, len(*it.ErrorDetails))
-
-		for _, d := range *it.ErrorDetails {
-			items = append(items, AppErrorDetailToDTO(d))
+		for _, d := range it.ErrorDetails {
+			details = append(details, AppErrorDetailToDTO(d))
 		}
-	} else {
-		items = []dtos.ErrorDetailDTO{}
 	}
 
 	return &dtos.ErrorDTO{
 		External: dtos.ExternalErrorDTO{
 			Code:    it.Code,
 			Message: it.Message,
-			Details: items,
+			Details: details,
 		},
 		Internal: dtos.InternalErrorDTO{
 			Code:         it.Code,

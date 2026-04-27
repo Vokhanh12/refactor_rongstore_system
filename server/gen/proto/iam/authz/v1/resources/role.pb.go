@@ -583,8 +583,15 @@ func (x *RoleMutation_Delete) GetId() string {
 type RoleMutation_Create_Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	ScopeId       string                 `protobuf:"bytes,2,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	ScopeType     string                 `protobuf:"bytes,5,opt,name=scope_type,json=scopeType,proto3" json:"scope_type,omitempty"`
+	AccessScope   string                 `protobuf:"bytes,6,opt,name=access_scope,json=accessScope,proto3" json:"access_scope,omitempty"`
+	Level         int32                  `protobuf:"varint,7,opt,name=level,proto3" json:"level,omitempty"`
+	IsSystem      bool                   `protobuf:"varint,8,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
+	IsSuper       bool                   `protobuf:"varint,9,opt,name=is_super,json=isSuper,proto3" json:"is_super,omitempty"`
+	IsActive      bool                   `protobuf:"varint,10,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -626,6 +633,13 @@ func (x *RoleMutation_Create_Data) GetCode() string {
 	return ""
 }
 
+func (x *RoleMutation_Create_Data) GetScopeId() string {
+	if x != nil {
+		return x.ScopeId
+	}
+	return ""
+}
+
 func (x *RoleMutation_Create_Data) GetName() string {
 	if x != nil {
 		return x.Name
@@ -640,10 +654,60 @@ func (x *RoleMutation_Create_Data) GetDescription() string {
 	return ""
 }
 
+func (x *RoleMutation_Create_Data) GetScopeType() string {
+	if x != nil {
+		return x.ScopeType
+	}
+	return ""
+}
+
+func (x *RoleMutation_Create_Data) GetAccessScope() string {
+	if x != nil {
+		return x.AccessScope
+	}
+	return ""
+}
+
+func (x *RoleMutation_Create_Data) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *RoleMutation_Create_Data) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
+}
+
+func (x *RoleMutation_Create_Data) GetIsSuper() bool {
+	if x != nil {
+		return x.IsSuper
+	}
+	return false
+}
+
+func (x *RoleMutation_Create_Data) GetIsActive() bool {
+	if x != nil {
+		return x.IsActive
+	}
+	return false
+}
+
 type RoleMutation_Update_Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	ScopeId       string                 `protobuf:"bytes,2,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	ScopeType     string                 `protobuf:"bytes,5,opt,name=scope_type,json=scopeType,proto3" json:"scope_type,omitempty"`
+	AccessScope   string                 `protobuf:"bytes,6,opt,name=access_scope,json=accessScope,proto3" json:"access_scope,omitempty"`
+	Level         int32                  `protobuf:"varint,7,opt,name=level,proto3" json:"level,omitempty"`
+	IsSystem      bool                   `protobuf:"varint,8,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
+	IsSuper       bool                   `protobuf:"varint,9,opt,name=is_super,json=isSuper,proto3" json:"is_super,omitempty"`
+	IsActive      bool                   `protobuf:"varint,10,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -678,6 +742,20 @@ func (*RoleMutation_Update_Data) Descriptor() ([]byte, []int) {
 	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{1, 1, 0}
 }
 
+func (x *RoleMutation_Update_Data) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *RoleMutation_Update_Data) GetScopeId() string {
+	if x != nil {
+		return x.ScopeId
+	}
+	return ""
+}
+
 func (x *RoleMutation_Update_Data) GetName() string {
 	if x != nil {
 		return x.Name
@@ -690,6 +768,48 @@ func (x *RoleMutation_Update_Data) GetDescription() string {
 		return x.Description
 	}
 	return ""
+}
+
+func (x *RoleMutation_Update_Data) GetScopeType() string {
+	if x != nil {
+		return x.ScopeType
+	}
+	return ""
+}
+
+func (x *RoleMutation_Update_Data) GetAccessScope() string {
+	if x != nil {
+		return x.AccessScope
+	}
+	return ""
+}
+
+func (x *RoleMutation_Update_Data) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *RoleMutation_Update_Data) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
+}
+
+func (x *RoleMutation_Update_Data) GetIsSuper() bool {
+	if x != nil {
+		return x.IsSuper
+	}
+	return false
+}
+
+func (x *RoleMutation_Update_Data) GetIsActive() bool {
+	if x != nil {
+		return x.IsActive
+	}
+	return false
 }
 
 type RoleView_Get struct {
@@ -824,24 +944,43 @@ const file_iam_authz_v1_resources_role_proto_rawDesc = "" +
 	"\vcreate_date\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"createDate\x12;\n" +
 	"\vupdate_date\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"updateDate\"\x96\x05\n" +
+	"updateDate\"\xbc\b\n" +
 	"\fRoleMutation\x12\x1c\n" +
 	"\x05op_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04opId\x125\n" +
 	"\x06create\x18\x02 \x01(\v2\x1b.iam.v1.RoleMutation.CreateH\x00R\x06create\x125\n" +
 	"\x06update\x18\x03 \x01(\v2\x1b.iam.v1.RoleMutation.UpdateH\x00R\x06update\x125\n" +
-	"\x06delete\x18\x04 \x01(\v2\x1b.iam.v1.RoleMutation.DeleteH\x00R\x06delete\x1a\xb2\x01\n" +
+	"\x06delete\x18\x04 \x01(\v2\x1b.iam.v1.RoleMutation.DeleteH\x00R\x06delete\x1a\xfb\x02\n" +
 	"\x06Create\x12>\n" +
-	"\x04data\x18\x01 \x01(\v2 .iam.v1.RoleMutation.Create.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1aP\n" +
+	"\x04data\x18\x01 \x01(\v2 .iam.v1.RoleMutation.Create.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a\x98\x02\n" +
 	"\x04Data\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription:\x16\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06CREATE\xa8\xb5\x18\x01\x1a\xbd\x01\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
+	"\bscope_id\x18\x02 \x01(\tR\ascopeId\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1d\n" +
+	"\n" +
+	"scope_type\x18\x05 \x01(\tR\tscopeType\x12!\n" +
+	"\faccess_scope\x18\x06 \x01(\tR\vaccessScope\x12\x14\n" +
+	"\x05level\x18\a \x01(\x05R\x05level\x12\x1b\n" +
+	"\tis_system\x18\b \x01(\bR\bisSystem\x12\x19\n" +
+	"\bis_super\x18\t \x01(\bR\aisSuper\x12\x1b\n" +
+	"\tis_active\x18\n" +
+	" \x01(\bR\bisActive:\x16\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06CREATE\xa8\xb5\x18\x01\x1a\x9a\x03\n" +
 	"\x06Update\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12>\n" +
-	"\x04data\x18\x02 \x01(\v2 .iam.v1.RoleMutation.Update.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a<\n" +
+	"\x04data\x18\x02 \x01(\v2 .iam.v1.RoleMutation.Update.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a\x98\x02\n" +
 	"\x04Data\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription:\x1c\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06UPDATE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01\x1a?\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
+	"\bscope_id\x18\x02 \x01(\tR\ascopeId\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1d\n" +
+	"\n" +
+	"scope_type\x18\x05 \x01(\tR\tscopeType\x12!\n" +
+	"\faccess_scope\x18\x06 \x01(\tR\vaccessScope\x12\x14\n" +
+	"\x05level\x18\a \x01(\x05R\x05level\x12\x1b\n" +
+	"\tis_system\x18\b \x01(\bR\bisSystem\x12\x19\n" +
+	"\bis_super\x18\t \x01(\bR\aisSuper\x12\x1b\n" +
+	"\tis_active\x18\n" +
+	" \x01(\bR\bisActive:\x1c\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06UPDATE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01\x1a?\n" +
 	"\x06Delete\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id:\x1c\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01B\r\n" +
 	"\x06action\x12\x03\xf8B\x01\"Q\n" +

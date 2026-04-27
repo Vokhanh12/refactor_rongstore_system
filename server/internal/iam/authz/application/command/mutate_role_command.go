@@ -1,19 +1,17 @@
 package command
 
 import (
-	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/common"
 )
 
 type CreateRoleCommand struct {
-	ID              uuid.UUID
-	ScopeID         *uuid.UUID
+	ScopeID         string
 	RoleScopeType   string
 	Code            string
 	Name            string
-	Description     *string
+	Description     string
 	RoleAccessScope string
-	Level           uint8
+	Level           int32
 	IsSystem        bool
 	IsActive        bool
 	IsSuper         bool
@@ -23,20 +21,24 @@ type CreateRoleCommandResult struct {
 }
 
 type UpdateRoleCommand struct {
-	ID              uuid.UUID
-	scope_id        uuid.UUID
+	ID              string
+	ScopeID         string
 	RoleScopeType   string
 	Code            string
 	Name            string
 	Description     string
 	RoleAccessScope string
-	level           uint8
+	Level           int32
 	IsSystem        bool
 	IsActive        bool
 	IsSuper         bool
 }
 
-type UpdateRoleCommandResult struct{}
+type UpdateRoleCommandResult struct {
+	Result common.RoleResult
+}
 
-type DeleteRoleCommand struct{}
+type DeleteRoleCommand struct {
+	ID string
+}
 type DeleteRoleCommandResult struct{}

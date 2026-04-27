@@ -8,12 +8,12 @@ import (
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
-	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
 // ============================================================
-// PROTO → COMMAND / QUERY
+// PROTO → COMMAND (REQUEST)
 // ============================================================
+
 func RoleMutateRequestToBatch(req *authzrs.RoleMutateRequest) authzuc.RoleMutationBatch {
 
 	items := make([]coreuc.Operation[authzuc.RoleMutation], 0, len(req.Mutations))
@@ -28,6 +28,10 @@ func RoleMutateRequestToBatch(req *authzrs.RoleMutateRequest) authzuc.RoleMutati
 	return authzuc.RoleMutationBatch{Items: items}
 }
 
+// ============================================================
+// ACTION → COMMAND
+// ============================================================
+
 func MapRoleActionRequest(action any) authzuc.RoleMutation {
 
 	switch v := action.(type) {
@@ -35,18 +39,41 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 	case *authzrs.RoleMutation_Create_:
 		return authzuc.RoleMutation{
 			Create: &cmd.CreateRoleCommand{
-				ID: v.Create.Data.Code,
+				Code:            v.Create.Data.Code,
+				ScopeID:         v.Create.Data.ScopeId,
+				RoleScopeType:   v.Create.Data.ScopeType,
+				Name:            v.Create.Data.Name,
+				Description:     v.Create.Data.Description,
+				RoleAccessScope: v.Create.Data.AccessScope,
+				Level:           v.Create.Data.Level,
+				IsSystem:        v.Create.Data.IsSystem, // FIX BUG
+				IsActive:        v.Create.Data.IsActive,
+				IsSuper:         v.Create.Data.IsSuper,
 			},
 		}
 
 	case *authzrs.RoleMutation_Update_:
 		return authzuc.RoleMutation{
-			Update: &cmd.UpdateRoleCommand{},
+			Update: &cmd.UpdateRoleCommand{
+				ID:              v.Update.Id,
+				Code:            v.Update.Data.Code,
+				ScopeID:         v.Update.Data.ScopeId,
+				RoleScopeType:   v.Update.Data.ScopeType,
+				Name:            v.Update.Data.Name,
+				Description:     v.Update.Data.Description,
+				RoleAccessScope: v.Update.Data.AccessScope,
+				Level:           v.Update.Data.Level,
+				IsSystem:        v.Update.Data.IsSystem, // FIX BUG
+				IsActive:        v.Update.Data.IsActive,
+				IsSuper:         v.Update.Data.IsSuper,
+			},
 		}
 
 	case *authzrs.RoleMutation_Delete_:
 		return authzuc.RoleMutation{
-			Delete: &cmd.DeleteRoleCommand{},
+			Delete: &cmd.DeleteRoleCommand{
+				ID: v.Delete.Id,
+			},
 		}
 
 	default:
@@ -55,37 +82,33 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 	}
 }
 
-func MapRoleActionProto(action any) commonv1.MutateResultItemDTO {
+// ============================================================
+// COMMAND RESULT → PROTO RESPONSE (DATA PART)
+// ============================================================
 
-	switch v := action.(type) {
+func MapRoleActionResponse(data any) authzrs.RoleMutation {
+
+	switch v := data.(type) {
 
 	case *cmd.CreateRoleCommandResult:
-		return commonv1.MutateResultItemDTO{
-			Data: &authzrs.RoleMutation_Create_{
-				Create: &authzrs.RoleMutation_Create{
-					Data: &authzrs.RoleMutation_Create_Data{
-						Code: v.ID,
-					},
-				},
+		return &authzrs.MutateResultItem_Create{
+			Create: &authzrs.CreateRoleResult{
+				Id: v.Result.Id,
 			},
 		}
 
 	case *cmd.UpdateRoleCommandResult:
-		return commonv1.MutateResultItemDTO{
-			Data: &authzrs.RoleMutation_Update_{
-				Update: &authzrs.RoleMutation_Update{},
-			},
+		return &authzrs.MutateResultItem_Update{
+			Update: &authzrs.UpdateRoleResult{},
 		}
 
 	case *cmd.DeleteRoleCommandResult:
-		return commonv1.MutateResultItemDTO{
-			Data: &authzrs.RoleMutation_Delete_{
-				Delete: &authzrs.RoleMutation_Delete{},
-			},
+		return &authzrs.MutateResultItem_Delete{
+			Delete: &authzrs.DeleteRoleResult{},
 		}
 
 	default:
-		corem.Must(fmt.Sprintf("unknown action type: %T", action))
-		return commonv1.MutateResultItemDTO{}
+		corem.Must(fmt.Sprintf("unknown result type: %T", data))
+		return nil
 	}
 }
