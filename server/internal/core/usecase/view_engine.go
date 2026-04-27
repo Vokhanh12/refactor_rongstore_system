@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
@@ -17,7 +18,6 @@ func NewViewEngine[T any](handlers []Handler[T]) *ViewEngine[T] {
 }
 
 func (e *ViewEngine[T]) Execute(ctx context.Context, items []Operation[T],
-	buildResult func(opID string, data any, err *aerrs.AppError) dtos.ViewResultItemDTO,
 ) []dtos.ViewResultItemDTO {
 
 	results := make([]dtos.ViewResultItemDTO, 0, len(items))
@@ -39,7 +39,7 @@ func (e *ViewEngine[T]) Execute(ctx context.Context, items []Operation[T],
 			err = aerrs.New(errs.VIEW_OPERATION_UNSUPPORTED)
 		}
 
-		results = append(results, buildResult(item.OpID, data, err))
+		results = append(results, mappers.BuildViewResult(item.OpID, data, err))
 	}
 
 	return results

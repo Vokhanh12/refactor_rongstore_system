@@ -5,5 +5,4 @@ type ListRoleQuery struct{}
 type GetRoleQuery struct{}
 type ExportRoleQuery struct{}
 type CountRoleQuery struct{}
-type ExistsRoleQuery struct
-
+type ExistsRoleQuery struct{}

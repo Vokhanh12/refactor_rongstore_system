@@ -3,7 +3,6 @@ package usecases
 import (
 	"context"
 
-	coremp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/common"
@@ -65,7 +64,7 @@ func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
 
 func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) dtos.MutateResultDTO {
 
-	results := u.engine.Execute(ctx, batch.Items, coremp.BuildMutateResult)
+	results := u.engine.Execute(ctx, batch.Items)
 
 	return dtos.MutateResultDTO{Items: results}
 }

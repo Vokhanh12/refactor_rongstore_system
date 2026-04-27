@@ -23,6 +23,15 @@ func BuildMutateResult(opID string, data any, err *aerrs.AppError) dtos.MutateRe
 	}
 }
 
+func BuildViewResult(opID string, data any, err *aerrs.AppError) dtos.ViewResultItemDTO {
+
+	return dtos.ViewResultItemDTO{
+		OpID:  opID,
+		Items: data,
+		Error: AppErrorToDTO(err),
+	}
+}
+
 func BuildTransportErrorResponse(ctx context.Context, err *aerrs.AppError) (*protos.BaseResponse, error) {
 
 	requestctx := ctxutil.MustRequest(ctx)

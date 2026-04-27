@@ -3,7 +3,6 @@ package usecases
 import (
 	"context"
 
-	coremap "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
@@ -67,7 +66,7 @@ func NewViewRoleUsecase(repo re.RoleRepository) *ViewRoleUsecase {
 
 func (u *ViewRoleUsecase) Execute(ctx context.Context, batch RoleViewBatch) dtos.ViewResultDTO {
 
-	results := u.engine.Execute(ctx, batch.Items, coremap.BuildViewResult)
+	results := u.engine.Execute(ctx, batch.Items)
 
 	return dtos.ViewResultDTO{Items: results}
 }

@@ -26,7 +26,7 @@ func NewRoleAccessScope(value string) (RoleAccessScope, *aerrs.AppError) {
 	v.Enum("roleAccessScope", validator.InEnum(scope, validRoleAccessScopes))
 
 	if err := v.Err(); err != nil {
-		return "", err
+		return RoleAccessScope(""), err
 	}
 
 	return scope, nil

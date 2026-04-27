@@ -1,40 +1,36 @@
 package enums
 
 import (
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type RoleScopeType string
 
 const (
-	RoleScopeGobal  RoleScopeType = "GOBAL"
+	RoleScopeGobal  RoleScopeType = "GLOBAL"
 	RoleScopeTenant RoleScopeType = "TENANT"
 	RoleScopeUnit   RoleScopeType = "UNIT"
 )
 
-func NewRoleScopeType(v string) (RoleScopeType, *aerrs.AppError) {
-	scope := RoleScopeType(v)
+var validRoleScopes = map[RoleScopeType]struct{}{
+	RoleScopeGobal:  {},
+	RoleScopeTenant: {},
+	RoleScopeUnit:   {},
+}
 
-	if !scope.IsValid() {
-		return "", aerrs.New(core.VALIDATION_FAILED,
-			aerrs.WithAppendErrorDetail(
-				aerrs.NewDetail(core.REASON_VAL_INVALID_FORMAT,
-					aerrs.WithField("RoleScopeType"),
-					aerrs.WithMessageDetail("invalid role scope type"),
-				),
-			),
-		)
+func NewRoleScopeType(value string) (RoleScopeType, *aerrs.AppError) {
+
+	v := validator.New().
+		Required("RoleScopeType", value)
+
+	scope := RoleScopeType(value)
+
+	v.Enum("roleAccessScope", validator.InEnum(scope, validRoleScopes))
+
+	if err := v.Err(); err != nil {
+		return RoleScopeType(""), err
 	}
 
 	return scope, nil
-}
-
-func (r RoleScopeType) IsValid() bool {
-	switch r {
-	case RoleScopeGobal, RoleScopeTenant, RoleScopeUnit:
-		return true
-	default:
-		return false
-	}
 }

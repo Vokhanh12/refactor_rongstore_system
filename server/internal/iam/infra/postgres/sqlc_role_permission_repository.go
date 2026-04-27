@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/errors"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
@@ -28,7 +30,7 @@ func NewSqlcRolePermissionRepository(queries *db.Queries) repositories.RolePermi
 }
 
 // Create implements [repositories.RolePermissionRepository].
-func (s *SqlcRolePermissionRepository) Create(ctx context.Context, rolePermission *entities.RolePermission) (*entities.RolePermission, *apperrors.AppError) {
+func (s *SqlcRolePermissionRepository) Create(ctx context.Context, rolePermission *en.RolePermission) (*en.RolePermission, *apperrors.AppError) {
 	panic("unimplemented")
 }
 
@@ -40,10 +42,10 @@ func (s *SqlcRolePermissionRepository) Delete(ctx context.Context, id uuid.UUID)
 func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 	ctx context.Context,
 	roleRefs []valueobjects.RoleRef,
-) ([]*entities.RolePermission, *apperrors.AppError) {
+) ([]*en.RolePermission, *apperrors.AppError) {
 
 	if len(roleRefs) == 0 {
-		return []*entities.RolePermission{}, nil
+		return []*en.RolePermission{}, nil
 	}
 
 	input := make([]roleRefDTO, 0, len(roleRefs))
@@ -57,7 +59,7 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 
 	payload, err := json.Marshal(input)
 	if err != nil {
-		return nil, apperrors.New(domain.JSON_SERIALIZATION_FAILED,
+		return nil, apperrors.New(core.JSON_SERIALIZATION_FAILED,
 			apperrors.WithCauseDetail(err))
 	}
 
@@ -66,44 +68,45 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
 
-	result := make([]*entities.RolePermission, 0, len(rows))
+	result := make([]*en.RolePermission, 0, len(rows))
 
 	for _, row := range rows {
 
-		roleRef := valueobjects.NewRoleRefFromPersistence(
+		roleRef := vo.RestoreRoleRef(
 			row.RoleCode,
-			pg.StringPtrFromUUID(row.RoleScopeID),
+			pg.UUIDPtrFromPgUUID(row.RoleScopeID),
 		)
 
-		role := entities.NewRoleFromPersistence(
-			row.RoleID.String(),
-			roleRef,
-			entities.RoleScopeType(row.RoleScopeType),
-			row.RoleName,
-			entities.RoleAcessScope(row.RoleAccessScope),
-			pg.StringPtrFromText(row.RoleDescription),
-			row.RoleIsSystem,
-			row.RoleIsSuper,
-			row.RoleIsActive,
-		)
+		role := en.RestoreRole(en.NewRoleParams{
+			ID:              row.RoleID,
+			RoleRef:         roleRef,
+			RoleScopeType:   enums.RoleScopeType(row.RoleScopeType),
+			Name:            row.RoleName,
+			RoleAccessScope: enums.RoleAccessScope(row.RoleAccessScope),
+			Level:           pg.Uint8FromInt32(row.RoleLevel),
+			Description:     nil,
+			IsSystem:        row.RoleIsSystem,
+			IsSuper:         row.RoleIsSuper,
+			IsActive:        row.RoleIsActive,
+		})
 
-		perm := entities.NewPermissionFromPersistence(
-			row.PermissionID.String(),
-			row.PermissionCode,
-			pg.StringPtrFromText(row.PermissionName),
-			pg.StringPtrFromText(row.PermissionDescription),
-			row.PermissionResource,
-			row.PermissionAction,
-			row.PermissionIsActive,
-		)
+		perm := en.RestorePermission(en.NewPermissionParams{
+			ID:          row.RoleID,
+			Code:        row.PermissionCode,
+			Name:        pg.StringPtrFromText(row.PermissionName),
+			Description: pg.StringPtrFromText(row.PermissionDescription),
+			Resource:    row.PermissionResource,
+			Action:      row.PermissionAction,
+			IsActive:    row.PermissionIsActive,
+		})
 
-		result = append(result, entities.NewRolePermission(role, perm))
+		result = append(result, en.NewRolePermission(role, perm))
 	}
 
 	return result, nil
 }
 
 // Update implements [repositories.RolePermissionRepository].
-func (s *SqlcRolePermissionRepository) Update(ctx context.Context, rolePermission *entities.RolePermission) (*entities.RolePermission, *apperrors.AppError) {
+func (s *SqlcRolePermissionRepository) Update(ctx context.Context, rolePermission *en.RolePermission) (*en.RolePermission, *apperrors.AppError) {
 	panic("unimplemented")
 }

@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
@@ -16,9 +17,7 @@ func NewMutateEngine[T any](handlers []Handler[T]) *MutateEngine[T] {
 	return &MutateEngine[T]{handlers: handlers}
 }
 
-func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T],
-	buildResult func(opID string, data any, err *aerrs.AppError) dtos.MutateResultItemDTO,
-) []dtos.MutateResultItemDTO {
+func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T]) []dtos.MutateResultItemDTO {
 
 	results := make([]dtos.MutateResultItemDTO, 0, len(items))
 
@@ -39,7 +38,7 @@ func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T],
 			err = aerrs.New(errs.MUTATE_OPERATION_UNSUPPORTED)
 		}
 
-		results = append(results, buildResult(item.OpID, data, err))
+		results = append(results, mappers.BuildMutateResult(item.OpID, data, err))
 	}
 
 	return results

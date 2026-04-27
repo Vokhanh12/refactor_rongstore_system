@@ -55,13 +55,13 @@ type NewPermissionParams struct {
 	IsActive bool
 }
 
-func NewPermissionFromPersistence(pp NewPermissionParams, rap vo.NewResourceActionParms) Permission {
+func RestorePermission(it NewPermissionParams) Permission {
 	return Permission{
-		id:             pp.ID,
-		code:           pp.Code,
-		name:           pp.Name,
-		description:    pp.Description,
-		resourceAction: vo.NewResourceActionFromPersistence(rap),
-		isActive:       pp.IsActive,
+		id:             it.ID,
+		code:           it.Code,
+		name:           it.Name,
+		description:    it.Description,
+		resourceAction: vo.RestoreResourceAction(it.Resource, it.Action),
+		isActive:       it.IsActive,
 	}
 }

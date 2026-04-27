@@ -1,6 +1,6 @@
 package jwt
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/services"
+import services "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/ports"
 
 var _ services.TokenGenerator = (*JWTGenerator)(nil)
 
