@@ -9,7 +9,6 @@ package resourcespb
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
-	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -595,7 +594,7 @@ var File_iam_authz_v1_resources_permission_proto protoreflect.FileDescriptor
 
 const file_iam_authz_v1_resources_permission_proto_rawDesc = "" +
 	"\n" +
-	"'iam/authz/v1/resources/permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xeb\x02\n" +
+	"'iam/authz/v1/resources/permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xeb\x02\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +

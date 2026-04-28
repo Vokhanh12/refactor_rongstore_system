@@ -8,6 +8,7 @@ import (
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 // ============================================================
@@ -36,7 +37,7 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 
 	switch v := action.(type) {
 
-	case *authzrs.RoleMutation_Create_:
+	case *authzrs.RoleMutation_Create:
 		return authzuc.RoleMutation{
 			Create: &cmd.CreateRoleCommand{
 				Code:            v.Create.Data.Code,
@@ -46,13 +47,13 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 				Description:     v.Create.Data.Description,
 				RoleAccessScope: v.Create.Data.AccessScope,
 				Level:           v.Create.Data.Level,
-				IsSystem:        v.Create.Data.IsSystem, // FIX BUG
+				IsSystem:        v.Create.Data.IsSystem,
 				IsActive:        v.Create.Data.IsActive,
 				IsSuper:         v.Create.Data.IsSuper,
 			},
 		}
 
-	case *authzrs.RoleMutation_Update_:
+	case *authzrs.RoleMutation_Update:
 		return authzuc.RoleMutation{
 			Update: &cmd.UpdateRoleCommand{
 				ID:              v.Update.Id,
@@ -63,13 +64,13 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 				Description:     v.Update.Data.Description,
 				RoleAccessScope: v.Update.Data.AccessScope,
 				Level:           v.Update.Data.Level,
-				IsSystem:        v.Update.Data.IsSystem, // FIX BUG
+				IsSystem:        v.Update.Data.IsSystem,
 				IsActive:        v.Update.Data.IsActive,
 				IsSuper:         v.Update.Data.IsSuper,
 			},
 		}
 
-	case *authzrs.RoleMutation_Delete_:
+	case *authzrs.RoleMutation_Delete:
 		return authzuc.RoleMutation{
 			Delete: &cmd.DeleteRoleCommand{
 				ID: v.Delete.Id,
@@ -86,26 +87,37 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 // COMMAND RESULT → PROTO RESPONSE (DATA PART)
 // ============================================================
 
-func MapRoleActionResponse(data any) authzrs.RoleMutation {
+func MapRoleActionResponse(data any) *anypb.Any {
 
 	switch v := data.(type) {
 
 	case *cmd.CreateRoleCommandResult:
-		return &authzrs.MutateResultItem_Create{
-			Create: &authzrs.CreateRoleResult{
-				Id: v.Result.Id,
+		pb := &authzrs.CreateResult{
+			RoleResult: &authzrs.RoleResult{
+				Id:          v.Result.Id,
+				Name:        v.Result.Name,
+				Description: v.Result.Description,
+				CreateAt:    corem.ToProtoTime(v.Result.CreatedAt),
+				UpdateAt:    corem.ToProtoTime(v.Result.UpdatedAt),
 			},
 		}
+		return corem.MustMarshalAny(pb)
 
 	case *cmd.UpdateRoleCommandResult:
-		return &authzrs.MutateResultItem_Update{
-			Update: &authzrs.UpdateRoleResult{},
+		pb := &authzrs.UpdateResult{
+			RoleResult: &authzrs.RoleResult{
+				Id:          v.Result.Id,
+				Name:        v.Result.Name,
+				Description: v.Result.Description,
+				CreateAt:    corem.ToProtoTime(v.Result.UpdatedAt),
+				UpdateAt:    corem.ToProtoTime(v.Result.UpdatedAt),
+			},
 		}
+		return corem.MustMarshalAny(pb)
 
 	case *cmd.DeleteRoleCommandResult:
-		return &authzrs.MutateResultItem_Delete{
-			Delete: &authzrs.DeleteRoleResult{},
-		}
+		pb := &authzrs.DeleteResult{}
+		return corem.MustMarshalAny(pb)
 
 	default:
 		corem.Must(fmt.Sprintf("unknown result type: %T", data))

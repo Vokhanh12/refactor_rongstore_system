@@ -9,7 +9,6 @@ package resourcespb
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
-	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -38,10 +37,10 @@ type Role struct {
 	IsSystem      bool                   `protobuf:"varint,9,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
 	IsSuper       bool                   `protobuf:"varint,10,opt,name=is_super,json=isSuper,proto3" json:"is_super,omitempty"`
 	IsActive      bool                   `protobuf:"varint,11,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	CreateBy      string                 `protobuf:"bytes,12,opt,name=create_by,json=createBy,proto3" json:"create_by,omitempty"`
-	UpdateBy      string                 `protobuf:"bytes,13,opt,name=update_by,json=updateBy,proto3" json:"update_by,omitempty"`
-	CreateDate    *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=create_date,json=createDate,proto3" json:"create_date,omitempty"`
-	UpdateDate    *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=update_date,json=updateDate,proto3" json:"update_date,omitempty"`
+	CreatedBy     string                 `protobuf:"bytes,12,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
+	UpdatedBy     string                 `protobuf:"bytes,13,opt,name=updated_by,json=updatedBy,proto3" json:"updated_by,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -153,30 +152,30 @@ func (x *Role) GetIsActive() bool {
 	return false
 }
 
-func (x *Role) GetCreateBy() string {
+func (x *Role) GetCreatedBy() string {
 	if x != nil {
-		return x.CreateBy
+		return x.CreatedBy
 	}
 	return ""
 }
 
-func (x *Role) GetUpdateBy() string {
+func (x *Role) GetUpdatedBy() string {
 	if x != nil {
-		return x.UpdateBy
+		return x.UpdatedBy
 	}
 	return ""
 }
 
-func (x *Role) GetCreateDate() *timestamppb.Timestamp {
+func (x *Role) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.CreateDate
+		return x.CreatedAt
 	}
 	return nil
 }
 
-func (x *Role) GetUpdateDate() *timestamppb.Timestamp {
+func (x *Role) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.UpdateDate
+		return x.UpdatedAt
 	}
 	return nil
 }
@@ -186,9 +185,9 @@ type RoleMutation struct {
 	OpId  string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
 	// Types that are valid to be assigned to Action:
 	//
-	//	*RoleMutation_Create_
-	//	*RoleMutation_Update_
-	//	*RoleMutation_Delete_
+	//	*RoleMutation_Create
+	//	*RoleMutation_Update
+	//	*RoleMutation_Delete
 	Action        isRoleMutation_Action `protobuf_oneof:"action"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -238,27 +237,27 @@ func (x *RoleMutation) GetAction() isRoleMutation_Action {
 	return nil
 }
 
-func (x *RoleMutation) GetCreate() *RoleMutation_Create {
+func (x *RoleMutation) GetCreate() *Create {
 	if x != nil {
-		if x, ok := x.Action.(*RoleMutation_Create_); ok {
+		if x, ok := x.Action.(*RoleMutation_Create); ok {
 			return x.Create
 		}
 	}
 	return nil
 }
 
-func (x *RoleMutation) GetUpdate() *RoleMutation_Update {
+func (x *RoleMutation) GetUpdate() *Update {
 	if x != nil {
-		if x, ok := x.Action.(*RoleMutation_Update_); ok {
+		if x, ok := x.Action.(*RoleMutation_Update); ok {
 			return x.Update
 		}
 	}
 	return nil
 }
 
-func (x *RoleMutation) GetDelete() *RoleMutation_Delete {
+func (x *RoleMutation) GetDelete() *Delete {
 	if x != nil {
-		if x, ok := x.Action.(*RoleMutation_Delete_); ok {
+		if x, ok := x.Action.(*RoleMutation_Delete); ok {
 			return x.Delete
 		}
 	}
@@ -269,23 +268,23 @@ type isRoleMutation_Action interface {
 	isRoleMutation_Action()
 }
 
-type RoleMutation_Create_ struct {
-	Create *RoleMutation_Create `protobuf:"bytes,2,opt,name=create,proto3,oneof"`
+type RoleMutation_Create struct {
+	Create *Create `protobuf:"bytes,2,opt,name=create,proto3,oneof"`
 }
 
-type RoleMutation_Update_ struct {
-	Update *RoleMutation_Update `protobuf:"bytes,3,opt,name=update,proto3,oneof"`
+type RoleMutation_Update struct {
+	Update *Update `protobuf:"bytes,3,opt,name=update,proto3,oneof"`
 }
 
-type RoleMutation_Delete_ struct {
-	Delete *RoleMutation_Delete `protobuf:"bytes,4,opt,name=delete,proto3,oneof"`
+type RoleMutation_Delete struct {
+	Delete *Delete `protobuf:"bytes,4,opt,name=delete,proto3,oneof"`
 }
 
-func (*RoleMutation_Create_) isRoleMutation_Action() {}
+func (*RoleMutation_Create) isRoleMutation_Action() {}
 
-func (*RoleMutation_Update_) isRoleMutation_Action() {}
+func (*RoleMutation_Update) isRoleMutation_Action() {}
 
-func (*RoleMutation_Delete_) isRoleMutation_Action() {}
+func (*RoleMutation_Delete) isRoleMutation_Action() {}
 
 type RoleMutateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -331,6 +330,270 @@ func (x *RoleMutateRequest) GetMutations() []*RoleMutation {
 	return nil
 }
 
+type Create struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Data          *Create_Data           `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Create) Reset() {
+	*x = Create{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Create) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Create) ProtoMessage() {}
+
+func (x *Create) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Create.ProtoReflect.Descriptor instead.
+func (*Create) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Create) GetData() *Create_Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type Update struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Data          *Update_Data           `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Update) Reset() {
+	*x = Update{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Update) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Update) ProtoMessage() {}
+
+func (x *Update) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Update.ProtoReflect.Descriptor instead.
+func (*Update) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Update) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Update) GetData() *Update_Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type Delete struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Delete) Reset() {
+	*x = Delete{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Delete) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Delete) ProtoMessage() {}
+
+func (x *Delete) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Delete.ProtoReflect.Descriptor instead.
+func (*Delete) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Delete) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type CreateResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleResult    *RoleResult            `protobuf:"bytes,1,opt,name=roleResult,proto3" json:"roleResult,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateResult) Reset() {
+	*x = CreateResult{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateResult) ProtoMessage() {}
+
+func (x *CreateResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateResult.ProtoReflect.Descriptor instead.
+func (*CreateResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CreateResult) GetRoleResult() *RoleResult {
+	if x != nil {
+		return x.RoleResult
+	}
+	return nil
+}
+
+type UpdateResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleResult    *RoleResult            `protobuf:"bytes,1,opt,name=roleResult,proto3" json:"roleResult,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateResult) Reset() {
+	*x = UpdateResult{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateResult) ProtoMessage() {}
+
+func (x *UpdateResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateResult.ProtoReflect.Descriptor instead.
+func (*UpdateResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *UpdateResult) GetRoleResult() *RoleResult {
+	if x != nil {
+		return x.RoleResult
+	}
+	return nil
+}
+
+type DeleteResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteResult) Reset() {
+	*x = DeleteResult{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteResult) ProtoMessage() {}
+
+func (x *DeleteResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteResult.ProtoReflect.Descriptor instead.
+func (*DeleteResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{8}
+}
+
 type RoleView struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	OpId  string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
@@ -346,7 +609,7 @@ type RoleView struct {
 
 func (x *RoleView) Reset() {
 	*x = RoleView{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[3]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -358,7 +621,7 @@ func (x *RoleView) String() string {
 func (*RoleView) ProtoMessage() {}
 
 func (x *RoleView) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[3]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,7 +634,7 @@ func (x *RoleView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleView.ProtoReflect.Descriptor instead.
 func (*RoleView) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{3}
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *RoleView) GetOpId() string {
@@ -437,127 +700,28 @@ func (*RoleView_List_) isRoleView_Action() {}
 
 func (*RoleView_Search_) isRoleView_Action() {}
 
-// ---------------- CREATE ----------------
-type RoleMutation_Create struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Data          *RoleMutation_Create_Data `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RoleMutation_Create) Reset() {
-	*x = RoleMutation_Create{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoleMutation_Create) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoleMutation_Create) ProtoMessage() {}
-
-func (x *RoleMutation_Create) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoleMutation_Create.ProtoReflect.Descriptor instead.
-func (*RoleMutation_Create) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{1, 0}
-}
-
-func (x *RoleMutation_Create) GetData() *RoleMutation_Create_Data {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
-// ---------------- UPDATE ----------------
-type RoleMutation_Update struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Id            string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Data          *RoleMutation_Update_Data `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RoleMutation_Update) Reset() {
-	*x = RoleMutation_Update{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoleMutation_Update) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoleMutation_Update) ProtoMessage() {}
-
-func (x *RoleMutation_Update) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoleMutation_Update.ProtoReflect.Descriptor instead.
-func (*RoleMutation_Update) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{1, 1}
-}
-
-func (x *RoleMutation_Update) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *RoleMutation_Update) GetData() *RoleMutation_Update_Data {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
-// ---------------- DELETE ----------------
-type RoleMutation_Delete struct {
+type GetResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RoleMutation_Delete) Reset() {
-	*x = RoleMutation_Delete{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[6]
+func (x *GetResult) Reset() {
+	*x = GetResult{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RoleMutation_Delete) String() string {
+func (x *GetResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoleMutation_Delete) ProtoMessage() {}
+func (*GetResult) ProtoMessage() {}
 
-func (x *RoleMutation_Delete) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[6]
+func (x *GetResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -568,49 +732,39 @@ func (x *RoleMutation_Delete) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RoleMutation_Delete.ProtoReflect.Descriptor instead.
-func (*RoleMutation_Delete) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{1, 2}
+// Deprecated: Use GetResult.ProtoReflect.Descriptor instead.
+func (*GetResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *RoleMutation_Delete) GetId() string {
+func (x *GetResult) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-type RoleMutation_Create_Data struct {
+type ListResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	ScopeId       string                 `protobuf:"bytes,2,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	ScopeType     string                 `protobuf:"bytes,5,opt,name=scope_type,json=scopeType,proto3" json:"scope_type,omitempty"`
-	AccessScope   string                 `protobuf:"bytes,6,opt,name=access_scope,json=accessScope,proto3" json:"access_scope,omitempty"`
-	Level         int32                  `protobuf:"varint,7,opt,name=level,proto3" json:"level,omitempty"`
-	IsSystem      bool                   `protobuf:"varint,8,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
-	IsSuper       bool                   `protobuf:"varint,9,opt,name=is_super,json=isSuper,proto3" json:"is_super,omitempty"`
-	IsActive      bool                   `protobuf:"varint,10,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RoleMutation_Create_Data) Reset() {
-	*x = RoleMutation_Create_Data{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[7]
+func (x *ListResult) Reset() {
+	*x = ListResult{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RoleMutation_Create_Data) String() string {
+func (x *ListResult) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoleMutation_Create_Data) ProtoMessage() {}
+func (*ListResult) ProtoMessage() {}
 
-func (x *RoleMutation_Create_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[7]
+func (x *ListResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -621,87 +775,169 @@ func (x *RoleMutation_Create_Data) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RoleMutation_Create_Data.ProtoReflect.Descriptor instead.
-func (*RoleMutation_Create_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{1, 0, 0}
+// Deprecated: Use ListResult.ProtoReflect.Descriptor instead.
+func (*ListResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *RoleMutation_Create_Data) GetCode() string {
+type SearchResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchResult) Reset() {
+	*x = SearchResult{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchResult) ProtoMessage() {}
+
+func (x *SearchResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchResult.ProtoReflect.Descriptor instead.
+func (*SearchResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{12}
+}
+
+type Create_Data struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	ScopeId       string                 `protobuf:"bytes,4,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
+	ScopeType     string                 `protobuf:"bytes,5,opt,name=scope_type,json=scopeType,proto3" json:"scope_type,omitempty"`
+	AccessScope   string                 `protobuf:"bytes,6,opt,name=access_scope,json=accessScope,proto3" json:"access_scope,omitempty"`
+	Level         int32                  `protobuf:"varint,7,opt,name=level,proto3" json:"level,omitempty"`
+	IsSystem      bool                   `protobuf:"varint,8,opt,name=is_system,json=isSystem,proto3" json:"is_system,omitempty"`
+	IsSuper       bool                   `protobuf:"varint,9,opt,name=is_super,json=isSuper,proto3" json:"is_super,omitempty"`
+	IsActive      bool                   `protobuf:"varint,10,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Create_Data) Reset() {
+	*x = Create_Data{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Create_Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Create_Data) ProtoMessage() {}
+
+func (x *Create_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Create_Data.ProtoReflect.Descriptor instead.
+func (*Create_Data) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{3, 0}
+}
+
+func (x *Create_Data) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *RoleMutation_Create_Data) GetScopeId() string {
-	if x != nil {
-		return x.ScopeId
-	}
-	return ""
-}
-
-func (x *RoleMutation_Create_Data) GetName() string {
+func (x *Create_Data) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *RoleMutation_Create_Data) GetDescription() string {
+func (x *Create_Data) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *RoleMutation_Create_Data) GetScopeType() string {
+func (x *Create_Data) GetScopeId() string {
+	if x != nil {
+		return x.ScopeId
+	}
+	return ""
+}
+
+func (x *Create_Data) GetScopeType() string {
 	if x != nil {
 		return x.ScopeType
 	}
 	return ""
 }
 
-func (x *RoleMutation_Create_Data) GetAccessScope() string {
+func (x *Create_Data) GetAccessScope() string {
 	if x != nil {
 		return x.AccessScope
 	}
 	return ""
 }
 
-func (x *RoleMutation_Create_Data) GetLevel() int32 {
+func (x *Create_Data) GetLevel() int32 {
 	if x != nil {
 		return x.Level
 	}
 	return 0
 }
 
-func (x *RoleMutation_Create_Data) GetIsSystem() bool {
+func (x *Create_Data) GetIsSystem() bool {
 	if x != nil {
 		return x.IsSystem
 	}
 	return false
 }
 
-func (x *RoleMutation_Create_Data) GetIsSuper() bool {
+func (x *Create_Data) GetIsSuper() bool {
 	if x != nil {
 		return x.IsSuper
 	}
 	return false
 }
 
-func (x *RoleMutation_Create_Data) GetIsActive() bool {
+func (x *Create_Data) GetIsActive() bool {
 	if x != nil {
 		return x.IsActive
 	}
 	return false
 }
 
-type RoleMutation_Update_Data struct {
+type Update_Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	ScopeId       string                 `protobuf:"bytes,2,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	ScopeId       string                 `protobuf:"bytes,4,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
 	ScopeType     string                 `protobuf:"bytes,5,opt,name=scope_type,json=scopeType,proto3" json:"scope_type,omitempty"`
 	AccessScope   string                 `protobuf:"bytes,6,opt,name=access_scope,json=accessScope,proto3" json:"access_scope,omitempty"`
 	Level         int32                  `protobuf:"varint,7,opt,name=level,proto3" json:"level,omitempty"`
@@ -712,21 +948,21 @@ type RoleMutation_Update_Data struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RoleMutation_Update_Data) Reset() {
-	*x = RoleMutation_Update_Data{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[8]
+func (x *Update_Data) Reset() {
+	*x = Update_Data{}
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RoleMutation_Update_Data) String() string {
+func (x *Update_Data) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoleMutation_Update_Data) ProtoMessage() {}
+func (*Update_Data) ProtoMessage() {}
 
-func (x *RoleMutation_Update_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[8]
+func (x *Update_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,75 +973,75 @@ func (x *RoleMutation_Update_Data) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RoleMutation_Update_Data.ProtoReflect.Descriptor instead.
-func (*RoleMutation_Update_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{1, 1, 0}
+// Deprecated: Use Update_Data.ProtoReflect.Descriptor instead.
+func (*Update_Data) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{4, 0}
 }
 
-func (x *RoleMutation_Update_Data) GetCode() string {
+func (x *Update_Data) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *RoleMutation_Update_Data) GetScopeId() string {
-	if x != nil {
-		return x.ScopeId
-	}
-	return ""
-}
-
-func (x *RoleMutation_Update_Data) GetName() string {
+func (x *Update_Data) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *RoleMutation_Update_Data) GetDescription() string {
+func (x *Update_Data) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *RoleMutation_Update_Data) GetScopeType() string {
+func (x *Update_Data) GetScopeId() string {
+	if x != nil {
+		return x.ScopeId
+	}
+	return ""
+}
+
+func (x *Update_Data) GetScopeType() string {
 	if x != nil {
 		return x.ScopeType
 	}
 	return ""
 }
 
-func (x *RoleMutation_Update_Data) GetAccessScope() string {
+func (x *Update_Data) GetAccessScope() string {
 	if x != nil {
 		return x.AccessScope
 	}
 	return ""
 }
 
-func (x *RoleMutation_Update_Data) GetLevel() int32 {
+func (x *Update_Data) GetLevel() int32 {
 	if x != nil {
 		return x.Level
 	}
 	return 0
 }
 
-func (x *RoleMutation_Update_Data) GetIsSystem() bool {
+func (x *Update_Data) GetIsSystem() bool {
 	if x != nil {
 		return x.IsSystem
 	}
 	return false
 }
 
-func (x *RoleMutation_Update_Data) GetIsSuper() bool {
+func (x *Update_Data) GetIsSuper() bool {
 	if x != nil {
 		return x.IsSuper
 	}
 	return false
 }
 
-func (x *RoleMutation_Update_Data) GetIsActive() bool {
+func (x *Update_Data) GetIsActive() bool {
 	if x != nil {
 		return x.IsActive
 	}
@@ -814,13 +1050,14 @@ func (x *RoleMutation_Update_Data) GetIsActive() bool {
 
 type RoleView_Get struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RoleView_Get) Reset() {
 	*x = RoleView_Get{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[9]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -832,7 +1069,7 @@ func (x *RoleView_Get) String() string {
 func (*RoleView_Get) ProtoMessage() {}
 
 func (x *RoleView_Get) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[9]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -845,18 +1082,27 @@ func (x *RoleView_Get) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleView_Get.ProtoReflect.Descriptor instead.
 func (*RoleView_Get) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{3, 0}
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{9, 0}
+}
+
+func (x *RoleView_Get) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
 }
 
 type RoleView_List struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Limit         int32                  `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset        int32                  `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RoleView_List) Reset() {
 	*x = RoleView_List{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[10]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -868,7 +1114,7 @@ func (x *RoleView_List) String() string {
 func (*RoleView_List) ProtoMessage() {}
 
 func (x *RoleView_List) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[10]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -881,18 +1127,33 @@ func (x *RoleView_List) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleView_List.ProtoReflect.Descriptor instead.
 func (*RoleView_List) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{3, 1}
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{9, 1}
+}
+
+func (x *RoleView_List) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *RoleView_List) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
 }
 
 type RoleView_Search struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Keyword       string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RoleView_Search) Reset() {
 	*x = RoleView_Search{}
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[11]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -904,7 +1165,7 @@ func (x *RoleView_Search) String() string {
 func (*RoleView_Search) ProtoMessage() {}
 
 func (x *RoleView_Search) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[11]
+	mi := &file_iam_authz_v1_resources_role_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -917,14 +1178,21 @@ func (x *RoleView_Search) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleView_Search.ProtoReflect.Descriptor instead.
 func (*RoleView_Search) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{3, 2}
+	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{9, 2}
+}
+
+func (x *RoleView_Search) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
 }
 
 var File_iam_authz_v1_resources_role_proto protoreflect.FileDescriptor
 
 const file_iam_authz_v1_resources_role_proto_rawDesc = "" +
 	"\n" +
-	"!iam/authz/v1/resources/role.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xdc\x03\n" +
+	"!iam/authz/v1/resources/role.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a+core/common/v1/resources/auth_options.proto\x1a#iam/authz/v1/resources/common.proto\"\xdc\x03\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12\x19\n" +
@@ -938,64 +1206,83 @@ const file_iam_authz_v1_resources_role_proto_rawDesc = "" +
 	"\tis_system\x18\t \x01(\bR\bisSystem\x12\x19\n" +
 	"\bis_super\x18\n" +
 	" \x01(\bR\aisSuper\x12\x1b\n" +
-	"\tis_active\x18\v \x01(\bR\bisActive\x12\x1b\n" +
-	"\tcreate_by\x18\f \x01(\tR\bcreateBy\x12\x1b\n" +
-	"\tupdate_by\x18\r \x01(\tR\bupdateBy\x12;\n" +
-	"\vcreate_date\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"createDate\x12;\n" +
-	"\vupdate_date\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"updateDate\"\xbc\b\n" +
+	"\tis_active\x18\v \x01(\bR\bisActive\x12\x1d\n" +
+	"\n" +
+	"created_by\x18\f \x01(\tR\tcreatedBy\x12\x1d\n" +
+	"\n" +
+	"updated_by\x18\r \x01(\tR\tupdatedBy\x129\n" +
+	"\n" +
+	"created_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xb9\x01\n" +
 	"\fRoleMutation\x12\x1c\n" +
-	"\x05op_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04opId\x125\n" +
-	"\x06create\x18\x02 \x01(\v2\x1b.iam.v1.RoleMutation.CreateH\x00R\x06create\x125\n" +
-	"\x06update\x18\x03 \x01(\v2\x1b.iam.v1.RoleMutation.UpdateH\x00R\x06update\x125\n" +
-	"\x06delete\x18\x04 \x01(\v2\x1b.iam.v1.RoleMutation.DeleteH\x00R\x06delete\x1a\xfb\x02\n" +
-	"\x06Create\x12>\n" +
-	"\x04data\x18\x01 \x01(\v2 .iam.v1.RoleMutation.Create.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a\x98\x02\n" +
-	"\x04Data\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
-	"\bscope_id\x18\x02 \x01(\tR\ascopeId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1d\n" +
-	"\n" +
-	"scope_type\x18\x05 \x01(\tR\tscopeType\x12!\n" +
-	"\faccess_scope\x18\x06 \x01(\tR\vaccessScope\x12\x14\n" +
-	"\x05level\x18\a \x01(\x05R\x05level\x12\x1b\n" +
-	"\tis_system\x18\b \x01(\bR\bisSystem\x12\x19\n" +
-	"\bis_super\x18\t \x01(\bR\aisSuper\x12\x1b\n" +
-	"\tis_active\x18\n" +
-	" \x01(\bR\bisActive:\x16\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06CREATE\xa8\xb5\x18\x01\x1a\x9a\x03\n" +
-	"\x06Update\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12>\n" +
-	"\x04data\x18\x02 \x01(\v2 .iam.v1.RoleMutation.Update.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a\x98\x02\n" +
-	"\x04Data\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x19\n" +
-	"\bscope_id\x18\x02 \x01(\tR\ascopeId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1d\n" +
-	"\n" +
-	"scope_type\x18\x05 \x01(\tR\tscopeType\x12!\n" +
-	"\faccess_scope\x18\x06 \x01(\tR\vaccessScope\x12\x14\n" +
-	"\x05level\x18\a \x01(\x05R\x05level\x12\x1b\n" +
-	"\tis_system\x18\b \x01(\bR\bisSystem\x12\x19\n" +
-	"\bis_super\x18\t \x01(\bR\aisSuper\x12\x1b\n" +
-	"\tis_active\x18\n" +
-	" \x01(\bR\bisActive:\x1c\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06UPDATE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01\x1a?\n" +
-	"\x06Delete\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id:\x1c\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01B\r\n" +
+	"\x05op_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04opId\x12(\n" +
+	"\x06create\x18\x02 \x01(\v2\x0e.iam.v1.CreateH\x00R\x06create\x12(\n" +
+	"\x06update\x18\x03 \x01(\v2\x0e.iam.v1.UpdateH\x00R\x06update\x12(\n" +
+	"\x06delete\x18\x04 \x01(\v2\x0e.iam.v1.DeleteH\x00R\x06deleteB\r\n" +
 	"\x06action\x12\x03\xf8B\x01\"Q\n" +
 	"\x11RoleMutateRequest\x12<\n" +
-	"\tmutations\x18\x01 \x03(\v2\x14.iam.v1.RoleMutationB\b\xfaB\x05\x92\x01\x02\b\x01R\tmutations\"\xd1\x01\n" +
+	"\tmutations\x18\x01 \x03(\v2\x14.iam.v1.RoleMutationB\b\xfaB\x05\x92\x01\x02\b\x01R\tmutations\"\xfc\x02\n" +
+	"\x06Create\x121\n" +
+	"\x04data\x18\x01 \x01(\v2\x13.iam.v1.Create.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a\xaa\x02\n" +
+	"\x04Data\x12\x1b\n" +
+	"\x04code\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04code\x12\x1b\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x19\n" +
+	"\bscope_id\x18\x04 \x01(\tR\ascopeId\x12\x1d\n" +
+	"\n" +
+	"scope_type\x18\x05 \x01(\tR\tscopeType\x12!\n" +
+	"\faccess_scope\x18\x06 \x01(\tR\vaccessScope\x12\x14\n" +
+	"\x05level\x18\a \x01(\x05R\x05level\x12\x1b\n" +
+	"\tis_system\x18\b \x01(\bR\bisSystem\x12\x19\n" +
+	"\bis_super\x18\t \x01(\bR\aisSuper\x12\x1b\n" +
+	"\tis_active\x18\n" +
+	" \x01(\bR\bisActive:\x12\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06CREATE\"\x9b\x03\n" +
+	"\x06Update\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x121\n" +
+	"\x04data\x18\x02 \x01(\v2\x13.iam.v1.Update.DataB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x04data\x1a\xaa\x02\n" +
+	"\x04Data\x12\x1b\n" +
+	"\x04code\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04code\x12\x1b\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x19\n" +
+	"\bscope_id\x18\x04 \x01(\tR\ascopeId\x12\x1d\n" +
+	"\n" +
+	"scope_type\x18\x05 \x01(\tR\tscopeType\x12!\n" +
+	"\faccess_scope\x18\x06 \x01(\tR\vaccessScope\x12\x14\n" +
+	"\x05level\x18\a \x01(\x05R\x05level\x12\x1b\n" +
+	"\tis_system\x18\b \x01(\bR\bisSystem\x12\x19\n" +
+	"\bis_super\x18\t \x01(\bR\aisSuper\x12\x1b\n" +
+	"\tis_active\x18\n" +
+	" \x01(\bR\bisActive:\x18\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06UPDATE\x9a\xb5\x18\x02id\";\n" +
+	"\x06Delete\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id:\x18\x8a\xb5\x18\x04ROLE\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\"B\n" +
+	"\fCreateResult\x122\n" +
+	"\n" +
+	"roleResult\x18\x01 \x01(\v2\x12.iam.v1.RoleResultR\n" +
+	"roleResult\"B\n" +
+	"\fUpdateResult\x122\n" +
+	"\n" +
+	"roleResult\x18\x01 \x01(\v2\x12.iam.v1.RoleResultR\n" +
+	"roleResult\"\x0e\n" +
+	"\fDeleteResult\"\xa4\x02\n" +
 	"\bRoleView\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opId\x12(\n" +
 	"\x03get\x18\x02 \x01(\v2\x14.iam.v1.RoleView.GetH\x00R\x03get\x12+\n" +
 	"\x04list\x18\x03 \x01(\v2\x15.iam.v1.RoleView.ListH\x00R\x04list\x121\n" +
-	"\x06search\x18\x04 \x01(\v2\x17.iam.v1.RoleView.SearchH\x00R\x06search\x1a\x05\n" +
-	"\x03Get\x1a\x06\n" +
-	"\x04List\x1a\b\n" +
-	"\x06SearchB\r\n" +
-	"\x06action\x12\x03\xf8B\x01B\x7f\n" +
-	"\x1dcom.aliasadi.iam.v1.resourcesP\x01Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
+	"\x06search\x18\x04 \x01(\v2\x17.iam.v1.RoleView.SearchH\x00R\x06search\x1a\x15\n" +
+	"\x03Get\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x1a4\n" +
+	"\x04List\x12\x14\n" +
+	"\x05limit\x18\x01 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06offset\x18\x02 \x01(\x05R\x06offset\x1a\"\n" +
+	"\x06Search\x12\x18\n" +
+	"\akeyword\x18\x01 \x01(\tR\akeywordB\b\n" +
+	"\x06action\"\x1b\n" +
+	"\tGetResult\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\f\n" +
+	"\n" +
+	"ListResult\"\x0e\n" +
+	"\fSearchResultB^Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
 
 var (
 	file_iam_authz_v1_resources_role_proto_rawDescOnce sync.Once
@@ -1009,39 +1296,48 @@ func file_iam_authz_v1_resources_role_proto_rawDescGZIP() []byte {
 	return file_iam_authz_v1_resources_role_proto_rawDescData
 }
 
-var file_iam_authz_v1_resources_role_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_iam_authz_v1_resources_role_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_iam_authz_v1_resources_role_proto_goTypes = []any{
-	(*Role)(nil),                     // 0: iam.v1.Role
-	(*RoleMutation)(nil),             // 1: iam.v1.RoleMutation
-	(*RoleMutateRequest)(nil),        // 2: iam.v1.RoleMutateRequest
-	(*RoleView)(nil),                 // 3: iam.v1.RoleView
-	(*RoleMutation_Create)(nil),      // 4: iam.v1.RoleMutation.Create
-	(*RoleMutation_Update)(nil),      // 5: iam.v1.RoleMutation.Update
-	(*RoleMutation_Delete)(nil),      // 6: iam.v1.RoleMutation.Delete
-	(*RoleMutation_Create_Data)(nil), // 7: iam.v1.RoleMutation.Create.Data
-	(*RoleMutation_Update_Data)(nil), // 8: iam.v1.RoleMutation.Update.Data
-	(*RoleView_Get)(nil),             // 9: iam.v1.RoleView.Get
-	(*RoleView_List)(nil),            // 10: iam.v1.RoleView.List
-	(*RoleView_Search)(nil),          // 11: iam.v1.RoleView.Search
-	(*timestamppb.Timestamp)(nil),    // 12: google.protobuf.Timestamp
+	(*Role)(nil),                  // 0: iam.v1.Role
+	(*RoleMutation)(nil),          // 1: iam.v1.RoleMutation
+	(*RoleMutateRequest)(nil),     // 2: iam.v1.RoleMutateRequest
+	(*Create)(nil),                // 3: iam.v1.Create
+	(*Update)(nil),                // 4: iam.v1.Update
+	(*Delete)(nil),                // 5: iam.v1.Delete
+	(*CreateResult)(nil),          // 6: iam.v1.CreateResult
+	(*UpdateResult)(nil),          // 7: iam.v1.UpdateResult
+	(*DeleteResult)(nil),          // 8: iam.v1.DeleteResult
+	(*RoleView)(nil),              // 9: iam.v1.RoleView
+	(*GetResult)(nil),             // 10: iam.v1.GetResult
+	(*ListResult)(nil),            // 11: iam.v1.ListResult
+	(*SearchResult)(nil),          // 12: iam.v1.SearchResult
+	(*Create_Data)(nil),           // 13: iam.v1.Create.Data
+	(*Update_Data)(nil),           // 14: iam.v1.Update.Data
+	(*RoleView_Get)(nil),          // 15: iam.v1.RoleView.Get
+	(*RoleView_List)(nil),         // 16: iam.v1.RoleView.List
+	(*RoleView_Search)(nil),       // 17: iam.v1.RoleView.Search
+	(*timestamppb.Timestamp)(nil), // 18: google.protobuf.Timestamp
+	(*RoleResult)(nil),            // 19: iam.v1.RoleResult
 }
 var file_iam_authz_v1_resources_role_proto_depIdxs = []int32{
-	12, // 0: iam.v1.Role.create_date:type_name -> google.protobuf.Timestamp
-	12, // 1: iam.v1.Role.update_date:type_name -> google.protobuf.Timestamp
-	4,  // 2: iam.v1.RoleMutation.create:type_name -> iam.v1.RoleMutation.Create
-	5,  // 3: iam.v1.RoleMutation.update:type_name -> iam.v1.RoleMutation.Update
-	6,  // 4: iam.v1.RoleMutation.delete:type_name -> iam.v1.RoleMutation.Delete
+	18, // 0: iam.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	18, // 1: iam.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	3,  // 2: iam.v1.RoleMutation.create:type_name -> iam.v1.Create
+	4,  // 3: iam.v1.RoleMutation.update:type_name -> iam.v1.Update
+	5,  // 4: iam.v1.RoleMutation.delete:type_name -> iam.v1.Delete
 	1,  // 5: iam.v1.RoleMutateRequest.mutations:type_name -> iam.v1.RoleMutation
-	9,  // 6: iam.v1.RoleView.get:type_name -> iam.v1.RoleView.Get
-	10, // 7: iam.v1.RoleView.list:type_name -> iam.v1.RoleView.List
-	11, // 8: iam.v1.RoleView.search:type_name -> iam.v1.RoleView.Search
-	7,  // 9: iam.v1.RoleMutation.Create.data:type_name -> iam.v1.RoleMutation.Create.Data
-	8,  // 10: iam.v1.RoleMutation.Update.data:type_name -> iam.v1.RoleMutation.Update.Data
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	13, // 6: iam.v1.Create.data:type_name -> iam.v1.Create.Data
+	14, // 7: iam.v1.Update.data:type_name -> iam.v1.Update.Data
+	19, // 8: iam.v1.CreateResult.roleResult:type_name -> iam.v1.RoleResult
+	19, // 9: iam.v1.UpdateResult.roleResult:type_name -> iam.v1.RoleResult
+	15, // 10: iam.v1.RoleView.get:type_name -> iam.v1.RoleView.Get
+	16, // 11: iam.v1.RoleView.list:type_name -> iam.v1.RoleView.List
+	17, // 12: iam.v1.RoleView.search:type_name -> iam.v1.RoleView.Search
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_iam_authz_v1_resources_role_proto_init() }
@@ -1049,12 +1345,13 @@ func file_iam_authz_v1_resources_role_proto_init() {
 	if File_iam_authz_v1_resources_role_proto != nil {
 		return
 	}
+	file_iam_authz_v1_resources_common_proto_init()
 	file_iam_authz_v1_resources_role_proto_msgTypes[1].OneofWrappers = []any{
-		(*RoleMutation_Create_)(nil),
-		(*RoleMutation_Update_)(nil),
-		(*RoleMutation_Delete_)(nil),
+		(*RoleMutation_Create)(nil),
+		(*RoleMutation_Update)(nil),
+		(*RoleMutation_Delete)(nil),
 	}
-	file_iam_authz_v1_resources_role_proto_msgTypes[3].OneofWrappers = []any{
+	file_iam_authz_v1_resources_role_proto_msgTypes[9].OneofWrappers = []any{
 		(*RoleView_Get_)(nil),
 		(*RoleView_List_)(nil),
 		(*RoleView_Search_)(nil),
@@ -1065,7 +1362,7 @@ func file_iam_authz_v1_resources_role_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_authz_v1_resources_role_proto_rawDesc), len(file_iam_authz_v1_resources_role_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

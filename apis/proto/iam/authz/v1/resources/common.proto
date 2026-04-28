@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package iam.v1;
+
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespb";
+
+import "google/protobuf/timestamp.proto";
+
+message RoleResult {
+    string id = 1;          
+	string name = 2;        
+	string description = 3; 
+	google.protobuf.Timestamp create_at = 4;    
+	google.protobuf.Timestamp update_at = 5;   
+}
