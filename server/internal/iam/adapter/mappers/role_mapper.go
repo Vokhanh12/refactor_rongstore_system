@@ -5,9 +5,11 @@ import (
 
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
 	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
@@ -20,9 +22,20 @@ func RoleMutateRequestToBatch(req *authzrs.RoleMutateRequest) authzuc.RoleMutati
 	items := make([]coreuc.Operation[authzuc.RoleMutation], 0, len(req.Mutations))
 
 	for _, m := range req.Mutations {
+		payload, err := DecodeRoleMutation(m.Action)
+
+		if err != nil {
+			items = append(items, coreuc.Operation[authzuc.RoleMutation]{
+				OpID:    m.OpId,
+				Payload: payload,
+				Success: false,
+			})
+		}
+
 		items = append(items, coreuc.Operation[authzuc.RoleMutation]{
 			OpID:    m.OpId,
-			Payload: MapRoleActionRequest(m.Action),
+			Payload: payload,
+			Success: true,
 		})
 	}
 
@@ -33,15 +46,19 @@ func RoleMutateRequestToBatch(req *authzrs.RoleMutateRequest) authzuc.RoleMutati
 // ACTION → COMMAND
 // ============================================================
 
-func MapRoleActionRequest(action any) authzuc.RoleMutation {
+func DecodeRoleMutation(action any) (authzuc.RoleMutation, *aerrs.AppError) {
 
 	switch v := action.(type) {
 
 	case *authzrs.RoleMutation_Create:
+		scopeID, err := cif.UUIDParse(v.Create.Data.ScopeId)
+		if err != nil {
+			return authzuc.RoleMutation{}, err
+		}
 		return authzuc.RoleMutation{
 			Create: &cmd.CreateRoleCommand{
 				Code:            v.Create.Data.Code,
-				ScopeID:         v.Create.Data.ScopeId,
+				ScopeID:         *scopeID,
 				RoleScopeType:   v.Create.Data.ScopeType,
 				Name:            v.Create.Data.Name,
 				Description:     v.Create.Data.Description,
@@ -51,12 +68,16 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 				IsActive:        v.Create.Data.IsActive,
 				IsSuper:         v.Create.Data.IsSuper,
 			},
-		}
+		}, nil
 
 	case *authzrs.RoleMutation_Update:
+		id, err := cif.UUIDParse(v.Update.Id)
+		if err != nil {
+			return authzuc.RoleMutation{}, err
+		}
 		return authzuc.RoleMutation{
 			Update: &cmd.UpdateRoleCommand{
-				ID:              v.Update.Id,
+				ID:              *id,
 				Code:            v.Update.Data.Code,
 				ScopeID:         v.Update.Data.ScopeId,
 				RoleScopeType:   v.Update.Data.ScopeType,
@@ -68,18 +89,22 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 				IsActive:        v.Update.Data.IsActive,
 				IsSuper:         v.Update.Data.IsSuper,
 			},
-		}
+		}, nil
 
 	case *authzrs.RoleMutation_Delete:
+		id, err := cif.UUIDParse(v.Delete.Id)
+		if err != nil {
+			return authzuc.RoleMutation{}, err
+		}
 		return authzuc.RoleMutation{
 			Delete: &cmd.DeleteRoleCommand{
-				ID: v.Delete.Id,
+				ID: *id,
 			},
-		}
+		}, nil
 
 	default:
 		corem.Must(fmt.Sprintf("unknown action type: %T", action))
-		return authzuc.RoleMutation{}
+		return authzuc.RoleMutation{}, nil
 	}
 }
 
@@ -87,7 +112,7 @@ func MapRoleActionRequest(action any) authzuc.RoleMutation {
 // COMMAND RESULT → PROTO RESPONSE (DATA PART)
 // ============================================================
 
-func MapRoleActionResponse(data any) *anypb.Any {
+func EncoreRoleMutation(data any) *anypb.Any {
 
 	switch v := data.(type) {
 

@@ -5,8 +5,9 @@ import (
 
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
-	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	crm "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
+	mps "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
@@ -30,12 +31,10 @@ func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRe
 	results := a.roleMutateUsecase.Execute(ctx, batch)
 
 	for _, item := range results.Items {
-
 		if item.Error != nil {
 			a.logger.Error(ctx, "iam_handler.role_mutate", item.Error.Internal, nil)
 		}
-
 	}
 
-	return corem.BuildMutateResponse(ctx, results, mappers.MapRoleActionProto(results.Items)), nil
+	return crm.BuildMutateResponse(ctx, results, mps.EncoreRoleMutation), nil
 }

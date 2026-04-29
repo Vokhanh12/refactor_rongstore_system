@@ -9,6 +9,7 @@ import (
 type Operation[T any] struct {
 	OpID    string
 	Payload T
+	Success bool
 }
 
 type Handler[T any] struct {

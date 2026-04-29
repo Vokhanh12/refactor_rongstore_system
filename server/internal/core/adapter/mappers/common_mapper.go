@@ -2,6 +2,7 @@ package mappers
 
 import (
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+	"google.golang.org/protobuf/types/known/anypb"
 
 	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
@@ -11,7 +12,7 @@ import (
 // TO → PROTO
 // ============================================================
 
-func AppErrorToProto(it *dtos.ErrorDTO) *protos.Error {
+func appErrorToProto(it *dtos.ErrorDTO) *protos.Error {
 
 	if it == nil {
 		return nil
@@ -20,7 +21,7 @@ func AppErrorToProto(it *dtos.ErrorDTO) *protos.Error {
 	items := make([]*protos.ErrorDetail, 0, len(it.External.Details))
 
 	for _, d := range it.External.Details {
-		items = append(items, AppErrorDetailToProto(d))
+		items = append(items, appErrorDetailToProto(d))
 	}
 
 	return &protos.Error{
@@ -41,7 +42,7 @@ func AppErrorToProto(it *dtos.ErrorDTO) *protos.Error {
 	}
 }
 
-func AppErrorDetailToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
+func appErrorDetailToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
 	return &protos.ErrorDetail{
 		Field:   it.Field,
 		Message: it.Message,
@@ -50,12 +51,16 @@ func AppErrorDetailToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
 	}
 }
 
-func MutateResultToProto(dto dtos.MutateResultDTO, MutateResultItemToProto func(action any) *protos.MutateResultItem) *protos.MutateResult {
+func mutateResultToProto(dto dtos.MutateResultDTO, mapActionData func(data any) *anypb.Any) *protos.MutateResult {
 
 	items := make([]*protos.MutateResultItem, 0, len(dto.Items))
 
 	for _, it := range dto.Items {
-		items = append(items, MutateResultItemToProto(it))
+		items = append(items, &protos.MutateResultItem{
+			OpId:  it.OpID,
+			Data:  mapActionData(it.Data),
+			Error: appErrorToProto(it.Error),
+		})
 	}
 
 	return &protos.MutateResult{
@@ -67,7 +72,7 @@ func MutateResultToProto(dto dtos.MutateResultDTO, MutateResultItemToProto func(
 // TO → DTO
 // ============================================================
 
-func AppErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
+func appErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
 	if it == nil {
 		return nil
 	}
@@ -75,7 +80,7 @@ func AppErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
 	details := make([]dtos.ErrorDetailDTO, 0)
 	if it.ErrorDetails != nil {
 		for _, d := range it.ErrorDetails {
-			details = append(details, AppErrorDetailToDTO(d))
+			details = append(details, appErrorDetailToDTO(d))
 		}
 	}
 
@@ -100,7 +105,7 @@ func AppErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
 	}
 }
 
-func AppErrorDetailToDTO(it aerrs.AppErrorDetail) dtos.ErrorDetailDTO {
+func appErrorDetailToDTO(it aerrs.AppErrorDetail) dtos.ErrorDetailDTO {
 	return dtos.ErrorDetailDTO{
 		Field:   it.Field,
 		Message: it.Message,

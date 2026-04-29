@@ -22,19 +22,34 @@ func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T]) []d
 	results := make([]dtos.MutateResultItemDTO, 0, len(items))
 
 	for _, item := range items {
+
+		// 1. Reject trước khi xử lý
+		if !item.Success {
+			results = append(results, mappers.BuildMutateResult(
+				item.OpID,
+				nil,
+				aerrs.New(errs.MUTATE_OPERATION_REJECT),
+			))
+			continue
+		}
+
 		var (
-			data any
-			err  *aerrs.AppError
+			data    any
+			err     *aerrs.AppError
+			matched bool
 		)
 
+		// 2. Handler execution
 		for _, h := range e.handlers {
 			if h.Cond(item.Payload) {
+				matched = true
 				data, err = h.Exec(ctx, item.Payload)
 				break
 			}
 		}
 
-		if err == nil && data == nil {
+		// 3. No handler match
+		if !matched {
 			err = aerrs.New(errs.MUTATE_OPERATION_UNSUPPORTED)
 		}
 
