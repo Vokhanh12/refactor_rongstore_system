@@ -28,14 +28,15 @@ func RoleMutateRequestToBatch(req *authzrs.RoleMutateRequest) authzuc.RoleMutati
 			items = append(items, coreuc.Operation[authzuc.RoleMutation]{
 				OpID:    m.OpId,
 				Payload: payload,
-				Success: false,
+				Error:   err,
 			})
+			continue
 		}
 
 		items = append(items, coreuc.Operation[authzuc.RoleMutation]{
 			OpID:    m.OpId,
 			Payload: payload,
-			Success: true,
+			Error:   nil,
 		})
 	}
 

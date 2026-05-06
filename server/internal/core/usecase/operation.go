@@ -9,7 +9,7 @@ import (
 type Operation[T any] struct {
 	OpID    string
 	Payload T
-	Success bool
+	Error   *aerrs.AppError
 }
 
 type Handler[T any] struct {

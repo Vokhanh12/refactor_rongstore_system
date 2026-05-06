@@ -24,11 +24,11 @@ func (e *MutateEngine[T]) Execute(ctx context.Context, items []Operation[T]) []d
 	for _, item := range items {
 
 		// 1. Reject trước khi xử lý
-		if !item.Success {
+		if item.Error != nil {
 			results = append(results, mappers.BuildMutateResult(
 				item.OpID,
 				nil,
-				aerrs.New(errs.MUTATE_OPERATION_REJECT),
+				aerrs.New(*item.Error),
 			))
 			continue
 		}

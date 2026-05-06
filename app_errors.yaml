@@ -47,6 +47,16 @@ services:
           severity: S2
           retryable: false
 
+        - code: CORE-MUT-004
+          key: MUTATE_PARSE_FAILED
+          component: mutate_engine
+          tags: [validation, client]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Failed to parse mutation payload"
+          severity: S3
+          retryable: false  
+          
       VIE:
         - code: CORE-VIE-001
           key: VIEW_OPERATION_UNSUPPORTED

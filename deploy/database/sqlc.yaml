@@ -1,0 +1,36 @@
+version: "2"
+
+sql:
+  # ===== IAM =====
+  - engine: postgresql
+    schema:
+      - sql/schema/iam/001_IAM.sql
+    queries:
+      - sql/queries/IAM.sql
+    gen:
+      go:
+        package: iam_sqlc
+        out: internal/iam/infrastructure/db/sqlc
+        sql_package: database/sql
+        emit_interface: true
+        emit_json_tags: true
+        overrides:
+          - db_type: uuid
+            go_type: github.com/google/uuid.UUID
+
+  # # ===== STORE OWNER =====
+  # - engine: postgresql
+  #   schema:
+  #     - sql/schema/rongstore/001_STORE_OWNER.sql
+  #   queries:
+  #     - sql/queries/STORE_OWNERS.sql
+  #   gen:
+  #     go:
+  #       package: store_owner_sqlc
+  #       out: internal/iam/infrastructure/db/sqlc/rongstore
+  #       sql_package: database/sql
+  #       emit_interface: true
+  #       emit_json_tags: true
+  #       overrides:
+  #         - db_type: uuid
+  #           go_type: github.com/google/uuid.UUID
