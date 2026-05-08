@@ -52,14 +52,14 @@ func DecodeRoleMutation(action any) (authzuc.RoleMutation, *aerrs.AppError) {
 	switch v := action.(type) {
 
 	case *authzrs.RoleMutation_Create:
-		scopeID, err := cif.UUIDParse(v.Create.Data.ScopeId)
+		scopeID, err := cif.ParseUUID(v.Create.Data.ScopeId)
 		if err != nil {
 			return authzuc.RoleMutation{}, err
 		}
 		return authzuc.RoleMutation{
 			Create: &cmd.CreateRoleCommand{
 				Code:            v.Create.Data.Code,
-				ScopeID:         *scopeID,
+				ScopeID:         scopeID,
 				RoleScopeType:   v.Create.Data.ScopeType,
 				Name:            v.Create.Data.Name,
 				Description:     v.Create.Data.Description,
@@ -72,7 +72,8 @@ func DecodeRoleMutation(action any) (authzuc.RoleMutation, *aerrs.AppError) {
 		}, nil
 
 	case *authzrs.RoleMutation_Update:
-		id, err := cif.UUIDParse(v.Update.Id)
+		id, err := cif.ParseUUID(&v.Update.Id)
+		scopeID, err := cif.ParseUUID(v.Update.Data.ScopeId)
 		if err != nil {
 			return authzuc.RoleMutation{}, err
 		}
@@ -80,7 +81,7 @@ func DecodeRoleMutation(action any) (authzuc.RoleMutation, *aerrs.AppError) {
 			Update: &cmd.UpdateRoleCommand{
 				ID:              *id,
 				Code:            v.Update.Data.Code,
-				ScopeID:         v.Update.Data.ScopeId,
+				ScopeID:         scopeID,
 				RoleScopeType:   v.Update.Data.ScopeType,
 				Name:            v.Update.Data.Name,
 				Description:     v.Update.Data.Description,
@@ -93,7 +94,7 @@ func DecodeRoleMutation(action any) (authzuc.RoleMutation, *aerrs.AppError) {
 		}, nil
 
 	case *authzrs.RoleMutation_Delete:
-		id, err := cif.UUIDParse(v.Delete.Id)
+		id, err := cif.ParseUUID(&v.Delete.Id)
 		if err != nil {
 			return authzuc.RoleMutation{}, err
 		}

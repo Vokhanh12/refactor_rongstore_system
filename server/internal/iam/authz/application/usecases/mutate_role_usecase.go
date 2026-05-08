@@ -99,7 +99,6 @@ func (u *MutateRoleUsecase) handleCreate(
 	}
 
 	role, err := en.NewRole(en.NewRoleParams{
-		ID:              cmd.ID,
 		RoleRef:         roleRef,
 		RoleScopeType:   scopeType,
 		Name:            cmd.Name,

@@ -6,11 +6,11 @@ import (
 )
 
 type CreateRoleCommand struct {
-	ScopeID         uuid.UUID
+	ScopeID         *uuid.UUID
 	RoleScopeType   string
 	Code            string
 	Name            string
-	Description     string
+	Description     *string
 	RoleAccessScope string
 	Level           int32
 	IsSystem        bool
@@ -23,11 +23,11 @@ type CreateRoleCommandResult struct {
 
 type UpdateRoleCommand struct {
 	ID              uuid.UUID
-	ScopeID         string
+	ScopeID         *uuid.UUID
 	RoleScopeType   string
 	Code            string
 	Name            string
-	Description     string
+	Description     *string
 	RoleAccessScope string
 	Level           int32
 	IsSystem        bool

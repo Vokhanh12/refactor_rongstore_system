@@ -16,14 +16,14 @@ import "iam/authz/v1/resources/common.proto";
 message Role {
   string id = 1;
   string code = 2;
-  string scope_id = 3;
+  optional string scope_id = 3;
 
   string name = 4;
   string scope_type = 5;
   string access_scope = 6;
 
   int32 level = 7;
-  string description = 8;
+  optional string description = 8;
 
   bool is_system = 9;
   bool is_super = 10;
@@ -69,9 +69,9 @@ message Create {
   message Data {
     string code = 1 [(validate.rules).string = {min_len: 1}];
     string name = 2 [(validate.rules).string = {min_len: 1}];
-    string description = 3;
+    optional string description = 3;
 
-    string scope_id = 4;
+    optional string scope_id = 4;
     string scope_type = 5;
     string access_scope = 6;
 
@@ -99,9 +99,9 @@ message Update {
   message Data {
     string code = 1 [(validate.rules).string = {min_len: 1}];
     string name = 2 [(validate.rules).string = {min_len: 1}];
-    string description = 3;
+    optional string description = 3;
 
-    string scope_id = 4;
+    optional string scope_id = 4;
     string scope_type = 5;
     string access_scope = 6;
 

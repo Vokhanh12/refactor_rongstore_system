@@ -22,7 +22,7 @@ type Role struct {
 
 	scopeType   enu.RoleScopeType
 	accessScope enu.RoleAccessScope
-	level       uint8
+	level       int32
 	description *string
 
 	isSystem bool
@@ -31,12 +31,11 @@ type Role struct {
 }
 
 type NewRoleParams struct {
-	ID              uuid.UUID
 	RoleRef         vo.RoleRef
 	RoleScopeType   enu.RoleScopeType
 	Name            string
 	RoleAccessScope enu.RoleAccessScope
-	Level           uint8
+	Level           int32
 	Description     *string
 	IsSystem        bool
 	IsSuper         bool
@@ -62,7 +61,7 @@ func NewRole(it NewRoleParams) (*Role, *aerrs.AppError) {
 	}
 
 	return &Role{
-		id:          it.ID,
+		id:          uuid.Must(uuid.NewV7()),
 		roleRef:     it.RoleRef,
 		name:        it.Name,
 		scopeType:   it.RoleScopeType,
@@ -81,7 +80,7 @@ func NewRole(it NewRoleParams) (*Role, *aerrs.AppError) {
 
 func RestoreRole(it NewRoleParams) Role {
 	return Role{
-		id:          it.ID,
+		id:          uuid.Must(uuid.NewV7()),
 		roleRef:     it.RoleRef,
 		name:        it.Name,
 		scopeType:   it.RoleScopeType,
