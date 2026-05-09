@@ -3,7 +3,7 @@ package grpc
 import (
 	"fmt"
 
-	comv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	comv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"

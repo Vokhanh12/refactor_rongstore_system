@@ -5,9 +5,9 @@ import (
 
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
-	crm "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
-	mps "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mappers"
+	crm "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/assemblers"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/assemblers"
+	mps "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/assemblers"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
@@ -26,7 +26,7 @@ func NewAuthzHandler(roleMutateUc uc.MutateRoleUsecase, logger logger.Logger) *A
 
 // RoleMutate implements [grpc.AuthzPort].
 func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRequest) (*commonv1.MutateResponse, error) {
-	batch := mappers.RoleMutateRequestToBatch(req)
+	batch := assemblers.RoleMutateRequestToBatch(req)
 
 	results := a.roleMutateUsecase.Execute(ctx, batch)
 

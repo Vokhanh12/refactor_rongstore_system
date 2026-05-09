@@ -1,4 +1,4 @@
-package mappers
+package assemblers
 
 import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
@@ -50,40 +50,44 @@ func RoleToExistsByCodeScopeParams(roleScopeType enu.RoleScopeType, roleRef vo.R
 
 func CreateRoleRowToEntity(row db.CreateRoleRow) entities.Role {
 	return entities.RestoreRole(
-		entities.NewRoleParams{
+		entities.RestoreRoleParams{
 			ID: row.ID,
-			RoleRef: vo.RestoreRoleRef(
-				row.Code,
-				pg.UUIDPtrFromPgUUID(row.ScopeID),
-			),
-			RoleScopeType:   RoleScopeTypeFromDB(row.RoleScopeType),
-			Name:            row.Name,
-			RoleAccessScope: RoleAccessScopeFromDB(row.RoleAccessScope),
-			Level:           pg.Uint8FromInt32(row.Level),
-			Description:     pg.StringPtrFromText(row.Description),
-			IsSystem:        row.IsSystem,
-			IsSuper:         row.IsSuper,
-			IsActive:        row.IsActive,
+			RolePayload: entities.RolePayload{
+				RoleRef: vo.RestoreRoleRef(
+					row.Code,
+					pg.UUIDPtrFromPgUUID(row.ScopeID),
+				),
+				RoleScopeType:   RoleScopeTypeFromDB(row.RoleScopeType),
+				Name:            row.Name,
+				RoleAccessScope: RoleAccessScopeFromDB(row.RoleAccessScope),
+				Level:           row.Level,
+				Description:     pg.StringPtrFromText(row.Description),
+				IsSystem:        row.IsSystem,
+				IsSuper:         row.IsSuper,
+				IsActive:        row.IsActive,
+			},
 		},
 	)
 }
 
 func UpdateRoleRowToEntity(row db.UpdateRoleRow) entities.Role {
 	return entities.RestoreRole(
-		entities.NewRoleParams{
+		entities.RestoreRoleParams{
 			ID: row.ID,
-			RoleRef: vo.RestoreRoleRef(
-				row.Code,
-				pg.UUIDPtrFromPgUUID(row.ScopeID),
-			),
-			RoleScopeType:   RoleScopeTypeFromDB(row.RoleScopeType),
-			Name:            row.Name,
-			RoleAccessScope: RoleAccessScopeFromDB(row.RoleAccessScope),
-			Level:           pg.Uint8FromInt32(row.Level),
-			Description:     pg.StringPtrFromText(row.Description),
-			IsSystem:        row.IsSystem,
-			IsSuper:         row.IsSuper,
-			IsActive:        row.IsActive,
+			RolePayload: entities.RolePayload{
+				RoleRef: vo.RestoreRoleRef(
+					row.Code,
+					pg.UUIDPtrFromPgUUID(row.ScopeID),
+				),
+				RoleScopeType:   RoleScopeTypeFromDB(row.RoleScopeType),
+				Name:            row.Name,
+				RoleAccessScope: RoleAccessScopeFromDB(row.RoleAccessScope),
+				Level:           row.Level,
+				Description:     pg.StringPtrFromText(row.Description),
+				IsSystem:        row.IsSystem,
+				IsSuper:         row.IsSuper,
+				IsActive:        row.IsActive,
+			},
 		},
 	)
 }

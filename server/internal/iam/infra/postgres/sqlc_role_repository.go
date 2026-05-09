@@ -9,7 +9,7 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	pgmappers "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mappers"
+	pgassemblers "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/assemblers"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
@@ -30,14 +30,14 @@ func NewSqlcRoleRepository(queries *db.Queries, dberr dberr.DBError) repositorie
 func (s *SqlcRoleRepository) Create(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 
 	createdRecord, err := s.queries.CreateRole(
-		ctx, pgmappers.RoleToCreateParams(role),
+		ctx, pgassemblers.RoleToCreateParams(role),
 	)
 
 	if err != nil {
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
 
-	entity := pgmappers.CreateRoleRowToEntity(createdRecord)
+	entity := pgassemblers.CreateRoleRowToEntity(createdRecord)
 
 	return &entity, nil
 }
@@ -56,14 +56,14 @@ func (s *SqlcRoleRepository) Delete(ctx context.Context, id uuid.UUID) *apperror
 // Update implements [repositories.RoleRepository].
 func (s *SqlcRoleRepository) Update(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 	updatedRecord, err := s.queries.UpdateRole(
-		ctx, pgmappers.RoleToUpdateParams(role),
+		ctx, pgassemblers.RoleToUpdateParams(role),
 	)
 
 	if err != nil {
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
 
-	entity := pgmappers.UpdateRoleRowToEntity(updatedRecord)
+	entity := pgassemblers.UpdateRoleRowToEntity(updatedRecord)
 
 	return &entity, nil
 }
@@ -80,7 +80,7 @@ func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*entit
 
 // Exists implements [repositories.RoleRepository].
 func (s *SqlcRoleRepository) Exists(ctx context.Context, roleScopeType enums.RoleScopeType, roleRef valueobjects.RoleRef) (bool, *apperrors.AppError) {
-	allowed, err := s.queries.ExistsRoleByCodeScope(ctx, pgmappers.RoleToExistsByCodeScopeParams(roleScopeType, roleRef))
+	allowed, err := s.queries.ExistsRoleByCodeScope(ctx, pgassemblers.RoleToExistsByCodeScopeParams(roleScopeType, roleRef))
 	if err != nil {
 		return false, dberr.TranslateDBError(err, s.dberr)
 	}

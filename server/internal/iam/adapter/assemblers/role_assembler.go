@@ -1,10 +1,10 @@
-package mappers
+package assemblers
 
 import (
 	"fmt"
 
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
-	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mappers"
+	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/assemblers"
 	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"

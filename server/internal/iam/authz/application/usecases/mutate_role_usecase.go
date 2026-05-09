@@ -5,7 +5,7 @@ import (
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/common"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/mapper"
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
@@ -119,13 +119,7 @@ func (u *MutateRoleUsecase) handleCreate(
 	}
 
 	return &c.CreateRoleCommandResult{
-		Result: common.RoleResult{
-			Id:          savedRole.ID(),
-			Name:        savedRole.Name(),
-			Description: savedRole.Description(),
-			CreatedAt:   savedRole.CreatedAt(),
-			UpdatedAt:   savedRole.UpdatedAt(),
-		},
+		Result: mapper.NewRoleResultFromEntity(savedRole),
 	}, nil
 }
 

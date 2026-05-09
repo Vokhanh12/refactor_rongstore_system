@@ -16,6 +16,7 @@ import (
 
 type Role struct {
 	cren.BaseEntity
+
 	id      uuid.UUID
 	roleRef vo.RoleRef
 	name    string
@@ -30,7 +31,11 @@ type Role struct {
 	isActive bool
 }
 
-type NewRoleParams struct {
+// ============================================================
+// PAYLOADS
+// ============================================================
+
+type RolePayload struct {
 	RoleRef         vo.RoleRef
 	RoleScopeType   enu.RoleScopeType
 	Name            string
@@ -42,75 +47,109 @@ type NewRoleParams struct {
 	IsActive        bool
 }
 
+type NewRoleParams struct {
+	RolePayload
+}
+
+type RestoreRoleParams struct {
+	ID uuid.UUID
+	RolePayload
+}
+
 // ============================================================
-// CONSTRUCTOR (domain - có validate)
+// CONSTRUCTOR (domain - validate)
 // ============================================================
 
-func NewRole(it NewRoleParams) (*Role, *aerrs.AppError) {
+func NewRole(
+	it NewRoleParams,
+) (*Role, *aerrs.AppError) {
 
-	v := validator.New()
-
-	err := v.
-		Required("Name", it.Name).
-		MaxLen("Name", it.Name, 100).
-		RangeInt("level", int(it.Level), 1, 255).
-		Err()
+	err := validateRolePayload(it.RolePayload)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &Role{
-		id:          uuid.Must(uuid.NewV7()),
-		roleRef:     it.RoleRef,
-		name:        it.Name,
-		scopeType:   it.RoleScopeType,
-		accessScope: it.RoleAccessScope,
-		level:       it.Level,
-		description: it.Description,
-		isSystem:    it.IsSystem,
-		isSuper:     it.IsSuper,
-		isActive:    it.IsActive,
-	}, nil
+	role := newRoleFromPayload(
+		uuid.Must(uuid.NewV7()),
+		it.RolePayload,
+	)
+
+	return &role, nil
 }
 
 // ============================================================
 // RESTORE (persistence - trust data)
 // ============================================================
 
-func RestoreRole(it NewRoleParams) Role {
+func RestoreRole(
+	it RestoreRoleParams,
+) Role {
+
+	return newRoleFromPayload(
+		it.ID,
+		it.RolePayload,
+	)
+}
+
+// ============================================================
+// PRIVATE FACTORY
+// ============================================================
+
+func newRoleFromPayload(
+	id uuid.UUID,
+	payload RolePayload,
+) Role {
+
 	return Role{
-		id:          uuid.Must(uuid.NewV7()),
-		roleRef:     it.RoleRef,
-		name:        it.Name,
-		scopeType:   it.RoleScopeType,
-		accessScope: it.RoleAccessScope,
-		level:       it.Level,
-		description: it.Description,
-		isSystem:    it.IsSystem,
-		isSuper:     it.IsSuper,
-		isActive:    it.IsActive,
+		id:          id,
+		roleRef:     payload.RoleRef,
+		name:        payload.Name,
+		scopeType:   payload.RoleScopeType,
+		accessScope: payload.RoleAccessScope,
+		level:       payload.Level,
+		description: payload.Description,
+		isSystem:    payload.IsSystem,
+		isSuper:     payload.IsSuper,
+		isActive:    payload.IsActive,
 	}
 }
 
 // ============================================================
-// SETTERS (domain - validate)
+// VALIDATION
 // ============================================================
 
+func validateRolePayload(
+	payload RolePayload,
+) *aerrs.AppError {
+
+	v := validator.New()
+
+	return v.
+		Required("Name", payload.Name).
+		MaxLen("Name", payload.Name, 100).
+		RangeInt("Level", int(payload.Level), 1, 255).
+		Err()
+}
+
 // ============================================================
-// GETTERS
+// DOMAIN METHODS
 // ============================================================
 
 func (r Role) IsElevated() bool {
 	return r.isSuper
 }
 
-func (p Role) RoleRef() vo.RoleRef {
-	return p.roleRef
-}
+// ============================================================
+// GETTERS
+// ============================================================
 
 func (r Role) ID() uuid.UUID {
 	return r.id
+}
+
+func (r Role) RoleRef() vo.RoleRef {
+	return r.roleRef
 }
 
 func (r Role) Name() string {
@@ -125,7 +164,7 @@ func (r Role) RoleAccessScope() enu.RoleAccessScope {
 	return r.accessScope
 }
 
-func (r Role) Level() uint8 {
+func (r Role) Level() int32 {
 	return r.level
 }
 

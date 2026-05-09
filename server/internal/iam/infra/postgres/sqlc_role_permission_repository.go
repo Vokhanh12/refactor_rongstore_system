@@ -77,18 +77,21 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 			pg.UUIDPtrFromPgUUID(row.RoleScopeID),
 		)
 
-		role := en.RestoreRole(en.NewRoleParams{
-			ID:              row.RoleID,
-			RoleRef:         roleRef,
-			RoleScopeType:   enums.RoleScopeType(row.RoleScopeType),
-			Name:            row.RoleName,
-			RoleAccessScope: enums.RoleAccessScope(row.RoleAccessScope),
-			Level:           pg.Uint8FromInt32(row.RoleLevel),
-			Description:     nil,
-			IsSystem:        row.RoleIsSystem,
-			IsSuper:         row.RoleIsSuper,
-			IsActive:        row.RoleIsActive,
-		})
+		role := en.RestoreRole(
+			en.RestoreRoleParams{
+				ID: row.RoleID,
+				RolePayload: en.RolePayload{
+					RoleRef:         roleRef,
+					RoleScopeType:   enums.RoleScopeType(row.RoleScopeType),
+					Name:            row.RoleName,
+					RoleAccessScope: enums.RoleAccessScope(row.RoleAccessScope),
+					Level:           row.RoleLevel,
+					Description:     pg.StringPtrFromText(row.RoleDescription),
+					IsSystem:        row.RoleIsSystem,
+					IsSuper:         row.RoleIsSuper,
+					IsActive:        row.RoleIsActive,
+				},
+			})
 
 		perm := en.RestorePermission(en.NewPermissionParams{
 			ID:          row.RoleID,

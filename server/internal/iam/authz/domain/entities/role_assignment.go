@@ -1,4 +1,3 @@
 package entities
 
-type RoleAssignment struct {
-}
+type RoleAssignment struct{}

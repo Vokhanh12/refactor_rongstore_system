@@ -1,4 +1,4 @@
-package mappers
+package assemblers
 
 import (
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
@@ -17,9 +17,9 @@ func RolePermissionMutateRequestToBatch(req *authzrs.RolePermissionMutateRequest
 	return authzuc.RolePermissionMutationBatch{}
 }
 
-func RoleViewRequestToBatch(req *authzrs.RoleViewRequest) authzuc.RoleViewBatch {
-	return authzuc.RoleViewBatch{}
-}
+// func RoleViewRequestToBatch(req *authzrs.RoleViewRequest) authzuc.RoleViewBatch {
+// 	return authzuc.RoleViewBatch{}
+// }
 
 func PermissionViewRequestToBatch(req *authzrs.PermissionViewRequest) authzuc.PermissionViewBatch {
 	return authzuc.PermissionViewBatch{}

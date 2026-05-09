@@ -1,4 +1,4 @@
-package mappers
+package assemblers
 
 import (
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"

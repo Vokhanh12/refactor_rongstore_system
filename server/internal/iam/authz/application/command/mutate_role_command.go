@@ -18,7 +18,7 @@ type CreateRoleCommand struct {
 	IsSuper         bool
 }
 type CreateRoleCommandResult struct {
-	Result common.RoleResult
+	Result *common.RoleResult
 }
 
 type UpdateRoleCommand struct {

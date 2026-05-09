@@ -1,4 +1,4 @@
-package mappers
+package assemblers
 
 import (
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
