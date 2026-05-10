@@ -5,7 +5,7 @@ import (
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/mapper"
+	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
@@ -98,17 +98,20 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, aerrs.New(merrors.ROLE_CONFLICT)
 	}
 
-	role, err := en.NewRole(en.NewRoleParams{
-		RoleRef:         roleRef,
-		RoleScopeType:   scopeType,
-		Name:            cmd.Name,
-		RoleAccessScope: scope,
-		Level:           cmd.Level,
-		Description:     cmd.Description,
-		IsSystem:        cmd.IsSystem,
-		IsSuper:         cmd.IsSuper,
-		IsActive:        cmd.IsActive,
-	})
+	role, err := en.NewRole(
+		en.RolePayload{
+			RoleRef:         roleRef,
+			RoleScopeType:   scopeType,
+			Name:            cmd.Name,
+			RoleAccessScope: scope,
+			Level:           cmd.Level,
+			Description:     cmd.Description,
+			IsSystem:        cmd.IsSystem,
+			IsSuper:         cmd.IsSuper,
+			IsActive:        cmd.IsActive,
+		},
+	)
+
 	if err != nil {
 		return nil, err
 	}

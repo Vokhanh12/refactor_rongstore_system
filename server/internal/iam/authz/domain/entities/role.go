@@ -17,13 +17,16 @@ import (
 type Role struct {
 	cren.BaseEntity
 
-	id      uuid.UUID
+	id uuid.UUID
+
 	roleRef vo.RoleRef
 	name    string
 
 	scopeType   enu.RoleScopeType
 	accessScope enu.RoleAccessScope
-	level       int32
+
+	level int32
+
 	description *string
 
 	isSystem bool
@@ -32,13 +35,13 @@ type Role struct {
 }
 
 // ============================================================
-// PAYLOADS
+// PAYLOAD
 // ============================================================
 
 type RolePayload struct {
 	RoleRef         vo.RoleRef
-	RoleScopeType   enu.RoleScopeType
 	Name            string
+	RoleScopeType   enu.RoleScopeType
 	RoleAccessScope enu.RoleAccessScope
 	Level           int32
 	Description     *string
@@ -47,71 +50,64 @@ type RolePayload struct {
 	IsActive        bool
 }
 
-type NewRoleParams struct {
-	RolePayload
-}
-
-type RestoreRoleParams struct {
-	ID uuid.UUID
-	RolePayload
-}
-
 // ============================================================
-// CONSTRUCTOR (domain - validate)
+// CONSTRUCTOR
 // ============================================================
 
 func NewRole(
-	it NewRoleParams,
+	payload RolePayload,
 ) (*Role, *aerrs.AppError) {
 
-	err := validateRolePayload(it.RolePayload)
-
-	if err != nil {
+	if err := validateRolePayload(payload); err != nil {
 		return nil, err
 	}
 
-	role := newRoleFromPayload(
-		uuid.Must(uuid.NewV7()),
-		it.RolePayload,
-	)
+	role := &Role{
+		id: uuid.Must(uuid.NewV7()),
 
-	return &role, nil
+		roleRef: payload.RoleRef,
+		name:    payload.Name,
+
+		scopeType:   payload.RoleScopeType,
+		accessScope: payload.RoleAccessScope,
+
+		level: payload.Level,
+
+		description: payload.Description,
+
+		isSystem: payload.IsSystem,
+		isSuper:  payload.IsSuper,
+		isActive: payload.IsActive,
+	}
+
+	return role, nil
 }
 
 // ============================================================
-// RESTORE (persistence - trust data)
+// RESTORE
 // ============================================================
 
 func RestoreRole(
-	it RestoreRoleParams,
-) Role {
-
-	return newRoleFromPayload(
-		it.ID,
-		it.RolePayload,
-	)
-}
-
-// ============================================================
-// PRIVATE FACTORY
-// ============================================================
-
-func newRoleFromPayload(
 	id uuid.UUID,
 	payload RolePayload,
 ) Role {
 
 	return Role{
-		id:          id,
-		roleRef:     payload.RoleRef,
-		name:        payload.Name,
+		id: id,
+
+		roleRef: payload.RoleRef,
+		name:    payload.Name,
+
 		scopeType:   payload.RoleScopeType,
 		accessScope: payload.RoleAccessScope,
-		level:       payload.Level,
+
+		level: payload.Level,
+
 		description: payload.Description,
-		isSystem:    payload.IsSystem,
-		isSuper:     payload.IsSuper,
-		isActive:    payload.IsActive,
+
+		isSystem: payload.IsSystem,
+		isSuper:  payload.IsSuper,
+		isActive: payload.IsActive,
 	}
 }
 
@@ -126,15 +122,41 @@ func validateRolePayload(
 	v := validator.New()
 
 	return v.
-		Required("Name", payload.Name).
-		MaxLen("Name", payload.Name, 100).
-		RangeInt("Level", int(payload.Level), 1, 255).
+		Required("name", payload.Name).
+		MaxLen("name", payload.Name, 100).
+		RangeInt("level", int(payload.Level), 1, 255).
 		Err()
 }
 
 // ============================================================
 // DOMAIN METHODS
 // ============================================================
+
+func (r *Role) Activate() {
+	r.isActive = true
+}
+
+func (r *Role) Deactivate() {
+
+	if r.isSystem {
+		return
+	}
+
+	r.isActive = false
+}
+
+// func (r *Role) PromoteLevel(
+// 	level int32,
+// ) *aerrs.AppError {
+
+// 	if level < r.level {
+// 		return aerrs.New("ROLE_LEVEL_INVALID")
+// 	}
+
+// 	r.level = level
+
+// 	return nil
+// }
 
 func (r Role) IsElevated() bool {
 	return r.isSuper
@@ -156,11 +178,11 @@ func (r Role) Name() string {
 	return r.name
 }
 
-func (r Role) RoleScopeType() enu.RoleScopeType {
+func (r Role) ScopeType() enu.RoleScopeType {
 	return r.scopeType
 }
 
-func (r Role) RoleAccessScope() enu.RoleAccessScope {
+func (r Role) AccessScope() enu.RoleAccessScope {
 	return r.accessScope
 }
 

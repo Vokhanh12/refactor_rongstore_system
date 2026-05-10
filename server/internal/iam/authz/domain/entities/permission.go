@@ -115,7 +115,6 @@ func newPermissionFromPayload(
 	payload PermissionPayload,
 	resourceAction vo.ResourceAction,
 ) Permission {
-
 	return Permission{
 		id:             id,
 		code:           payload.Code,

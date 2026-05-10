@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
@@ -27,7 +27,7 @@ func NewSqlcRoleRepository(queries *db.Queries, dberr dberr.DBError) repositorie
 }
 
 // Create implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Create(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
+func (s *SqlcRoleRepository) Create(ctx context.Context, role *en.Role) (*en.Role, *apperrors.AppError) {
 
 	createdRecord, err := s.queries.CreateRole(
 		ctx, pgassemblers.RoleToCreateParams(role),
@@ -54,7 +54,7 @@ func (s *SqlcRoleRepository) Delete(ctx context.Context, id uuid.UUID) *apperror
 }
 
 // Update implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Update(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
+func (s *SqlcRoleRepository) Update(ctx context.Context, role *en.Role) (*en.Role, *apperrors.AppError) {
 	updatedRecord, err := s.queries.UpdateRole(
 		ctx, pgassemblers.RoleToUpdateParams(role),
 	)
@@ -69,12 +69,12 @@ func (s *SqlcRoleRepository) Update(ctx context.Context, role *entities.Role) (*
 }
 
 // FindByCode implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) FindByCode(ctx context.Context, code string) (*entities.Role, *apperrors.AppError) {
+func (s *SqlcRoleRepository) FindByCode(ctx context.Context, code string) (*en.Role, *apperrors.AppError) {
 	panic("unimplemented")
 }
 
 // FindById implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*entities.Role, *apperrors.AppError) {
+func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*en.Role, *apperrors.AppError) {
 	panic("unimplemented")
 }
 

@@ -78,30 +78,33 @@ func (s *SqlcRolePermissionRepository) FindAllByRoleRefs(
 		)
 
 		role := en.RestoreRole(
-			en.RestoreRoleParams{
-				ID: row.RoleID,
-				RolePayload: en.RolePayload{
-					RoleRef:         roleRef,
-					RoleScopeType:   enums.RoleScopeType(row.RoleScopeType),
-					Name:            row.RoleName,
-					RoleAccessScope: enums.RoleAccessScope(row.RoleAccessScope),
-					Level:           row.RoleLevel,
-					Description:     pg.StringPtrFromText(row.RoleDescription),
-					IsSystem:        row.RoleIsSystem,
-					IsSuper:         row.RoleIsSuper,
-					IsActive:        row.RoleIsActive,
-				},
-			})
+			row.RoleID,
+			en.RolePayload{
+				RoleRef:         roleRef,
+				RoleScopeType:   enums.RoleScopeType(row.RoleScopeType),
+				Name:            row.RoleName,
+				RoleAccessScope: enums.RoleAccessScope(row.RoleAccessScope),
+				Level:           row.RoleLevel,
+				Description:     pg.StringPtrFromText(row.RoleDescription),
+				IsSystem:        row.RoleIsSystem,
+				IsSuper:         row.RoleIsSuper,
+				IsActive:        row.RoleIsActive,
+			},
+		)
 
-		perm := en.RestorePermission(en.NewPermissionParams{
-			ID:          row.RoleID,
-			Code:        row.PermissionCode,
-			Name:        pg.StringPtrFromText(row.PermissionName),
-			Description: pg.StringPtrFromText(row.PermissionDescription),
-			Resource:    row.PermissionResource,
-			Action:      row.PermissionAction,
-			IsActive:    row.PermissionIsActive,
-		})
+		perm := en.RestorePermission(
+			en.RestorePermissionParams{
+				ID: row.RoleID,
+				PermissionPayload: en.PermissionPayload{
+					Code:        row.PermissionCode,
+					Name:        pg.StringPtrFromText(row.PermissionName),
+					Description: pg.StringPtrFromText(row.PermissionDescription),
+					Resource:    row.PermissionResource,
+					Action:      row.PermissionAction,
+					IsActive:    row.PermissionIsActive,
+				},
+			},
+		)
 
 		result = append(result, en.NewRolePermission(role, perm))
 	}
