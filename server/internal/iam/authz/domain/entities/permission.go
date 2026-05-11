@@ -3,6 +3,7 @@ package entities
 import (
 	"github.com/google/uuid"
 
+	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
@@ -13,7 +14,10 @@ import (
 // ============================================================
 
 type Permission struct {
-	id   uuid.UUID
+	cren.BaseEntity
+
+	id uuid.UUID
+
 	code string
 
 	name        *string
@@ -25,7 +29,7 @@ type Permission struct {
 }
 
 // ============================================================
-// PAYLOADS
+// PAYLOAD
 // ============================================================
 
 type PermissionPayload struct {
@@ -40,94 +44,100 @@ type PermissionPayload struct {
 	IsActive bool
 }
 
-type NewPermissionParams struct {
-	PermissionPayload
-}
-
-type RestorePermissionParams struct {
-	ID uuid.UUID
-	PermissionPayload
-}
-
 // ============================================================
-// CONSTRUCTOR (domain - validate)
+// CONSTRUCTOR
 // ============================================================
 
 func NewPermission(
-	it NewPermissionParams,
+	payload PermissionPayload,
 ) (*Permission, *aerrs.AppError) {
 
-	v := validator.New()
+	if err := validatePermissionPayload(payload); err != nil {
+		return nil, err
+	}
 
-	err := v.
-		Required("Code", it.Code).
-		MaxLen("Code", it.Code, 100).
-		Required("Resource", it.Resource).
-		Required("Action", it.Action).
-		Err()
+	resourceAction, err := vo.NewResourceAction(
+		payload.Resource,
+		payload.Action,
+	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	resourceAction, appErr := vo.NewResourceAction(
-		it.Resource,
-		it.Action,
-	)
+	permission := &Permission{
+		id: uuid.Must(uuid.NewV7()),
 
-	if appErr != nil {
-		return nil, appErr
+		code: payload.Code,
+
+		name:        payload.Name,
+		description: payload.Description,
+
+		resourceAction: resourceAction,
+
+		isActive: payload.IsActive,
 	}
 
-	permission := newPermissionFromPayload(
-		uuid.Must(uuid.NewV7()),
-		it.PermissionPayload,
-		resourceAction,
-	)
-
-	return &permission, nil
+	return permission, nil
 }
 
 // ============================================================
-// RESTORE (persistence - trust data)
+// RESTORE
 // ============================================================
 
-func RestorePermission(it RestorePermissionParams) Permission {
-
-	resourceAction := vo.RestoreResourceAction(
-		it.Resource,
-		it.Action,
-	)
-
-	return newPermissionFromPayload(
-		it.ID,
-		it.PermissionPayload,
-		resourceAction,
-	)
-}
-
-// ============================================================
-// PRIVATE FACTORY
-// ============================================================
-
-func newPermissionFromPayload(
+func RestorePermission(
 	id uuid.UUID,
 	payload PermissionPayload,
-	resourceAction vo.ResourceAction,
-) Permission {
-	return Permission{
-		id:             id,
-		code:           payload.Code,
-		name:           payload.Name,
-		description:    payload.Description,
+) *Permission {
+
+	resourceAction := vo.RestoreResourceAction(
+		payload.Resource,
+		payload.Action,
+	)
+
+	return &Permission{
+		id: id,
+
+		code: payload.Code,
+
+		name:        payload.Name,
+		description: payload.Description,
+
 		resourceAction: resourceAction,
-		isActive:       payload.IsActive,
+
+		isActive: payload.IsActive,
 	}
+}
+
+// ============================================================
+// VALIDATION
+// ============================================================
+
+func validatePermissionPayload(
+	payload PermissionPayload,
+) *aerrs.AppError {
+
+	v := validator.New()
+
+	return v.
+		Required("code", payload.Code).
+		MaxLen("code", payload.Code, 100).
+		Required("resource", payload.Resource).
+		Required("action", payload.Action).
+		Err()
 }
 
 // ============================================================
 // DOMAIN METHODS
 // ============================================================
+
+func (p *Permission) Activate() {
+	p.isActive = true
+}
+
+func (p *Permission) Deactivate() {
+	p.isActive = false
+}
 
 func (p Permission) Key() string {
 	return p.resourceAction.Resource() +
@@ -136,9 +146,10 @@ func (p Permission) Key() string {
 }
 
 func (p Permission) Match(
-	resource,
+	resource string,
 	action string,
 ) bool {
+
 	return p.resourceAction.Resource() == resource &&
 		p.resourceAction.Action() == action
 }

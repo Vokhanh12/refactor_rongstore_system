@@ -71,18 +71,18 @@ func (u *ViewRoleUsecase) Execute(ctx context.Context, batch RoleViewBatch) dtos
 	return dtos.ViewResultDTO{Items: results}
 }
 
-func (u *ViewRoleUsecase) handleGet(ctx context.Context, q q.GetRoleQuery) (any, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleGet(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *aerrs.AppError) {
 	return nil, nil
 }
 
-func (u *ViewRoleUsecase) handleList(ctx context.Context, q q.ListRoleQuery) (any, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleList(ctx context.Context, q q.ListRoleQuery) (q.ListRoleQueryResult, *aerrs.AppError) {
 	return nil, nil
 }
 
-func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q q.SearchRoleQuery) (any, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q q.SearchRoleQuery) (q.SearchRoleQueryResult, *aerrs.AppError) {
 	return nil, nil
 }
 
-func (u *ViewRoleUsecase) handleExport(ctx context.Context, q q.ExportRoleQuery) (any, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleExport(ctx context.Context, q q.ExportRoleQuery) (q.ExportRoleQueryResult, *aerrs.AppError) {
 	return nil, nil
 }

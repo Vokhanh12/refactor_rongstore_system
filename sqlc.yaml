@@ -3,10 +3,8 @@ version: "2"
 sql:
   - engine: postgresql
     schema:
-      - sql/iam/auth/schema
       - sql/iam/authz/schema
     queries:
-      - sql/iam/auth/queries
       - sql/iam/authz/queries
     gen:
       go:

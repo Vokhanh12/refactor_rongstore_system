@@ -4,11 +4,14 @@ import (
 	"context"
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
-type RolePermissionView struct{}
+type RolePermissionView struct {
+	Get *q.GetRoleQuery
+}
 
 type RolePermissionViewBatch struct {
 	Items []core.Operation[RolePermissionView]

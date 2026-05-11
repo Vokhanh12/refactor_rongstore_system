@@ -1,5 +1,14 @@
 package command
 
+type AuthorizationGrant struct {
+	RoleRef vo.RoleRef
+
+	IsElevated bool
+
+	Resource string
+	Action   string
+}
+
 type AuthorizeCommand struct {
 	UserID   string
 	TenantID string

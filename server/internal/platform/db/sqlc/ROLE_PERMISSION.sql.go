@@ -8,96 +8,57 @@ package iam_sqlc
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const getRolePermissionsByRoleRefs = `-- name: GetRolePermissionsByRoleRefs :many
-SELECT 
-    -- ROLE
-    r.id                 AS role_id,
-    r.code               AS role_code,
-    r.scope_id           AS role_scope_id,
-    r.role_scope_type    AS role_scope_type,
-    r.name               AS role_name,
-    r.description        AS role_description,
-    r.role_access_scope  AS role_access_scope,
-    r.level              AS role_level,
-    r.is_system          AS role_is_system,
-    r.is_super           AS role_is_super,
-    r.is_active          AS role_is_active,
+const listPermissionCacheRowsByRoleRefs = `-- name: ListPermissionCacheRowsByRoleRefs :many
+SELECT
+    r.code      AS role_code,
+    r.scope_id  AS role_scope_id,
 
-    -- PERMISSION
-    p.id            AS permission_id,       
-    p.code          AS permission_code,
-    p.name          AS permission_name,
-    p.description   AS permission_description,
-    p.resource      AS permission_resource,
-    p.action        AS permission_action,
-    p.is_active     AS permission_is_active
+    p.resource  AS permission_resource,
+    p.action    AS permission_action
 
 FROM roles r
-JOIN role_permissions rp ON rp.role_id = r.id
-JOIN permissions p ON p.id = rp.permission_id
+
+JOIN role_permissions rp
+    ON rp.role_id = r.id
+
+JOIN permissions p
+    ON p.id = rp.permission_id
 
 JOIN jsonb_to_recordset($1::jsonb)
     AS x(role_code text, scope_id uuid)
+
 ON r.code = x.role_code
+
 AND (
     r.scope_id = x.scope_id
     OR (r.scope_id IS NULL AND x.scope_id IS NULL)
 )
 `
 
-type GetRolePermissionsByRoleRefsRow struct {
-	RoleID                uuid.UUID       `json:"role_id"`
-	RoleCode              string          `json:"role_code"`
-	RoleScopeID           pgtype.UUID     `json:"role_scope_id"`
-	RoleScopeType         RoleScopeType   `json:"role_scope_type"`
-	RoleName              string          `json:"role_name"`
-	RoleDescription       pgtype.Text     `json:"role_description"`
-	RoleAccessScope       RoleAccessScope `json:"role_access_scope"`
-	RoleLevel             int32           `json:"role_level"`
-	RoleIsSystem          bool            `json:"role_is_system"`
-	RoleIsSuper           bool            `json:"role_is_super"`
-	RoleIsActive          bool            `json:"role_is_active"`
-	PermissionID          uuid.UUID       `json:"permission_id"`
-	PermissionCode        string          `json:"permission_code"`
-	PermissionName        pgtype.Text     `json:"permission_name"`
-	PermissionDescription pgtype.Text     `json:"permission_description"`
-	PermissionResource    string          `json:"permission_resource"`
-	PermissionAction      string          `json:"permission_action"`
-	PermissionIsActive    bool            `json:"permission_is_active"`
+type ListPermissionCacheRowsByRoleRefsRow struct {
+	RoleCode           string      `json:"role_code"`
+	RoleScopeID        pgtype.UUID `json:"role_scope_id"`
+	PermissionResource string      `json:"permission_resource"`
+	PermissionAction   string      `json:"permission_action"`
 }
 
-func (q *Queries) GetRolePermissionsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]GetRolePermissionsByRoleRefsRow, error) {
-	rows, err := q.db.Query(ctx, getRolePermissionsByRoleRefs, dollar_1)
+func (q *Queries) ListPermissionCacheRowsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListPermissionCacheRowsByRoleRefsRow, error) {
+	rows, err := q.db.Query(ctx, listPermissionCacheRowsByRoleRefs, dollar_1)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetRolePermissionsByRoleRefsRow
+	var items []ListPermissionCacheRowsByRoleRefsRow
 	for rows.Next() {
-		var i GetRolePermissionsByRoleRefsRow
+		var i ListPermissionCacheRowsByRoleRefsRow
 		if err := rows.Scan(
-			&i.RoleID,
 			&i.RoleCode,
 			&i.RoleScopeID,
-			&i.RoleScopeType,
-			&i.RoleName,
-			&i.RoleDescription,
-			&i.RoleAccessScope,
-			&i.RoleLevel,
-			&i.RoleIsSystem,
-			&i.RoleIsSuper,
-			&i.RoleIsActive,
-			&i.PermissionID,
-			&i.PermissionCode,
-			&i.PermissionName,
-			&i.PermissionDescription,
 			&i.PermissionResource,
 			&i.PermissionAction,
-			&i.PermissionIsActive,
 		); err != nil {
 			return nil, err
 		}

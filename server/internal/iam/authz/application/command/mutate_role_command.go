@@ -17,6 +17,7 @@ type CreateRoleCommand struct {
 	IsActive        bool
 	IsSuper         bool
 }
+
 type CreateRoleCommandResult struct {
 	Result *common.RoleResult
 }
