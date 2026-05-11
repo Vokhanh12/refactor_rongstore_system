@@ -191,6 +191,26 @@ services:
             severity: S3
             retryable: false
 
+          - code: AUTH-SEC-003
+            key: JWT_INVALID
+            component: jwt
+            tags: [security, auth]
+            http_status: 401
+            grpc_code: Unauthenticated
+            message: "Invalid token"
+            severity: S3
+            retryable: false
+
+          - code: AUTH-SEC-004
+            key: JWT_PAYLOAD_INVALID
+            component: jwt
+            tags: [security, auth]
+            http_status: 401
+            grpc_code: Unauthenticated
+            message: "Invalid token payload"
+            severity: S3
+            retryable: false
+
   # ============================================================
   # IAM - AUTHZ (AUTHORIZATION)
   # ============================================================

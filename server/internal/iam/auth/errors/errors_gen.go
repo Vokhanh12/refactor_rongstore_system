@@ -94,6 +94,36 @@ var (
 		ServerAction: "",
 	}
 
+	JWT_INVALID = apperrors.AppError{
+		Key: "JWT_INVALID",
+		Code: "AUTH-SEC-003",
+		Component: "jwt",
+		Tags: []string{"security","auth"},
+		Status: 401,
+		GRPCCode: "Unauthenticated",
+		Message: "Invalid token",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	JWT_PAYLOAD_INVALID = apperrors.AppError{
+		Key: "JWT_PAYLOAD_INVALID",
+		Code: "AUTH-SEC-004",
+		Component: "jwt",
+		Tags: []string{"security","auth"},
+		Status: 401,
+		GRPCCode: "Unauthenticated",
+		Message: "Invalid token payload",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 )
 
 var (
@@ -221,6 +251,8 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"AUTH-VAL-004": LOGIN_PAYLOAD_INVALID,
 	"AUTH-SEC-001": TOKEN_EXPIRED,
 	"AUTH-SEC-002": UNAUTHORIZED,
+	"AUTH-SEC-003": JWT_INVALID,
+	"AUTH-SEC-004": JWT_PAYLOAD_INVALID,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{

@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/grpc"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/jwt"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
@@ -15,12 +16,11 @@ func AuthUnaryInterceptor() grpc.UnaryServerInterceptor {
 		if values := md.Get("x-jwt-payload"); len(values) > 0 {
 			if payload, err := jwt.DecodePayload(values[0]); err == nil {
 				ctx = ctxutil.WithUser(ctx, ctxutil.UserContext{
-					UserID:   payload.UserID,
-					Roles:    payload.Roles,
-					TenantID: payload.TenantID,
+					UserID: payload.UserID,
+					Roles:  payload.Roles,
 				})
 			} else {
-				// log decode failure
+				return nil, core.ToGRPCError(err.Code, err.Message)
 			}
 		}
 		return handler(ctx, req)

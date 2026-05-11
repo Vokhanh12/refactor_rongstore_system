@@ -47,23 +47,23 @@ func BuildMutateResponse(ctx context.Context, results dtos.MutateResultDTO, mapA
 	}
 }
 
-func BuildViewResponse(
-	ctx context.Context,
-	items []*protos.ViewResult,
-) *protos.ViewResponse {
+// func BuildViewResponse(
+// 	ctx context.Context,
+// 	items []*protos.ViewResult,
+// ) *protos.ViewResponse {
 
-	requestctx := ctxutil.MustRequest(ctx)
-	locatectx := ctxutil.MustLocale(ctx)
+// 	requestctx := ctxutil.MustRequest(ctx)
+// 	locatectx := ctxutil.MustLocale(ctx)
 
-	return &protos.ViewResponse{
-		Metadata: &protos.Metadata{
-			TraceId:    requestctx.TraceID,
-			RequestId:  requestctx.RequestID,
-			Locale:     locatectx.Locale,
-			Region:     locatectx.Region,
-			Degraded:   false,
-			ServerTime: time.Now().UnixMilli(),
-		},
-		ViewResults: items,
-	}
-}
+// 	return &protos.ViewResponse{
+// 		Metadata: &protos.Metadata{
+// 			TraceId:    requestctx.TraceID,
+// 			RequestId:  requestctx.RequestID,
+// 			Locale:     locatectx.Locale,
+// 			Region:     locatectx.Region,
+// 			Degraded:   false,
+// 			ServerTime: time.Now().UnixMilli(),
+// 		},
+// 		ViewResults: items,
+// 	}
+// }

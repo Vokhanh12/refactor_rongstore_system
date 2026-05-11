@@ -34,6 +34,21 @@ var (
 		ServerAction: "",
 	}
 
+	MUTATE_PARSE_FAILED = apperrors.AppError{
+		Key: "MUTATE_PARSE_FAILED",
+		Code: "CORE-MUT-004",
+		Component: "mutate_engine",
+		Tags: []string{"validation","client"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Failed to parse mutation payload",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 	VIEW_OPERATION_UNSUPPORTED = apperrors.AppError{
 		Key: "VIEW_OPERATION_UNSUPPORTED",
 		Code: "CORE-VIE-001",
@@ -247,6 +262,7 @@ var (
 var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-MUT-001": MUTATE_OPERATION_UNSUPPORTED,
 	"CORE-MUT-002": MUTATE_PARTIAL_FAILURE,
+	"CORE-MUT-004": MUTATE_PARSE_FAILED,
 	"CORE-VIE-001": VIEW_OPERATION_UNSUPPORTED,
 	"CORE-VIE-002": VIEW_PARTIAL_FAILURE,
 	"CORE-VAL-001": VALIDATION_FAILED,

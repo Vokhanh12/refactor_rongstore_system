@@ -4,21 +4,42 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+
+	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/errors"
+	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-func DecodePayload(encoded string) (*Payload, error) {
+func DecodePayload(encoded string) (*Payload, *aerr.AppError) {
+
 	if encoded == "" {
-		return nil, errors.New("empty jwt payload header")
+		return nil,
+			aerr.New(
+				errs.JWT_INVALID,
+				aerr.WithCauseDetail(
+					errors.New("empty jwt payload"),
+				),
+			)
 	}
 
 	raw, err := base64.RawURLEncoding.DecodeString(encoded)
+
 	if err != nil {
-		return nil, err
+		return nil,
+			aerr.New(
+				errs.JWT_PAYLOAD_INVALID,
+				aerr.WithCauseDetail(err),
+			)
 	}
 
 	var payload Payload
+
 	if err := json.Unmarshal(raw, &payload); err != nil {
-		return nil, err
+
+		return nil,
+			aerr.New(
+				errs.JWT_PAYLOAD_INVALID,
+				aerr.WithCauseDetail(err),
+			)
 	}
 
 	return &payload, nil
