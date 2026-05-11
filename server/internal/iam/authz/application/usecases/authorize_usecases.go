@@ -86,7 +86,7 @@ func (u *AuthorizeUsecase) Execute(
 	// ---------- Load from DB ----------
 	if len(roleKeysMissCache) > 0 {
 
-		rolePermissions, err := u.rolePermissionRepository.Find	AllByRoleRefs(ctx, roleKeysMissCache)
+		rolePermissions, err := u.rolePermissionRepository.(ctx, roleKeysMissCache)
 		if err != nil {
 			return nil, err
 		}
