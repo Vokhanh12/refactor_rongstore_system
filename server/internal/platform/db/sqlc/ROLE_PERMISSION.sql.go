@@ -11,13 +11,14 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const listPermissionCacheRowsByRoleRefs = `-- name: ListPermissionCacheRowsByRoleRefs :many
+const listAuthorizationGrantsByRoleRefs = `-- name: ListAuthorizationGrantsByRoleRefs :many
 SELECT
-    r.code      AS role_code,
-    r.scope_id  AS role_scope_id,
+    r.code AS role_code,
+    r.scope_id AS role_scope_id,
+    r.is_super AS role_is_super,
 
-    p.resource  AS permission_resource,
-    p.action    AS permission_action
+    p.resource AS permission_resource,
+    p.action AS permission_action
 
 FROM roles r
 
@@ -38,25 +39,27 @@ AND (
 )
 `
 
-type ListPermissionCacheRowsByRoleRefsRow struct {
+type ListAuthorizationGrantsByRoleRefsRow struct {
 	RoleCode           string      `json:"role_code"`
 	RoleScopeID        pgtype.UUID `json:"role_scope_id"`
+	RoleIsSuper        bool        `json:"role_is_super"`
 	PermissionResource string      `json:"permission_resource"`
 	PermissionAction   string      `json:"permission_action"`
 }
 
-func (q *Queries) ListPermissionCacheRowsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListPermissionCacheRowsByRoleRefsRow, error) {
-	rows, err := q.db.Query(ctx, listPermissionCacheRowsByRoleRefs, dollar_1)
+func (q *Queries) ListAuthorizationGrantsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleRefsRow, error) {
+	rows, err := q.db.Query(ctx, listAuthorizationGrantsByRoleRefs, dollar_1)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListPermissionCacheRowsByRoleRefsRow
+	var items []ListAuthorizationGrantsByRoleRefsRow
 	for rows.Next() {
-		var i ListPermissionCacheRowsByRoleRefsRow
+		var i ListAuthorizationGrantsByRoleRefsRow
 		if err := rows.Scan(
 			&i.RoleCode,
 			&i.RoleScopeID,
+			&i.RoleIsSuper,
 			&i.PermissionResource,
 			&i.PermissionAction,
 		); err != nil {

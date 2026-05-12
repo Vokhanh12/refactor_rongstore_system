@@ -6,11 +6,26 @@ package iam_sqlc
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
+	// ============================================================
+	// WRITE: ROLE COMMANDS
+	// ============================================================
+	CreateRole(ctx context.Context, arg CreateRoleParams) (CreateRoleRow, error)
+	DeleteRole(ctx context.Context, id uuid.UUID) error
+	ExistsRoleByCodeScope(ctx context.Context, arg ExistsRoleByCodeScopeParams) (bool, error)
 	GetPermissionByCode(ctx context.Context, code string) (GetPermissionByCodeRow, error)
-	ListPermissionCacheRowsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListPermissionCacheRowsByRoleRefsRow, error)
+	GetRoleByCode(ctx context.Context, code string) (GetRoleByCodeRow, error)
+	// ============================================================
+	// READ: ROLE QUERIES
+	// ============================================================
+	GetRoleByID(ctx context.Context, id uuid.UUID) (GetRoleByIDRow, error)
+	ListAuthorizationGrantsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleRefsRow, error)
+	ListRoles(ctx context.Context, arg ListRolesParams) ([]ListRolesRow, error)
+	UpdateRole(ctx context.Context, arg UpdateRoleParams) (UpdateRoleRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

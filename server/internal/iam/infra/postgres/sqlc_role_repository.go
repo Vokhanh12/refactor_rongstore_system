@@ -2,10 +2,9 @@ package postgres
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/google/uuid"
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/serialization"
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
@@ -110,10 +109,9 @@ func (s *SqlcRoleRepository) ListRoleByRef(
 		})
 	}
 
-	payload, err := json.Marshal(input)
+	payload, err := serialization.MustMarshal(input)
 	if err != nil {
-		return nil, apperrors.New(core.JSON_SERIALIZATION_FAILED,
-			apperrors.WithCauseDetail(err))
+		return nil, err
 	}
 
 	rows, err := s.queries.GetRolePermissionsByRoleRefs(ctx, payload)

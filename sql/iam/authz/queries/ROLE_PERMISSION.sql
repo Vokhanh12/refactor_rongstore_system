@@ -1,8 +1,12 @@
--- name: ListRolePermissionByRoleRefs :many
+-- name: ListAuthorizationGrantsByRoleRefs :many
 SELECT
-    r.id AS role_id,
-    p.id AS permission_id,
-    
+    r.code AS role_code,
+    r.scope_id AS role_scope_id,
+    r.is_super AS role_is_super,
+
+    p.resource AS permission_resource,
+    p.action AS permission_action
+
 FROM roles r
 
 JOIN role_permissions rp
