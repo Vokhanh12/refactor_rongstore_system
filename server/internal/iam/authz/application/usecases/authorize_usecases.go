@@ -11,22 +11,22 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
+	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	cs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
-	rs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 )
 
 const permissionCacheTTL = 15 * time.Minute
 
 type AuthorizeUsecase struct {
-	rolePermissionCache      cs.RolePermissionCache
-	rolePermissionRepository rs.RolePermissionRepository
+	rolePermissionCache cs.RolePermissionCache
+	AuthorizeQuery      q.AuthorizeQuery
 }
 
-func NewAuthorizeUsecase(rpCache cs.RolePermissionCache, rpRepository rs.RolePermissionRepository) *AuthorizeUsecase {
+func NewAuthorizeUsecase(rpCache cs.RolePermissionCache, authQuery q.AuthorizeQuery) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
-		rolePermissionCache:      rpCache,
-		rolePermissionRepository: rpRepository,
+		rolePermissionCache: rpCache,
+		AuthorizeQuery:      authQuery,
 	}
 }
 
@@ -86,12 +86,12 @@ func (u *AuthorizeUsecase) Execute(
 	// ---------- Load from DB ----------
 	if len(roleKeysMissCache) > 0 {
 
-		rolePermissions, err := u.rolePermissionRepository.(ctx, roleKeysMissCache)
+		authorizationGrant, err := u.AuthorizeQuery.ListGrantsByRoleRefs(ctx, roleKeysMissCache)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, rp := range rolePermissions {
+		for _, rp := range authorizationGrant {
 
 			// shortcut: super role
 			if rp.Role.IsElevated() {
