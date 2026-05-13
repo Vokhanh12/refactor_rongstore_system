@@ -11,7 +11,7 @@ import (
 // VALUE OBJECT
 // ============================================================
 
-type RoleRef struct {
+type RoleKey struct {
 	roleCode string
 	scopeID  *uuid.UUID
 }
@@ -20,16 +20,16 @@ type RoleRef struct {
 // CONSTRUCTOR (domain - có validate)
 // ============================================================
 
-func NewRoleRef(scopeID *uuid.UUID, roleCode string) (RoleRef, *aerrs.AppError) {
+func NewRoleKey(scopeID *uuid.UUID, roleCode string) (RoleKey, *aerrs.AppError) {
 
 	v := validator.New().
 		Required("roleCode", roleCode)
 
 	if err := v.Err(); err != nil {
-		return RoleRef{}, err
+		return RoleKey{}, err
 	}
 
-	return RoleRef{
+	return RoleKey{
 		roleCode: roleCode,
 		scopeID:  scopeID,
 	}, nil
@@ -39,8 +39,8 @@ func NewRoleRef(scopeID *uuid.UUID, roleCode string) (RoleRef, *aerrs.AppError) 
 // RESTORE (persistence - trust data)
 // ============================================================
 
-func RestoreRoleRef(roleCode string, scopeID *uuid.UUID) RoleRef {
-	return RoleRef{
+func RestoreRoleKey(roleCode string, scopeID *uuid.UUID) RoleKey {
+	return RoleKey{
 		roleCode: roleCode,
 		scopeID:  scopeID,
 	}
@@ -50,14 +50,14 @@ func RestoreRoleRef(roleCode string, scopeID *uuid.UUID) RoleRef {
 // GETTERS
 // ============================================================
 
-func (r RoleRef) RoleCode() string    { return r.roleCode }
-func (r RoleRef) ScopeID() *uuid.UUID { return r.scopeID }
+func (r RoleKey) RoleCode() string    { return r.roleCode }
+func (r RoleKey) ScopeID() *uuid.UUID { return r.scopeID }
 
 // ============================================================
 // UTILS
 // ============================================================
 
-func (r RoleRef) String() string {
+func (r RoleKey) String() string {
 	if r.scopeID == nil {
 		return r.roleCode + ":<nil>"
 	}

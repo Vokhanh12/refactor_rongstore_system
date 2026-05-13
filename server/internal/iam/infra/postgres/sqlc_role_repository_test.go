@@ -23,7 +23,7 @@ func TestSqlcRoleRepository_Create(t *testing.T) {
 
 	scopeID := uuid.New()
 
-	roleRef := vo.NewRoleRefFromPersistence(
+	RoleKey := vo.NewRoleKeyFromPersistence(
 		"SUPER_ADMIN",
 		&scopeID,
 	)
@@ -32,7 +32,7 @@ func TestSqlcRoleRepository_Create(t *testing.T) {
 
 	role := entities.NewRoleFromPersistence(
 		uuid.New(),
-		roleRef,
+		RoleKey,
 		entities.RoleTypeTenant,
 		"Super Admin",
 		entities.AcessScopeGobal,
@@ -47,8 +47,8 @@ func TestSqlcRoleRepository_Create(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, created)
 
-	assert.Equal(t, role.RoleRef().RoleCode(), created.RoleRef().RoleCode())
-	assert.Equal(t, role.RoleRef().ScopeID(), created.RoleRef().ScopeID())
+	assert.Equal(t, role.RoleKey().RoleCode(), created.RoleKey().RoleCode())
+	assert.Equal(t, role.RoleKey().ScopeID(), created.RoleKey().ScopeID())
 	assert.Equal(t, role.IsElevated(), created.IsElevated())
 }
 

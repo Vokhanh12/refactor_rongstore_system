@@ -19,7 +19,7 @@ type Role struct {
 
 	id uuid.UUID
 
-	roleRef vo.RoleRef
+	RoleKey vo.RoleKey
 	name    string
 
 	scopeType   enu.RoleScopeType
@@ -39,7 +39,7 @@ type Role struct {
 // ============================================================
 
 type RolePayload struct {
-	RoleRef         vo.RoleRef
+	RoleKey         vo.RoleKey
 	Name            string
 	RoleScopeType   enu.RoleScopeType
 	RoleAccessScope enu.RoleAccessScope
@@ -65,7 +65,7 @@ func NewRole(
 	role := &Role{
 		id: uuid.Must(uuid.NewV7()),
 
-		roleRef: payload.RoleRef,
+		RoleKey: payload.RoleKey,
 		name:    payload.Name,
 
 		scopeType:   payload.RoleScopeType,
@@ -95,7 +95,7 @@ func RestoreRole(
 	return Role{
 		id: id,
 
-		roleRef: payload.RoleRef,
+		RoleKey: payload.RoleKey,
 		name:    payload.Name,
 
 		scopeType:   payload.RoleScopeType,
@@ -170,8 +170,8 @@ func (r Role) ID() uuid.UUID {
 	return r.id
 }
 
-func (r Role) RoleRef() vo.RoleRef {
-	return r.roleRef
+func (r Role) RoleKey() vo.RoleKey {
+	return r.RoleKey
 }
 
 func (r Role) Name() string {

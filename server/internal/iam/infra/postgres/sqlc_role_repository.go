@@ -82,8 +82,8 @@ func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*en.Ro
 }
 
 // Exists implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Exists(ctx context.Context, roleScopeType enums.RoleScopeType, roleRef valueobjects.RoleRef) (bool, *apperrors.AppError) {
-	allowed, err := s.queries.ExistsRoleByCodeScope(ctx, mapper.RoleToExistsByCodeScopeParams(roleScopeType, roleRef))
+func (s *SqlcRoleRepository) Exists(ctx context.Context, roleScopeType enums.RoleScopeType, RoleKey valueobjects.RoleKey) (bool, *apperrors.AppError) {
+	allowed, err := s.queries.ExistsRoleByCodeScope(ctx, mapper.RoleToExistsByCodeScopeParams(roleScopeType, RoleKey))
 	if err != nil {
 		return false, dberr.TranslateDBError(err, s.dberr)
 	}
@@ -93,17 +93,17 @@ func (s *SqlcRoleRepository) Exists(ctx context.Context, roleScopeType enums.Rol
 
 func (s *SqlcRoleRepository) ListRoleByRef(
 	ctx context.Context,
-	roleRefs []valueobjects.RoleRef,
+	RoleKeys []valueobjects.RoleKey,
 ) ([]*en.RolePermission, *apperrors.AppError) {
 
-	if len(roleRefs) == 0 {
+	if len(RoleKeys) == 0 {
 		return []*en.RolePermission{}, nil
 	}
 
-	input := make([]roleRefDTO, 0, len(roleRefs))
+	input := make([]RoleKeyDTO, 0, len(RoleKeys))
 
-	for _, r := range roleRefs {
-		input = append(input, roleRefDTO{
+	for _, r := range RoleKeys {
+		input = append(input, RoleKeyDTO{
 			RoleCode: r.RoleCode(),
 			ScopeID:  r.ScopeID(),
 		})
@@ -114,7 +114,7 @@ func (s *SqlcRoleRepository) ListRoleByRef(
 		return nil, err
 	}
 
-	rows, err := s.queries.GetRolePermissionsByRoleRefs(ctx, payload)
+	rows, err := s.queries.GetRolePermissionsByRoleKeys(ctx, payload)
 	if err != nil {
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
@@ -123,7 +123,7 @@ func (s *SqlcRoleRepository) ListRoleByRef(
 
 	for _, row := range rows {
 
-		roleRef := vo.RestoreRoleRef(
+		RoleKey := vo.RestoreRoleKey(
 			row.RoleCode,
 			pg.UUIDPtrFromPgUUID(row.RoleScopeID),
 		)
@@ -131,7 +131,7 @@ func (s *SqlcRoleRepository) ListRoleByRef(
 		role := en.RestoreRole(
 			row.RoleID,
 			en.RolePayload{
-				RoleRef:         roleRef,
+				RoleKey:         RoleKey,
 				RoleScopeType:   enums.RoleScopeType(row.RoleScopeType),
 				Name:            row.RoleName,
 				RoleAccessScope: enums.RoleAccessScope(row.RoleAccessScope),

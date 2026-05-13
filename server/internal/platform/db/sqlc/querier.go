@@ -23,7 +23,7 @@ type Querier interface {
 	// READ: ROLE QUERIES
 	// ============================================================
 	GetRoleByID(ctx context.Context, id uuid.UUID) (GetRoleByIDRow, error)
-	ListAuthorizationGrantsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleRefsRow, error)
+	ListAuthorizationGrantsByRoleKeys(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleKeysRow, error)
 	ListRoles(ctx context.Context, arg ListRolesParams) ([]ListRolesRow, error)
 	UpdateRole(ctx context.Context, arg UpdateRoleParams) (UpdateRoleRow, error)
 }

@@ -8,6 +8,6 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-type AuthorizeQuery interface {
-	ListGrantsByRoleRefs(ctx context.Context, roleRefs []vo.RoleRef) ([]pr.AuthorizationGrant, *aerrs.AppError)
+type AuthorizationQuery interface {
+	ListGrantsByRoleKeys(ctx context.Context, RoleKeys []vo.RoleKey) ([]pr.AuthorizationGrant, *aerrs.AppError)
 }

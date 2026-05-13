@@ -13,7 +13,7 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/testhelpers"
 )
 
-func TestSqlcRolePermissionRepository_FindAllByRoleRefs(t *testing.T) {
+func TestSqlcRolePermissionRepository_FindAllByRoleKeys(t *testing.T) {
 	ctx := context.Background()
 
 	// setup DB (testcontainer hoặc test DB local)
@@ -52,12 +52,12 @@ func TestSqlcRolePermissionRepository_FindAllByRoleRefs(t *testing.T) {
 	require.NoError(t, err)
 
 	// ===== Call function =====
-	roleRef := valueobjects.NewRoleRefFromPersistence(
+	RoleKey := valueobjects.NewRoleKeyFromPersistence(
 		"ADMIN",
 		&[]string{scopeID.String()}[0],
 	)
 
-	results, appErr := repo.FindAllByRoleRefs(ctx, []valueobjects.RoleRef{roleRef})
+	results, appErr := repo.FindAllByRoleKeys(ctx, []valueobjects.RoleKey{RoleKey})
 
 	// ===== Assertions =====
 	require.Nil(t, appErr)
@@ -65,15 +65,15 @@ func TestSqlcRolePermissionRepository_FindAllByRoleRefs(t *testing.T) {
 
 	rp := results[0]
 
-	assert.Equal(t, "ADMIN", rp.Role.RoleRef().RoleCode())
-	assert.Equal(t, scopeID.String(), rp.Role.RoleRef().ScopeID())
+	assert.Equal(t, "ADMIN", rp.Role.RoleKey().RoleCode())
+	assert.Equal(t, scopeID.String(), rp.Role.RoleKey().ScopeID())
 
 	assert.Equal(t, "USER_CREATE", rp.Permission.Code())
 	assert.Equal(t, "USER", rp.Permission.ResourceAction().Resource())
 	assert.Equal(t, "CREATE", rp.Permission.ResourceAction().Action())
 }
 
-func TestSqlcRolePermissionRepository_FindAllByRoleRefs_EmptyInput(t *testing.T) {
+func TestSqlcRolePermissionRepository_FindAllByRoleKeys_EmptyInput(t *testing.T) {
 	ctx := context.Background()
 
 	testDB := testhelpers.SetupTestDB(t)
@@ -82,13 +82,13 @@ func TestSqlcRolePermissionRepository_FindAllByRoleRefs_EmptyInput(t *testing.T)
 	queries := iam_sqlc.New(testDB.DB)
 	repo := NewSqlcRolePermissionRepository(queries)
 
-	results, err := repo.FindAllByRoleRefs(ctx, []valueobjects.RoleRef{})
+	results, err := repo.FindAllByRoleKeys(ctx, []valueobjects.RoleKey{})
 
 	require.Nil(t, err)
 	assert.Empty(t, results)
 }
 
-func TestSqlcRolePermissionRepository_FindAllByRoleRefs_NotFound(t *testing.T) {
+func TestSqlcRolePermissionRepository_FindAllByRoleKeys_NotFound(t *testing.T) {
 	ctx := context.Background()
 
 	testDB := testhelpers.SetupTestDB(t)
@@ -99,12 +99,12 @@ func TestSqlcRolePermissionRepository_FindAllByRoleRefs_NotFound(t *testing.T) {
 
 	scopeID := uuid.New()
 
-	roleRef := valueobjects.NewRoleRefFromPersistence(
+	RoleKey := valueobjects.NewRoleKeyFromPersistence(
 		"NOT_EXIST",
 		&[]string{scopeID.String()}[0],
 	)
 
-	results, err := repo.FindAllByRoleRefs(ctx, []valueobjects.RoleRef{roleRef})
+	results, err := repo.FindAllByRoleKeys(ctx, []valueobjects.RoleKey{RoleKey})
 
 	require.Nil(t, err)
 	assert.Empty(t, results)

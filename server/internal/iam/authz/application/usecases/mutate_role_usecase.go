@@ -74,7 +74,7 @@ func (u *MutateRoleUsecase) handleCreate(
 	cmd c.CreateRoleCommand,
 ) (*c.CreateRoleCommandResult, *aerrs.AppError) {
 
-	roleRef, err := vo.NewRoleRef(cmd.ScopeID, cmd.Code)
+	RoleKey, err := vo.NewRoleKey(cmd.ScopeID, cmd.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	exists, err := u.repo.Exists(ctx, scopeType, roleRef)
+	exists, err := u.repo.Exists(ctx, scopeType, RoleKey)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (u *MutateRoleUsecase) handleCreate(
 
 	role, err := en.NewRole(
 		en.RolePayload{
-			RoleRef:         roleRef,
+			RoleKey:         RoleKey,
 			RoleScopeType:   scopeType,
 			Name:            cmd.Name,
 			RoleAccessScope: scope,

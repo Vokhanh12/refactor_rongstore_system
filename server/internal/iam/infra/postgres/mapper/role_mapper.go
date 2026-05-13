@@ -11,9 +11,9 @@ import (
 func RoleToCreateParams(role *en.Role) db.CreateRoleParams {
 	return db.CreateRoleParams{
 		ID:              role.ID(),
-		ScopeID:         pg.PgUUIDFromUUIDPtr(role.RoleRef().ScopeID()),
+		ScopeID:         pg.PgUUIDFromUUIDPtr(role.RoleKey().ScopeID()),
 		RoleScopeType:   RoleScopeTypeToDB(role.ScopeType()),
-		Code:            role.RoleRef().RoleCode(),
+		Code:            role.RoleKey().RoleCode(),
 		Name:            role.Name(),
 		Description:     pg.TextFromStringPtr(role.Description()),
 		RoleAccessScope: RoleAccessScopeToDB(role.AccessScope()),
@@ -27,9 +27,9 @@ func RoleToCreateParams(role *en.Role) db.CreateRoleParams {
 func RoleToUpdateParams(role *en.Role) db.UpdateRoleParams {
 	return db.UpdateRoleParams{
 		ID:              role.ID(),
-		ScopeID:         pg.PgUUIDFromUUIDPtr(role.RoleRef().ScopeID()),
+		ScopeID:         pg.PgUUIDFromUUIDPtr(role.RoleKey().ScopeID()),
 		RoleScopeType:   RoleScopeTypeToDB(role.ScopeType()),
-		Code:            role.RoleRef().RoleCode(),
+		Code:            role.RoleKey().RoleCode(),
 		Name:            role.Name(),
 		Description:     pg.TextFromStringPtr(role.Description()),
 		RoleAccessScope: RoleAccessScopeToDB(role.AccessScope()),
@@ -40,11 +40,11 @@ func RoleToUpdateParams(role *en.Role) db.UpdateRoleParams {
 	}
 }
 
-func RoleToExistsByCodeScopeParams(roleScopeType enu.RoleScopeType, roleRef vo.RoleRef) db.ExistsRoleByCodeScopeParams {
+func RoleToExistsByCodeScopeParams(roleScopeType enu.RoleScopeType, RoleKey vo.RoleKey) db.ExistsRoleByCodeScopeParams {
 	return db.ExistsRoleByCodeScopeParams{
-		Code:          roleRef.RoleCode(),
+		Code:          RoleKey.RoleCode(),
 		RoleScopeType: RoleScopeTypeToDB(roleScopeType),
-		ScopeID:       pg.PgUUIDFromUUIDPtr(roleRef.ScopeID()),
+		ScopeID:       pg.PgUUIDFromUUIDPtr(RoleKey.ScopeID()),
 	}
 }
 
@@ -52,7 +52,7 @@ func CreateRoleRowToEntity(row db.CreateRoleRow) en.Role {
 	return en.RestoreRole(
 		row.ID,
 		en.RolePayload{
-			RoleRef: vo.RestoreRoleRef(
+			RoleKey: vo.RestoreRoleKey(
 				row.Code,
 				pg.UUIDPtrFromPgUUID(row.ScopeID),
 			),
@@ -72,7 +72,7 @@ func UpdateRoleRowToEntity(row db.UpdateRoleRow) en.Role {
 	return en.RestoreRole(
 		row.ID,
 		en.RolePayload{
-			RoleRef: vo.RestoreRoleRef(
+			RoleKey: vo.RestoreRoleKey(
 				row.Code,
 				pg.UUIDPtrFromPgUUID(row.ScopeID),
 			),

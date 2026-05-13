@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const listAuthorizationGrantsByRoleRefs = `-- name: ListAuthorizationGrantsByRoleRefs :many
+const listAuthorizationGrantsByRoleKeys = `-- name: ListAuthorizationGrantsByRoleKeys :many
 SELECT
     r.code AS role_code,
     r.scope_id AS role_scope_id,
@@ -39,7 +39,7 @@ AND (
 )
 `
 
-type ListAuthorizationGrantsByRoleRefsRow struct {
+type ListAuthorizationGrantsByRoleKeysRow struct {
 	RoleCode           string      `json:"role_code"`
 	RoleScopeID        pgtype.UUID `json:"role_scope_id"`
 	RoleIsSuper        bool        `json:"role_is_super"`
@@ -47,15 +47,15 @@ type ListAuthorizationGrantsByRoleRefsRow struct {
 	PermissionAction   string      `json:"permission_action"`
 }
 
-func (q *Queries) ListAuthorizationGrantsByRoleRefs(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleRefsRow, error) {
-	rows, err := q.db.Query(ctx, listAuthorizationGrantsByRoleRefs, dollar_1)
+func (q *Queries) ListAuthorizationGrantsByRoleKeys(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleKeysRow, error) {
+	rows, err := q.db.Query(ctx, listAuthorizationGrantsByRoleKeys, dollar_1)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListAuthorizationGrantsByRoleRefsRow
+	var items []ListAuthorizationGrantsByRoleKeysRow
 	for rows.Next() {
-		var i ListAuthorizationGrantsByRoleRefsRow
+		var i ListAuthorizationGrantsByRoleKeysRow
 		if err := rows.Scan(
 			&i.RoleCode,
 			&i.RoleScopeID,

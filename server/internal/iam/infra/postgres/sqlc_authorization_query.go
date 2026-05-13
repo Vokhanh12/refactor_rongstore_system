@@ -25,15 +25,15 @@ func NewSqlcAuthorizeQuery(queries *db.Queries) q.AuthorizeQuery {
 	return &SqlcAuthorizeQuery{queries: queries}
 }
 
-// ListGrantsByRoleRefs implements [query.AuthorizeQuery].
-func (s *SqlcAuthorizeQuery) ListGrantsByRoleRefs(ctx context.Context, roleRefs []valueobjects.RoleRef) ([]pr.AuthorizationGrant, *apperrors.AppError) {
+// ListGrantsByRoleKeys implements [query.AuthorizeQuery].
+func (s *SqlcAuthorizeQuery) ListGrantsByRoleKeys(ctx context.Context, RoleKeys []valueobjects.RoleKey) ([]pr.AuthorizationGrant, *apperrors.AppError) {
 
-	payload, aerr := serialization.MustMarshal(roleRefs)
+	payload, aerr := serialization.MustMarshal(RoleKeys)
 	if aerr != nil {
 		return nil, aerr
 	}
 
-	rows, err := s.queries.ListAuthorizationGrantsByRoleRefs(ctx, payload)
+	rows, err := s.queries.ListAuthorizationGrantsByRoleKeys(ctx, payload)
 	if err != nil {
 		return nil, dberr.TranslateDBError(err, s.dberr)
 	}
@@ -42,7 +42,7 @@ func (s *SqlcAuthorizeQuery) ListGrantsByRoleRefs(ctx context.Context, roleRefs 
 
 	for _, row := range rows {
 		results = append(results, pr.AuthorizationGrant{
-			RoleRef:    vo.RestoreRoleRef(row.RoleCode, pg.UUIDPtrFromPgUUID(row.RoleScopeID)),
+			RoleKey:    vo.RestoreRoleKey(row.RoleCode, pg.UUIDPtrFromPgUUID(row.RoleScopeID)),
 			IsElevated: row.RoleIsSuper,
 			Resource:   row.PermissionResource,
 			Action:     row.PermissionAction,

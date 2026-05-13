@@ -9,6 +9,6 @@ import (
 )
 
 type RolePermissionCache interface {
-	GetPermissions(ctx context.Context, roleRef vo.RoleRef) ([]vo.ResourceAction, *aerrs.AppError)
-	SetPermissions(ctx context.Context, roleRef vo.RoleRef, resourceActions []vo.ResourceAction, ttl time.Duration) *aerrs.AppError
+	GetPermissions(ctx context.Context, RoleKey vo.RoleKey) ([]vo.ResourceAction, *aerrs.AppError)
+	SetPermissions(ctx context.Context, RoleKey vo.RoleKey, resourceActions []vo.ResourceAction, ttl time.Duration) *aerrs.AppError
 }

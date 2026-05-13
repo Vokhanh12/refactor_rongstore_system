@@ -19,14 +19,14 @@ import (
 const permissionCacheTTL = 15 * time.Minute
 
 type AuthorizeUsecase struct {
-	rolePermissionCache cs.RolePermissionCache
-	AuthorizeQuery      q.AuthorizeQuery
+	cache cs.AuthorizationCache
+	query q.AuthorizationQuery
 }
 
-func NewAuthorizeUsecase(rpCache cs.RolePermissionCache, authQuery q.AuthorizeQuery) *AuthorizeUsecase {
+func NewAuthorizeUsecase(c cs.AuthorizationCache, q q.AuthorizationQuery) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
-		rolePermissionCache: rpCache,
-		AuthorizeQuery:      authQuery,
+		cache: c,
+		query: q,
 	}
 }
 
@@ -47,7 +47,7 @@ func (u *AuthorizeUsecase) Execute(
 	targetKey := cmd.Resource + ":" + cmd.Action
 
 	rolePermKeysMap := make(map[string][]vo.ResourceAction, len(cmd.Roles))
-	var roleKeysMissCache []vo.RoleRef
+	var RoleKeysMissCache []vo.RoleKey
 
 	// ---------- Parse + cache check ----------
 	for _, role := range cmd.Roles {
@@ -64,13 +64,13 @@ func (u *AuthorizeUsecase) Execute(
 			return nil, aerrs.New(core.UUID_INVALID, aerrs.WithCauseDetail(err))
 		}
 
-		roleKey, aerr := vo.NewRoleRef(&scopeID, roleCode)
+		roleKey, aerr := vo.NewRoleKey(&scopeID, roleCode)
 		if aerr != nil {
 			return nil, aerr
 		}
 
 		// cache
-		perms, aerr := u.rolePermissionCache.GetPermissions(ctx, roleKey)
+		perms, aerr := u.cache.GetResourceActionByRoleKey(ctx, roleKey)
 		if err != nil {
 			return nil, aerr
 		}
@@ -80,36 +80,35 @@ func (u *AuthorizeUsecase) Execute(
 			continue
 		}
 
-		roleKeysMissCache = append(roleKeysMissCache, roleKey)
+		RoleKeysMissCache = append(RoleKeysMissCache, roleKey)
 	}
 
 	// ---------- Load from DB ----------
-	if len(roleKeysMissCache) > 0 {
+	if len(RoleKeysMissCache) > 0 {
 
-		authorizationGrant, err := u.AuthorizeQuery.ListGrantsByRoleRefs(ctx, roleKeysMissCache)
+		authzGrants, err := u.query.ListGrantsByRoleKeys(ctx, RoleKeysMissCache)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, rp := range authorizationGrant {
+		for _, ag := range authzGrants {
 
-			// shortcut: super role
-			if rp.Role.IsElevated() {
+			if ag.Match(ag.Resource, ag.Action) {
 				return allow()
 			}
 
-			key := rp.Role.RoleRef().String()
+			key := ag.RoleKey.String()
 
 			rolePermKeysMap[key] = append(
 				rolePermKeysMap[key],
-				rp.Permission.ResourceAction(),
+				ag.Permission.ResourceAction(),
 			)
 		}
 
 		// cache back
-		for _, roleRef := range roleKeysMissCache {
-			perms := rolePermKeysMap[roleRef.String()]
-			u.rolePermissionCache.SetPermissions(ctx, roleRef, perms, permissionCacheTTL)
+		for _, RoleKey := range RoleKeysMissCache {
+			perms := rolePermKeysMap[RoleKey.String()]
+			u.rolePermissionCache.SetPermissions(ctx, RoleKey, perms, permissionCacheTTL)
 		}
 	}
 

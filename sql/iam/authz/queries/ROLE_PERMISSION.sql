@@ -1,4 +1,4 @@
--- name: ListAuthorizationGrantsByRoleRefs :many
+-- name: ListAuthorizationGrantsByRoleKeys :many
 SELECT
     r.code AS role_code,
     r.scope_id AS role_scope_id,
