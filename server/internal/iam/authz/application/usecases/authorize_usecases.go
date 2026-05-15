@@ -36,7 +36,7 @@ func (u *AuthorizeUsecase) Execute(
 ) (*com.AuthorizeCommandResult, *aerrs.AppError) {
 
 	// ---------- Validate input ----------
-	if len(cmd.Roles) == 0 {
+	if len(cmd.RoleKeyStrs) == 0 {
 		return deny(&merrs.ROLE_REQUIRED)
 	}
 
@@ -46,13 +46,12 @@ func (u *AuthorizeUsecase) Execute(
 
 	targetKey := cmd.Resource + ":" + cmd.Action
 
-	rolePermKeysMap := make(map[string][]vo.ResourceAction, len(cmd.Roles))
-	var RoleKeysMissCache []vo.RoleKey
+	rasMap := make(map[string][]vo.ResourceAction, len(cmd.RoleKeyStrs))
+	var rksMissCache []vo.RoleKey
 
-	// ---------- Parse + cache check ----------
-	for _, role := range cmd.Roles {
+	for _, roleKeyStr := range cmd.RoleKeyStrs {
 
-		parts := strings.Split(role, ":")
+		parts := strings.Split(roleKeyStr, ":")
 		if len(parts) != 2 {
 			return nil, aerrs.New(core.STRING_SPLIT_INVALID)
 		}
@@ -69,59 +68,50 @@ func (u *AuthorizeUsecase) Execute(
 			return nil, aerr
 		}
 
-		// cache
-		perms, aerr := u.cache.GetResourceActionByRoleKey(ctx, roleKey)
-		if err != nil {
+		rasCache, aerr := u.cache.GetResourceActionByRoleKey(ctx, roleKey)
+		if aerr != nil {
 			return nil, aerr
 		}
 
-		if len(perms) > 0 {
-			rolePermKeysMap[role] = perms
+		if len(rasCache) > 0 {
+			rasMap[roleKeyStr] = rasCache
 			continue
 		}
 
-		RoleKeysMissCache = append(RoleKeysMissCache, roleKey)
+		rksMissCache = append(rksMissCache, roleKey)
 	}
 
-	// ---------- Load from DB ----------
-	if len(RoleKeysMissCache) > 0 {
+	if len(rksMissCache) > 0 {
 
-		authzGrants, err := u.query.ListGrantsByRoleKeys(ctx, RoleKeysMissCache)
+		authzGrants, err := u.query.ListGrantsByRoleKeys(ctx, rksMissCache)
 		if err != nil {
 			return nil, err
 		}
 
 		for _, ag := range authzGrants {
 
-			if ag.Match(ag.Resource, ag.Action) {
-				return allow()
-			}
+			roKeystr := ag.RoleKey.String()
 
-			key := ag.RoleKey.String()
-
-			rolePermKeysMap[key] = append(
-				rolePermKeysMap[key],
-				ag.Permission.ResourceAction(),
+			rasMap[roKeystr] = append(
+				rasMap[roKeystr],
+				ag.ResourceAction,
 			)
 		}
 
-		// cache back
-		for _, RoleKey := range RoleKeysMissCache {
-			perms := rolePermKeysMap[RoleKey.String()]
-			u.rolePermissionCache.SetPermissions(ctx, RoleKey, perms, permissionCacheTTL)
+		for _, RoleKey := range rksMissCache {
+			ras := rasMap[RoleKey.String()]
+			u.cache.SetResourceActionByRoleKey(ctx, RoleKey, ras, permissionCacheTTL)
 		}
 	}
 
-	// ---------- Flatten permissions ----------
 	globalPerms := make(map[string]struct{})
 
-	for _, perms := range rolePermKeysMap {
+	for _, perms := range rasMap {
 		for _, p := range perms {
 			globalPerms[p.String()] = struct{}{}
 		}
 	}
 
-	// ---------- Check permission ----------
 	if _, ok := globalPerms[targetKey]; ok {
 		return allow()
 	}

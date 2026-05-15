@@ -7,10 +7,5 @@ type AuthorizationGrant struct {
 
 	IsElevated bool
 
-	Resource string
-	Action   string
-}
-
-func (g AuthorizationGrant) Match(resource, action string) bool {
-	return g.Resource == resource && g.Action == action
+	ResourceAction vo.ResourceAction
 }
