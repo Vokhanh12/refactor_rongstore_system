@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"

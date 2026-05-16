@@ -1,5 +1,5 @@
-version: 1
-updated_at: "2025-08-17"
+version: 2
+updated_at: "2026-05-16"
 owner: platform-auth
 
 # ============================================================
@@ -7,112 +7,158 @@ owner: platform-auth
 # ============================================================
 
 conventions:
-  code_format: "<DOMAIN>-<CATEGORY>-<NNN>"
+
+  code_format: "<DOMAIN>-<LAYER>-<NNN>"
+
+  layers:
+
+    DOM: "Business invariant / domain rule"
+    APP: "Usecase orchestration / workflow"
+    TRANS: "Transport / DTO / request"
+    PARSE: "Technical parsing / conversion"
+    INFRA: "Infrastructure / external system"
+    SEC: "Authentication / authorization"
+    SYS: "Unexpected / fallback"
 
   severity_scale:
+
     S1: "Critical outage / security risk"
     S2: "Degraded experience / important failure"
-    S3: "Client error / minor issue"
+    S3: "Client error / invalid input"
 
   retry_policy:
-    http_retryable: [408, 429, 500, 502, 503, 504]
-    grpc_retryable: ["Unavailable", "DeadlineExceeded"]
+
+    http_retryable:
+      - 408
+      - 429
+      - 500
+      - 502
+      - 503
+      - 504
+
+    grpc_retryable:
+      - "Unavailable"
+      - "DeadlineExceeded"
 
 # ============================================================
-# CORE (GENERIC / SHARED ENGINE)
+# SERVICES
 # ============================================================
 
 services:
+
+  # ==========================================================
+  # CORE
+  # ==========================================================
+
   core:
+
     domain: "CORE"
+
     errors:
-      MUT:
-        - code: CORE-MUT-001
+
+      DOM:
+
+        - code: CORE-DOM-001
+          key: VALIDATION_FAILED
+          component: validator
+          tags: [domain, validation]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Validation failed"
+          severity: S3
+          retryable: false
+
+      APP:
+
+        - code: CORE-APP-001
           key: MUTATE_OPERATION_UNSUPPORTED
           component: mutate_engine
-          tags: [validation, client]
+          tags: [application]
           http_status: 400
           grpc_code: InvalidArgument
           message: "Unsupported mutate operation"
           severity: S3
           retryable: false
 
-        - code: CORE-MUT-002
+        - code: CORE-APP-002
           key: MUTATE_PARTIAL_FAILURE
           component: mutate_engine
-          tags: [system]
+          tags: [application]
           http_status: 200
           grpc_code: OK
           message: "One or more operations failed"
           severity: S2
           retryable: false
 
-        - code: CORE-MUT-004
-          key: MUTATE_PARSE_FAILED
-          component: mutate_engine
-          tags: [validation, client]
-          http_status: 400
-          grpc_code: InvalidArgument
-          message: "Failed to parse mutation payload"
-          severity: S3
-          retryable: false  
-          
-      VIE:
-        - code: CORE-VIE-001
+        - code: CORE-APP-003
           key: VIEW_OPERATION_UNSUPPORTED
           component: view_engine
-          tags: [validation, client]
+          tags: [application]
           http_status: 400
           grpc_code: InvalidArgument
           message: "Unsupported view operation"
           severity: S3
           retryable: false
 
-        - code: CORE-VIE-002
+        - code: CORE-APP-004
           key: VIEW_PARTIAL_FAILURE
-          component: mutate_engine
-          tags: [system]
+          component: view_engine
+          tags: [application]
           http_status: 200
           grpc_code: OK
           message: "One or more operations failed"
           severity: S2
           retryable: false
 
-      VAL:
-        - code: CORE-VAL-001
-          key: VALIDATION_FAILED
-          component: validator
-          tags: [system]
+      TRANS:
+
+        - code: CORE-TRANS-001
+          key: INVALID_REQUEST_PAYLOAD
+          component: transport
+          tags: [transport]
           http_status: 400
           grpc_code: InvalidArgument
-          message: "Validation failed"
+          message: "Invalid request payload"
           severity: S3
-          retryable: false   
+          retryable: false
 
-        - code: CORE-VAL-002
+      PARSE:
+
+        - code: CORE-PARSE-001
           key: STRING_SPLIT_INVALID
-          component: api_gateway
-          tags: [validation, client]
+          component: parser
+          tags: [parser]
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid string format"
           severity: S3
-          retryable: false    
+          retryable: false
 
-        - code: CORE-VAL-003
+        - code: CORE-PARSE-002
           key: UUID_INVALID
-          component: api_gateway
-          tags: [validation, client]
+          component: parser
+          tags: [parser]
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid UUID format"
           severity: S3
           retryable: false
 
+        - code: CORE-PARSE-003
+          key: MUTATE_PARSE_FAILED
+          component: mutate_engine
+          tags: [parser]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Failed to parse mutation payload"
+          severity: S3
+          retryable: false
+
       INFRA:
-        - code: CORE-INF-001
+
+        - code: CORE-INFRA-001
           key: JSON_SERIALIZATION_FAILED
-          component: api_gateway
+          component: serializer
           tags: [infra]
           http_status: 500
           grpc_code: Internal
@@ -120,61 +166,84 @@ services:
           severity: S2
           retryable: false
 
-# ============================================================
-# IAM - AUTH (AUTHENTICATION)
-# ============================================================
+      SYS:
+
+        - code: CORE-SYS-001
+          key: INTERNAL_ERROR
+          component: system
+          tags: [system]
+          http_status: 500
+          grpc_code: Internal
+          message: "Internal server error"
+          severity: S1
+          retryable: false
+
+  # ==========================================================
+  # IAM
+  # ==========================================================
+
   iam:
+
+    # ========================================================
+    # AUTH
+    # ========================================================
+
     auth:
+
       domain: "AUTH"
 
       errors:
 
-        VAL:
-          - code: AUTH-VAL-001
-            key: LOGIN_EMAIL_EMPTY
+        DOM:
+
+          - code: AUTH-DOM-001
+            key: LOGIN_EMAIL_REQUIRED
             component: validator
-            tags: [validation, client]
+            tags: [domain]
             http_status: 400
             grpc_code: InvalidArgument
             message: "Email is required"
             severity: S3
             retryable: false
 
-          - code: AUTH-VAL-002
+          - code: AUTH-DOM-002
             key: LOGIN_EMAIL_INVALID
             component: validator
-            tags: [validation, client]
+            tags: [domain]
             http_status: 400
             grpc_code: InvalidArgument
             message: "Invalid email format"
             severity: S3
             retryable: false
 
-          - code: AUTH-VAL-003
-            key: LOGIN_PASSWORD_EMPTY
+          - code: AUTH-DOM-003
+            key: LOGIN_PASSWORD_REQUIRED
             component: validator
-            tags: [validation, client]
+            tags: [domain]
             http_status: 400
             grpc_code: InvalidArgument
             message: "Password is required"
             severity: S3
             retryable: false
 
-          - code: AUTH-VAL-004
+        TRANS:
+
+          - code: AUTH-TRANS-001
             key: LOGIN_PAYLOAD_INVALID
-            component: validator
-            tags: [validation, client]
+            component: auth_transport
+            tags: [transport]
             http_status: 400
             grpc_code: InvalidArgument
-            message: "Invalid request payload"
+            message: "Invalid login payload"
             severity: S3
             retryable: false
 
         SEC:
+
           - code: AUTH-SEC-001
             key: TOKEN_EXPIRED
             component: jwt
-            tags: [security, auth]
+            tags: [security]
             http_status: 401
             grpc_code: Unauthenticated
             message: "Token expired"
@@ -184,7 +253,7 @@ services:
           - code: AUTH-SEC-002
             key: UNAUTHORIZED
             component: auth_service
-            tags: [security, auth]
+            tags: [security]
             http_status: 401
             grpc_code: Unauthenticated
             message: "Authentication required"
@@ -194,7 +263,7 @@ services:
           - code: AUTH-SEC-003
             key: JWT_INVALID
             component: jwt
-            tags: [security, auth]
+            tags: [security]
             http_status: 401
             grpc_code: Unauthenticated
             message: "Invalid token"
@@ -204,57 +273,28 @@ services:
           - code: AUTH-SEC-004
             key: JWT_PAYLOAD_INVALID
             component: jwt
-            tags: [security, auth]
+            tags: [security]
             http_status: 401
             grpc_code: Unauthenticated
             message: "Invalid token payload"
             severity: S3
             retryable: false
 
-  # ============================================================
-  # IAM - AUTHZ (AUTHORIZATION)
-  # ============================================================
+    # ========================================================
+    # AUTHZ
+    # ========================================================
 
     authz:
+
       domain: "AUTHZ"
 
       errors:
 
-        VAL:
-          - code: AUTHZ-VAL-001
-            key: AUTHORIZATION_INVALID
-            component: authz_service
-            tags: [validation, authz]
-            http_status: 400
-            grpc_code: InvalidArgument
-            message: "Invalid authorization"
-            severity: S3
-            retryable: false
-
-          - code: AUTHZ-VAL-002
-            key: RESOURCE_OR_ACTION_REQUIRED
-            component: authz_service
-            tags: [validation, authz]
-            http_status: 400
-            grpc_code: InvalidArgument
-            message: "Resource and action are required"
-            severity: S3
-            retryable: false
-
-          - code: AUTHZ-VAL-003
-            key: ROLE_REQUIRED
-            component: authz_service
-            tags: [validation, authz]
-            http_status: 400
-            grpc_code: InvalidArgument
-            message: "Role is required"
-            severity: S3
-            retryable: false
-
         DOM:
+
           - code: AUTHZ-DOM-001
             key: ROLE_NOT_FOUND
-            component: role_service
+            component: role_domain
             tags: [domain]
             http_status: 404
             grpc_code: NotFound
@@ -263,18 +303,8 @@ services:
             retryable: false
 
           - code: AUTHZ-DOM-002
-            key: ROLE_CONFLICT
-            component: role_service
-            tags: [domain]
-            http_status: 409
-            grpc_code: AlreadyExists
-            message: "Role already exists"
-            severity: S3
-            retryable: false
-
-          - code: AUTHZ-DOM-003
             key: ROLE_INVALID
-            component: role_service
+            component: role_domain
             tags: [domain]
             http_status: 400
             grpc_code: InvalidArgument
@@ -282,38 +312,85 @@ services:
             severity: S3
             retryable: false
 
-          - code: AUTHZ-DOM-004
+        APP:
+
+          - code: AUTHZ-APP-001
+            key: ROLE_ALREADY_EXISTS
+            component: role_usecase
+            tags: [application]
+            http_status: 409
+            grpc_code: AlreadyExists
+            message: "Role already exists"
+            severity: S3
+            retryable: false
+
+          - code: AUTHZ-APP-002
             key: ROLE_PERSIST_FAILED
             component: role_repository
-            tags: [domain]
+            tags: [application]
             http_status: 500
             grpc_code: Internal
             message: "Failed to persist role"
             severity: S2
             retryable: false
 
+        TRANS:
+
+          - code: AUTHZ-TRANS-001
+            key: AUTHORIZATION_INVALID
+            component: authz_transport
+            tags: [transport]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Invalid authorization"
+            severity: S3
+            retryable: false
+
+          - code: AUTHZ-TRANS-002
+            key: RESOURCE_OR_ACTION_REQUIRED
+            component: authz_transport
+            tags: [transport]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Resource and action are required"
+            severity: S3
+            retryable: false
+
+          - code: AUTHZ-TRANS-003
+            key: ROLE_REQUIRED
+            component: authz_transport
+            tags: [transport]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Role is required"
+            severity: S3
+            retryable: false
+
         SEC:
+
           - code: AUTHZ-SEC-001
             key: ROLE_FORBIDDEN
             component: authz_service
-            tags: [security, authz]
+            tags: [security]
             http_status: 403
             grpc_code: PermissionDenied
             message: "Permission denied"
             severity: S3
             retryable: false
 
-  # ============================================================
-  # INFRASTRUCTURE (SHARED)
-  # ============================================================
+  # ==========================================================
+  # PLATFORM
+  # ==========================================================
 
   platform:
+
     domain: "PLATFORM"
 
     errors:
 
       INFRA:
-        - code: PLATFORM-INF-001
+
+        - code: PLATFORM-INFRA-001
           key: DB_TIMEOUT
           component: postgres
           tags: [infra, database]
@@ -323,7 +400,7 @@ services:
           severity: S1
           retryable: true
 
-        - code: PLATFORM-INF-002
+        - code: PLATFORM-INFRA-002
           key: DB_QUERY_FAILED
           component: postgres
           tags: [infra, database]
@@ -333,7 +410,7 @@ services:
           severity: S2
           retryable: false
 
-        - code: PLATFORM-INF-003
+        - code: PLATFORM-INFRA-003
           key: REDIS_UNAVAILABLE
           component: redis
           tags: [infra, cache]
@@ -343,7 +420,7 @@ services:
           severity: S1
           retryable: true
 
-        - code: PLATFORM-INF-004
+        - code: PLATFORM-INFRA-004
           key: EXTERNAL_SERVICE_UNAVAILABLE
           component: external_service
           tags: [infra, external]
@@ -353,134 +430,112 @@ services:
           severity: S1
           retryable: true
 
-        - code: PLATFORM-INF-005
+        - code: PLATFORM-INFRA-005
           key: POSTGRES_UNAVAILABLE
           component: postgres
           tags: [infra, database]
           http_status: 503
           grpc_code: Unavailable
-          message: "postgres unavailable"
+          message: "Postgres unavailable"
           severity: S1
           retryable: true
- 
 
 # ============================================================
-# ERROR DETAILS (VALIDATION LEVEL)
+# ERROR DETAILS
 # ============================================================
 
 error_details:
 
-  # ========================
-  # REQUIRED / NULL
-  # ========================
-  - code: VAL_REQUIRED
-    message: "Field is required"
+  DOM:
 
-  - code: VAL_NULL
-    message: "Field must not be null"
+    - code: VAL_REQUIRED
+      message: "Field is required"
 
-  # ========================
-  # FORMAT / TYPE
-  # ========================
-  - code: VAL_INVALID_FORMAT
-    message: "Invalid format"
+    - code: VAL_NULL
+      message: "Field must not be null"
 
-  - code: VAL_INVALID_TYPE
-    message: "Invalid data type"
+    - code: VAL_INVALID_FORMAT
+      message: "Invalid format"
 
-  - code: VAL_INVALID_ENUM
-    message: "Invalid enum value"
+    - code: VAL_INVALID_TYPE
+      message: "Invalid data type"
 
-  # ========================
-  # RANGE / SIZE
-  # ========================
-  - code: VAL_OUT_OF_RANGE
-    message: "Out of range"
+    - code: VAL_INVALID_ENUM
+      message: "Invalid enum value"
 
-  - code: VAL_TOO_SHORT
-    message: "Value is too short"
+    - code: VAL_OUT_OF_RANGE
+      message: "Out of range"
 
-  - code: VAL_TOO_LONG
-    message: "Value is too long"
+    - code: VAL_TOO_SHORT
+      message: "Value is too short"
 
-  - code: VAL_MIN
-    message: "Value is below minimum"
+    - code: VAL_TOO_LONG
+      message: "Value is too long"
 
-  - code: VAL_MAX
-    message: "Value exceeds maximum"
+    - code: VAL_MIN
+      message: "Value is below minimum"
 
-  # ========================
-  # STRING / PATTERN
-  # ========================
-  - code: VAL_INVALID_PATTERN
-    message: "Value does not match required pattern"
+    - code: VAL_MAX
+      message: "Value exceeds maximum"
 
-  # ========================
-  # BUSINESS LOGIC
-  # ========================
-  - code: VAL_DUPLICATE
-    message: "Duplicate value"
+    - code: VAL_INVALID_PATTERN
+      message: "Value does not match required pattern"
 
-  - code: VAL_CONFLICT
-    message: "Value conflicts with existing data"
+  APP:
 
-  - code: VAL_NOT_ALLOWED
-    message: "Operation not allowed"
+    - code: APP_DUPLICATE
+      message: "Duplicate value"
 
-  - code: VAL_FORBIDDEN_STATE
-    message: "Invalid state for operation"
+    - code: APP_CONFLICT
+      message: "Value conflicts with existing data"
 
-  # ========================
-  # EXISTENCE
-  # ========================
-  - code: VAL_NOT_FOUND
-    message: "Not found"
+    - code: APP_NOT_ALLOWED
+      message: "Operation not allowed"
 
-  - code: VAL_ALREADY_EXISTS
-    message: "Already exists"
+    - code: APP_FORBIDDEN_STATE
+      message: "Invalid state for operation"
 
-  # ========================
-  # RELATION / REFERENCE
-  # ========================
-  - code: VAL_INVALID_REFERENCE
-    message: "Invalid reference"
+    - code: APP_NOT_FOUND
+      message: "Not found"
 
-  - code: VAL_DEPENDENCY_MISSING
-    message: "Required dependency is missing"
+    - code: APP_ALREADY_EXISTS
+      message: "Already exists"
 
-  # ========================
-  # TIME / DATE
-  # ========================
-  - code: VAL_INVALID_TIME_RANGE
-    message: "Invalid time range"
+    - code: APP_DEPENDENCY_MISSING
+      message: "Required dependency is missing"
 
-  - code: VAL_EXPIRED
-    message: "Value has expired"
+  PARSE:
 
-  # ========================
-  # SECURITY / INPUT
-  # ========================
-  - code: VAL_UNSAFE_INPUT
-    message: "Unsafe input detected"
+    - code: PARSE_INVALID_REFERENCE
+      message: "Invalid reference"
 
-  # ========================
-  # GENERIC FALLBACK
-  # ========================
-  - code: VAL_INVALID
-    message: "Invalid value"
+    - code: PARSE_INVALID_TIME_RANGE
+      message: "Invalid time range"
+
+  SEC:
+
+    - code: SEC_UNSAFE_INPUT
+      message: "Unsafe input detected"
+
+    - code: SEC_INVALID
+      message: "Invalid value"
+
 # ============================================================
-# DEFAULTS / FALLBACK
+# DEFAULTS
 # ============================================================
 
 defaults:
+
   UNKNOWN_DOMAIN:
-    code: CORE-VAL-999
+
+    code: CORE-DOM-999
     http_status: 400
     grpc_code: InvalidArgument
     message: "Unknown domain error"
 
   INTERNAL_FALLBACK:
-    code: CORE-INF-000
+
+    code: CORE-SYS-999
     http_status: 500
     grpc_code: Internal
     message: "Internal server error"

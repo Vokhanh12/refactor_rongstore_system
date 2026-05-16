@@ -3,8 +3,8 @@ package entities
 import (
 	"github.com/google/uuid"
 
-	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/entities"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
+	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/entities"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/validator"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
@@ -19,7 +19,7 @@ type Role struct {
 
 	id uuid.UUID
 
-	RoleKey vo.RoleKey
+	roleKey vo.RoleKey
 	name    string
 
 	scopeType   enu.RoleScopeType
@@ -65,7 +65,7 @@ func NewRole(
 	role := &Role{
 		id: uuid.Must(uuid.NewV7()),
 
-		RoleKey: payload.RoleKey,
+		roleKey: payload.RoleKey,
 		name:    payload.Name,
 
 		scopeType:   payload.RoleScopeType,
@@ -95,7 +95,7 @@ func RestoreRole(
 	return Role{
 		id: id,
 
-		RoleKey: payload.RoleKey,
+		roleKey: payload.RoleKey,
 		name:    payload.Name,
 
 		scopeType:   payload.RoleScopeType,
@@ -171,7 +171,7 @@ func (r Role) ID() uuid.UUID {
 }
 
 func (r Role) RoleKey() vo.RoleKey {
-	return r.RoleKey
+	return r.roleKey
 }
 
 func (r Role) Name() string {

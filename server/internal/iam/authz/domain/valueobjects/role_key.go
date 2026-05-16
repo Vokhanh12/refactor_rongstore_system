@@ -5,8 +5,9 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/validator"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/normalize"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -64,11 +65,8 @@ func ParseRoleKey(value string) (RoleKey, *aerrs.AppError) {
 
 	parts := strings.Split(value, ":")
 
-	v := validator.New().
-		Format("roleKey", len(parts) == 2)
-
-	if err := v.Err(); err != nil {
-		return RoleKey{}, err
+	if len(parts) != 2 {
+		return RoleKey{}, aerrs.New(core.STRING_SPLIT_INVALID)
 	}
 
 	scopeID, err := normalize.ParseUUID(&parts[1])

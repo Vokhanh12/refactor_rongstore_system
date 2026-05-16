@@ -3,8 +3,8 @@ package entities
 import (
 	"github.com/google/uuid"
 
-	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/entities"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/validator"
+	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/entities"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/validator"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )

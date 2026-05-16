@@ -42,10 +42,9 @@ func (s *SqlcAuthorizeQuery) ListGrantsByRoleKeys(ctx context.Context, RoleKeys 
 
 	for _, row := range rows {
 		results = append(results, pr.AuthorizationGrant{
-			RoleKey:    vo.RestoreRoleKey(row.RoleCode, pg.UUIDPtrFromPgUUID(row.RoleScopeID)),
-			IsElevated: row.RoleIsSuper,
-			Resource:   row.PermissionResource,
-			Action:     row.PermissionAction,
+			RoleKey:        vo.RestoreRoleKey(row.RoleCode, pg.UUIDPtrFromPgUUID(row.RoleScopeID)),
+			IsElevated:     row.RoleIsSuper,
+			ResourceAction: vo.RestoreResourceAction(row.PermissionResource, row.PermissionAction),
 		})
 	}
 

@@ -2,11 +2,8 @@ package usecases
 
 import (
 	"context"
-	"strings"
 	"time"
 
-	"github.com/google/uuid"
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	merrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
@@ -51,21 +48,9 @@ func (u *AuthorizeUsecase) Execute(
 
 	for _, roleKeyStr := range cmd.RoleKeyStrs {
 
-		parts := strings.Split(roleKeyStr, ":")
-		if len(parts) != 2 {
-			return nil, aerrs.New(core.STRING_SPLIT_INVALID)
-		}
-
-		roleCode := parts[0]
-
-		scopeID, err := uuid.Parse(parts[1])
+		roleKey, err := vo.ParseRoleKey(roleKeyStr)
 		if err != nil {
-			return nil, aerrs.New(core.UUID_INVALID, aerrs.WithCauseDetail(err))
-		}
-
-		roleKey, aerr := vo.NewRoleKey(&scopeID, roleCode)
-		if aerr != nil {
-			return nil, aerr
+			return nil, err
 		}
 
 		rasCache, aerr := u.cache.GetResourceActionByRoleKey(ctx, roleKey)

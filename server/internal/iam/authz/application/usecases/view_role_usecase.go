@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 
-	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"

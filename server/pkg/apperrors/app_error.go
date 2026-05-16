@@ -7,6 +7,7 @@ type AppError struct {
 	Code string // AUTH-VAL-001
 	Key  string // LOGIN_EMAIL_EMPTY
 
+	Layer string
 	// ===== Message =====
 	Message string // human readable
 

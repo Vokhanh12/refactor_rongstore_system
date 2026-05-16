@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 
-	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
@@ -95,7 +95,7 @@ func (u *MutateRoleUsecase) handleCreate(
 	}
 
 	if exists {
-		return nil, aerrs.New(merrors.ROLE_CONFLICT)
+		return nil, aerrs.New(merrors.ROLE_ALREADY_EXISTS)
 	}
 
 	role, err := en.NewRole(
