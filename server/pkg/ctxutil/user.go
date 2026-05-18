@@ -3,8 +3,8 @@ package ctxutil
 import "context"
 
 type UserContext struct {
-	UserID string
-	Roles  []string
+	UserID      string
+	RoleKeyStrs []string
 }
 
 type userCtxKeyType struct{}

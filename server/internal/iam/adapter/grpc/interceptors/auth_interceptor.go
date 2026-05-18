@@ -16,8 +16,8 @@ func AuthUnaryInterceptor() grpc.UnaryServerInterceptor {
 		if values := md.Get("x-jwt-payload"); len(values) > 0 {
 			if payload, err := jwt.DecodePayload(values[0]); err == nil {
 				ctx = ctxutil.WithUser(ctx, ctxutil.UserContext{
-					UserID: payload.UserID,
-					Roles:  payload.Roles,
+					UserID:      payload.UserID,
+					RoleKeyStrs: payload.RoleKeyStrs,
 				})
 			} else {
 				return nil, core.ToGRPCError(err.Code, err.Message)

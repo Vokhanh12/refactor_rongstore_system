@@ -14,14 +14,14 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ q.AuthorizeQuery = (*SqlcAuthorizeQuery)(nil)
+var _ q.AuthorizationQuery = (*SqlcAuthorizeQuery)(nil)
 
 type SqlcAuthorizeQuery struct {
 	queries *db.Queries
 	dberr   dberr.DBError
 }
 
-func NewSqlcAuthorizeQuery(queries *db.Queries) q.AuthorizeQuery {
+func NewSqlcAuthorizeQuery(queries *db.Queries) q.AuthorizationQuery {
 	return &SqlcAuthorizeQuery{queries: queries}
 }
 

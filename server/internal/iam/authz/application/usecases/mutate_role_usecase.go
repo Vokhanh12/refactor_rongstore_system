@@ -10,7 +10,7 @@ import (
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	merrors "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
+	authzerr "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -74,7 +74,7 @@ func (u *MutateRoleUsecase) handleCreate(
 	cmd c.CreateRoleCommand,
 ) (*c.CreateRoleCommandResult, *aerrs.AppError) {
 
-	RoleKey, err := vo.NewRoleKey(cmd.ScopeID, cmd.Code)
+	roleKey, err := vo.NewRoleKey(cmd.ScopeID, cmd.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -89,18 +89,18 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	exists, err := u.repo.Exists(ctx, scopeType, RoleKey)
+	exists, err := u.repo.Exists(ctx, scopeType, roleKey)
 	if err != nil {
 		return nil, err
 	}
 
 	if exists {
-		return nil, aerrs.New(merrors.ROLE_ALREADY_EXISTS)
+		return nil, aerrs.New(authzerr.ROLE_ALREADY_EXISTS)
 	}
 
 	role, err := en.NewRole(
 		en.RolePayload{
-			RoleKey:         RoleKey,
+			RoleKey:         roleKey,
 			RoleScopeType:   scopeType,
 			Name:            cmd.Name,
 			RoleAccessScope: scope,

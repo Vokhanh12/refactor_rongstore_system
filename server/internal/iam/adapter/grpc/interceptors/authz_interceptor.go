@@ -26,17 +26,16 @@ func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInter
 		}
 
 		userctx, ok := ctxutil.User(ctx)
-		if !ok || userctx.UserID == "" || userctx.Roles == nil {
-
+		if !ok || userctx.UserID == "" || userctx.RoleKeyStrs == nil {
 			return nil, status.Errorf(codes.PermissionDenied, "unauthenticated")
 		}
 
 		result, aerr := authorize.Execute(ctx, command.AuthorizeCommand{
-			UserID:     userctx.UserID,
-			Roles:      userctx.Roles,
-			Resource:   authOpt.Resource,
-			Action:     authOpt.Action,
-			ResourceID: extractResourceID(protoReq, authOpt.ResourceIDField),
+			UserID:      userctx.UserID,
+			RoleKeyStrs: userctx.RoleKeyStrs,
+			Resource:    authOpt.Resource,
+			Action:      authOpt.Action,
+			ResourceID:  extractResourceID(protoReq, authOpt.ResourceIDField),
 		})
 
 		if aerr != nil {
