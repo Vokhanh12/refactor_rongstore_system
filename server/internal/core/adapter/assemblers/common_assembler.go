@@ -5,7 +5,7 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 
 	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 // ============================================================

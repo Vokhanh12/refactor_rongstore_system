@@ -3,7 +3,7 @@ package query
 import (
 	"context"
 
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 type ViewRolePermissionQuery interface {

@@ -9,7 +9,7 @@ import (
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 

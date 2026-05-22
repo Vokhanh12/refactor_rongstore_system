@@ -7,7 +7,7 @@ import (
 
 	cren "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/validator"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 // ============================================================
@@ -104,6 +104,10 @@ func RestoreUserRole(
 // VALIDATION
 // ============================================================
 
+// ============================================================
+// VALIDATION
+// ============================================================
+
 func validateUserRolePayload(
 	payload UserRolePayload,
 ) *aerrs.AppError {
@@ -113,6 +117,14 @@ func validateUserRolePayload(
 	v.Required("user_id", payload.UserID.String())
 	v.Required("role_id", payload.RoleID.String())
 
+	validScope := payload.ScopeType.IsValid()
+
+	v.Enum("scope_type", validScope)
+
+	if !validScope {
+		return v.Err()
+	}
+
 	switch payload.ScopeType {
 
 	case ScopeGlobal:
@@ -121,9 +133,6 @@ func validateUserRolePayload(
 		if payload.ScopeID == nil || *payload.ScopeID == "" {
 			v.Required("scope_id", "")
 		}
-
-	default:
-		v.Invalid("scope_type")
 	}
 
 	return v.Err()
@@ -143,6 +152,15 @@ func (u UserRole) IsOrganizationScope() bool {
 
 func (u UserRole) IsUnitScope() bool {
 	return u.scopeType == ScopeUnit
+}
+
+func (s ScopeType) IsValid() bool {
+	switch s {
+	case ScopeGlobal, ScopeOrganization, ScopeUnit:
+		return true
+	default:
+		return false
+	}
 }
 
 // ============================================================

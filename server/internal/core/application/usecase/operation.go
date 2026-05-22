@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 type Operation[T any] struct {

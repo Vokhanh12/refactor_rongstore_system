@@ -5,7 +5,7 @@ import (
 	"time"
 
 	merrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"

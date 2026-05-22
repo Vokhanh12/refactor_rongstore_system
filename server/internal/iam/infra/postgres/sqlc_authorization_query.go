@@ -8,25 +8,25 @@ import (
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ q.AuthorizationQuery = (*SqlcAuthorizeQuery)(nil)
+var _ q.AuthorizationQuery = (*SqlcAuthorizationQuery)(nil)
 
-type SqlcAuthorizeQuery struct {
+type SqlcAuthorizationQuery struct {
 	queries *db.Queries
 	dberr   dberr.DBError
 }
 
-func NewSqlcAuthorizeQuery(queries *db.Queries) q.AuthorizationQuery {
-	return &SqlcAuthorizeQuery{queries: queries}
+func NewSqlcAuthorizationQuery(queries *db.Queries) q.AuthorizationQuery {
+	return &SqlcAuthorizationQuery{queries: queries}
 }
 
-// ListGrantsByRoleKeys implements [query.AuthorizeQuery].
-func (s *SqlcAuthorizeQuery) ListGrantsByRoleKeys(ctx context.Context, RoleKeys []valueobjects.RoleKey) ([]pr.AuthorizationGrant, *apperrors.AppError) {
+// ListGrantsByRoleKeys implements [query.AuthorizationQuery].
+func (s *SqlcAuthorizationQuery) ListGrantsByRoleKeys(ctx context.Context, RoleKeys []valueobjects.RoleKey) ([]pr.AuthorizationGrant, *apperrors.AppError) {
 
 	payload, aerr := serialization.MustMarshal(RoleKeys)
 	if aerr != nil {

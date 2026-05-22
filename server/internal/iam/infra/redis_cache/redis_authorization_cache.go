@@ -6,18 +6,25 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/cache"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 var _ caches.AuthorizationCache = (*RedisAuthorizationCache)(nil)
 
 type RedisAuthorizationCache struct {
 	client *redis.Client
+	codec  core.Codec
+}
+
+// GetResourceActionByRoleKey implements [caches.AuthorizationCache].
+func (r *RedisAuthorizationCache) GetResourceActionByRoleKey(ctx context.Context, RoleKey vo.RoleKey) ([]vo.ResourceAction, *aerrs.AppError) {
+	panic("unimplemented")
 }
 
 // GetResourceAction implements [caches.AuthorizationCache].

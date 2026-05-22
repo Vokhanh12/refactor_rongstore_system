@@ -4,9 +4,9 @@ import (
 	"context"
 
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ q.ViewRolePermissionQuery = (*SqlcRolePermissionQuery)(nil)

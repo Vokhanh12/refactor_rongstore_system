@@ -2,336 +2,333 @@
 
 package errors
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+import "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
 var (
 	VALIDATION_FAILED = apperrors.AppError{
-		Key: "VALIDATION_FAILED",
-		Code: "CORE-DOM-001",
-		Layer: "DOM",
-		Component: "validator",
-		Tags: []string{"domain","validation"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Validation failed",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "VALIDATION_FAILED",
+		Code:         "CORE-DOM-001",
+		Layer:        "DOM",
+		Component:    "validator",
+		Tags:         []string{"domain", "validation"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Validation failed",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	MUTATE_OPERATION_UNSUPPORTED = apperrors.AppError{
-		Key: "MUTATE_OPERATION_UNSUPPORTED",
-		Code: "CORE-APP-001",
-		Layer: "APP",
-		Component: "mutate_engine",
-		Tags: []string{"application"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Unsupported mutate operation",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "MUTATE_OPERATION_UNSUPPORTED",
+		Code:         "CORE-APP-001",
+		Layer:        "APP",
+		Component:    "mutate_engine",
+		Tags:         []string{"application"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Unsupported mutate operation",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	MUTATE_PARTIAL_FAILURE = apperrors.AppError{
-		Key: "MUTATE_PARTIAL_FAILURE",
-		Code: "CORE-APP-002",
-		Layer: "APP",
-		Component: "mutate_engine",
-		Tags: []string{"application"},
-		Status: 200,
-		GRPCCode: "OK",
-		Message: "One or more operations failed",
-		Severity: "S2",
-		Retryable: false,
-		Cause: "",
+		Key:          "MUTATE_PARTIAL_FAILURE",
+		Code:         "CORE-APP-002",
+		Layer:        "APP",
+		Component:    "mutate_engine",
+		Tags:         []string{"application"},
+		Status:       200,
+		GRPCCode:     "OK",
+		Message:      "One or more operations failed",
+		Severity:     "S2",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	VIEW_OPERATION_UNSUPPORTED = apperrors.AppError{
-		Key: "VIEW_OPERATION_UNSUPPORTED",
-		Code: "CORE-APP-003",
-		Layer: "APP",
-		Component: "view_engine",
-		Tags: []string{"application"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Unsupported view operation",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "VIEW_OPERATION_UNSUPPORTED",
+		Code:         "CORE-APP-003",
+		Layer:        "APP",
+		Component:    "view_engine",
+		Tags:         []string{"application"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Unsupported view operation",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	VIEW_PARTIAL_FAILURE = apperrors.AppError{
-		Key: "VIEW_PARTIAL_FAILURE",
-		Code: "CORE-APP-004",
-		Layer: "APP",
-		Component: "view_engine",
-		Tags: []string{"application"},
-		Status: 200,
-		GRPCCode: "OK",
-		Message: "One or more operations failed",
-		Severity: "S2",
-		Retryable: false,
-		Cause: "",
+		Key:          "VIEW_PARTIAL_FAILURE",
+		Code:         "CORE-APP-004",
+		Layer:        "APP",
+		Component:    "view_engine",
+		Tags:         []string{"application"},
+		Status:       200,
+		GRPCCode:     "OK",
+		Message:      "One or more operations failed",
+		Severity:     "S2",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	INVALID_REQUEST_PAYLOAD = apperrors.AppError{
-		Key: "INVALID_REQUEST_PAYLOAD",
-		Code: "CORE-TRANS-001",
-		Layer: "TRANS",
-		Component: "transport",
-		Tags: []string{"transport"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Invalid request payload",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "INVALID_REQUEST_PAYLOAD",
+		Code:         "CORE-TRANS-001",
+		Layer:        "TRANS",
+		Component:    "transport",
+		Tags:         []string{"transport"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Invalid request payload",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	STRING_SPLIT_INVALID = apperrors.AppError{
-		Key: "STRING_SPLIT_INVALID",
-		Code: "CORE-PARSE-001",
-		Layer: "PARSE",
-		Component: "parser",
-		Tags: []string{"parser"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Invalid string format",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "STRING_SPLIT_INVALID",
+		Code:         "CORE-PARSE-001",
+		Layer:        "PARSE",
+		Component:    "parser",
+		Tags:         []string{"parser"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Invalid string format",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	UUID_INVALID = apperrors.AppError{
-		Key: "UUID_INVALID",
-		Code: "CORE-PARSE-002",
-		Layer: "PARSE",
-		Component: "parser",
-		Tags: []string{"parser"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Invalid UUID format",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "UUID_INVALID",
+		Code:         "CORE-PARSE-002",
+		Layer:        "PARSE",
+		Component:    "parser",
+		Tags:         []string{"parser"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Invalid UUID format",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	MUTATE_PARSE_FAILED = apperrors.AppError{
-		Key: "MUTATE_PARSE_FAILED",
-		Code: "CORE-PARSE-003",
-		Layer: "PARSE",
-		Component: "mutate_engine",
-		Tags: []string{"parser"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Failed to parse mutation payload",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:          "MUTATE_PARSE_FAILED",
+		Code:         "CORE-PARSE-003",
+		Layer:        "PARSE",
+		Component:    "mutate_engine",
+		Tags:         []string{"parser"},
+		Status:       400,
+		GRPCCode:     "InvalidArgument",
+		Message:      "Failed to parse mutation payload",
+		Severity:     "S3",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	JSON_SERIALIZATION_FAILED = apperrors.AppError{
-		Key: "JSON_SERIALIZATION_FAILED",
-		Code: "CORE-INFRA-001",
-		Layer: "INFRA",
-		Component: "serializer",
-		Tags: []string{"infra"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Failed to serialize request payload",
-		Severity: "S2",
-		Retryable: false,
-		Cause: "",
+		Key:          "JSON_SERIALIZATION_FAILED",
+		Code:         "CORE-INFRA-001",
+		Layer:        "INFRA",
+		Component:    "serializer",
+		Tags:         []string{"infra"},
+		Status:       500,
+		GRPCCode:     "Internal",
+		Message:      "Failed to serialize request payload",
+		Severity:     "S2",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	INTERNAL_ERROR = apperrors.AppError{
-		Key: "INTERNAL_ERROR",
-		Code: "CORE-SYS-001",
-		Layer: "SYS",
-		Component: "system",
-		Tags: []string{"system"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Internal server error",
-		Severity: "S1",
-		Retryable: false,
-		Cause: "",
+		Key:          "INTERNAL_ERROR",
+		Code:         "CORE-SYS-001",
+		Layer:        "SYS",
+		Component:    "system",
+		Tags:         []string{"system"},
+		Status:       500,
+		GRPCCode:     "Internal",
+		Message:      "Internal server error",
+		Severity:     "S1",
+		Retryable:    false,
+		Cause:        "",
 		ClientAction: "",
 		ServerAction: "",
 	}
-
 )
 
 var (
 	REASON_VAL_REQUIRED = apperrors.AppErrorDetail{
-		Code: "VAL_REQUIRED",
+		Code:    "VAL_REQUIRED",
 		Message: "Field is required",
 	}
 
 	REASON_VAL_NULL = apperrors.AppErrorDetail{
-		Code: "VAL_NULL",
+		Code:    "VAL_NULL",
 		Message: "Field must not be null",
 	}
 
 	REASON_VAL_INVALID_FORMAT = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_FORMAT",
+		Code:    "VAL_INVALID_FORMAT",
 		Message: "Invalid format",
 	}
 
 	REASON_VAL_INVALID_TYPE = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_TYPE",
+		Code:    "VAL_INVALID_TYPE",
 		Message: "Invalid data type",
 	}
 
 	REASON_VAL_INVALID_ENUM = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_ENUM",
+		Code:    "VAL_INVALID_ENUM",
 		Message: "Invalid enum value",
 	}
 
 	REASON_VAL_OUT_OF_RANGE = apperrors.AppErrorDetail{
-		Code: "VAL_OUT_OF_RANGE",
+		Code:    "VAL_OUT_OF_RANGE",
 		Message: "Out of range",
 	}
 
 	REASON_VAL_TOO_SHORT = apperrors.AppErrorDetail{
-		Code: "VAL_TOO_SHORT",
+		Code:    "VAL_TOO_SHORT",
 		Message: "Value is too short",
 	}
 
 	REASON_VAL_TOO_LONG = apperrors.AppErrorDetail{
-		Code: "VAL_TOO_LONG",
+		Code:    "VAL_TOO_LONG",
 		Message: "Value is too long",
 	}
 
 	REASON_VAL_MIN = apperrors.AppErrorDetail{
-		Code: "VAL_MIN",
+		Code:    "VAL_MIN",
 		Message: "Value is below minimum",
 	}
 
 	REASON_VAL_MAX = apperrors.AppErrorDetail{
-		Code: "VAL_MAX",
+		Code:    "VAL_MAX",
 		Message: "Value exceeds maximum",
 	}
 
 	REASON_VAL_INVALID_PATTERN = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_PATTERN",
+		Code:    "VAL_INVALID_PATTERN",
 		Message: "Value does not match required pattern",
 	}
 
 	REASON_APP_DUPLICATE = apperrors.AppErrorDetail{
-		Code: "APP_DUPLICATE",
+		Code:    "APP_DUPLICATE",
 		Message: "Duplicate value",
 	}
 
 	REASON_APP_CONFLICT = apperrors.AppErrorDetail{
-		Code: "APP_CONFLICT",
+		Code:    "APP_CONFLICT",
 		Message: "Value conflicts with existing data",
 	}
 
 	REASON_APP_NOT_ALLOWED = apperrors.AppErrorDetail{
-		Code: "APP_NOT_ALLOWED",
+		Code:    "APP_NOT_ALLOWED",
 		Message: "Operation not allowed",
 	}
 
 	REASON_APP_FORBIDDEN_STATE = apperrors.AppErrorDetail{
-		Code: "APP_FORBIDDEN_STATE",
+		Code:    "APP_FORBIDDEN_STATE",
 		Message: "Invalid state for operation",
 	}
 
 	REASON_APP_NOT_FOUND = apperrors.AppErrorDetail{
-		Code: "APP_NOT_FOUND",
+		Code:    "APP_NOT_FOUND",
 		Message: "Not found",
 	}
 
 	REASON_APP_ALREADY_EXISTS = apperrors.AppErrorDetail{
-		Code: "APP_ALREADY_EXISTS",
+		Code:    "APP_ALREADY_EXISTS",
 		Message: "Already exists",
 	}
 
 	REASON_APP_DEPENDENCY_MISSING = apperrors.AppErrorDetail{
-		Code: "APP_DEPENDENCY_MISSING",
+		Code:    "APP_DEPENDENCY_MISSING",
 		Message: "Required dependency is missing",
 	}
 
 	REASON_PARSE_INVALID_REFERENCE = apperrors.AppErrorDetail{
-		Code: "PARSE_INVALID_REFERENCE",
+		Code:    "PARSE_INVALID_REFERENCE",
 		Message: "Invalid reference",
 	}
 
 	REASON_PARSE_INVALID_TIME_RANGE = apperrors.AppErrorDetail{
-		Code: "PARSE_INVALID_TIME_RANGE",
+		Code:    "PARSE_INVALID_TIME_RANGE",
 		Message: "Invalid time range",
 	}
 
 	REASON_SEC_UNSAFE_INPUT = apperrors.AppErrorDetail{
-		Code: "SEC_UNSAFE_INPUT",
+		Code:    "SEC_UNSAFE_INPUT",
 		Message: "Unsafe input detected",
 	}
 
 	REASON_SEC_INVALID = apperrors.AppErrorDetail{
-		Code: "SEC_INVALID",
+		Code:    "SEC_INVALID",
 		Message: "Invalid value",
 	}
-
 )
 
 var ErrorByCode = map[string]apperrors.AppError{
-	"CORE-DOM-001": VALIDATION_FAILED,
-	"CORE-APP-001": MUTATE_OPERATION_UNSUPPORTED,
-	"CORE-APP-002": MUTATE_PARTIAL_FAILURE,
-	"CORE-APP-003": VIEW_OPERATION_UNSUPPORTED,
-	"CORE-APP-004": VIEW_PARTIAL_FAILURE,
+	"CORE-DOM-001":   VALIDATION_FAILED,
+	"CORE-APP-001":   MUTATE_OPERATION_UNSUPPORTED,
+	"CORE-APP-002":   MUTATE_PARTIAL_FAILURE,
+	"CORE-APP-003":   VIEW_OPERATION_UNSUPPORTED,
+	"CORE-APP-004":   VIEW_PARTIAL_FAILURE,
 	"CORE-TRANS-001": INVALID_REQUEST_PAYLOAD,
 	"CORE-PARSE-001": STRING_SPLIT_INVALID,
 	"CORE-PARSE-002": UUID_INVALID,
 	"CORE-PARSE-003": MUTATE_PARSE_FAILED,
 	"CORE-INFRA-001": JSON_SERIALIZATION_FAILED,
-	"CORE-SYS-001": INTERNAL_ERROR,
+	"CORE-SYS-001":   INTERNAL_ERROR,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
-	"VAL_REQUIRED": REASON_VAL_REQUIRED,
-	"VAL_NULL": REASON_VAL_NULL,
-	"VAL_INVALID_FORMAT": REASON_VAL_INVALID_FORMAT,
-	"VAL_INVALID_TYPE": REASON_VAL_INVALID_TYPE,
-	"VAL_INVALID_ENUM": REASON_VAL_INVALID_ENUM,
-	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
-	"VAL_TOO_SHORT": REASON_VAL_TOO_SHORT,
-	"VAL_TOO_LONG": REASON_VAL_TOO_LONG,
-	"VAL_MIN": REASON_VAL_MIN,
-	"VAL_MAX": REASON_VAL_MAX,
-	"VAL_INVALID_PATTERN": REASON_VAL_INVALID_PATTERN,
-	"APP_DUPLICATE": REASON_APP_DUPLICATE,
-	"APP_CONFLICT": REASON_APP_CONFLICT,
-	"APP_NOT_ALLOWED": REASON_APP_NOT_ALLOWED,
-	"APP_FORBIDDEN_STATE": REASON_APP_FORBIDDEN_STATE,
-	"APP_NOT_FOUND": REASON_APP_NOT_FOUND,
-	"APP_ALREADY_EXISTS": REASON_APP_ALREADY_EXISTS,
-	"APP_DEPENDENCY_MISSING": REASON_APP_DEPENDENCY_MISSING,
-	"PARSE_INVALID_REFERENCE": REASON_PARSE_INVALID_REFERENCE,
+	"VAL_REQUIRED":             REASON_VAL_REQUIRED,
+	"VAL_NULL":                 REASON_VAL_NULL,
+	"VAL_INVALID_FORMAT":       REASON_VAL_INVALID_FORMAT,
+	"VAL_INVALID_TYPE":         REASON_VAL_INVALID_TYPE,
+	"VAL_INVALID_ENUM":         REASON_VAL_INVALID_ENUM,
+	"VAL_OUT_OF_RANGE":         REASON_VAL_OUT_OF_RANGE,
+	"VAL_TOO_SHORT":            REASON_VAL_TOO_SHORT,
+	"VAL_TOO_LONG":             REASON_VAL_TOO_LONG,
+	"VAL_MIN":                  REASON_VAL_MIN,
+	"VAL_MAX":                  REASON_VAL_MAX,
+	"VAL_INVALID_PATTERN":      REASON_VAL_INVALID_PATTERN,
+	"APP_DUPLICATE":            REASON_APP_DUPLICATE,
+	"APP_CONFLICT":             REASON_APP_CONFLICT,
+	"APP_NOT_ALLOWED":          REASON_APP_NOT_ALLOWED,
+	"APP_FORBIDDEN_STATE":      REASON_APP_FORBIDDEN_STATE,
+	"APP_NOT_FOUND":            REASON_APP_NOT_FOUND,
+	"APP_ALREADY_EXISTS":       REASON_APP_ALREADY_EXISTS,
+	"APP_DEPENDENCY_MISSING":   REASON_APP_DEPENDENCY_MISSING,
+	"PARSE_INVALID_REFERENCE":  REASON_PARSE_INVALID_REFERENCE,
 	"PARSE_INVALID_TIME_RANGE": REASON_PARSE_INVALID_TIME_RANGE,
-	"SEC_UNSAFE_INPUT": REASON_SEC_UNSAFE_INPUT,
-	"SEC_INVALID": REASON_SEC_INVALID,
+	"SEC_UNSAFE_INPUT":         REASON_SEC_UNSAFE_INPUT,
+	"SEC_INVALID":              REASON_SEC_INVALID,
 }
-

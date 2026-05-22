@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 )
 
 func ParseUUID(s *string) (*uuid.UUID, *aerrs.AppError) {

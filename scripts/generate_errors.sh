@@ -109,7 +109,7 @@ for svc in $services; do
 
 package errors
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+import "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 
 var (
 EOF
