@@ -6,7 +6,7 @@ import (
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 

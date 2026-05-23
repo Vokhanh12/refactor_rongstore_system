@@ -8,10 +8,10 @@ import (
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ q.AuthorizationQuery = (*SqlcAuthorizationQuery)(nil)

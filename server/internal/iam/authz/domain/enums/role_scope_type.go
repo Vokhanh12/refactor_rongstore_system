@@ -2,7 +2,7 @@ package enums
 
 import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/validator"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type RoleScopeType string

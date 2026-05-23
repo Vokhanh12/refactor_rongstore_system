@@ -10,7 +10,8 @@ import (
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
@@ -94,7 +95,7 @@ func (u *MutateRoleUsecase) handleCreate(
 	}
 
 	if exists {
-		return nil, aerrs.New(authzerr.ROLE_ALREADY_EXISTS)
+		return nil, aerrs.New(domain.ROLE_ALREADY_EXISTS)
 	}
 
 	role, err := en.NewRole(

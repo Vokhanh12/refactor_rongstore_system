@@ -19,7 +19,7 @@ fi
 echo "🧹 Cleaning old generated files..."
 
 find ../server/internal -type f -name "errors_gen.go" -delete
-find ../pkg/apperrors -type f -name "errors_gen.go" -delete
+find ../server/pkg/apperrors -type f -name "errors_gen.go" -delete
 
 echo "✅ Old generated files removed"
 echo ""
@@ -109,7 +109,7 @@ for svc in $services; do
 
 package errors
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 var (
 EOF
@@ -308,7 +308,7 @@ done
 # DEFAULT ERRORS
 # ============================================================
 
-OUTPUT_DEFAULT_FILE="../pkg/apperrors/errors_gen.go"
+OUTPUT_DEFAULT_FILE="../server/pkg/apperrors/errors_gen.go"
 
 mkdir -p "$(dirname "$OUTPUT_DEFAULT_FILE")"
 rm -f "$OUTPUT_DEFAULT_FILE"

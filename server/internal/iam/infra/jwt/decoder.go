@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/errors"
-	aerr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 func DecodePayload(encoded string) (*Payload, *aerr.AppError) {

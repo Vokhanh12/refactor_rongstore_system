@@ -324,16 +324,6 @@ services:
             severity: S3
             retryable: false
 
-          - code: AUTHZ-APP-002
-            key: ROLE_PERSIST_FAILED
-            component: role_repository
-            tags: [application]
-            http_status: 500
-            grpc_code: Internal
-            message: "Failed to persist role"
-            severity: S2
-            retryable: false
-
         TRANS:
 
           - code: AUTHZ-TRANS-001
@@ -439,6 +429,36 @@ services:
           message: "Postgres unavailable"
           severity: S1
           retryable: true
+
+        - code: PLATFORM-INFRA-006
+          key: CACHE_SERIALIZATION_FAILED
+          component: cache
+          tags: [infra, cache]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to serialize cache payload"
+          severity: S2
+          retryable: false
+
+        - code: PLATFORM-INFRA-007
+          key: CACHE_DESERIALIZATION_FAILED
+          component: cache
+          tags: [infra, cache]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to deserialize cache payload"
+          severity: S2
+          retryable: false
+
+        - code: PLATFORM-INFRA-008
+          key: CACHE_OPERATION_FAILED
+          component: cache
+          tags: [infra, cache]
+          http_status: 500
+          grpc_code: Internal
+          message: "Cache operation failed"
+          severity: S2
+          retryable: false
 
 # ============================================================
 # ERROR DETAILS

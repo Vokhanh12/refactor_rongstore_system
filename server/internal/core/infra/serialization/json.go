@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 func MustMarshal(v any) ([]byte, *apperrors.AppError) {

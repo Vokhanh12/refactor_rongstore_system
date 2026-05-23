@@ -10,5 +10,5 @@ func Lookup(code string) *AppError {
 	if e, ok := catalog[code]; ok {
 		return New(e)
 	}
-	return New(UNKNOWN_DOMAIN_KEY)
+	return New(UNKNOWN_DOMAIN)
 }

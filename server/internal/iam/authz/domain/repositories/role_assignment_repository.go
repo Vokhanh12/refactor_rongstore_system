@@ -3,7 +3,7 @@ package repositories
 import (
 	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type RoleAssignmentRepository interface {

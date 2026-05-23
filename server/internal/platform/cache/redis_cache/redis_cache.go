@@ -1,4 +1,4 @@
-package redisprovider
+package rediscache
 
 import (
 	"context"
@@ -6,10 +6,16 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/cache"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/config"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/errors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
+
+type RedisCache struct {
+	client *redis.Client
+	codec  core.Codec
+}
 
 func NewRedisClient(
 	cfg *config.Config,
@@ -53,4 +59,52 @@ func NewRedisClient(
 	}
 
 	return rdb, nil
+}
+
+func NewRedisCache(
+	client *redis.Client,
+	codec core.Codec,
+) *RedisCache {
+
+	return &RedisCache{
+		client: client,
+		codec:  codec,
+	}
+}
+
+func (r *RedisCache) Get(
+	ctx context.Context,
+	key string,
+	dest any,
+) error {
+
+	data, err := r.client.Get(ctx, key).Bytes()
+	if err != nil {
+		return err
+	}
+
+	return r.codec.Unmarshal(data, dest)
+}
+
+func (r *RedisCache) Set(
+	ctx context.Context,
+	key string,
+	value any,
+	ttl time.Duration,
+) error {
+
+	data, err := r.codec.Marshal(value)
+	if err != nil {
+		return err
+	}
+
+	return r.client.Set(ctx, key, data, ttl).Err()
+}
+
+func (r *RedisCache) Delete(
+	ctx context.Context,
+	key string,
+) error {
+
+	return r.client.Del(ctx, key).Err()
 }

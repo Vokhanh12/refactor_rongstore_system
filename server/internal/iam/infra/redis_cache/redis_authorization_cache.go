@@ -1,69 +1,133 @@
+// ============================================================
+// AUTHZ REDIS ADAPTER
+// internal/iam/authz/infrastructure/caches/rediscache/authorization_cache.go
+// ============================================================
+
 package rediscache
 
 import (
 	"context"
-	"encoding/json"
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/cache"
+
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/cache"
+	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache"
+	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache/errors"
+	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/errors"
+
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ caches.AuthorizationCache = (*RedisAuthorizationCache)(nil)
 
+const authorizationPrefix = "authz:role-permissions"
+
 type RedisAuthorizationCache struct {
-	client *redis.Client
-	codec  core.Codec
+	cache      *cache.RedisCache
+	keyBuilder *core.KeyBuilder
 }
 
-// GetResourceActionByRoleKey implements [caches.AuthorizationCache].
-func (r *RedisAuthorizationCache) GetResourceActionByRoleKey(ctx context.Context, RoleKey vo.RoleKey) ([]vo.ResourceAction, *aerrs.AppError) {
-	panic("unimplemented")
+func NewRedisAuthorizationCache(client *redis.Client) *RedisAuthorizationCache {
+
+	return &RedisAuthorizationCache{
+		cache: cache.NewRedisCache(
+			client,
+			core.NewJSONCodec(),
+		),
+
+		keyBuilder: core.NewKeyBuilder(
+			authorizationPrefix,
+		),
+	}
 }
 
-// GetResourceAction implements [caches.AuthorizationCache].
-func (r *RedisAuthorizationCache) GetResourceAction(ctx context.Context, RoleKey valueobjects.RoleKey) ([]valueobjects.ResourceAction, *apperrors.AppError) {
+func (r *RedisAuthorizationCache) GetResourceActionByRoleKey(
+	ctx context.Context,
+	roleKey vo.RoleKey,
+) ([]vo.ResourceAction, *aerrs.AppError) {
 
-	val, err := r.client.Get(ctx, r.cacheKey(RoleKey.String())).Result()
+	key := r.buildRoleKey(roleKey)
+
+	var resourceActions []vo.ResourceAction
+
+	err := r.cache.Get(
+		ctx,
+		key,
+		&resourceActions,
+	)
+
 	if err != nil {
+
 		if err == redis.Nil {
 			return nil, nil
 		}
-		return nil, aerrs.New(errs.REDIS_UNAVAILABLE,
-			aerrs.WithCauseDetail(err))
-	}
 
-	var resourceActions []vo.ResourceAction
-	if err := json.Unmarshal([]byte(val), &resourceActions); err != nil {
-		return nil, aerrs.New(errs.REDIS_UNAVAILABLE,
-			aerrs.WithCauseDetail(err))
+		return nil, aerrs.New(
+			errs.REDIS_UNAVAILABLE,
+			aerrs.WithCauseDetail(err),
+		)
 	}
 
 	return resourceActions, nil
 }
 
-// SetResourceActionByRoleKey implements [caches.AuthorizationCache].
-func (r *RedisAuthorizationCache) SetResourceActionByRoleKey(ctx context.Context, RoleKey valueobjects.RoleKey, resourceActions []valueobjects.ResourceAction, ttl time.Duration) *apperrors.AppError {
-	data, err := json.Marshal(resourceActions)
-	if err != nil {
-		return aerrs.New(errs.REDIS_UNAVAILABLE,
-			aerrs.WithCauseDetail(err))
-	}
+func (r *RedisAuthorizationCache) SetResourceActionByRoleKey(
+	ctx context.Context,
+	roleKey vo.RoleKey,
+	resourceActions []vo.ResourceAction,
+	ttl time.Duration,
+) *aerrs.AppError {
 
-	if err := r.client.Set(ctx, r.cacheKey(RoleKey.String()), data, ttl).Err(); err != nil {
-		return aerrs.New(errs.REDIS_UNAVAILABLE,
-			aerrs.WithCauseDetail(err))
+	key := r.buildRoleKey(roleKey)
+
+	err := r.cache.Set(
+		ctx,
+		key,
+		resourceActions,
+		ttl,
+	)
+
+	if err != nil {
+		return aerrs.New(
+			errs.REDIS_UNAVAILABLE,
+			aerrs.WithCauseDetail(err),
+		)
 	}
 
 	return nil
 }
 
-func (r *RedisAuthorizationCache) cacheKey(value string) string {
-	return "authz:authorization:" + value
+func (r *RedisAuthorizationCache) DeleteByRoleKey(
+	ctx context.Context,
+	roleKey vo.RoleKey,
+) *aerrs.AppError {
+
+	key := r.buildRoleKey(roleKey)
+
+	err := r.cache.Delete(
+		ctx,
+		key,
+	)
+
+	if err != nil {
+		return aerrs.New(
+			errs.REDIS_UNAVAILABLE,
+			aerrs.WithCauseDetail(err),
+		)
+	}
+
+	return nil
+}
+
+func (r *RedisAuthorizationCache) buildRoleKey(
+	roleKey vo.RoleKey,
+) string {
+
+	return r.keyBuilder.Build(
+		roleKey.String(),
+	)
 }

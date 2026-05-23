@@ -2,282 +2,285 @@
 
 package errors
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
+import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 var (
 	LOGIN_EMAIL_REQUIRED = apperrors.AppError{
-		Key:          "LOGIN_EMAIL_REQUIRED",
-		Code:         "AUTH-DOM-001",
-		Layer:        "DOM",
-		Component:    "validator",
-		Tags:         []string{"domain"},
-		Status:       400,
-		GRPCCode:     "InvalidArgument",
-		Message:      "Email is required",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "LOGIN_EMAIL_REQUIRED",
+		Code: "AUTH-DOM-001",
+		Layer: "DOM",
+		Component: "validator",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Email is required",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	LOGIN_EMAIL_INVALID = apperrors.AppError{
-		Key:          "LOGIN_EMAIL_INVALID",
-		Code:         "AUTH-DOM-002",
-		Layer:        "DOM",
-		Component:    "validator",
-		Tags:         []string{"domain"},
-		Status:       400,
-		GRPCCode:     "InvalidArgument",
-		Message:      "Invalid email format",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "LOGIN_EMAIL_INVALID",
+		Code: "AUTH-DOM-002",
+		Layer: "DOM",
+		Component: "validator",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid email format",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	LOGIN_PASSWORD_REQUIRED = apperrors.AppError{
-		Key:          "LOGIN_PASSWORD_REQUIRED",
-		Code:         "AUTH-DOM-003",
-		Layer:        "DOM",
-		Component:    "validator",
-		Tags:         []string{"domain"},
-		Status:       400,
-		GRPCCode:     "InvalidArgument",
-		Message:      "Password is required",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "LOGIN_PASSWORD_REQUIRED",
+		Code: "AUTH-DOM-003",
+		Layer: "DOM",
+		Component: "validator",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Password is required",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	LOGIN_PAYLOAD_INVALID = apperrors.AppError{
-		Key:          "LOGIN_PAYLOAD_INVALID",
-		Code:         "AUTH-TRANS-001",
-		Layer:        "TRANS",
-		Component:    "auth_transport",
-		Tags:         []string{"transport"},
-		Status:       400,
-		GRPCCode:     "InvalidArgument",
-		Message:      "Invalid login payload",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "LOGIN_PAYLOAD_INVALID",
+		Code: "AUTH-TRANS-001",
+		Layer: "TRANS",
+		Component: "auth_transport",
+		Tags: []string{"transport"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid login payload",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	TOKEN_EXPIRED = apperrors.AppError{
-		Key:          "TOKEN_EXPIRED",
-		Code:         "AUTH-SEC-001",
-		Layer:        "SEC",
-		Component:    "jwt",
-		Tags:         []string{"security"},
-		Status:       401,
-		GRPCCode:     "Unauthenticated",
-		Message:      "Token expired",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "TOKEN_EXPIRED",
+		Code: "AUTH-SEC-001",
+		Layer: "SEC",
+		Component: "jwt",
+		Tags: []string{"security"},
+		Status: 401,
+		GRPCCode: "Unauthenticated",
+		Message: "Token expired",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	UNAUTHORIZED = apperrors.AppError{
-		Key:          "UNAUTHORIZED",
-		Code:         "AUTH-SEC-002",
-		Layer:        "SEC",
-		Component:    "auth_service",
-		Tags:         []string{"security"},
-		Status:       401,
-		GRPCCode:     "Unauthenticated",
-		Message:      "Authentication required",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "UNAUTHORIZED",
+		Code: "AUTH-SEC-002",
+		Layer: "SEC",
+		Component: "auth_service",
+		Tags: []string{"security"},
+		Status: 401,
+		GRPCCode: "Unauthenticated",
+		Message: "Authentication required",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	JWT_INVALID = apperrors.AppError{
-		Key:          "JWT_INVALID",
-		Code:         "AUTH-SEC-003",
-		Layer:        "SEC",
-		Component:    "jwt",
-		Tags:         []string{"security"},
-		Status:       401,
-		GRPCCode:     "Unauthenticated",
-		Message:      "Invalid token",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "JWT_INVALID",
+		Code: "AUTH-SEC-003",
+		Layer: "SEC",
+		Component: "jwt",
+		Tags: []string{"security"},
+		Status: 401,
+		GRPCCode: "Unauthenticated",
+		Message: "Invalid token",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	JWT_PAYLOAD_INVALID = apperrors.AppError{
-		Key:          "JWT_PAYLOAD_INVALID",
-		Code:         "AUTH-SEC-004",
-		Layer:        "SEC",
-		Component:    "jwt",
-		Tags:         []string{"security"},
-		Status:       401,
-		GRPCCode:     "Unauthenticated",
-		Message:      "Invalid token payload",
-		Severity:     "S3",
-		Retryable:    false,
-		Cause:        "",
+		Key: "JWT_PAYLOAD_INVALID",
+		Code: "AUTH-SEC-004",
+		Layer: "SEC",
+		Component: "jwt",
+		Tags: []string{"security"},
+		Status: 401,
+		GRPCCode: "Unauthenticated",
+		Message: "Invalid token payload",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
 		ClientAction: "",
 		ServerAction: "",
 	}
+
 )
 
 var (
 	REASON_VAL_REQUIRED = apperrors.AppErrorDetail{
-		Code:    "VAL_REQUIRED",
+		Code: "VAL_REQUIRED",
 		Message: "Field is required",
 	}
 
 	REASON_VAL_NULL = apperrors.AppErrorDetail{
-		Code:    "VAL_NULL",
+		Code: "VAL_NULL",
 		Message: "Field must not be null",
 	}
 
 	REASON_VAL_INVALID_FORMAT = apperrors.AppErrorDetail{
-		Code:    "VAL_INVALID_FORMAT",
+		Code: "VAL_INVALID_FORMAT",
 		Message: "Invalid format",
 	}
 
 	REASON_VAL_INVALID_TYPE = apperrors.AppErrorDetail{
-		Code:    "VAL_INVALID_TYPE",
+		Code: "VAL_INVALID_TYPE",
 		Message: "Invalid data type",
 	}
 
 	REASON_VAL_INVALID_ENUM = apperrors.AppErrorDetail{
-		Code:    "VAL_INVALID_ENUM",
+		Code: "VAL_INVALID_ENUM",
 		Message: "Invalid enum value",
 	}
 
 	REASON_VAL_OUT_OF_RANGE = apperrors.AppErrorDetail{
-		Code:    "VAL_OUT_OF_RANGE",
+		Code: "VAL_OUT_OF_RANGE",
 		Message: "Out of range",
 	}
 
 	REASON_VAL_TOO_SHORT = apperrors.AppErrorDetail{
-		Code:    "VAL_TOO_SHORT",
+		Code: "VAL_TOO_SHORT",
 		Message: "Value is too short",
 	}
 
 	REASON_VAL_TOO_LONG = apperrors.AppErrorDetail{
-		Code:    "VAL_TOO_LONG",
+		Code: "VAL_TOO_LONG",
 		Message: "Value is too long",
 	}
 
 	REASON_VAL_MIN = apperrors.AppErrorDetail{
-		Code:    "VAL_MIN",
+		Code: "VAL_MIN",
 		Message: "Value is below minimum",
 	}
 
 	REASON_VAL_MAX = apperrors.AppErrorDetail{
-		Code:    "VAL_MAX",
+		Code: "VAL_MAX",
 		Message: "Value exceeds maximum",
 	}
 
 	REASON_VAL_INVALID_PATTERN = apperrors.AppErrorDetail{
-		Code:    "VAL_INVALID_PATTERN",
+		Code: "VAL_INVALID_PATTERN",
 		Message: "Value does not match required pattern",
 	}
 
 	REASON_APP_DUPLICATE = apperrors.AppErrorDetail{
-		Code:    "APP_DUPLICATE",
+		Code: "APP_DUPLICATE",
 		Message: "Duplicate value",
 	}
 
 	REASON_APP_CONFLICT = apperrors.AppErrorDetail{
-		Code:    "APP_CONFLICT",
+		Code: "APP_CONFLICT",
 		Message: "Value conflicts with existing data",
 	}
 
 	REASON_APP_NOT_ALLOWED = apperrors.AppErrorDetail{
-		Code:    "APP_NOT_ALLOWED",
+		Code: "APP_NOT_ALLOWED",
 		Message: "Operation not allowed",
 	}
 
 	REASON_APP_FORBIDDEN_STATE = apperrors.AppErrorDetail{
-		Code:    "APP_FORBIDDEN_STATE",
+		Code: "APP_FORBIDDEN_STATE",
 		Message: "Invalid state for operation",
 	}
 
 	REASON_APP_NOT_FOUND = apperrors.AppErrorDetail{
-		Code:    "APP_NOT_FOUND",
+		Code: "APP_NOT_FOUND",
 		Message: "Not found",
 	}
 
 	REASON_APP_ALREADY_EXISTS = apperrors.AppErrorDetail{
-		Code:    "APP_ALREADY_EXISTS",
+		Code: "APP_ALREADY_EXISTS",
 		Message: "Already exists",
 	}
 
 	REASON_APP_DEPENDENCY_MISSING = apperrors.AppErrorDetail{
-		Code:    "APP_DEPENDENCY_MISSING",
+		Code: "APP_DEPENDENCY_MISSING",
 		Message: "Required dependency is missing",
 	}
 
 	REASON_PARSE_INVALID_REFERENCE = apperrors.AppErrorDetail{
-		Code:    "PARSE_INVALID_REFERENCE",
+		Code: "PARSE_INVALID_REFERENCE",
 		Message: "Invalid reference",
 	}
 
 	REASON_PARSE_INVALID_TIME_RANGE = apperrors.AppErrorDetail{
-		Code:    "PARSE_INVALID_TIME_RANGE",
+		Code: "PARSE_INVALID_TIME_RANGE",
 		Message: "Invalid time range",
 	}
 
 	REASON_SEC_UNSAFE_INPUT = apperrors.AppErrorDetail{
-		Code:    "SEC_UNSAFE_INPUT",
+		Code: "SEC_UNSAFE_INPUT",
 		Message: "Unsafe input detected",
 	}
 
 	REASON_SEC_INVALID = apperrors.AppErrorDetail{
-		Code:    "SEC_INVALID",
+		Code: "SEC_INVALID",
 		Message: "Invalid value",
 	}
+
 )
 
 var ErrorByCode = map[string]apperrors.AppError{
-	"AUTH-DOM-001":   LOGIN_EMAIL_REQUIRED,
-	"AUTH-DOM-002":   LOGIN_EMAIL_INVALID,
-	"AUTH-DOM-003":   LOGIN_PASSWORD_REQUIRED,
+	"AUTH-DOM-001": LOGIN_EMAIL_REQUIRED,
+	"AUTH-DOM-002": LOGIN_EMAIL_INVALID,
+	"AUTH-DOM-003": LOGIN_PASSWORD_REQUIRED,
 	"AUTH-TRANS-001": LOGIN_PAYLOAD_INVALID,
-	"AUTH-SEC-001":   TOKEN_EXPIRED,
-	"AUTH-SEC-002":   UNAUTHORIZED,
-	"AUTH-SEC-003":   JWT_INVALID,
-	"AUTH-SEC-004":   JWT_PAYLOAD_INVALID,
+	"AUTH-SEC-001": TOKEN_EXPIRED,
+	"AUTH-SEC-002": UNAUTHORIZED,
+	"AUTH-SEC-003": JWT_INVALID,
+	"AUTH-SEC-004": JWT_PAYLOAD_INVALID,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
-	"VAL_REQUIRED":             REASON_VAL_REQUIRED,
-	"VAL_NULL":                 REASON_VAL_NULL,
-	"VAL_INVALID_FORMAT":       REASON_VAL_INVALID_FORMAT,
-	"VAL_INVALID_TYPE":         REASON_VAL_INVALID_TYPE,
-	"VAL_INVALID_ENUM":         REASON_VAL_INVALID_ENUM,
-	"VAL_OUT_OF_RANGE":         REASON_VAL_OUT_OF_RANGE,
-	"VAL_TOO_SHORT":            REASON_VAL_TOO_SHORT,
-	"VAL_TOO_LONG":             REASON_VAL_TOO_LONG,
-	"VAL_MIN":                  REASON_VAL_MIN,
-	"VAL_MAX":                  REASON_VAL_MAX,
-	"VAL_INVALID_PATTERN":      REASON_VAL_INVALID_PATTERN,
-	"APP_DUPLICATE":            REASON_APP_DUPLICATE,
-	"APP_CONFLICT":             REASON_APP_CONFLICT,
-	"APP_NOT_ALLOWED":          REASON_APP_NOT_ALLOWED,
-	"APP_FORBIDDEN_STATE":      REASON_APP_FORBIDDEN_STATE,
-	"APP_NOT_FOUND":            REASON_APP_NOT_FOUND,
-	"APP_ALREADY_EXISTS":       REASON_APP_ALREADY_EXISTS,
-	"APP_DEPENDENCY_MISSING":   REASON_APP_DEPENDENCY_MISSING,
-	"PARSE_INVALID_REFERENCE":  REASON_PARSE_INVALID_REFERENCE,
+	"VAL_REQUIRED": REASON_VAL_REQUIRED,
+	"VAL_NULL": REASON_VAL_NULL,
+	"VAL_INVALID_FORMAT": REASON_VAL_INVALID_FORMAT,
+	"VAL_INVALID_TYPE": REASON_VAL_INVALID_TYPE,
+	"VAL_INVALID_ENUM": REASON_VAL_INVALID_ENUM,
+	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
+	"VAL_TOO_SHORT": REASON_VAL_TOO_SHORT,
+	"VAL_TOO_LONG": REASON_VAL_TOO_LONG,
+	"VAL_MIN": REASON_VAL_MIN,
+	"VAL_MAX": REASON_VAL_MAX,
+	"VAL_INVALID_PATTERN": REASON_VAL_INVALID_PATTERN,
+	"APP_DUPLICATE": REASON_APP_DUPLICATE,
+	"APP_CONFLICT": REASON_APP_CONFLICT,
+	"APP_NOT_ALLOWED": REASON_APP_NOT_ALLOWED,
+	"APP_FORBIDDEN_STATE": REASON_APP_FORBIDDEN_STATE,
+	"APP_NOT_FOUND": REASON_APP_NOT_FOUND,
+	"APP_ALREADY_EXISTS": REASON_APP_ALREADY_EXISTS,
+	"APP_DEPENDENCY_MISSING": REASON_APP_DEPENDENCY_MISSING,
+	"PARSE_INVALID_REFERENCE": REASON_PARSE_INVALID_REFERENCE,
 	"PARSE_INVALID_TIME_RANGE": REASON_PARSE_INVALID_TIME_RANGE,
-	"SEC_UNSAFE_INPUT":         REASON_SEC_UNSAFE_INPUT,
-	"SEC_INVALID":              REASON_SEC_INVALID,
+	"SEC_UNSAFE_INPUT": REASON_SEC_UNSAFE_INPUT,
+	"SEC_INVALID": REASON_SEC_INVALID,
 }
+

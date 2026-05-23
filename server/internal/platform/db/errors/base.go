@@ -6,8 +6,8 @@ import (
 	"errors"
 	"strings"
 
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/apperrors"
 	plerrs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/errors"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	"github.com/jackc/pgx/v5/pgconn"
 )
@@ -21,7 +21,6 @@ type DBError struct {
 	// ---------- Infra ----------
 	//Timeout     aerrs.AppError // context deadline
 	//Unavailable aerrs.AppError // connection issue
-	Internal aerrs.AppError // fallback (unknown)
 }
 
 func TranslateDBError(err error, e DBError) *aerrs.AppError {
@@ -62,7 +61,7 @@ func TranslateDBError(err error, e DBError) *aerrs.AppError {
 	}
 
 	// ---------- Fallback ----------
-	return aerrs.New(e.Internal, aerrs.WithCauseDetail(err))
+	return aerrs.New(aerrs.INTERNAL_FALLBACK, aerrs.WithCauseDetail(err))
 }
 
 func isConnectionError(err error) bool {
