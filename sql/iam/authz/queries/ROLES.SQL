@@ -127,3 +127,25 @@ SELECT EXISTS (
       AND role_scope_type = $2
       AND scope_id IS NOT DISTINCT FROM $3
 ) AS exists;
+
+-- name: SearchRoles :many
+SELECT
+    id,
+    scope_id,
+    role_scope_type,
+    code,
+    name,
+    description,
+    role_access_scope,
+    level,
+    is_system,
+    is_active,
+    is_super
+FROM roles
+WHERE
+    ($1::text IS NULL OR code ILIKE '%' || $1 || '%'
+        OR name ILIKE '%' || $1 || '%')
+AND ($2::text IS NULL OR role_scope_type = $2)
+AND ($3::bool IS NULL OR is_active = $3)
+ORDER BY created_at DESC
+LIMIT $4 OFFSET $5;

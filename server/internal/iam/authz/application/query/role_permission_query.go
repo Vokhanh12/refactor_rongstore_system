@@ -6,7 +6,7 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-type ViewRolePermissionQuery interface {
+type RolePermissionQuery interface {
 	Search(ctx context.Context, a any) (any, *aerrs.AppError)
 }
 

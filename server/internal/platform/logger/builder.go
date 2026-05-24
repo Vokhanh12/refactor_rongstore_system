@@ -11,7 +11,6 @@ func buildFields(entry LogEntry, extra map[string]interface{}) []zap.Field {
 		zap.String("cause", entry.Cause),
 		zap.String("client_action", entry.ClientAction),
 		zap.String("server_action", entry.ServerAction),
-		zap.Int("http_status", entry.HTTPStatus),
 		zap.String("grpc_code", entry.GRPCCode),
 		zap.Bool("expected", entry.Expected),
 	}

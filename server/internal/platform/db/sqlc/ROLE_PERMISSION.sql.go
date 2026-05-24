@@ -8,7 +8,7 @@ package iam_sqlc
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const listAuthorizationGrantsByRoleKeys = `-- name: ListAuthorizationGrantsByRoleKeys :many
@@ -40,11 +40,11 @@ AND (
 `
 
 type ListAuthorizationGrantsByRoleKeysRow struct {
-	RoleCode           string      `json:"role_code"`
-	RoleScopeID        pgtype.UUID `json:"role_scope_id"`
-	RoleIsSuper        bool        `json:"role_is_super"`
-	PermissionResource string      `json:"permission_resource"`
-	PermissionAction   string      `json:"permission_action"`
+	RoleCode           string     `json:"role_code"`
+	RoleScopeID        *uuid.UUID `json:"role_scope_id"`
+	RoleIsSuper        bool       `json:"role_is_super"`
+	PermissionResource string     `json:"permission_resource"`
+	PermissionAction   string     `json:"permission_action"`
 }
 
 func (q *Queries) ListAuthorizationGrantsByRoleKeys(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleKeysRow, error) {

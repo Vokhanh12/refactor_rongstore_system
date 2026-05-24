@@ -4,86 +4,150 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mapper"
+
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ re.RoleRepository = (*SqlcRoleRepository)(nil)
+var _ repositories.RoleRepository = (*SqlcRoleRepository)(nil)
 
 type SqlcRoleRepository struct {
 	queries *db.Queries
 	dberr   dberr.DBError
 }
 
-func NewSqlcRoleRepository(queries *db.Queries, dberr dberr.DBError) repositories.RoleRepository {
-	return &SqlcRoleRepository{queries: queries, dberr: dberr}
+func NewSqlcRoleRepository(
+	queries *db.Queries,
+	dberr dberr.DBError,
+) repositories.RoleRepository {
+	return &SqlcRoleRepository{
+		queries: queries,
+		dberr:   dberr,
+	}
 }
 
-// Create implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Create(ctx context.Context, role *en.Role) (*en.Role, *apperrors.AppError) {
+// FindById implements [repositories.RoleRepository].
+func (r *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*en.Role, *aerrs.AppError) {
+	panic("unimplemented")
+}
 
-	createdRecord, err := s.queries.CreateRole(
-		ctx, mapper.RoleToCreateParams(role),
+func (r *SqlcRoleRepository) Create(
+	ctx context.Context,
+	role *en.Role,
+) (*en.Role, *aerrs.AppError) {
+
+	row, err := r.queries.CreateRole(
+		ctx,
+		db.CreateRoleParams{
+			ID:              role.ID(),
+			ScopeID:         role.RoleKey().ScopeID(),
+			RoleScopeType:   mapper.RoleScopeTypeToDB(role.ScopeType()),
+			Code:            role.RoleKey().RoleCode(),
+			Name:            role.Name(),
+			Description:     role.Description(),
+			RoleAccessScope: mapper.RoleAccessScopeToDB(role.AccessScope()),
+			Level:           int32(role.Level()),
+			IsSystem:        role.IsSystem(),
+			IsActive:        role.IsActive(),
+			IsSuper:         role.IsSuper(),
+		},
 	)
 
 	if err != nil {
-		return nil, dberr.TranslateDBError(err, s.dberr)
+		return nil, dberr.TranslateDBError(err, r.dberr)
 	}
 
-	entity := mapper.CreateRoleRowToEntity(createdRecord)
+	entity := mapper.CreateRoleRowToEntity(row)
 
 	return &entity, nil
 }
 
-// Delete implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Delete(ctx context.Context, id uuid.UUID) *apperrors.AppError {
-	err := s.queries.DeleteRole(ctx, id)
+func (r *SqlcRoleRepository) Update(
+	ctx context.Context,
+	role *en.Role,
+) (*en.Role, *aerrs.AppError) {
+
+	row, err := r.queries.UpdateRole(
+		ctx,
+		db.UpdateRoleParams{
+			ID:              role.ID(),
+			ScopeID:         role.RoleKey().ScopeID(),
+			RoleScopeType:   mapper.RoleScopeTypeToDB(role.ScopeType()),
+			Code:            role.RoleKey().RoleCode(),
+			Name:            role.Name(),
+			Description:     role.Description(),
+			RoleAccessScope: mapper.RoleAccessScopeToDB(role.AccessScope()),
+			Level:           int32(role.Level()),
+			IsSystem:        role.IsSystem(),
+			IsActive:        role.IsActive(),
+			IsSuper:         role.IsSuper(),
+		},
+	)
 
 	if err != nil {
-		return dberr.TranslateDBError(err, s.dberr)
+		return nil, dberr.TranslateDBError(err, r.dberr)
+	}
+
+	entity := mapper.UpdateRoleRowToEntity(row)
+
+	return &entity, nil
+}
+
+func (r *SqlcRoleRepository) Delete(
+	ctx context.Context,
+	id uuid.UUID,
+) *aerrs.AppError {
+
+	err := r.queries.DeleteRole(ctx, id)
+
+	if err != nil {
+		return dberr.TranslateDBError(err, r.dberr)
 	}
 
 	return nil
 }
 
-// Update implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Update(ctx context.Context, role *en.Role) (*en.Role, *apperrors.AppError) {
-	updatedRecord, err := s.queries.UpdateRole(
-		ctx, mapper.RoleToUpdateParams(role),
+func (r *SqlcRoleRepository) FindByID(
+	ctx context.Context,
+	id uuid.UUID,
+) (*en.Role, *aerrs.AppError) {
+	panic("unimplemented")
+}
+
+func (r *SqlcRoleRepository) FindByCode(
+	ctx context.Context,
+	code string,
+) (*en.Role, *aerrs.AppError) {
+	panic("unimplemented")
+}
+
+func (r *SqlcRoleRepository) Exists(
+	ctx context.Context,
+	scopeType enu.RoleScopeType,
+	roleKey vo.RoleKey,
+) (bool, *aerrs.AppError) {
+
+	exists, err := r.queries.ExistsRoleByCodeScope(
+		ctx,
+		db.ExistsRoleByCodeScopeParams{
+			Code:          roleKey.RoleCode(),
+			RoleScopeType: mapper.RoleScopeTypeToDB(scopeType),
+			ScopeID:       roleKey.ScopeID(),
+		},
 	)
 
 	if err != nil {
-		return nil, dberr.TranslateDBError(err, s.dberr)
+		return false, dberr.TranslateDBError(err, r.dberr)
 	}
 
-	entity := mapper.UpdateRoleRowToEntity(updatedRecord)
-
-	return &entity, nil
-}
-
-// FindByCode implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) FindByCode(ctx context.Context, code string) (*en.Role, *apperrors.AppError) {
-	panic("unimplemented")
-}
-
-// FindById implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*en.Role, *apperrors.AppError) {
-	panic("unimplemented")
-}
-
-// Exists implements [repositories.RoleRepository].
-func (s *SqlcRoleRepository) Exists(ctx context.Context, roleScopeType enums.RoleScopeType, RoleKey valueobjects.RoleKey) (bool, *apperrors.AppError) {
-	allowed, err := s.queries.ExistsRoleByCodeScope(ctx, mapper.RoleToExistsByCodeScopeParams(roleScopeType, RoleKey))
-	if err != nil {
-		return false, dberr.TranslateDBError(err, s.dberr)
-	}
-
-	return allowed, nil
+	return exists, nil
 }

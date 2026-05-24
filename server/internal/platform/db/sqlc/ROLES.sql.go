@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createRole = `-- name: CreateRole :one
@@ -46,11 +45,11 @@ RETURNING
 
 type CreateRoleParams struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
@@ -60,11 +59,11 @@ type CreateRoleParams struct {
 
 type CreateRoleRow struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
@@ -129,7 +128,7 @@ SELECT EXISTS (
 type ExistsRoleByCodeScopeParams struct {
 	Code          string        `json:"code"`
 	RoleScopeType RoleScopeType `json:"role_scope_type"`
-	ScopeID       pgtype.UUID   `json:"scope_id"`
+	ScopeID       *uuid.UUID    `json:"scope_id"`
 }
 
 func (q *Queries) ExistsRoleByCodeScope(ctx context.Context, arg ExistsRoleByCodeScopeParams) (bool, error) {
@@ -158,11 +157,11 @@ WHERE code = $1
 
 type GetRoleByCodeRow struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
@@ -209,11 +208,11 @@ WHERE id = $1
 
 type GetRoleByIDRow struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
@@ -268,11 +267,11 @@ type ListRolesParams struct {
 
 type ListRolesRow struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
@@ -289,6 +288,89 @@ func (q *Queries) ListRoles(ctx context.Context, arg ListRolesParams) ([]ListRol
 	var items []ListRolesRow
 	for rows.Next() {
 		var i ListRolesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ScopeID,
+			&i.RoleScopeType,
+			&i.Code,
+			&i.Name,
+			&i.Description,
+			&i.RoleAccessScope,
+			&i.Level,
+			&i.IsSystem,
+			&i.IsActive,
+			&i.IsSuper,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const searchRoles = `-- name: SearchRoles :many
+SELECT
+    id,
+    scope_id,
+    role_scope_type,
+    code,
+    name,
+    description,
+    role_access_scope,
+    level,
+    is_system,
+    is_active,
+    is_super
+FROM roles
+WHERE
+    ($1::text IS NULL OR code ILIKE '%' || $1 || '%'
+        OR name ILIKE '%' || $1 || '%')
+AND ($2::text IS NULL OR role_scope_type = $2)
+AND ($3::bool IS NULL OR is_active = $3)
+ORDER BY created_at DESC
+LIMIT $4 OFFSET $5
+`
+
+type SearchRolesParams struct {
+	Column1 string `json:"column_1"`
+	Column2 string `json:"column_2"`
+	Column3 bool   `json:"column_3"`
+	Limit   int32  `json:"limit"`
+	Offset  int32  `json:"offset"`
+}
+
+type SearchRolesRow struct {
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     *string         `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+}
+
+func (q *Queries) SearchRoles(ctx context.Context, arg SearchRolesParams) ([]SearchRolesRow, error) {
+	rows, err := q.db.Query(ctx, searchRoles,
+		arg.Column1,
+		arg.Column2,
+		arg.Column3,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SearchRolesRow
+	for rows.Next() {
+		var i SearchRolesRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.ScopeID,
@@ -342,11 +424,11 @@ RETURNING
 
 type UpdateRoleParams struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`
@@ -356,11 +438,11 @@ type UpdateRoleParams struct {
 
 type UpdateRoleRow struct {
 	ID              uuid.UUID       `json:"id"`
-	ScopeID         pgtype.UUID     `json:"scope_id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
 	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
 	Code            string          `json:"code"`
 	Name            string          `json:"name"`
-	Description     pgtype.Text     `json:"description"`
+	Description     *string         `json:"description"`
 	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
 	Level           int32           `json:"level"`
 	IsSystem        bool            `json:"is_system"`

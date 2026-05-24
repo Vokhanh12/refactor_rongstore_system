@@ -9,14 +9,14 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ q.ViewRolePermissionQuery = (*SqlcRolePermissionQuery)(nil)
+var _ q.RolePermissionQuery = (*SqlcRolePermissionQuery)(nil)
 
 type SqlcRolePermissionQuery struct {
 	queries *db.Queries
 	dberr   dberr.DBError
 }
 
-func NewSqlcRolePermissionQuery(queries *db.Queries) q.ViewRolePermissionQuery {
+func NewSqlcRolePermissionQuery(queries *db.Queries) q.RolePermissionQuery {
 	return &SqlcRolePermissionQuery{queries: queries}
 }
 

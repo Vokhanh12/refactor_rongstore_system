@@ -25,6 +25,7 @@ type Querier interface {
 	GetRoleByID(ctx context.Context, id uuid.UUID) (GetRoleByIDRow, error)
 	ListAuthorizationGrantsByRoleKeys(ctx context.Context, dollar_1 []byte) ([]ListAuthorizationGrantsByRoleKeysRow, error)
 	ListRoles(ctx context.Context, arg ListRolesParams) ([]ListRolesRow, error)
+	SearchRoles(ctx context.Context, arg SearchRolesParams) ([]SearchRolesRow, error)
 	UpdateRole(ctx context.Context, arg UpdateRoleParams) (UpdateRoleRow, error)
 }
 

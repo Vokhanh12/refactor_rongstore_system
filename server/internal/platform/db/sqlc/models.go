@@ -7,6 +7,7 @@ package iam_sqlc
 import (
 	"database/sql/driver"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -101,41 +102,41 @@ type Permission struct {
 	ID          uuid.UUID        `json:"id"`
 	Code        string           `json:"code"`
 	Name        pgtype.Text      `json:"name"`
-	Description pgtype.Text      `json:"description"`
+	Description *string          `json:"description"`
 	Resource    string           `json:"resource"`
 	Action      string           `json:"action"`
 	IsActive    bool             `json:"is_active"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
-	CreatedBy   pgtype.UUID      `json:"created_by"`
-	UpdatedBy   pgtype.UUID      `json:"updated_by"`
+	CreatedBy   *uuid.UUID       `json:"created_by"`
+	UpdatedBy   *uuid.UUID       `json:"updated_by"`
 }
 
 type Role struct {
-	ID              uuid.UUID          `json:"id"`
-	ScopeID         pgtype.UUID        `json:"scope_id"`
-	RoleScopeType   RoleScopeType      `json:"role_scope_type"`
-	Code            string             `json:"code"`
-	Name            string             `json:"name"`
-	Description     pgtype.Text        `json:"description"`
-	RoleAccessScope RoleAccessScope    `json:"role_access_scope"`
-	Level           int32              `json:"level"`
-	IsSystem        bool               `json:"is_system"`
-	IsActive        bool               `json:"is_active"`
-	IsSuper         bool               `json:"is_super"`
-	CreatedAt       pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
-	CreatedBy       pgtype.UUID        `json:"created_by"`
-	UpdatedBy       pgtype.UUID        `json:"updated_by"`
+	ID              uuid.UUID       `json:"id"`
+	ScopeID         *uuid.UUID      `json:"scope_id"`
+	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
+	Code            string          `json:"code"`
+	Name            string          `json:"name"`
+	Description     *string         `json:"description"`
+	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
+	Level           int32           `json:"level"`
+	IsSystem        bool            `json:"is_system"`
+	IsActive        bool            `json:"is_active"`
+	IsSuper         bool            `json:"is_super"`
+	CreatedAt       *time.Time      `json:"created_at"`
+	UpdatedAt       *time.Time      `json:"updated_at"`
+	CreatedBy       *uuid.UUID      `json:"created_by"`
+	UpdatedBy       *uuid.UUID      `json:"updated_by"`
 }
 
 type RolePermission struct {
 	RoleID       uuid.UUID        `json:"role_id"`
 	PermissionID uuid.UUID        `json:"permission_id"`
 	GrantedAt    pgtype.Timestamp `json:"granted_at"`
-	GrantedBy    pgtype.UUID      `json:"granted_by"`
+	GrantedBy    *uuid.UUID       `json:"granted_by"`
 	CreatedAt    pgtype.Timestamp `json:"created_at"`
 	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
-	CreatedBy    pgtype.UUID      `json:"created_by"`
-	UpdatedBy    pgtype.UUID      `json:"updated_by"`
+	CreatedBy    *uuid.UUID       `json:"created_by"`
+	UpdatedBy    *uuid.UUID       `json:"updated_by"`
 }

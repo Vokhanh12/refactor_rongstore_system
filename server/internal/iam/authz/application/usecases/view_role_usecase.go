@@ -5,7 +5,6 @@ import (
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -22,14 +21,14 @@ type RoleViewBatch struct {
 }
 
 type ViewRoleUsecase struct {
-	repo   re.RoleRepository
+	query  q.RoleQuery
 	engine *coreuc.ViewEngine[RoleView]
 }
 
-func NewViewRoleUsecase(repo re.RoleRepository) *ViewRoleUsecase {
+func NewViewRoleUsecase(q q.RoleQuery) *ViewRoleUsecase {
 
 	u := &ViewRoleUsecase{
-		repo: repo,
+		query: q,
 	}
 
 	handlers := []coreuc.Handler[RoleView]{
@@ -72,17 +71,17 @@ func (u *ViewRoleUsecase) Execute(ctx context.Context, batch RoleViewBatch) dtos
 }
 
 func (u *ViewRoleUsecase) handleGet(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *aerrs.AppError) {
-	return nil, nil
+	return u.query.Get(ctx, q)
 }
 
 func (u *ViewRoleUsecase) handleList(ctx context.Context, q q.ListRoleQuery) (q.ListRoleQueryResult, *aerrs.AppError) {
-	return nil, nil
+	return u.query.List(ctx, q)
 }
 
 func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q q.SearchRoleQuery) (q.SearchRoleQueryResult, *aerrs.AppError) {
-	return nil, nil
+	return u.query.Search(ctx, q)
 }
 
 func (u *ViewRoleUsecase) handleExport(ctx context.Context, q q.ExportRoleQuery) (q.ExportRoleQueryResult, *aerrs.AppError) {
-	return nil, nil
+	return u.query.Export(ctx, q)
 }

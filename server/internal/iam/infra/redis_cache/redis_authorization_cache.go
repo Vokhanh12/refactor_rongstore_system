@@ -15,8 +15,7 @@ import (
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/cache"
-	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache"
-	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache/errors"
+	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache/redis"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/errors"
 
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"

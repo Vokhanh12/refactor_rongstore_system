@@ -9,7 +9,6 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
-	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
@@ -42,7 +41,7 @@ func (s *SqlcAuthorizationQuery) ListGrantsByRoleKeys(ctx context.Context, RoleK
 
 	for _, row := range rows {
 		results = append(results, pr.AuthorizationGrant{
-			RoleKey:        vo.RestoreRoleKey(row.RoleCode, pg.UUIDPtrFromPgUUID(row.RoleScopeID)),
+			RoleKey:        vo.RestoreRoleKey(row.RoleCode, row.RoleScopeID),
 			IsElevated:     row.RoleIsSuper,
 			ResourceAction: vo.RestoreResourceAction(row.PermissionResource, row.PermissionAction),
 		})
