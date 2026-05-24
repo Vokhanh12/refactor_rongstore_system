@@ -8,7 +8,6 @@ import (
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
@@ -17,7 +16,6 @@ var _ q.AuthorizationQuery = (*SqlcAuthorizationQuery)(nil)
 
 type SqlcAuthorizationQuery struct {
 	queries *db.Queries
-	dberr   dberr.DBError
 }
 
 func NewSqlcAuthorizationQuery(queries *db.Queries) q.AuthorizationQuery {

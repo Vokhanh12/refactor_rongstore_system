@@ -133,6 +133,54 @@ var (
 		ServerAction: "",
 	}
 
+	DB_CONFLICT = apperrors.AppError{
+		Key: "DB_CONFLICT",
+		Code: "PLATFORM-INFRA-009",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 409,
+		GRPCCode: "AlreadyExists",
+		Message: "Database conflict",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_INVALID_REFERENCE = apperrors.AppError{
+		Key: "DB_INVALID_REFERENCE",
+		Code: "PLATFORM-INFRA-010",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid database reference",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_NOT_FOUND = apperrors.AppError{
+		Key: "DB_NOT_FOUND",
+		Code: "PLATFORM-INFRA-011",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 404,
+		GRPCCode: "NotFound",
+		Message: "Database record not found",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 )
 
 var (
@@ -257,6 +305,9 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"PLATFORM-INFRA-006": CACHE_SERIALIZATION_FAILED,
 	"PLATFORM-INFRA-007": CACHE_DESERIALIZATION_FAILED,
 	"PLATFORM-INFRA-008": CACHE_OPERATION_FAILED,
+	"PLATFORM-INFRA-009": DB_CONFLICT,
+	"PLATFORM-INFRA-010": DB_INVALID_REFERENCE,
+	"PLATFORM-INFRA-011": DB_NOT_FOUND,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{

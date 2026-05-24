@@ -12,8 +12,8 @@ import (
 
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mapper"
 
-	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
-	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
+	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
+	sqlc "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
@@ -21,17 +21,12 @@ import (
 var _ repositories.RoleRepository = (*SqlcRoleRepository)(nil)
 
 type SqlcRoleRepository struct {
-	queries *db.Queries
-	dberr   dberr.DBError
+	db *pg.DB
 }
 
-func NewSqlcRoleRepository(
-	queries *db.Queries,
-	dberr dberr.DBError,
-) repositories.RoleRepository {
+func NewSqlcRoleRepository(db *pg.DB) repositories.RoleRepository {
 	return &SqlcRoleRepository{
-		queries: queries,
-		dberr:   dberr,
+		db: db,
 	}
 }
 
@@ -45,9 +40,9 @@ func (r *SqlcRoleRepository) Create(
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
 
-	row, err := r.queries.CreateRole(
+	row, err := r.db.Q.CreateRole(
 		ctx,
-		db.CreateRoleParams{
+		sqlc.CreateRoleParams{
 			ID:              role.ID(),
 			ScopeID:         role.RoleKey().ScopeID(),
 			RoleScopeType:   mapper.RoleScopeTypeToDB(role.ScopeType()),
@@ -63,7 +58,7 @@ func (r *SqlcRoleRepository) Create(
 	)
 
 	if err != nil {
-		return nil, dberr.TranslateDBError(err, r.dberr)
+		return nil, r.db.Wrap(err)
 	}
 
 	entity := mapper.CreateRoleRowToEntity(row)
@@ -76,9 +71,9 @@ func (r *SqlcRoleRepository) Update(
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
 
-	row, err := r.queries.UpdateRole(
+	row, err := r.db.Q.UpdateRole(
 		ctx,
-		db.UpdateRoleParams{
+		sqlc.UpdateRoleParams{
 			ID:              role.ID(),
 			ScopeID:         role.RoleKey().ScopeID(),
 			RoleScopeType:   mapper.RoleScopeTypeToDB(role.ScopeType()),
@@ -94,7 +89,7 @@ func (r *SqlcRoleRepository) Update(
 	)
 
 	if err != nil {
-		return nil, dberr.TranslateDBError(err, r.dberr)
+		return nil, r.db.Wrap(err)
 	}
 
 	entity := mapper.UpdateRoleRowToEntity(row)
@@ -107,10 +102,10 @@ func (r *SqlcRoleRepository) Delete(
 	id uuid.UUID,
 ) *aerrs.AppError {
 
-	err := r.queries.DeleteRole(ctx, id)
+	err := r.db.Q.DeleteRole(ctx, id)
 
 	if err != nil {
-		return dberr.TranslateDBError(err, r.dberr)
+		return r.db.Wrap(err)
 	}
 
 	return nil
@@ -136,9 +131,9 @@ func (r *SqlcRoleRepository) Exists(
 	roleKey vo.RoleKey,
 ) (bool, *aerrs.AppError) {
 
-	exists, err := r.queries.ExistsRoleByCodeScope(
+	exists, err := r.db.Q.ExistsRoleByCodeScope(
 		ctx,
-		db.ExistsRoleByCodeScopeParams{
+		sqlc.ExistsRoleByCodeScopeParams{
 			Code:          roleKey.RoleCode(),
 			RoleScopeType: mapper.RoleScopeTypeToDB(scopeType),
 			ScopeID:       roleKey.ScopeID(),
@@ -146,7 +141,7 @@ func (r *SqlcRoleRepository) Exists(
 	)
 
 	if err != nil {
-		return false, dberr.TranslateDBError(err, r.dberr)
+		return false, r.db.Wrap(err)
 	}
 
 	return exists, nil

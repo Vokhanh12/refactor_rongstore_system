@@ -460,6 +460,36 @@ services:
           severity: S2
           retryable: false
 
+        - code: PLATFORM-INFRA-009
+          key: DB_CONFLICT
+          component: postgres
+          tags: [infra, database]
+          http_status: 409
+          grpc_code: AlreadyExists
+          message: "Database conflict"
+          severity: S3
+          retryable: false
+
+        - code: PLATFORM-INFRA-010
+          key: DB_INVALID_REFERENCE
+          component: postgres
+          tags: [infra, database]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Invalid database reference"
+          severity: S3
+          retryable: false
+
+        - code: PLATFORM-INFRA-011
+          key: DB_NOT_FOUND
+          component: postgres
+          tags: [infra, database]
+          http_status: 404
+          grpc_code: NotFound
+          message: "Database record not found"
+          severity: S3
+          retryable: false
+
 # ============================================================
 # ERROR DETAILS
 # ============================================================

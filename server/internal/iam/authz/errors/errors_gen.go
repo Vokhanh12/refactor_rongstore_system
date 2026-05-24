@@ -53,22 +53,6 @@ var (
 		ServerAction: "",
 	}
 
-	ROLE_PERSIST_FAILED = apperrors.AppError{
-		Key: "ROLE_PERSIST_FAILED",
-		Code: "AUTHZ-APP-002",
-		Layer: "APP",
-		Component: "role_repository",
-		Tags: []string{"application"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Failed to persist role",
-		Severity: "S2",
-		Retryable: false,
-		Cause: "",
-		ClientAction: "",
-		ServerAction: "",
-	}
-
 	AUTHORIZATION_INVALID = apperrors.AppError{
 		Key: "AUTHORIZATION_INVALID",
 		Code: "AUTHZ-TRANS-001",
@@ -252,7 +236,6 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"AUTHZ-DOM-001": ROLE_NOT_FOUND,
 	"AUTHZ-DOM-002": ROLE_INVALID,
 	"AUTHZ-APP-001": ROLE_ALREADY_EXISTS,
-	"AUTHZ-APP-002": ROLE_PERSIST_FAILED,
 	"AUTHZ-TRANS-001": AUTHORIZATION_INVALID,
 	"AUTHZ-TRANS-002": RESOURCE_OR_ACTION_REQUIRED,
 	"AUTHZ-TRANS-003": ROLE_REQUIRED,
