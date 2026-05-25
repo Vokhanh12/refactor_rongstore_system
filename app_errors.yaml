@@ -110,6 +110,16 @@ services:
           severity: S2
           retryable: false
 
+        - code: CORE-APP-005
+          key: APP_OPERATION_FAILED
+          component: application
+          tags: [application]
+          http_status: 400
+          grpc_code: FailedPrecondition
+          message: "Application operation failed"
+          severity: S3
+          retryable: false
+
       TRANS:
 
         - code: CORE-TRANS-001

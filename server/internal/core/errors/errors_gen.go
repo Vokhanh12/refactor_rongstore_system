@@ -85,6 +85,22 @@ var (
 		ServerAction: "",
 	}
 
+	APP_OPERATION_FAILED = apperrors.AppError{
+		Key: "APP_OPERATION_FAILED",
+		Code: "CORE-APP-005",
+		Layer: "APP",
+		Component: "application",
+		Tags: []string{"application"},
+		Status: 400,
+		GRPCCode: "FailedPrecondition",
+		Message: "Application operation failed",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 	INVALID_REQUEST_PAYLOAD = apperrors.AppError{
 		Key: "INVALID_REQUEST_PAYLOAD",
 		Code: "CORE-TRANS-001",
@@ -302,6 +318,7 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-APP-002": MUTATE_PARTIAL_FAILURE,
 	"CORE-APP-003": VIEW_OPERATION_UNSUPPORTED,
 	"CORE-APP-004": VIEW_PARTIAL_FAILURE,
+	"CORE-APP-005": APP_OPERATION_FAILED,
 	"CORE-TRANS-001": INVALID_REQUEST_PAYLOAD,
 	"CORE-PARSE-001": STRING_SPLIT_INVALID,
 	"CORE-PARSE-002": UUID_INVALID,
