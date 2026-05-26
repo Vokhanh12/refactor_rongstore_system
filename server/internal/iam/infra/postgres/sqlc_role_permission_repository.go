@@ -7,20 +7,18 @@ import (
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
-	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
+	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ re.RolePermissionRepository = (*SqlcRolePermissionRepository)(nil)
 
 type SqlcRolePermissionRepository struct {
-	queries *db.Queries
-	dberr   dberr.DBError
+	dba *pg.DbAdapter
 }
 
-func NewSqlcRolePermissionRepository(queries *db.Queries) repositories.RolePermissionRepository {
-	return &SqlcRolePermissionRepository{queries: queries}
+func NewSqlcRolePermissionRepository(dba *pg.DbAdapter) repositories.RolePermissionRepository {
+	return &SqlcRolePermissionRepository{dba: dba}
 }
 
 // Create implements [repositories.RolePermissionRepository].

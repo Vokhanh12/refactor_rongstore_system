@@ -242,6 +242,15 @@
       },
       "title": "---------------- UPDATE AVATAR ----------------"
     },
+    "StoreOwnerViewSearch": {
+      "type": "object",
+      "properties": {
+        "common": {
+          "$ref": "#/definitions/v1SearchCriteria"
+        }
+      },
+      "title": "---------------- SEARCH ----------------"
+    },
     "StoreOwnerViewSearchByTiles": {
       "type": "object",
       "properties": {
@@ -255,14 +264,6 @@
       },
       "title": "---------------- SEARCH BY TILES ----------------"
     },
-    "commonV1Search": {
-      "type": "object",
-      "properties": {
-        "keyword": {
-          "type": "string"
-        }
-      }
-    },
     "iamV1StoreOwnerView": {
       "type": "object",
       "properties": {
@@ -270,7 +271,7 @@
           "type": "string"
         },
         "search": {
-          "$ref": "#/definitions/v1StoreOwnerViewSearch"
+          "$ref": "#/definitions/StoreOwnerViewSearch"
         },
         "searchByTiles": {
           "$ref": "#/definitions/StoreOwnerViewSearchByTiles"
@@ -383,6 +384,54 @@
             "type": "object",
             "$ref": "#/definitions/v1ErrorDetail"
           }
+        }
+      }
+    },
+    "v1Filter": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "op": {
+          "$ref": "#/definitions/v1FilterOperator"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FilterValue"
+          }
+        }
+      }
+    },
+    "v1FilterOperator": {
+      "type": "string",
+      "enum": [
+        "FILTER_OPERATOR_UNSPECIFIED",
+        "EQ",
+        "NEQ",
+        "GT",
+        "GTE",
+        "LT",
+        "LTE",
+        "LIKE",
+        "IN"
+      ],
+      "default": "FILTER_OPERATOR_UNSPECIFIED"
+    },
+    "v1FilterValue": {
+      "type": "object",
+      "properties": {
+        "stringValue": {
+          "type": "string"
+        },
+        "intValue": {
+          "type": "string",
+          "format": "int64"
+        },
+        "boolValue": {
+          "type": "boolean"
         }
       }
     },
@@ -511,16 +560,49 @@
         }
       }
     },
-    "v1SearchRequest": {
+    "v1SearchCriteria": {
       "type": "object",
       "properties": {
+        "keyword": {
+          "type": "string"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Filter"
+          }
+        },
+        "sorts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Sort"
+          }
+        },
         "pagination": {
           "$ref": "#/definitions/v1Pagination"
-        },
-        "input": {
-          "$ref": "#/definitions/commonV1Search"
         }
       }
+    },
+    "v1Sort": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "direction": {
+          "$ref": "#/definitions/v1SortDirection"
+        }
+      }
+    },
+    "v1SortDirection": {
+      "type": "string",
+      "enum": [
+        "ASC",
+        "DESC"
+      ],
+      "default": "ASC"
     },
     "v1StoreOwnerMutateRequest": {
       "type": "object",
@@ -565,15 +647,6 @@
           }
         }
       }
-    },
-    "v1StoreOwnerViewSearch": {
-      "type": "object",
-      "properties": {
-        "common": {
-          "$ref": "#/definitions/v1SearchRequest"
-        }
-      },
-      "title": "---------------- SEARCH ----------------"
     },
     "v1ViewResponse": {
       "type": "object",

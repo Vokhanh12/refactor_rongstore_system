@@ -90,75 +90,18 @@ func (x *BaseRequest) GetUserAgent() string {
 	return ""
 }
 
-type SearchRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Pagination    *Pagination            `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	Input         *Search                `protobuf:"bytes,2,opt,name=input,proto3" json:"input,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SearchRequest) Reset() {
-	*x = SearchRequest{}
-	mi := &file_core_common_v1_resources_base_request_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SearchRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SearchRequest) ProtoMessage() {}
-
-func (x *SearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_core_common_v1_resources_base_request_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SearchRequest.ProtoReflect.Descriptor instead.
-func (*SearchRequest) Descriptor() ([]byte, []int) {
-	return file_core_common_v1_resources_base_request_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *SearchRequest) GetPagination() *Pagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
-func (x *SearchRequest) GetInput() *Search {
-	if x != nil {
-		return x.Input
-	}
-	return nil
-}
-
 var File_core_common_v1_resources_base_request_proto protoreflect.FileDescriptor
 
 const file_core_common_v1_resources_base_request_proto_rawDesc = "" +
 	"\n" +
-	"+core/common/v1/resources/base_request.proto\x12\tcommon.v1\x1a\x1avalidate/v1/validate.proto\x1a%core/common/v1/resources/search.proto\x1a)core/common/v1/resources/pagination.proto\"\xe9\x01\n" +
+	"+core/common/v1/resources/base_request.proto\x12\tcommon.v1\x1a\x1avalidate/v1/validate.proto\"\xe9\x01\n" +
 	"\vBaseRequest\x12d\n" +
 	"\x11request_date_time\x18\x01 \x01(\tB8\xfaB5r3\x10\x012/^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{2}Z)$R\x0frequestDateTime\x12'\n" +
 	"\n" +
 	"request_id\x18\x02 \x01(\tB\b\xfaB\x05r\x03\xb0\x01\x01R\trequestId\x12#\n" +
 	"\blanguage\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\blanguage\x12&\n" +
 	"\n" +
-	"user_agent\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\tuserAgent\"\x83\x01\n" +
-	"\rSearchRequest\x12?\n" +
-	"\n" +
-	"pagination\x18\x01 \x01(\v2\x15.common.v1.PaginationB\b\xfaB\x05\x8a\x01\x02\x10\x01R\n" +
-	"pagination\x121\n" +
-	"\x05input\x18\x02 \x01(\v2\x11.common.v1.SearchB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x05inputBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
+	"user_agent\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\tuserAgentBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
 	file_core_common_v1_resources_base_request_proto_rawDescOnce sync.Once
@@ -172,21 +115,16 @@ func file_core_common_v1_resources_base_request_proto_rawDescGZIP() []byte {
 	return file_core_common_v1_resources_base_request_proto_rawDescData
 }
 
-var file_core_common_v1_resources_base_request_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_common_v1_resources_base_request_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_core_common_v1_resources_base_request_proto_goTypes = []any{
-	(*BaseRequest)(nil),   // 0: common.v1.BaseRequest
-	(*SearchRequest)(nil), // 1: common.v1.SearchRequest
-	(*Pagination)(nil),    // 2: common.v1.Pagination
-	(*Search)(nil),        // 3: common.v1.Search
+	(*BaseRequest)(nil), // 0: common.v1.BaseRequest
 }
 var file_core_common_v1_resources_base_request_proto_depIdxs = []int32{
-	2, // 0: common.v1.SearchRequest.pagination:type_name -> common.v1.Pagination
-	3, // 1: common.v1.SearchRequest.input:type_name -> common.v1.Search
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_core_common_v1_resources_base_request_proto_init() }
@@ -194,15 +132,13 @@ func file_core_common_v1_resources_base_request_proto_init() {
 	if File_core_common_v1_resources_base_request_proto != nil {
 		return
 	}
-	file_core_common_v1_resources_search_proto_init()
-	file_core_common_v1_resources_pagination_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_base_request_proto_rawDesc), len(file_core_common_v1_resources_base_request_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

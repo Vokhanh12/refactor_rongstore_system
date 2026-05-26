@@ -4,20 +4,18 @@ import (
 	"context"
 
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
-	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
+	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ q.RolePermissionQuery = (*SqlcRolePermissionQuery)(nil)
 
 type SqlcRolePermissionQuery struct {
-	queries *db.Queries
-	dberr   dberr.DBError
+	dba *pg.DbAdapter
 }
 
-func NewSqlcRolePermissionQuery(queries *db.Queries) q.RolePermissionQuery {
-	return &SqlcRolePermissionQuery{queries: queries}
+func NewSqlcRolePermissionQuery(dba *pg.DbAdapter) q.RolePermissionQuery {
+	return &SqlcRolePermissionQuery{dba: dba}
 }
 
 // Search implements [query.ViewRolePermissionQuery].

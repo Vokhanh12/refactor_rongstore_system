@@ -7,16 +7,15 @@
 package resourcespb
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
-	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
+	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -704,7 +703,7 @@ func (*RolePermissionMutation_Delete_Data) Descriptor() ([]byte, []int) {
 // ---------------- SEARCH ----------------
 type RolePermissionView_Search struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Common        *v1.SearchRequest      `protobuf:"bytes,1,opt,name=common,proto3" json:"common,omitempty"`
+	Common        *v1.SearchCriteria     `protobuf:"bytes,1,opt,name=common,proto3" json:"common,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -739,7 +738,7 @@ func (*RolePermissionView_Search) Descriptor() ([]byte, []int) {
 	return file_iam_authz_v1_resources_role_permission_proto_rawDescGZIP(), []int{2, 0}
 }
 
-func (x *RolePermissionView_Search) GetCommon() *v1.SearchRequest {
+func (x *RolePermissionView_Search) GetCommon() *v1.SearchCriteria {
 	if x != nil {
 		return x.Common
 	}
@@ -802,7 +801,7 @@ var File_iam_authz_v1_resources_role_permission_proto protoreflect.FileDescripto
 
 const file_iam_authz_v1_resources_role_permission_proto_rawDesc = "" +
 	"\n" +
-	",iam/authz/v1/resources/role_permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x02\n" +
+	",iam/authz/v1/resources/role_permission.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.core/common/v1/resources/search_criteria.proto\"\xa6\x02\n" +
 	"\x0eRolePermission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03lat\x18\x02 \x01(\x01R\x03lat\x12\x10\n" +
@@ -838,12 +837,12 @@ const file_iam_authz_v1_resources_role_permission_proto_rawDesc = "" +
 	"\x06Delete\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x1a\x06\n" +
 	"\x04Data:'\x8a\xb5\x18\x0fROLE_PERMISSION\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01B\r\n" +
-	"\x06action\x12\x03\xf8B\x01\"\xb6\x02\n" +
+	"\x06action\x12\x03\xf8B\x01\"\xb7\x02\n" +
 	"\x12RolePermissionView\x12\x1c\n" +
 	"\x05op_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04opId\x12;\n" +
-	"\x06search\x18\x02 \x01(\v2!.iam.v1.RolePermissionView.SearchH\x00R\x06search\x1a\xb5\x01\n" +
-	"\x06Search\x12:\n" +
-	"\x06common\x18\x01 \x01(\v2\x18.common.v1.SearchRequestB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x06common\x1aN\n" +
+	"\x06search\x18\x02 \x01(\v2!.iam.v1.RolePermissionView.SearchH\x00R\x06search\x1a\xb6\x01\n" +
+	"\x06Search\x12;\n" +
+	"\x06common\x18\x01 \x01(\v2\x19.common.v1.SearchCriteriaB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x06common\x1aN\n" +
 	"\x04Data\x120\n" +
 	"\aresults\x18\x01 \x03(\v2\x16.iam.v1.RolePermissionR\aresults\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total:\x1f\x8a\xb5\x18\x0fROLE_PERMISSION\x92\xb5\x18\x04READ\xa8\xb5\x18\x01B\r\n" +
@@ -881,7 +880,7 @@ var file_iam_authz_v1_resources_role_permission_proto_goTypes = []any{
 	(*RolePermissionView_Search)(nil),          // 11: iam.v1.RolePermissionView.Search
 	(*RolePermissionView_Search_Data)(nil),     // 12: iam.v1.RolePermissionView.Search.Data
 	(*timestamppb.Timestamp)(nil),              // 13: google.protobuf.Timestamp
-	(*v1.SearchRequest)(nil),                   // 14: common.v1.SearchRequest
+	(*v1.SearchCriteria)(nil),                  // 14: common.v1.SearchCriteria
 }
 var file_iam_authz_v1_resources_role_permission_proto_depIdxs = []int32{
 	13, // 0: iam.v1.RolePermission.create_date:type_name -> google.protobuf.Timestamp
@@ -891,7 +890,7 @@ var file_iam_authz_v1_resources_role_permission_proto_depIdxs = []int32{
 	7,  // 4: iam.v1.RolePermissionMutation.delete:type_name -> iam.v1.RolePermissionMutation.Delete
 	11, // 5: iam.v1.RolePermissionView.search:type_name -> iam.v1.RolePermissionView.Search
 	1,  // 6: iam.v1.RolePermissionMutateRequest.mutations:type_name -> iam.v1.RolePermissionMutation
-	14, // 7: iam.v1.RolePermissionView.Search.common:type_name -> common.v1.SearchRequest
+	14, // 7: iam.v1.RolePermissionView.Search.common:type_name -> common.v1.SearchCriteria
 	0,  // 8: iam.v1.RolePermissionView.Search.Data.results:type_name -> iam.v1.RolePermission
 	9,  // [9:9] is the sub-list for method output_type
 	9,  // [9:9] is the sub-list for method input_type

@@ -7,15 +7,15 @@
 package resourcespb
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
+	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -783,6 +783,8 @@ func (*ListResult) Descriptor() ([]byte, []int) {
 
 type SearchResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Role                `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -815,6 +817,20 @@ func (x *SearchResult) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SearchResult.ProtoReflect.Descriptor instead.
 func (*SearchResult) Descriptor() ([]byte, []int) {
 	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SearchResult) GetItems() []*Role {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *SearchResult) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 type Create_Data struct {
@@ -1147,7 +1163,7 @@ func (x *RoleView_List) GetOffset() int32 {
 
 type RoleView_Search struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Keyword       string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Query         *v1.SearchCriteria     `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1182,18 +1198,18 @@ func (*RoleView_Search) Descriptor() ([]byte, []int) {
 	return file_iam_authz_v1_resources_role_proto_rawDescGZIP(), []int{9, 2}
 }
 
-func (x *RoleView_Search) GetKeyword() string {
+func (x *RoleView_Search) GetQuery() *v1.SearchCriteria {
 	if x != nil {
-		return x.Keyword
+		return x.Query
 	}
-	return ""
+	return nil
 }
 
 var File_iam_authz_v1_resources_role_proto protoreflect.FileDescriptor
 
 const file_iam_authz_v1_resources_role_proto_rawDesc = "" +
 	"\n" +
-	"!iam/authz/v1/resources/role.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a+core/common/v1/resources/auth_options.proto\x1a#iam/authz/v1/resources/common.proto\"\x83\x04\n" +
+	"!iam/authz/v1/resources/role.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a+core/common/v1/resources/auth_options.proto\x1a.core/common/v1/resources/search_criteria.proto\x1a#iam/authz/v1/resources/common.proto\"\x83\x04\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\x12\x1e\n" +
@@ -1271,7 +1287,7 @@ const file_iam_authz_v1_resources_role_proto_rawDesc = "" +
 	"\n" +
 	"roleResult\x18\x01 \x01(\v2\x12.iam.v1.RoleResultR\n" +
 	"roleResult\"\x0e\n" +
-	"\fDeleteResult\"\xa4\x02\n" +
+	"\fDeleteResult\"\xbb\x02\n" +
 	"\bRoleView\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opId\x12(\n" +
 	"\x03get\x18\x02 \x01(\v2\x14.iam.v1.RoleView.GetH\x00R\x03get\x12+\n" +
@@ -1281,15 +1297,17 @@ const file_iam_authz_v1_resources_role_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x1a4\n" +
 	"\x04List\x12\x14\n" +
 	"\x05limit\x18\x01 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x02 \x01(\x05R\x06offset\x1a\"\n" +
-	"\x06Search\x12\x18\n" +
-	"\akeyword\x18\x01 \x01(\tR\akeywordB\b\n" +
+	"\x06offset\x18\x02 \x01(\x05R\x06offset\x1a9\n" +
+	"\x06Search\x12/\n" +
+	"\x05query\x18\x01 \x01(\v2\x19.common.v1.SearchCriteriaR\x05queryB\b\n" +
 	"\x06action\"\x1b\n" +
 	"\tGetResult\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\f\n" +
 	"\n" +
-	"ListResult\"\x0e\n" +
-	"\fSearchResultB^Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
+	"ListResult\"H\n" +
+	"\fSearchResult\x12\"\n" +
+	"\x05items\x18\x01 \x03(\v2\f.iam.v1.RoleR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05totalB^Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
 
 var (
 	file_iam_authz_v1_resources_role_proto_rawDescOnce sync.Once
@@ -1325,6 +1343,7 @@ var file_iam_authz_v1_resources_role_proto_goTypes = []any{
 	(*RoleView_Search)(nil),       // 17: iam.v1.RoleView.Search
 	(*timestamppb.Timestamp)(nil), // 18: google.protobuf.Timestamp
 	(*RoleResult)(nil),            // 19: iam.v1.RoleResult
+	(*v1.SearchCriteria)(nil),     // 20: common.v1.SearchCriteria
 }
 var file_iam_authz_v1_resources_role_proto_depIdxs = []int32{
 	18, // 0: iam.v1.Role.created_at:type_name -> google.protobuf.Timestamp
@@ -1340,11 +1359,13 @@ var file_iam_authz_v1_resources_role_proto_depIdxs = []int32{
 	15, // 10: iam.v1.RoleView.get:type_name -> iam.v1.RoleView.Get
 	16, // 11: iam.v1.RoleView.list:type_name -> iam.v1.RoleView.List
 	17, // 12: iam.v1.RoleView.search:type_name -> iam.v1.RoleView.Search
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	0,  // 13: iam.v1.SearchResult.items:type_name -> iam.v1.Role
+	20, // 14: iam.v1.RoleView.Search.query:type_name -> common.v1.SearchCriteria
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_iam_authz_v1_resources_role_proto_init() }

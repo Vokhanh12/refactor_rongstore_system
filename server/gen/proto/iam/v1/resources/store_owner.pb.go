@@ -856,7 +856,7 @@ func (*StoreOwnerMutation_Delete_Data) Descriptor() ([]byte, []int) {
 // ---------------- SEARCH ----------------
 type StoreOwnerView_Search struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Common        *v1.SearchRequest      `protobuf:"bytes,1,opt,name=common,proto3" json:"common,omitempty"`
+	Common        *v1.SearchCriteria     `protobuf:"bytes,1,opt,name=common,proto3" json:"common,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -891,7 +891,7 @@ func (*StoreOwnerView_Search) Descriptor() ([]byte, []int) {
 	return file_iam_v1_resources_store_owner_proto_rawDescGZIP(), []int{3, 0}
 }
 
-func (x *StoreOwnerView_Search) GetCommon() *v1.SearchRequest {
+func (x *StoreOwnerView_Search) GetCommon() *v1.SearchCriteria {
 	if x != nil {
 		return x.Common
 	}
@@ -1127,7 +1127,7 @@ var File_iam_v1_resources_store_owner_proto protoreflect.FileDescriptor
 
 const file_iam_v1_resources_store_owner_proto_rawDesc = "" +
 	"\n" +
-	"\"iam/v1/resources/store_owner.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa2\x02\n" +
+	"\"iam/v1/resources/store_owner.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.core/common/v1/resources/search_criteria.proto\"\xa2\x02\n" +
 	"\n" +
 	"StoreOwner\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
@@ -1175,13 +1175,13 @@ const file_iam_v1_resources_store_owner_proto_rawDesc = "" +
 	"\x04Data:#\x8a\xb5\x18\vSTORE_OWNER\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01B\r\n" +
 	"\x06action\x12\x03\xf8B\x01\"]\n" +
 	"\x17StoreOwnerMutateRequest\x12B\n" +
-	"\tmutations\x18\x01 \x03(\v2\x1a.iam.v1.StoreOwnerMutationB\b\xfaB\x05\x92\x01\x02\b\x01R\tmutations\"\xbf\x05\n" +
+	"\tmutations\x18\x01 \x03(\v2\x1a.iam.v1.StoreOwnerMutationB\b\xfaB\x05\x92\x01\x02\b\x01R\tmutations\"\xc0\x05\n" +
 	"\x0eStoreOwnerView\x12\x1c\n" +
 	"\x05op_id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04opId\x127\n" +
 	"\x06search\x18\x02 \x01(\v2\x1d.iam.v1.StoreOwnerView.SearchH\x00R\x06search\x12N\n" +
-	"\x0fsearch_by_tiles\x18\x03 \x01(\v2$.iam.v1.StoreOwnerView.SearchByTilesH\x00R\rsearchByTiles\x1a\xad\x01\n" +
-	"\x06Search\x12:\n" +
-	"\x06common\x18\x01 \x01(\v2\x18.common.v1.SearchRequestB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x06common\x1aJ\n" +
+	"\x0fsearch_by_tiles\x18\x03 \x01(\v2$.iam.v1.StoreOwnerView.SearchByTilesH\x00R\rsearchByTiles\x1a\xae\x01\n" +
+	"\x06Search\x12;\n" +
+	"\x06common\x18\x01 \x01(\v2\x19.common.v1.SearchCriteriaB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x06common\x1aJ\n" +
 	"\x04Data\x12,\n" +
 	"\aresults\x18\x01 \x03(\v2\x12.iam.v1.StoreOwnerR\aresults\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total:\x1b\x8a\xb5\x18\vSTORE_OWNER\x92\xb5\x18\x04READ\xa8\xb5\x18\x01\x1a\xc6\x02\n" +
@@ -1235,7 +1235,7 @@ var file_iam_v1_resources_store_owner_proto_goTypes = []any{
 	(*StoreOwnerView_SearchByTiles_TileRange)(nil), // 16: iam.v1.StoreOwnerView.SearchByTiles.TileRange
 	(*StoreOwnerView_SearchByTiles_Data)(nil),      // 17: iam.v1.StoreOwnerView.SearchByTiles.Data
 	(*timestamppb.Timestamp)(nil),                  // 18: google.protobuf.Timestamp
-	(*v1.SearchRequest)(nil),                       // 19: common.v1.SearchRequest
+	(*v1.SearchCriteria)(nil),                      // 19: common.v1.SearchCriteria
 }
 var file_iam_v1_resources_store_owner_proto_depIdxs = []int32{
 	18, // 0: iam.v1.StoreOwner.create_date:type_name -> google.protobuf.Timestamp
@@ -1248,7 +1248,7 @@ var file_iam_v1_resources_store_owner_proto_depIdxs = []int32{
 	13, // 7: iam.v1.StoreOwnerView.search:type_name -> iam.v1.StoreOwnerView.Search
 	14, // 8: iam.v1.StoreOwnerView.search_by_tiles:type_name -> iam.v1.StoreOwnerView.SearchByTiles
 	3,  // 9: iam.v1.StoreOwnerViewRequest.views:type_name -> iam.v1.StoreOwnerView
-	19, // 10: iam.v1.StoreOwnerView.Search.common:type_name -> common.v1.SearchRequest
+	19, // 10: iam.v1.StoreOwnerView.Search.common:type_name -> common.v1.SearchCriteria
 	16, // 11: iam.v1.StoreOwnerView.SearchByTiles.tile_range:type_name -> iam.v1.StoreOwnerView.SearchByTiles.TileRange
 	0,  // 12: iam.v1.StoreOwnerView.Search.Data.results:type_name -> iam.v1.StoreOwner
 	0,  // 13: iam.v1.StoreOwnerView.SearchByTiles.Data.results:type_name -> iam.v1.StoreOwner

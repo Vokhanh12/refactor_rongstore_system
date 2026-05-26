@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pr "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/projection"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/querydsl"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -16,7 +17,9 @@ type RoleQuery interface {
 	Exists(ctx context.Context, q ExistsRoleQuery) (ExistsRoleQueryResult, *aerrs.AppError)
 }
 
-type SearchRoleQuery struct{}
+type SearchRoleQuery struct {
+	Criteria querydsl.SearchCriteria
+}
 type SearchRoleQueryResult struct {
 	Items []pr.RoleView
 	Total int64

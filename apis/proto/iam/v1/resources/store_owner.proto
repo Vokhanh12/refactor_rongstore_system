@@ -10,6 +10,7 @@ import "validate/v1/validate.proto";
 import "core/common/v1/resources/base_request.proto";
 import "core/common/v1/resources/auth_options.proto";
 import "google/protobuf/timestamp.proto";
+import "core/common/v1/resources/search_criteria.proto";
 
 
 // ============================================================
@@ -169,7 +170,7 @@ message StoreOwnerView {
     option (auth.action) = "READ";
     option (auth.require_tenant) = true;
 
-    common.v1.SearchRequest common = 1 [
+    common.v1.SearchCriteria common = 1 [
       (validate.rules).message = {required: true}
     ];
 

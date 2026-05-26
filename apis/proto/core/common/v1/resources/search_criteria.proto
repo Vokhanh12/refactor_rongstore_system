@@ -1,0 +1,17 @@
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1";
+
+import "core/common/v1/resources/filter.proto";
+import "core/common/v1/resources/sort.proto";
+import "core/common/v1/resources/pagination.proto";
+
+message SearchCriteria  {
+  string keyword = 1;
+
+  repeated Filter filters = 2;
+
+  repeated Sort sorts = 3;
+
+  Pagination pagination = 4;
+}

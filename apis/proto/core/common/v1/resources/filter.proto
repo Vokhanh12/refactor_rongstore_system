@@ -1,0 +1,35 @@
+syntax = "proto3";
+package common.v1;
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1";
+
+enum FilterOperator {
+  FILTER_OPERATOR_UNSPECIFIED = 0;
+
+  EQ = 1;
+  NEQ = 2;
+
+  GT = 3;
+  GTE = 4;
+
+  LT = 5;
+  LTE = 6;
+
+  LIKE = 7;
+  IN = 8;
+}
+
+message FilterValue {
+  oneof kind {
+    string string_value = 1;
+    int64 int_value = 2;
+    bool bool_value = 3;
+  }
+}
+
+message Filter {
+  string field = 1;
+
+  FilterOperator op = 2;
+
+  repeated FilterValue values = 3;
+}

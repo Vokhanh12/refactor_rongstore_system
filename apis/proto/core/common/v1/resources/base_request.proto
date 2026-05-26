@@ -4,8 +4,6 @@ package common.v1;
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1"; 
 
 import "validate/v1/validate.proto";
-import "core/common/v1/resources/search.proto";
-import "core/common/v1/resources/pagination.proto";
 
 message BaseRequest {
     string request_date_time = 1 [(validate.rules).string = {
@@ -18,9 +16,4 @@ message BaseRequest {
     string language = 3 [(validate.rules).string = {min_len: 1}];
   
     string user_agent = 4 [(validate.rules).string = {min_len: 1}];
-}
-  
-message SearchRequest {
-  Pagination pagination = 1 [(validate.rules).message = {required: true}];
-  Search input = 2 [(validate.rules).message = {required: true}];
 }

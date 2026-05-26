@@ -118,7 +118,7 @@ func (u *MutateRoleUsecase) handleCreate(
 
 	savedRole, err := u.repo.Create(ctx, role)
 	if err != nil {
-		return nil, coreuc.Transfer(err)
+		return nil, coreuc.Translate(err)
 	}
 
 	return &c.CreateRoleCommandResult{

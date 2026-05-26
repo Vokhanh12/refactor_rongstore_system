@@ -21,12 +21,12 @@ import (
 var _ repositories.RoleRepository = (*SqlcRoleRepository)(nil)
 
 type SqlcRoleRepository struct {
-	db *pg.DB
+	dba *pg.DbAdapter
 }
 
-func NewSqlcRoleRepository(db *pg.DB) repositories.RoleRepository {
+func NewSqlcRoleRepository(dba *pg.DbAdapter) repositories.RoleRepository {
 	return &SqlcRoleRepository{
-		db: db,
+		dba: dba,
 	}
 }
 
@@ -40,7 +40,7 @@ func (r *SqlcRoleRepository) Create(
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
 
-	row, err := r.db.Q.CreateRole(
+	row, err := r.dba.Q.CreateRole(
 		ctx,
 		sqlc.CreateRoleParams{
 			ID:              role.ID(),
@@ -58,7 +58,7 @@ func (r *SqlcRoleRepository) Create(
 	)
 
 	if err != nil {
-		return nil, r.db.Wrap(err)
+		return nil, r.dba.Wrap(err)
 	}
 
 	entity := mapper.CreateRoleRowToEntity(row)
@@ -71,7 +71,7 @@ func (r *SqlcRoleRepository) Update(
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
 
-	row, err := r.db.Q.UpdateRole(
+	row, err := r.dba.Q.UpdateRole(
 		ctx,
 		sqlc.UpdateRoleParams{
 			ID:              role.ID(),
@@ -89,7 +89,7 @@ func (r *SqlcRoleRepository) Update(
 	)
 
 	if err != nil {
-		return nil, r.db.Wrap(err)
+		return nil, r.dba.Wrap(err)
 	}
 
 	entity := mapper.UpdateRoleRowToEntity(row)
@@ -102,10 +102,10 @@ func (r *SqlcRoleRepository) Delete(
 	id uuid.UUID,
 ) *aerrs.AppError {
 
-	err := r.db.Q.DeleteRole(ctx, id)
+	err := r.dba.Q.DeleteRole(ctx, id)
 
 	if err != nil {
-		return r.db.Wrap(err)
+		return r.dba.Wrap(err)
 	}
 
 	return nil
@@ -131,7 +131,7 @@ func (r *SqlcRoleRepository) Exists(
 	roleKey vo.RoleKey,
 ) (bool, *aerrs.AppError) {
 
-	exists, err := r.db.Q.ExistsRoleByCodeScope(
+	exists, err := r.dba.Q.ExistsRoleByCodeScope(
 		ctx,
 		sqlc.ExistsRoleByCodeScopeParams{
 			Code:          roleKey.RoleCode(),
@@ -141,7 +141,7 @@ func (r *SqlcRoleRepository) Exists(
 	)
 
 	if err != nil {
-		return false, r.db.Wrap(err)
+		return false, r.dba.Wrap(err)
 	}
 
 	return exists, nil

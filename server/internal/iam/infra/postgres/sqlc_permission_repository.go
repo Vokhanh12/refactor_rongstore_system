@@ -6,16 +6,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	dberr "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/errors"
-	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
+	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ re.PermissionRepository = (*SqlcPermissionRepository)(nil)
 
 type SqlcPermissionRepository struct {
-	queries *db.Queries
-	dberr   dberr.DBError
+	dba *pg.DbAdapter
 }
 
 // Create implements [repositories.PermissionRepository].
