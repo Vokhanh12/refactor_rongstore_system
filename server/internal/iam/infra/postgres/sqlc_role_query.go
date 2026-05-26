@@ -88,13 +88,17 @@ func (s *SqlcRoleQuery) Search(ctx context.Context, query q.SearchRoleQuery) (
 	sql, args, err := qb.ToSql()
 
 	if err != nil {
-		return q.SearchRoleQueryResult{}, apperrors.Internal("BUILD_QUERY_ERROR")
+		return q.SearchRoleQueryResult{},
+			apperrors.New(apperrors.INTERNAL_FALLBACK,
+				apperrors.WithMessage("Failed to build SQL query"),
+				apperrors.WithCauseDetail(err),
+			)
 	}
 
 	rows, err := s.dba.P.Query(ctx, sql, args...)
 
 	if err != nil {
-		return q.SearchRoleQueryResult{}, apperrors.Internal("QUERY_ROLE_ERROR")
+		return q.SearchRoleQueryResult{}, s.dba.Wrap(err)
 	}
 
 	defer rows.Close()
@@ -123,7 +127,10 @@ func (s *SqlcRoleQuery) Search(ctx context.Context, query q.SearchRoleQuery) (
 
 		if err != nil {
 			return q.SearchRoleQueryResult{},
-				apperrors.Internal("SCAN_ROLE_ERROR")
+				apperrors.New(apperrors.INTERNAL_FALLBACK,
+					apperrors.WithMessage("Failed to scan role row"),
+					apperrors.WithCauseDetail(err),
+				)
 		}
 
 		results = append(

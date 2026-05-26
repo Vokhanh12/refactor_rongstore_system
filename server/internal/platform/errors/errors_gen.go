@@ -94,7 +94,7 @@ var (
 		Status: 500,
 		GRPCCode: "Internal",
 		Message: "Failed to serialize cache payload",
-		Severity: "S2",
+		Severity: "S3",
 		Retryable: false,
 		Cause: "",
 		ClientAction: "",
@@ -110,7 +110,7 @@ var (
 		Status: 500,
 		GRPCCode: "Internal",
 		Message: "Failed to deserialize cache payload",
-		Severity: "S2",
+		Severity: "S3",
 		Retryable: false,
 		Cause: "",
 		ClientAction: "",
@@ -126,7 +126,7 @@ var (
 		Status: 500,
 		GRPCCode: "Internal",
 		Message: "Cache operation failed",
-		Severity: "S2",
+		Severity: "S3",
 		Retryable: false,
 		Cause: "",
 		ClientAction: "",
@@ -181,6 +181,86 @@ var (
 		ServerAction: "",
 	}
 
+	DB_QUERY_CANCELED = apperrors.AppError{
+		Key: "DB_QUERY_CANCELED",
+		Code: "PLATFORM-INFRA-012",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database"},
+		Status: 499,
+		GRPCCode: "Canceled",
+		Message: "Database query canceled",
+		Severity: "S2",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_SERIALIZATION_CONFLICT = apperrors.AppError{
+		Key: "DB_SERIALIZATION_CONFLICT",
+		Code: "PLATFORM-INFRA-013",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database","transaction"},
+		Status: 409,
+		GRPCCode: "Aborted",
+		Message: "Transaction serialization conflict",
+		Severity: "S2",
+		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_DEADLOCK = apperrors.AppError{
+		Key: "DB_DEADLOCK",
+		Code: "PLATFORM-INFRA-014",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database","transaction"},
+		Status: 409,
+		GRPCCode: "Aborted",
+		Message: "Database deadlock detected",
+		Severity: "S2",
+		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	DB_CONNECTION_LOST = apperrors.AppError{
+		Key: "DB_CONNECTION_LOST",
+		Code: "PLATFORM-INFRA-015",
+		Layer: "INFRA",
+		Component: "postgres",
+		Tags: []string{"infra","database","network"},
+		Status: 503,
+		GRPCCode: "Unavailable",
+		Message: "Database connection lost",
+		Severity: "S1",
+		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	CACHE_TIMEOUT = apperrors.AppError{
+		Key: "CACHE_TIMEOUT",
+		Code: "PLATFORM-INFRA-016",
+		Layer: "INFRA",
+		Component: "redis",
+		Tags: []string{"infra","cache"},
+		Status: 503,
+		GRPCCode: "DeadlineExceeded",
+		Message: "Cache timeout",
+		Severity: "S2",
+		Retryable: true,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 )
 
 var (
@@ -224,21 +304,6 @@ var (
 		Message: "Value is too long",
 	}
 
-	REASON_VAL_MIN = apperrors.AppErrorDetail{
-		Code: "VAL_MIN",
-		Message: "Value is below minimum",
-	}
-
-	REASON_VAL_MAX = apperrors.AppErrorDetail{
-		Code: "VAL_MAX",
-		Message: "Value exceeds maximum",
-	}
-
-	REASON_VAL_INVALID_PATTERN = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_PATTERN",
-		Message: "Value does not match required pattern",
-	}
-
 	REASON_APP_DUPLICATE = apperrors.AppErrorDetail{
 		Code: "APP_DUPLICATE",
 		Message: "Duplicate value",
@@ -267,11 +332,6 @@ var (
 	REASON_APP_ALREADY_EXISTS = apperrors.AppErrorDetail{
 		Code: "APP_ALREADY_EXISTS",
 		Message: "Already exists",
-	}
-
-	REASON_APP_DEPENDENCY_MISSING = apperrors.AppErrorDetail{
-		Code: "APP_DEPENDENCY_MISSING",
-		Message: "Required dependency is missing",
 	}
 
 	REASON_PARSE_INVALID_REFERENCE = apperrors.AppErrorDetail{
@@ -308,6 +368,11 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"PLATFORM-INFRA-009": DB_CONFLICT,
 	"PLATFORM-INFRA-010": DB_INVALID_REFERENCE,
 	"PLATFORM-INFRA-011": DB_NOT_FOUND,
+	"PLATFORM-INFRA-012": DB_QUERY_CANCELED,
+	"PLATFORM-INFRA-013": DB_SERIALIZATION_CONFLICT,
+	"PLATFORM-INFRA-014": DB_DEADLOCK,
+	"PLATFORM-INFRA-015": DB_CONNECTION_LOST,
+	"PLATFORM-INFRA-016": CACHE_TIMEOUT,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
@@ -319,16 +384,12 @@ var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
 	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
 	"VAL_TOO_SHORT": REASON_VAL_TOO_SHORT,
 	"VAL_TOO_LONG": REASON_VAL_TOO_LONG,
-	"VAL_MIN": REASON_VAL_MIN,
-	"VAL_MAX": REASON_VAL_MAX,
-	"VAL_INVALID_PATTERN": REASON_VAL_INVALID_PATTERN,
 	"APP_DUPLICATE": REASON_APP_DUPLICATE,
 	"APP_CONFLICT": REASON_APP_CONFLICT,
 	"APP_NOT_ALLOWED": REASON_APP_NOT_ALLOWED,
 	"APP_FORBIDDEN_STATE": REASON_APP_FORBIDDEN_STATE,
 	"APP_NOT_FOUND": REASON_APP_NOT_FOUND,
 	"APP_ALREADY_EXISTS": REASON_APP_ALREADY_EXISTS,
-	"APP_DEPENDENCY_MISSING": REASON_APP_DEPENDENCY_MISSING,
 	"PARSE_INVALID_REFERENCE": REASON_PARSE_INVALID_REFERENCE,
 	"PARSE_INVALID_TIME_RANGE": REASON_PARSE_INVALID_TIME_RANGE,
 	"SEC_UNSAFE_INPUT": REASON_SEC_UNSAFE_INPUT,

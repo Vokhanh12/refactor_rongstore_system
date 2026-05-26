@@ -1,5 +1,5 @@
 version: 2
-updated_at: "2026-05-16"
+updated_at: "2026-05-26"
 owner: platform-auth
 
 # ============================================================
@@ -11,34 +11,22 @@ conventions:
   code_format: "<DOMAIN>-<LAYER>-<NNN>"
 
   layers:
-
     DOM: "Business invariant / domain rule"
     APP: "Usecase orchestration / workflow"
     TRANS: "Transport / DTO / request"
     PARSE: "Technical parsing / conversion"
     INFRA: "Infrastructure / external system"
     SEC: "Authentication / authorization"
-    SYS: "Unexpected / fallback"
+    SYS: "Unexpected / fallback / system lifecycle"
 
   severity_scale:
-
     S1: "Critical outage / security risk"
     S2: "Degraded experience / important failure"
     S3: "Client error / invalid input"
 
   retry_policy:
-
-    http_retryable:
-      - 408
-      - 429
-      - 500
-      - 502
-      - 503
-      - 504
-
-    grpc_retryable:
-      - "Unavailable"
-      - "DeadlineExceeded"
+    http_retryable: [408, 429, 500, 502, 503, 504]
+    grpc_retryable: ["Unavailable", "DeadlineExceeded", "Aborted"]
 
 # ============================================================
 # SERVICES
@@ -57,7 +45,6 @@ services:
     errors:
 
       DOM:
-
         - code: CORE-DOM-001
           key: VALIDATION_FAILED
           component: validator
@@ -69,7 +56,6 @@ services:
           retryable: false
 
       APP:
-
         - code: CORE-APP-001
           key: MUTATE_OPERATION_UNSUPPORTED
           component: mutate_engine
@@ -114,14 +100,13 @@ services:
           key: APP_OPERATION_FAILED
           component: application
           tags: [application]
-          http_status: 400
-          grpc_code: FailedPrecondition
+          http_status: 500
+          grpc_code: Internal
           message: "Application operation failed"
-          severity: S3
+          severity: S2
           retryable: false
 
       TRANS:
-
         - code: CORE-TRANS-001
           key: INVALID_REQUEST_PAYLOAD
           component: transport
@@ -133,7 +118,6 @@ services:
           retryable: false
 
       PARSE:
-
         - code: CORE-PARSE-001
           key: STRING_SPLIT_INVALID
           component: parser
@@ -165,7 +149,6 @@ services:
           retryable: false
 
       INFRA:
-
         - code: CORE-INFRA-001
           key: JSON_SERIALIZATION_FAILED
           component: serializer
@@ -177,7 +160,6 @@ services:
           retryable: false
 
       SYS:
-
         - code: CORE-SYS-001
           key: INTERNAL_ERROR
           component: system
@@ -188,15 +170,22 @@ services:
           severity: S1
           retryable: false
 
+        - code: CORE-SYS-002
+          key: REQUEST_CANCELED
+          component: system
+          tags: [system, lifecycle]
+          http_status: 499
+          grpc_code: Canceled
+          message: "Request canceled"
+          severity: S3
+          retryable: false
+  
+
   # ==========================================================
   # IAM
   # ==========================================================
 
   iam:
-
-    # ========================================================
-    # AUTH
-    # ========================================================
 
     auth:
 
@@ -205,7 +194,6 @@ services:
       errors:
 
         DOM:
-
           - code: AUTH-DOM-001
             key: LOGIN_EMAIL_REQUIRED
             component: validator
@@ -237,7 +225,6 @@ services:
             retryable: false
 
         TRANS:
-
           - code: AUTH-TRANS-001
             key: LOGIN_PAYLOAD_INVALID
             component: auth_transport
@@ -249,7 +236,6 @@ services:
             retryable: false
 
         SEC:
-
           - code: AUTH-SEC-001
             key: TOKEN_EXPIRED
             component: jwt
@@ -290,9 +276,15 @@ services:
             severity: S3
             retryable: false
 
-    # ========================================================
-    # AUTHZ
-    # ========================================================
+          - code: AUTH-SEC-005
+            key: INVALID_CREDENTIALS
+            component: auth_service
+            tags: [security]
+            http_status: 401
+            grpc_code: Unauthenticated
+            message: "Invalid credentials"
+            severity: S3
+            retryable: false
 
     authz:
 
@@ -301,7 +293,6 @@ services:
       errors:
 
         DOM:
-
           - code: AUTHZ-DOM-001
             key: ROLE_NOT_FOUND
             component: role_domain
@@ -323,7 +314,6 @@ services:
             retryable: false
 
         APP:
-
           - code: AUTHZ-APP-001
             key: ROLE_ALREADY_EXISTS
             component: role_usecase
@@ -335,7 +325,6 @@ services:
             retryable: false
 
         TRANS:
-
           - code: AUTHZ-TRANS-001
             key: AUTHORIZATION_INVALID
             component: authz_transport
@@ -367,7 +356,6 @@ services:
             retryable: false
 
         SEC:
-
           - code: AUTHZ-SEC-001
             key: ROLE_FORBIDDEN
             component: authz_service
@@ -447,7 +435,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Failed to serialize cache payload"
-          severity: S2
+          severity: S3
           retryable: false
 
         - code: PLATFORM-INFRA-007
@@ -457,7 +445,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Failed to deserialize cache payload"
-          severity: S2
+          severity: S3
           retryable: false
 
         - code: PLATFORM-INFRA-008
@@ -467,7 +455,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Cache operation failed"
-          severity: S2
+          severity: S3
           retryable: false
 
         - code: PLATFORM-INFRA-009
@@ -500,6 +488,56 @@ services:
           severity: S3
           retryable: false
 
+        - code: PLATFORM-INFRA-012
+          key: DB_QUERY_CANCELED
+          component: postgres
+          tags: [infra, database]
+          http_status: 499
+          grpc_code: Canceled
+          message: "Database query canceled"
+          severity: S2
+          retryable: false
+
+        - code: PLATFORM-INFRA-013
+          key: DB_SERIALIZATION_CONFLICT
+          component: postgres
+          tags: [infra, database, transaction]
+          http_status: 409
+          grpc_code: Aborted
+          message: "Transaction serialization conflict"
+          severity: S2
+          retryable: true
+
+        - code: PLATFORM-INFRA-014
+          key: DB_DEADLOCK
+          component: postgres
+          tags: [infra, database, transaction]
+          http_status: 409
+          grpc_code: Aborted
+          message: "Database deadlock detected"
+          severity: S2
+          retryable: true
+
+        - code: PLATFORM-INFRA-015
+          key: DB_CONNECTION_LOST
+          component: postgres
+          tags: [infra, database, network]
+          http_status: 503
+          grpc_code: Unavailable
+          message: "Database connection lost"
+          severity: S1
+          retryable: true
+
+        - code: PLATFORM-INFRA-016
+          key: CACHE_TIMEOUT
+          component: redis
+          tags: [infra, cache]
+          http_status: 503
+          grpc_code: DeadlineExceeded
+          message: "Cache timeout"
+          severity: S2
+          retryable: true
+
 # ============================================================
 # ERROR DETAILS
 # ============================================================
@@ -507,76 +545,46 @@ services:
 error_details:
 
   DOM:
-
     - code: VAL_REQUIRED
       message: "Field is required"
-
     - code: VAL_NULL
       message: "Field must not be null"
-
     - code: VAL_INVALID_FORMAT
       message: "Invalid format"
-
     - code: VAL_INVALID_TYPE
       message: "Invalid data type"
-
     - code: VAL_INVALID_ENUM
       message: "Invalid enum value"
-
     - code: VAL_OUT_OF_RANGE
       message: "Out of range"
-
     - code: VAL_TOO_SHORT
       message: "Value is too short"
-
     - code: VAL_TOO_LONG
       message: "Value is too long"
 
-    - code: VAL_MIN
-      message: "Value is below minimum"
-
-    - code: VAL_MAX
-      message: "Value exceeds maximum"
-
-    - code: VAL_INVALID_PATTERN
-      message: "Value does not match required pattern"
-
   APP:
-
     - code: APP_DUPLICATE
       message: "Duplicate value"
-
     - code: APP_CONFLICT
       message: "Value conflicts with existing data"
-
     - code: APP_NOT_ALLOWED
       message: "Operation not allowed"
-
     - code: APP_FORBIDDEN_STATE
       message: "Invalid state for operation"
-
     - code: APP_NOT_FOUND
       message: "Not found"
-
     - code: APP_ALREADY_EXISTS
       message: "Already exists"
 
-    - code: APP_DEPENDENCY_MISSING
-      message: "Required dependency is missing"
-
   PARSE:
-
     - code: PARSE_INVALID_REFERENCE
       message: "Invalid reference"
-
     - code: PARSE_INVALID_TIME_RANGE
       message: "Invalid time range"
 
   SEC:
-
     - code: SEC_UNSAFE_INPUT
       message: "Unsafe input detected"
-
     - code: SEC_INVALID
       message: "Invalid value"
 
@@ -587,14 +595,12 @@ error_details:
 defaults:
 
   UNKNOWN_DOMAIN:
-
     code: CORE-DOM-999
     http_status: 400
     grpc_code: InvalidArgument
     message: "Unknown domain error"
 
   INTERNAL_FALLBACK:
-
     code: CORE-SYS-999
     http_status: 500
     grpc_code: Internal

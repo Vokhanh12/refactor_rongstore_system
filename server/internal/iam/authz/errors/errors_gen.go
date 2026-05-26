@@ -160,21 +160,6 @@ var (
 		Message: "Value is too long",
 	}
 
-	REASON_VAL_MIN = apperrors.AppErrorDetail{
-		Code: "VAL_MIN",
-		Message: "Value is below minimum",
-	}
-
-	REASON_VAL_MAX = apperrors.AppErrorDetail{
-		Code: "VAL_MAX",
-		Message: "Value exceeds maximum",
-	}
-
-	REASON_VAL_INVALID_PATTERN = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_PATTERN",
-		Message: "Value does not match required pattern",
-	}
-
 	REASON_APP_DUPLICATE = apperrors.AppErrorDetail{
 		Code: "APP_DUPLICATE",
 		Message: "Duplicate value",
@@ -203,11 +188,6 @@ var (
 	REASON_APP_ALREADY_EXISTS = apperrors.AppErrorDetail{
 		Code: "APP_ALREADY_EXISTS",
 		Message: "Already exists",
-	}
-
-	REASON_APP_DEPENDENCY_MISSING = apperrors.AppErrorDetail{
-		Code: "APP_DEPENDENCY_MISSING",
-		Message: "Required dependency is missing",
 	}
 
 	REASON_PARSE_INVALID_REFERENCE = apperrors.AppErrorDetail{
@@ -251,16 +231,12 @@ var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
 	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
 	"VAL_TOO_SHORT": REASON_VAL_TOO_SHORT,
 	"VAL_TOO_LONG": REASON_VAL_TOO_LONG,
-	"VAL_MIN": REASON_VAL_MIN,
-	"VAL_MAX": REASON_VAL_MAX,
-	"VAL_INVALID_PATTERN": REASON_VAL_INVALID_PATTERN,
 	"APP_DUPLICATE": REASON_APP_DUPLICATE,
 	"APP_CONFLICT": REASON_APP_CONFLICT,
 	"APP_NOT_ALLOWED": REASON_APP_NOT_ALLOWED,
 	"APP_FORBIDDEN_STATE": REASON_APP_FORBIDDEN_STATE,
 	"APP_NOT_FOUND": REASON_APP_NOT_FOUND,
 	"APP_ALREADY_EXISTS": REASON_APP_ALREADY_EXISTS,
-	"APP_DEPENDENCY_MISSING": REASON_APP_DEPENDENCY_MISSING,
 	"PARSE_INVALID_REFERENCE": REASON_PARSE_INVALID_REFERENCE,
 	"PARSE_INVALID_TIME_RANGE": REASON_PARSE_INVALID_TIME_RANGE,
 	"SEC_UNSAFE_INPUT": REASON_SEC_UNSAFE_INPUT,

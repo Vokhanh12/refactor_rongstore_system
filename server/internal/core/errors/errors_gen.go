@@ -91,10 +91,10 @@ var (
 		Layer: "APP",
 		Component: "application",
 		Tags: []string{"application"},
-		Status: 400,
-		GRPCCode: "FailedPrecondition",
+		Status: 500,
+		GRPCCode: "Internal",
 		Message: "Application operation failed",
-		Severity: "S3",
+		Severity: "S2",
 		Retryable: false,
 		Cause: "",
 		ClientAction: "",
@@ -197,6 +197,22 @@ var (
 		ServerAction: "",
 	}
 
+	REQUEST_CANCELED = apperrors.AppError{
+		Key: "REQUEST_CANCELED",
+		Code: "CORE-SYS-002",
+		Layer: "SYS",
+		Component: "system",
+		Tags: []string{"system","lifecycle"},
+		Status: 499,
+		GRPCCode: "Canceled",
+		Message: "Request canceled",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 )
 
 var (
@@ -240,21 +256,6 @@ var (
 		Message: "Value is too long",
 	}
 
-	REASON_VAL_MIN = apperrors.AppErrorDetail{
-		Code: "VAL_MIN",
-		Message: "Value is below minimum",
-	}
-
-	REASON_VAL_MAX = apperrors.AppErrorDetail{
-		Code: "VAL_MAX",
-		Message: "Value exceeds maximum",
-	}
-
-	REASON_VAL_INVALID_PATTERN = apperrors.AppErrorDetail{
-		Code: "VAL_INVALID_PATTERN",
-		Message: "Value does not match required pattern",
-	}
-
 	REASON_APP_DUPLICATE = apperrors.AppErrorDetail{
 		Code: "APP_DUPLICATE",
 		Message: "Duplicate value",
@@ -283,11 +284,6 @@ var (
 	REASON_APP_ALREADY_EXISTS = apperrors.AppErrorDetail{
 		Code: "APP_ALREADY_EXISTS",
 		Message: "Already exists",
-	}
-
-	REASON_APP_DEPENDENCY_MISSING = apperrors.AppErrorDetail{
-		Code: "APP_DEPENDENCY_MISSING",
-		Message: "Required dependency is missing",
 	}
 
 	REASON_PARSE_INVALID_REFERENCE = apperrors.AppErrorDetail{
@@ -325,6 +321,7 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-PARSE-003": MUTATE_PARSE_FAILED,
 	"CORE-INFRA-001": JSON_SERIALIZATION_FAILED,
 	"CORE-SYS-001": INTERNAL_ERROR,
+	"CORE-SYS-002": REQUEST_CANCELED,
 }
 
 var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
@@ -336,16 +333,12 @@ var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
 	"VAL_OUT_OF_RANGE": REASON_VAL_OUT_OF_RANGE,
 	"VAL_TOO_SHORT": REASON_VAL_TOO_SHORT,
 	"VAL_TOO_LONG": REASON_VAL_TOO_LONG,
-	"VAL_MIN": REASON_VAL_MIN,
-	"VAL_MAX": REASON_VAL_MAX,
-	"VAL_INVALID_PATTERN": REASON_VAL_INVALID_PATTERN,
 	"APP_DUPLICATE": REASON_APP_DUPLICATE,
 	"APP_CONFLICT": REASON_APP_CONFLICT,
 	"APP_NOT_ALLOWED": REASON_APP_NOT_ALLOWED,
 	"APP_FORBIDDEN_STATE": REASON_APP_FORBIDDEN_STATE,
 	"APP_NOT_FOUND": REASON_APP_NOT_FOUND,
 	"APP_ALREADY_EXISTS": REASON_APP_ALREADY_EXISTS,
-	"APP_DEPENDENCY_MISSING": REASON_APP_DEPENDENCY_MISSING,
 	"PARSE_INVALID_REFERENCE": REASON_PARSE_INVALID_REFERENCE,
 	"PARSE_INVALID_TIME_RANGE": REASON_PARSE_INVALID_TIME_RANGE,
 	"SEC_UNSAFE_INPUT": REASON_SEC_UNSAFE_INPUT,
