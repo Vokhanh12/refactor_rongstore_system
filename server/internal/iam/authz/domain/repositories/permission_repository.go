@@ -8,8 +8,10 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-type PermissionRepository interface {
+type PermissionCommandRepository interface {
 	Create(ctx context.Context, role *entities.Role) (*entities.Role, *aerrs.AppError)
 	Update(ctx context.Context, role *entities.Role) (*entities.Role, *aerrs.AppError)
 	Delete(ctx context.Context, id uuid.UUID) *aerrs.AppError
 }
+
+type PermissionQueryRepository interface{}

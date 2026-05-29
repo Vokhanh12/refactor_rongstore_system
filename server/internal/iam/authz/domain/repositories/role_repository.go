@@ -10,10 +10,13 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-type RoleRepository interface {
+type RoleCommandRepository interface {
 	Create(ctx context.Context, role *entities.Role) (*entities.Role, *aerrs.AppError)
 	Update(ctx context.Context, role *entities.Role) (*entities.Role, *aerrs.AppError)
 	Delete(ctx context.Context, id uuid.UUID) *aerrs.AppError
+}
+
+type RoleQueryRepository interface {
 	FindById(ctx context.Context, id uuid.UUID) (*entities.Role, *aerrs.AppError)
 	FindByCode(ctx context.Context, code string) (*entities.Role, *aerrs.AppError)
 	Exists(ctx context.Context, roleScopeType enu.RoleScopeType, RoleKey vo.RoleKey) (bool, *aerrs.AppError)

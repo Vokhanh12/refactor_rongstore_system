@@ -8,7 +8,7 @@ import (
 	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
-	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
@@ -26,11 +26,11 @@ type RoleMutationBatch struct {
 }
 
 type MutateRoleUsecase struct {
-	repo   re.RoleRepository
+	repo   repos.RoleCommandRepository
 	engine *coreuc.MutateEngine[RoleMutation]
 }
 
-func NewMutateRoleUsecase(repo re.RoleRepository) *MutateRoleUsecase {
+func NewMutateRoleUsecase(repo repos.RoleCommandRepository) *MutateRoleUsecase {
 
 	u := &MutateRoleUsecase{
 		repo: repo,

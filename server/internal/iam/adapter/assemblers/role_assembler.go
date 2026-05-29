@@ -5,8 +5,8 @@ import (
 
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
 	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/assemblers"
-	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra"
-	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/usecase"
+	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
+	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/normalize"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"

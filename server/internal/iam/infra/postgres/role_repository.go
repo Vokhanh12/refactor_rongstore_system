@@ -6,9 +6,7 @@ import (
 	"github.com/google/uuid"
 
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
-	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mapper"
 
@@ -18,24 +16,19 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ repositories.RoleRepository = (*SqlcRoleRepository)(nil)
+var _ repositories.RoleCommandRepository = (*RoleCommandRepository)(nil)
 
-type SqlcRoleRepository struct {
+type RoleCommandRepository struct {
 	dba *pg.DbAdapter
 }
 
-func NewSqlcRoleRepository(dba *pg.DbAdapter) repositories.RoleRepository {
-	return &SqlcRoleRepository{
+func NewRoleCommandRepository(dba *pg.DbAdapter) repositories.RoleCommandRepository {
+	return &RoleCommandRepository{
 		dba: dba,
 	}
 }
 
-// FindById implements [repositories.RoleRepository].
-func (r *SqlcRoleRepository) FindById(ctx context.Context, id uuid.UUID) (*en.Role, *aerrs.AppError) {
-	panic("unimplemented")
-}
-
-func (r *SqlcRoleRepository) Create(
+func (r *RoleCommandRepository) Create(
 	ctx context.Context,
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
@@ -66,7 +59,7 @@ func (r *SqlcRoleRepository) Create(
 	return &entity, nil
 }
 
-func (r *SqlcRoleRepository) Update(
+func (r *RoleCommandRepository) Update(
 	ctx context.Context,
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
@@ -97,7 +90,7 @@ func (r *SqlcRoleRepository) Update(
 	return &entity, nil
 }
 
-func (r *SqlcRoleRepository) Delete(
+func (r *RoleCommandRepository) Delete(
 	ctx context.Context,
 	id uuid.UUID,
 ) *aerrs.AppError {
@@ -109,40 +102,4 @@ func (r *SqlcRoleRepository) Delete(
 	}
 
 	return nil
-}
-
-func (r *SqlcRoleRepository) FindByID(
-	ctx context.Context,
-	id uuid.UUID,
-) (*en.Role, *aerrs.AppError) {
-	panic("unimplemented")
-}
-
-func (r *SqlcRoleRepository) FindByCode(
-	ctx context.Context,
-	code string,
-) (*en.Role, *aerrs.AppError) {
-	panic("unimplemented")
-}
-
-func (r *SqlcRoleRepository) Exists(
-	ctx context.Context,
-	scopeType enu.RoleScopeType,
-	roleKey vo.RoleKey,
-) (bool, *aerrs.AppError) {
-
-	exists, err := r.dba.Q.ExistsRoleByCodeScope(
-		ctx,
-		sqlc.ExistsRoleByCodeScopeParams{
-			Code:          roleKey.RoleCode(),
-			RoleScopeType: mapper.RoleScopeTypeToDB(scopeType),
-			ScopeID:       roleKey.ScopeID(),
-		},
-	)
-
-	if err != nil {
-		return false, r.dba.Wrap(err)
-	}
-
-	return exists, nil
 }

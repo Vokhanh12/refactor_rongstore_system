@@ -5,7 +5,7 @@ import (
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
@@ -20,10 +20,10 @@ type PermissionMutationBatch struct {
 }
 
 type MutatePermissionUsecase struct {
-	repo re.PermissionRepository
+	repo repos.PermissionCommandRepository
 }
 
-func NewMutatePermissionUsecase(repo re.PermissionRepository) *MutatePermissionUsecase {
+func NewMutatePermissionUsecase(repo repos.PermissionCommandRepository) *MutatePermissionUsecase {
 	return &MutatePermissionUsecase{repo: repo}
 }
 

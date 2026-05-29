@@ -3,18 +3,18 @@ package postgres
 import (
 	"context"
 
-	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ q.RolePermissionQuery = (*SqlcRolePermissionQuery)(nil)
+var _ repos.RolePermissionQueryRepository = (*SqlcRolePermissionQuery)(nil)
 
 type SqlcRolePermissionQuery struct {
 	dba *pg.DbAdapter
 }
 
-func NewSqlcRolePermissionQuery(dba *pg.DbAdapter) q.RolePermissionQuery {
+func NewSqlcRolePermissionQuery(dba *pg.DbAdapter) repos.RolePermissionQueryRepository {
 	return &SqlcRolePermissionQuery{dba: dba}
 }
 

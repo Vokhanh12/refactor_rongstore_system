@@ -4,16 +4,17 @@ import (
 	"context"
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
-	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
+	qs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
 type RoleView struct {
-	Get    *q.GetRoleQuery
-	Search *q.SearchRoleQuery
-	List   *q.ListRoleQuery
-	Export *q.ExportRoleQuery
+	Get    *qs.GetRoleQuery
+	Search *qs.SearchRoleQuery
+	List   *qs.ListRoleQuery
+	Export *qs.ExportRoleQuery
 }
 
 type RoleViewBatch struct {
@@ -21,11 +22,11 @@ type RoleViewBatch struct {
 }
 
 type ViewRoleUsecase struct {
-	query  q.RoleQuery
+	query  repos.RoleQueryRepository
 	engine *coreuc.ViewEngine[RoleView]
 }
 
-func NewViewRoleUsecase(q q.RoleQuery) *ViewRoleUsecase {
+func NewViewRoleUsecase(q repos.RoleQueryRepository) *ViewRoleUsecase {
 
 	u := &ViewRoleUsecase{
 		query: q,
@@ -70,18 +71,18 @@ func (u *ViewRoleUsecase) Execute(ctx context.Context, batch RoleViewBatch) dtos
 	return dtos.ViewResultDTO{Items: results}
 }
 
-func (u *ViewRoleUsecase) handleGet(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleGet(ctx context.Context, q qs.GetRoleQuery) (qs.GetRoleQueryResult, *aerrs.AppError) {
 	return u.query.Get(ctx, q)
 }
 
-func (u *ViewRoleUsecase) handleList(ctx context.Context, q q.ListRoleQuery) (q.ListRoleQueryResult, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleList(ctx context.Context, q qs.ListRoleQuery) (qs.ListRoleQueryResult, *aerrs.AppError) {
 	return u.query.List(ctx, q)
 }
 
-func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q q.SearchRoleQuery) (q.SearchRoleQueryResult, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q qs.SearchRoleQuery) (qs.SearchRoleQueryResult, *aerrs.AppError) {
 	return u.query.Search(ctx, q)
 }
 
-func (u *ViewRoleUsecase) handleExport(ctx context.Context, q q.ExportRoleQuery) (q.ExportRoleQueryResult, *aerrs.AppError) {
+func (u *ViewRoleUsecase) handleExport(ctx context.Context, q qs.ExportRoleQuery) (qs.ExportRoleQueryResult, *aerrs.AppError) {
 	return u.query.Export(ctx, q)
 }
