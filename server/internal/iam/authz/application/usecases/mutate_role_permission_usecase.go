@@ -20,10 +20,10 @@ type RolePermissionMutationBatch struct {
 }
 
 type MutateRolePermissionUsecase struct {
-	repo repos.RolePermissionCommandRepository
+	repo repos.RolePermissionRepository
 }
 
-func NewMutateRolePermissionUsecase(repo repos.RolePermissionCommandRepository) *MutateRolePermissionUsecase {
+func NewMutateRolePermissionUsecase(repo repos.RolePermissionRepository) *MutateRolePermissionUsecase {
 	return &MutateRolePermissionUsecase{repo: repo}
 }
 

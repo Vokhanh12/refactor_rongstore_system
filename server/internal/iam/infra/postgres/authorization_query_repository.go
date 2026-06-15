@@ -5,7 +5,7 @@ import (
 
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/serialization"
 	pr "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/projection"
-	authzrepos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	authzrepos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"

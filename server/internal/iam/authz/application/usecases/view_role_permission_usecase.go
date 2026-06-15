@@ -5,7 +5,7 @@ import (
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	re "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 
@@ -18,10 +18,10 @@ type RolePermissionViewBatch struct {
 }
 
 type ViewRolePermissionUsecase struct {
-	repo re.RolePermissionQueryRepository
+	repo repos.RolePermissionQueryRepository
 }
 
-func NewViewRolePermissionUsecase(repo re.RolePermissionQueryRepository) *ViewRolePermissionUsecase {
+func NewViewRolePermissionUsecase(repo repos.RolePermissionQueryRepository) *ViewRolePermissionUsecase {
 	return &ViewRolePermissionUsecase{repo: repo}
 }
 

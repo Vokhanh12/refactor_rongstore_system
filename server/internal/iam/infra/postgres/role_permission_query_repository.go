@@ -3,7 +3,7 @@ package postgres
 import (
 	"context"
 
-	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )

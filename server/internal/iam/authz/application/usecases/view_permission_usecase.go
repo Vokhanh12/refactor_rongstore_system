@@ -4,7 +4,7 @@ import (
 	"context"
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
-	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
 

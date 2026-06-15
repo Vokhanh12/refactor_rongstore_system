@@ -5,6 +5,7 @@ import (
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
+	ques "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
@@ -26,12 +27,12 @@ type RoleMutationBatch struct {
 }
 
 type MutateRoleUsecase struct {
-	command repos.RoleCommandRepository
-	query   repos.RoleQueryRepository
+	command repos.RoleRepository
+	query   ques.RoleQueryRepository
 	engine  *coreuc.MutateEngine[RoleMutation]
 }
 
-func NewMutateRoleUsecase(c repos.RoleCommandRepository, q repos.RoleQueryRepository) *MutateRoleUsecase {
+func NewMutateRoleUsecase(c repos.RoleRepository, q ques.RoleQueryRepository) *MutateRoleUsecase {
 
 	u := &MutateRoleUsecase{
 		command: c,

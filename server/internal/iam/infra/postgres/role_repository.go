@@ -16,19 +16,19 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ repositories.RoleCommandRepository = (*RoleCommandRepository)(nil)
+var _ repositories.RoleRepository = (*RoleRepository)(nil)
 
-type RoleCommandRepository struct {
+type RoleRepository struct {
 	dba *pg.DbAdapter
 }
 
-func NewRoleCommandRepository(dba *pg.DbAdapter) repositories.RoleCommandRepository {
-	return &RoleCommandRepository{
+func NewRoleRepository(dba *pg.DbAdapter) repositories.RoleRepository {
+	return &RoleRepository{
 		dba: dba,
 	}
 }
 
-func (r *RoleCommandRepository) Create(
+func (r *RoleRepository) Create(
 	ctx context.Context,
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
@@ -59,7 +59,7 @@ func (r *RoleCommandRepository) Create(
 	return &entity, nil
 }
 
-func (r *RoleCommandRepository) Update(
+func (r *RoleRepository) Update(
 	ctx context.Context,
 	role *en.Role,
 ) (*en.Role, *aerrs.AppError) {
@@ -90,7 +90,7 @@ func (r *RoleCommandRepository) Update(
 	return &entity, nil
 }
 
-func (r *RoleCommandRepository) Delete(
+func (r *RoleRepository) Delete(
 	ctx context.Context,
 	id uuid.UUID,
 ) *aerrs.AppError {

@@ -8,8 +8,8 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	cs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/caches"
-	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 )
 

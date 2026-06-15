@@ -10,23 +10,23 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ repos.PermissionCommandRepository = (*PermissionCommandRepository)(nil)
+var _ repos.PermissionRepository = (*PermissionRepository)(nil)
 
-type PermissionCommandRepository struct {
+type PermissionRepository struct {
 	dba *pg.DbAdapter
 }
 
-// Create implements [repositories.PermissionCommandRepository].
-func (s *PermissionCommandRepository) Create(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
+// Create implements [repositories.PermissionRepository].
+func (s *PermissionRepository) Create(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 	panic("unimplemented")
 }
 
-// Delete implements [repositories.PermissionCommandRepository].
-func (s *PermissionCommandRepository) Delete(ctx context.Context, id uuid.UUID) *apperrors.AppError {
+// Delete implements [repositories.PermissionRepository].
+func (s *PermissionRepository) Delete(ctx context.Context, id uuid.UUID) *apperrors.AppError {
 	panic("unimplemented")
 }
 
-// Update implements [repositories.PermissionCommandRepository].
-func (s *PermissionCommandRepository) Update(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
+// Update implements [repositories.PermissionRepository].
+func (s *PermissionRepository) Update(ctx context.Context, role *entities.Role) (*entities.Role, *apperrors.AppError) {
 	panic("unimplemented")
 }

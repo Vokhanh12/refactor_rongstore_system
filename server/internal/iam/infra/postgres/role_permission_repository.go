@@ -11,27 +11,27 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-var _ re.RolePermissionCommandRepository = (*RolePermissionCommandRepository)(nil)
+var _ re.RolePermissionRepository = (*RolePermissionRepository)(nil)
 
-type RolePermissionCommandRepository struct {
+type RolePermissionRepository struct {
 	dba *pg.DbAdapter
 }
 
-func NewRolePermissionCommandRepository(dba *pg.DbAdapter) repositories.RolePermissionCommandRepository {
-	return &RolePermissionCommandRepository{dba: dba}
+func NewRolePermissionRepository(dba *pg.DbAdapter) repositories.RolePermissionRepository {
+	return &RolePermissionRepository{dba: dba}
 }
 
 // Create implements [repositories.RolePermissionRepository].
-func (s *RolePermissionCommandRepository) Create(ctx context.Context, rolePermission *en.RolePermission) (*en.RolePermission, *apperrors.AppError) {
+func (s *RolePermissionRepository) Create(ctx context.Context, rolePermission *en.RolePermission) (*en.RolePermission, *apperrors.AppError) {
 	panic("unimplemented")
 }
 
 // Delete implements [repositories.RolePermissionRepository].
-func (s *RolePermissionCommandRepository) Delete(ctx context.Context, id uuid.UUID) *apperrors.AppError {
+func (s *RolePermissionRepository) Delete(ctx context.Context, id uuid.UUID) *apperrors.AppError {
 	panic("unimplemented")
 }
 
 // Update implements [repositories.RolePermissionRepository].
-func (s *RolePermissionCommandRepository) Update(ctx context.Context, rolePermission *en.RolePermission) (*en.RolePermission, *apperrors.AppError) {
+func (s *RolePermissionRepository) Update(ctx context.Context, rolePermission *en.RolePermission) (*en.RolePermission, *apperrors.AppError) {
 	panic("unimplemented")
 }

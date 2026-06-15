@@ -5,7 +5,7 @@ import (
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	qs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -75,12 +75,8 @@ func (u *ViewRoleUsecase) handleGet(ctx context.Context, q qs.GetRoleQuery) (qs.
 	return u.query.Get(ctx, q)
 }
 
-func (u *ViewRoleUsecase) handleList(ctx context.Context, q qs.ListRoleQuery) (qs.ListRoleQueryResult, *aerrs.AppError) {
-	return u.query.List(ctx, q)
-}
-
 func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q qs.SearchRoleQuery) (qs.SearchRoleQueryResult, *aerrs.AppError) {
-	return u.query.
+	return u.query.Search(ctx, q)
 }
 
 func (u *ViewRoleUsecase) handleExport(ctx context.Context, q qs.ExportRoleQuery) (qs.ExportRoleQueryResult, *aerrs.AppError) {

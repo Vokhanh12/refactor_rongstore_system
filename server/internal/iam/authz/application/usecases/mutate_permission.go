@@ -20,10 +20,10 @@ type PermissionMutationBatch struct {
 }
 
 type MutatePermissionUsecase struct {
-	repo repos.PermissionCommandRepository
+	repo repos.PermissionRepository
 }
 
-func NewMutatePermissionUsecase(repo repos.PermissionCommandRepository) *MutatePermissionUsecase {
+func NewMutatePermissionUsecase(repo repos.PermissionRepository) *MutatePermissionUsecase {
 	return &MutatePermissionUsecase{repo: repo}
 }
 
