@@ -38,28 +38,6 @@ func NewRoleQueryRepository(
 	}
 }
 
-func (r *RoleQueryRepository) Exists(
-	ctx context.Context,
-	scopeType enu.RoleScopeType,
-	roleKey vo.RoleKey,
-) (bool, *aerrs.AppError) {
-
-	exists, err := r.dba.Q.ExistsRoleByCodeScope(
-		ctx,
-		sqlc.ExistsRoleByCodeScopeParams{
-			Code:          roleKey.RoleCode(),
-			RoleScopeType: mapper.RoleScopeTypeToDB(scopeType),
-			ScopeID:       roleKey.ScopeID(),
-		},
-	)
-
-	if err != nil {
-		return false, r.dba.Wrap(err)
-	}
-
-	return exists, nil
-}
-
 // FindByCode implements [repositories.RoleQueryRepository].
 func (s *RoleQueryRepository) FindByCode(ctx context.Context, code string) (*entities.Role, *apperrors.AppError) {
 	panic("unimplemented")
@@ -150,4 +128,22 @@ func (s *RoleQueryRepository) Get(ctx context.Context, q q.GetRoleQuery) (q.GetR
 // List implements [query.RoleQuery].
 func (s *RoleQueryRepository) List(ctx context.Context, q q.ListRoleQuery) (q.ListRoleQueryResult, *apperrors.AppError) {
 	panic("unimplemented")
+}
+
+// ExistsRoleByCodeScope implements [repositories.RoleQueryRepository].
+func (r *RoleQueryRepository) ExistsRoleByCodeScope(ctx context.Context, roleScopeType enu.RoleScopeType, roleKey vo.RoleKey) (bool, *aerrs.AppError) {
+	exists, err := r.dba.Q.ExistsRoleByCodeScope(
+		ctx,
+		sqlc.ExistsRoleByCodeScopeParams{
+			Code:          roleKey.RoleCode(),
+			RoleScopeType: mapper.RoleScopeTypeToDB(roleScopeType),
+			ScopeID:       roleKey.ScopeID(),
+		},
+	)
+
+	if err != nil {
+		return false, r.dba.Translate(err)
+	}
+
+	return exists, nil
 }

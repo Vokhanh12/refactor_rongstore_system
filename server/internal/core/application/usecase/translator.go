@@ -6,24 +6,24 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-func Translate(err *aerrs.AppError) *aerrs.AppError {
-	if err == nil {
+func Translate(repoer *aerrs.AppError) *aerrs.AppError {
+	if repoer == nil {
 		return nil
 	}
 
-	switch err.Code {
+	switch repoer.Code {
 
 	case platform.DB_CONFLICT.Code:
-		return wrapOperationFailure(err, core.REASON_APP_CONFLICT)
+		return wrapOperationFailure(repoer, core.REASON_APP_CONFLICT)
 
 	case platform.DB_NOT_FOUND.Code:
-		return wrapOperationFailure(err, core.REASON_APP_NOT_FOUND)
+		return wrapOperationFailure(repoer, core.REASON_APP_NOT_FOUND)
 
 	case platform.DB_INVALID_REFERENCE.Code:
-		return wrapOperationFailure(err, core.REASON_APP_DEPENDENCY_MISSING)
+		return wrapOperationFailure(repoer, core.REASON_APP_DEPENDENCY_MISSING)
 	}
 
-	return err
+	return repoer
 }
 
 func wrapOperationFailure(

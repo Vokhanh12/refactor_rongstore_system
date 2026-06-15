@@ -11,5 +11,3 @@ type RoleAssignmentCommandRepository interface {
 	Update(roleAssignment *entities.RoleAssignment) (*entities.RoleAssignment, *aerrs.AppError)
 	Delete(id uuid.UUID) *aerrs.AppError
 }
-
-type RoleAssignmentQueryRepository interface{}

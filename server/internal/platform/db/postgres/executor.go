@@ -24,7 +24,7 @@ func QueryMany[T any](
 	rows, err := db.Query(ctx, sql, args...)
 
 	if err != nil {
-		return nil, TranslateDBError(err)
+		return nil, translateDBError(err)
 	}
 
 	defer rows.Close()
@@ -48,7 +48,7 @@ func QueryMany[T any](
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, TranslateDBError(err)
+		return nil, translateDBError(err)
 	}
 
 	return results, nil

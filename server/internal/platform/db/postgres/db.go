@@ -18,6 +18,6 @@ func New(q *sqlc.Queries, p *pgxpool.Pool) *DbAdapter {
 	}
 }
 
-func (db *DbAdapter) Wrap(err error) *aerrs.AppError {
-	return TranslateDBError(err)
+func (db *DbAdapter) Translate(err error) *aerrs.AppError {
+	return translateDBError(err)
 }

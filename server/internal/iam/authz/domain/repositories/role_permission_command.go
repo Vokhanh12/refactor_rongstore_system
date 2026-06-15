@@ -13,5 +13,3 @@ type RolePermissionCommandRepository interface {
 	Update(ctx context.Context, rolePermission *entities.RolePermission) (*entities.RolePermission, *aerrs.AppError)
 	Delete(ctx context.Context, id uuid.UUID) *aerrs.AppError
 }
-
-type RolePermissionQueryRepository interface{}

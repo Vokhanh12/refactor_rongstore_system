@@ -8,3 +8,5 @@ type GetRolePermissionQueryResult struct{}
 
 type ListRolePermissionQuery struct{}
 type ListRolePermissionQueryResult struct{}
+
+type RolePermissionQueryRepository interface{}

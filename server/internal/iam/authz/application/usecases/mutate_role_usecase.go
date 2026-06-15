@@ -26,14 +26,16 @@ type RoleMutationBatch struct {
 }
 
 type MutateRoleUsecase struct {
-	repo   repos.RoleCommandRepository
-	engine *coreuc.MutateEngine[RoleMutation]
+	command repos.RoleCommandRepository
+	query   repos.RoleQueryRepository
+	engine  *coreuc.MutateEngine[RoleMutation]
 }
 
-func NewMutateRoleUsecase(repo repos.RoleCommandRepository) *MutateRoleUsecase {
+func NewMutateRoleUsecase(c repos.RoleCommandRepository, q repos.RoleQueryRepository) *MutateRoleUsecase {
 
 	u := &MutateRoleUsecase{
-		repo: repo,
+		command: c,
+		query:   q,
 	}
 
 	handlers := []coreuc.Handler[RoleMutation]{
@@ -89,9 +91,9 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	exists, err := u.repo.Exists(ctx, scopeType, roleKey)
+	exists, err := u.query.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
 	if err != nil {
-		return nil, err
+		return nil, coreuc.Translate(err)
 	}
 
 	if exists {
@@ -116,7 +118,7 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	savedRole, err := u.repo.Create(ctx, role)
+	savedRole, err := u.command.Create(ctx, role)
 	if err != nil {
 		return nil, coreuc.Translate(err)
 	}

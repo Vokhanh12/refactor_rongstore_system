@@ -51,7 +51,7 @@ func (r *RoleCommandRepository) Create(
 	)
 
 	if err != nil {
-		return nil, r.dba.Wrap(err)
+		return nil, r.dba.Translate(err)
 	}
 
 	entity := mapper.CreateRoleRowToEntity(row)
@@ -82,7 +82,7 @@ func (r *RoleCommandRepository) Update(
 	)
 
 	if err != nil {
-		return nil, r.dba.Wrap(err)
+		return nil, r.dba.Translate(err)
 	}
 
 	entity := mapper.UpdateRoleRowToEntity(row)
@@ -98,7 +98,7 @@ func (r *RoleCommandRepository) Delete(
 	err := r.dba.Q.DeleteRole(ctx, id)
 
 	if err != nil {
-		return r.dba.Wrap(err)
+		return r.dba.Translate(err)
 	}
 
 	return nil

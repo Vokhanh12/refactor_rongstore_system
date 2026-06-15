@@ -32,7 +32,7 @@ func (s *AuthorizationQueryRepository) ListGrantsByRoleKeys(ctx context.Context,
 
 	rows, err := s.dba.Q.ListAuthorizationGrantsByRoleKeys(ctx, payload)
 	if err != nil {
-		return nil, s.dba.Wrap(err)
+		return nil, s.dba.Translate(err)
 	}
 
 	results := make([]pr.AuthorizationGrant, 0, len(rows))

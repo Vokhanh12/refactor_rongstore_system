@@ -13,7 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-func TranslateDBError(err error) *aerrs.AppError {
+func translateDBError(err error) *aerrs.AppError {
 
 	if err == nil {
 		return nil

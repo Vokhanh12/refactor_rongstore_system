@@ -80,7 +80,7 @@ func (u *ViewRoleUsecase) handleList(ctx context.Context, q qs.ListRoleQuery) (q
 }
 
 func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q qs.SearchRoleQuery) (qs.SearchRoleQueryResult, *aerrs.AppError) {
-	return u.query.Search(ctx, q)
+	return u.query.
 }
 
 func (u *ViewRoleUsecase) handleExport(ctx context.Context, q qs.ExportRoleQuery) (qs.ExportRoleQueryResult, *aerrs.AppError) {
