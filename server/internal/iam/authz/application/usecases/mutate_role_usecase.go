@@ -4,6 +4,7 @@ import (
 	"context"
 
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	ques "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
@@ -11,7 +12,6 @@ import (
 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	domain "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/errors"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
 )
@@ -28,7 +28,6 @@ type RoleMutationBatch struct {
 
 type MutateRoleUsecase struct {
 	command repos.RoleRepository
-	query   ques.RoleQueryRepository
 	engine  *coreuc.MutateEngine[RoleMutation]
 }
 
@@ -36,7 +35,6 @@ func NewMutateRoleUsecase(c repos.RoleRepository, q ques.RoleQueryRepository) *M
 
 	u := &MutateRoleUsecase{
 		command: c,
-		query:   q,
 	}
 
 	handlers := []coreuc.Handler[RoleMutation]{
@@ -92,13 +90,13 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	exists, err := u.query.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
+	exists, err := u.command.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
 	if err != nil {
 		return nil, coreuc.Translate(err)
 	}
 
 	if exists {
-		return nil, aerrs.New(domain.ROLE_ALREADY_EXISTS)
+		return nil, aerrs.New(core.ENTITY_ALREADY_EXISTS)
 	}
 
 	role, err := en.NewRole(

@@ -44,3 +44,11 @@ type DeleteRoleCommand struct {
 	ID uuid.UUID
 }
 type DeleteRoleCommandResult struct{}
+
+type ExistsRoleQuery struct {
+	Code string
+}
+
+type ExistsRoleQueryResult struct {
+	Exsits bool
+}

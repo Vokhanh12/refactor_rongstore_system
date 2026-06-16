@@ -55,6 +55,26 @@ services:
           severity: S3
           retryable: false
 
+        - code: CORE-DOM-002
+          key: ENTITY_NOT_FOUND
+          component: entity_domain
+          tags: [domain]
+          http_status: 404
+          grpc_code: NotFound
+          message: "{{resource}} not found"
+          severity: S3
+          retryable: false   
+
+        - code: AUTHZ-DOM-002
+          key: ENTITY_INVALID
+          component: entity_domain
+          tags: [domain]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "{{resource}} contains invalid references"
+          severity: S3
+          retryable: false
+
       APP:
         - code: CORE-APP-001
           key: MUTATE_OPERATION_UNSUPPORTED
@@ -104,6 +124,16 @@ services:
           grpc_code: Internal
           message: "Application operation failed"
           severity: S2
+          retryable: false
+
+        - code: CORE-APP-006
+          key: ENTITY_ALREADY_EXISTS
+          component: entity_usecase
+          tags: [application]
+          http_status: 409
+          grpc_code: AlreadyExists
+          message: "{{resource}} already exists"
+          severity: S3
           retryable: false
 
       TRANS:
@@ -293,34 +323,26 @@ services:
       errors:
 
         DOM:
-          - code: AUTHZ-DOM-001
-            key: ROLE_NOT_FOUND
-            component: role_domain
-            tags: [domain]
-            http_status: 404
-            grpc_code: NotFound
-            message: "Role not found"
-            severity: S3
-            retryable: false
-
-          - code: AUTHZ-DOM-002
-            key: ROLE_INVALID
-            component: role_domain
-            tags: [domain]
+          - code: NONE-DOM-001
+            key: DOM_NONE
+            component: none
+            tags: [none]
             http_status: 400
             grpc_code: InvalidArgument
-            message: "Role contains invalid references"
+            message: "Invalid authorization"
             severity: S3
             retryable: false
 
+
         APP:
-          - code: AUTHZ-APP-001
-            key: ROLE_ALREADY_EXISTS
-            component: role_usecase
-            tags: [application]
-            http_status: 409
-            grpc_code: AlreadyExists
-            message: "Role already exists"
+
+          - code: NONE-APP-001
+            key: APP_NONE
+            component: none
+            tags: [none]
+            http_status: 400
+            grpc_code: InvalidArgument
+            message: "Invalid authorization"
             severity: S3
             retryable: false
 

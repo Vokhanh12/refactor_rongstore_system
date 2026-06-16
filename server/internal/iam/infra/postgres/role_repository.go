@@ -6,7 +6,9 @@ import (
 	"github.com/google/uuid"
 
 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mapper"
 
@@ -102,4 +104,22 @@ func (r *RoleRepository) Delete(
 	}
 
 	return nil
+}
+
+// ExistsRoleByCodeScope implements [repositories.RoleRepository].
+func (r *RoleRepository) ExistsRoleByCodeScope(ctx context.Context, roleScopeType enu.RoleScopeType, roleKey vo.RoleKey) (bool, *aerrs.AppError) {
+	exists, err := r.dba.Q.ExistsRoleByCodeScope(
+		ctx,
+		sqlc.ExistsRoleByCodeScopeParams{
+			Code:          roleKey.RoleCode(),
+			RoleScopeType: mapper.RoleScopeTypeToDB(roleScopeType),
+			ScopeID:       roleKey.ScopeID(),
+		},
+	)
+
+	if err != nil {
+		return false, r.dba.Translate(err)
+	}
+
+	return exists, nil
 }

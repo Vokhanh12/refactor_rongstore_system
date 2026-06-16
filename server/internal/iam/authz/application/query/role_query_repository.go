@@ -5,8 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
-	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
-	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
@@ -15,5 +14,4 @@ type RoleQueryRepository interface {
 	Export(ctx context.Context, q ExportRoleQuery) (ExportRoleQueryResult, *aerrs.AppError)
 	FindById(ctx context.Context, id uuid.UUID) (*entities.Role, *aerrs.AppError)
 	FindByCode(ctx context.Context, code string) (*entities.Role, *aerrs.AppError)
-	ExistsRoleByCodeScope(ctx context.Context, roleScopeType enu.RoleScopeType, roleKey vo.RoleKey) (bool, *aerrs.AppError)
 }

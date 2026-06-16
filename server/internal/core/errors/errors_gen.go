@@ -21,6 +21,38 @@ var (
 		ServerAction: "",
 	}
 
+	ENTITY_NOT_FOUND = apperrors.AppError{
+		Key: "ENTITY_NOT_FOUND",
+		Code: "CORE-DOM-002",
+		Layer: "DOM",
+		Component: "entity_domain",
+		Tags: []string{"domain"},
+		Status: 404,
+		GRPCCode: "NotFound",
+		Message: "Entity not found",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	ENTITY_INVALID = apperrors.AppError{
+		Key: "ENTITY_INVALID",
+		Code: "AUTHZ-DOM-002",
+		Layer: "DOM",
+		Component: "entity_domain",
+		Tags: []string{"domain"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Entity contains invalid references",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 	MUTATE_OPERATION_UNSUPPORTED = apperrors.AppError{
 		Key: "MUTATE_OPERATION_UNSUPPORTED",
 		Code: "CORE-APP-001",
@@ -95,6 +127,22 @@ var (
 		GRPCCode: "Internal",
 		Message: "Application operation failed",
 		Severity: "S2",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
+	ENTITY_ALREADY_EXISTS = apperrors.AppError{
+		Key: "ENTITY_ALREADY_EXISTS",
+		Code: "CORE-APP-006",
+		Layer: "APP",
+		Component: "entity_usecase",
+		Tags: []string{"application"},
+		Status: 409,
+		GRPCCode: "AlreadyExists",
+		Message: "entity already exists",
+		Severity: "S3",
 		Retryable: false,
 		Cause: "",
 		ClientAction: "",
@@ -310,11 +358,14 @@ var (
 
 var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-DOM-001": VALIDATION_FAILED,
+	"CORE-DOM-002": ENTITY_NOT_FOUND,
+	"AUTHZ-DOM-002": ENTITY_INVALID,
 	"CORE-APP-001": MUTATE_OPERATION_UNSUPPORTED,
 	"CORE-APP-002": MUTATE_PARTIAL_FAILURE,
 	"CORE-APP-003": VIEW_OPERATION_UNSUPPORTED,
 	"CORE-APP-004": VIEW_PARTIAL_FAILURE,
 	"CORE-APP-005": APP_OPERATION_FAILED,
+	"CORE-APP-006": ENTITY_ALREADY_EXISTS,
 	"CORE-TRANS-001": INVALID_REQUEST_PAYLOAD,
 	"CORE-PARSE-001": STRING_SPLIT_INVALID,
 	"CORE-PARSE-002": UUID_INVALID,

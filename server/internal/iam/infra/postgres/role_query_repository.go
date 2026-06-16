@@ -7,18 +7,13 @@ import (
 	authzrepos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
-	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
-	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/fields"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/mapper"
 	srs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/scanrows"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/querydsl"
-	sqlc "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ authzrepos.RoleQueryRepository = (*RoleQueryRepository)(nil)
@@ -123,27 +118,4 @@ func (s *RoleQueryRepository) Export(ctx context.Context, q q.ExportRoleQuery) (
 // Get implements [query.RoleQuery].
 func (s *RoleQueryRepository) Get(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *apperrors.AppError) {
 	panic("unimplemented")
-}
-
-// List implements [query.RoleQuery].
-func (s *RoleQueryRepository) List(ctx context.Context, q q.ListRoleQuery) (q.ListRoleQueryResult, *apperrors.AppError) {
-	panic("unimplemented")
-}
-
-// ExistsRoleByCodeScope implements [repositories.RoleQueryRepository].
-func (r *RoleQueryRepository) ExistsRoleByCodeScope(ctx context.Context, roleScopeType enu.RoleScopeType, roleKey vo.RoleKey) (bool, *aerrs.AppError) {
-	exists, err := r.dba.Q.ExistsRoleByCodeScope(
-		ctx,
-		sqlc.ExistsRoleByCodeScopeParams{
-			Code:          roleKey.RoleCode(),
-			RoleScopeType: mapper.RoleScopeTypeToDB(roleScopeType),
-			ScopeID:       roleKey.ScopeID(),
-		},
-	)
-
-	if err != nil {
-		return false, r.dba.Translate(err)
-	}
-
-	return exists, nil
 }

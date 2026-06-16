@@ -30,11 +30,3 @@ type ExportRoleQuery struct {
 type ExportRoleQueryResult struct {
 	FileURL string
 }
-
-type ExistsRoleQuery struct {
-	Code string
-}
-
-type ExistsRoleQueryResult struct {
-	Exsits bool
-}

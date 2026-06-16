@@ -13,7 +13,6 @@ import (
 type RoleView struct {
 	Get    *qs.GetRoleQuery
 	Search *qs.SearchRoleQuery
-	List   *qs.ListRoleQuery
 	Export *qs.ExportRoleQuery
 }
 
@@ -43,12 +42,6 @@ func NewViewRoleUsecase(q repos.RoleQueryRepository) *ViewRoleUsecase {
 			Cond: func(p RoleView) bool { return p.Get != nil },
 			Exec: func(ctx context.Context, p RoleView) (any, *aerrs.AppError) {
 				return u.handleGet(ctx, *p.Get)
-			},
-		},
-		{
-			Cond: func(p RoleView) bool { return p.List != nil },
-			Exec: func(ctx context.Context, p RoleView) (any, *aerrs.AppError) {
-				return u.handleList(ctx, *p.List)
 			},
 		},
 		{

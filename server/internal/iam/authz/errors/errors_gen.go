@@ -5,31 +5,15 @@ package errors
 import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 var (
-	ROLE_NOT_FOUND = apperrors.AppError{
-		Key: "ROLE_NOT_FOUND",
-		Code: "AUTHZ-DOM-001",
+	DOM_NONE = apperrors.AppError{
+		Key: "DOM_NONE",
+		Code: "NONE-DOM-001",
 		Layer: "DOM",
-		Component: "role_domain",
-		Tags: []string{"domain"},
-		Status: 404,
-		GRPCCode: "NotFound",
-		Message: "Role not found",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
-		ClientAction: "",
-		ServerAction: "",
-	}
-
-	ROLE_INVALID = apperrors.AppError{
-		Key: "ROLE_INVALID",
-		Code: "AUTHZ-DOM-002",
-		Layer: "DOM",
-		Component: "role_domain",
-		Tags: []string{"domain"},
+		Component: "none",
+		Tags: []string{"none"},
 		Status: 400,
 		GRPCCode: "InvalidArgument",
-		Message: "Role contains invalid references",
+		Message: "Invalid authorization",
 		Severity: "S3",
 		Retryable: false,
 		Cause: "",
@@ -37,15 +21,15 @@ var (
 		ServerAction: "",
 	}
 
-	ROLE_ALREADY_EXISTS = apperrors.AppError{
-		Key: "ROLE_ALREADY_EXISTS",
-		Code: "AUTHZ-APP-001",
+	APP_NONE = apperrors.AppError{
+		Key: "APP_NONE",
+		Code: "NONE-APP-001",
 		Layer: "APP",
-		Component: "role_usecase",
-		Tags: []string{"application"},
-		Status: 409,
-		GRPCCode: "AlreadyExists",
-		Message: "Role already exists",
+		Component: "none",
+		Tags: []string{"none"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid authorization",
 		Severity: "S3",
 		Retryable: false,
 		Cause: "",
@@ -213,9 +197,8 @@ var (
 )
 
 var ErrorByCode = map[string]apperrors.AppError{
-	"AUTHZ-DOM-001": ROLE_NOT_FOUND,
-	"AUTHZ-DOM-002": ROLE_INVALID,
-	"AUTHZ-APP-001": ROLE_ALREADY_EXISTS,
+	"NONE-DOM-001": DOM_NONE,
+	"NONE-APP-001": APP_NONE,
 	"AUTHZ-TRANS-001": AUTHORIZATION_INVALID,
 	"AUTHZ-TRANS-002": RESOURCE_OR_ACTION_REQUIRED,
 	"AUTHZ-TRANS-003": ROLE_REQUIRED,
