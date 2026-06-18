@@ -3,10 +3,8 @@ package postgres
 import (
 	"context"
 
-	"github.com/google/uuid"
 	authzrepos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/fields"
 	srs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/scanrows"
 	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
@@ -33,15 +31,6 @@ func NewRoleQueryRepository(
 	}
 }
 
-// FindByCode implements [repositories.RoleQueryRepository].
-func (s *RoleQueryRepository) FindByCode(ctx context.Context, code string) (*entities.Role, *apperrors.AppError) {
-	panic("unimplemented")
-}
-
-// FindById implements [repositories.RoleQueryRepository].
-func (s *RoleQueryRepository) FindById(ctx context.Context, id uuid.UUID) (*entities.Role, *apperrors.AppError) {
-	panic("unimplemented")
-}
 func (s *RoleQueryRepository) Search(ctx context.Context, query q.SearchRoleQuery) (
 	q.SearchRoleQueryResult,
 	*apperrors.AppError,
@@ -115,7 +104,7 @@ func (s *RoleQueryRepository) Export(ctx context.Context, q q.ExportRoleQuery) (
 	panic("unimplemented")
 }
 
-// Get implements [query.RoleQuery].
-func (s *RoleQueryRepository) Get(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *apperrors.AppError) {
+// GetById implements [query.RoleQueryRepository].
+func (s *RoleQueryRepository) GetById(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *apperrors.AppError) {
 	panic("unimplemented")
 }

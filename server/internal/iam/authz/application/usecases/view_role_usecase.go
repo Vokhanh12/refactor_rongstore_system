@@ -65,7 +65,7 @@ func (u *ViewRoleUsecase) Execute(ctx context.Context, batch RoleViewBatch) dtos
 }
 
 func (u *ViewRoleUsecase) handleGet(ctx context.Context, q qs.GetRoleQuery) (qs.GetRoleQueryResult, *aerrs.AppError) {
-	return u.query.Get(ctx, q)
+	return u.query.GetById(ctx, q)
 }
 
 func (u *ViewRoleUsecase) handleSearch(ctx context.Context, q qs.SearchRoleQuery) (qs.SearchRoleQueryResult, *aerrs.AppError) {

@@ -7,13 +7,13 @@
 package servicespb
 
 import (
-	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
-	resources "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	unsafe "unsafe"
+
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
+	resources "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
