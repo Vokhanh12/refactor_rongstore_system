@@ -3,26 +3,10 @@ package wire
 import (
 	"context"
 	"server/internal/iam/infrastructure/client"
-	"server/internal/iam/infrastructure/db/postgres"
 	"server/pkg/config"
 
 	iamgrpc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/grpc/handler"
-	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache/redis"
-	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
 )
-
-type Infra struct {
-	Postgres db.PostgresDB
-	Redis    cache.RedisCache
-}
-
-type RootDeps struct {
-	Infra *Infra
-
-	IAM IamDeps
-	FNB FnBDeps
-	HR  HrDeps
-}
 
 type IamDeps struct {
 	AuthHandler  *iamgrpc.AuthHandler
@@ -32,25 +16,6 @@ type IamDeps struct {
 type FnBDeps struct{}
 
 type HrDeps struct{}
-
-func Initialize(
-	ctx context.Context,
-	cfg *config.Config,
-) *RootDeps {
-
-	infra := &Infra{
-		Postgres: postgres.InitPostgresDB(ctx, cfg),
-		Redis:    cache.InitRedisCache(ctx, cfg),
-	}
-
-	return &RootDeps{
-		Infra: infra,
-
-		IAM: InitializeIAM(ctx, cfg, infra),
-		FNB: InitializeFNB(ctx, cfg, infra),
-		HR:  InitializeHR(ctx, cfg, infra),
-	}
-}
 
 func InitializeIAM(
 	ctx context.Context,
@@ -84,4 +49,20 @@ func InitializeIAM(
 	return IamDeps{
 		AuthzHandler: authzHandler,
 	}
+}
+
+func InitializeHR(
+	ctx context.Context,
+	cfg *config.Config,
+	infra *Infra,
+) HrDeps {
+	panic("none")
+}
+
+func InitializeFNB(
+	ctx context.Context,
+	cfg *config.Config,
+	infra *Infra,
+) FnBDeps {
+	panic("none")
 }
