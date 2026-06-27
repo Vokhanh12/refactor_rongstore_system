@@ -2,8 +2,8 @@ package wire
 
 import (
 	"context"
-	"server/internal/iam/infrastructure/db/postgres"
-	"server/pkg/config"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
+	cfg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/config"
 
 	cache "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/cache/redis"
 	db "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
@@ -24,7 +24,7 @@ type RootDeps struct {
 
 func Initialize(
 	ctx context.Context,
-	cfg *config.Config,
+	cfg *cfg.Config,
 ) *RootDeps {
 
 	infra := &Infra{

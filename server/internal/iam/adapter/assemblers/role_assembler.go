@@ -4,13 +4,12 @@ import (
 	"fmt"
 
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/assemblers"
 	corem "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/assemblers"
-	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/normalize"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	"google.golang.org/protobuf/types/known/anypb"
 )
 
 // ============================================================
@@ -19,26 +18,15 @@ import (
 
 func RoleMutateRequestToBatch(req *authzrs.RoleMutateRequest) authzuc.RoleMutationBatch {
 
-	items := make([]coreuc.Operation[authzuc.RoleMutation], 0, len(req.Mutations))
-
-	for _, m := range req.Mutations {
-		payload, err := DecodeRoleMutation(m.Action)
-
-		if err != nil {
-			items = append(items, coreuc.Operation[authzuc.RoleMutation]{
-				OpID:    m.OpId,
-				Payload: payload,
-				Error:   err,
-			})
-			continue
-		}
-
-		items = append(items, coreuc.Operation[authzuc.RoleMutation]{
-			OpID:    m.OpId,
-			Payload: payload,
-			Error:   nil,
-		})
-	}
+	items := assemblers.BuildBatch(
+		req.Mutations,
+		func(m *authzrs.RoleMutation) (authzuc.RoleMutation, *aerrs.AppError) {
+			return DecodeRoleMutation(m.Action)
+		},
+		func(m *authzrs.RoleMutation) string {
+			return m.OpId
+		},
+	)
 
 	return authzuc.RoleMutationBatch{Items: items}
 }
@@ -107,47 +95,5 @@ func DecodeRoleMutation(action any) (authzuc.RoleMutation, *aerrs.AppError) {
 	default:
 		corem.Must(fmt.Sprintf("unknown action type: %T", action))
 		return authzuc.RoleMutation{}, nil
-	}
-}
-
-// ============================================================
-// COMMAND RESULT → PROTO RESPONSE (DATA PART)
-// ============================================================
-
-func EncoreRoleMutation(data any) *anypb.Any {
-
-	switch v := data.(type) {
-
-	case *cmd.CreateRoleCommandResult:
-		pb := &authzrs.CreateResult{
-			RoleResult: &authzrs.RoleResult{
-				Id:          v.Result.Id,
-				Name:        v.Result.Name,
-				Description: v.Result.Description,
-				CreateAt:    corem.ToProtoTime(v.Result.CreatedAt),
-				UpdateAt:    corem.ToProtoTime(v.Result.UpdatedAt),
-			},
-		}
-		return corem.MustMarshalAny(pb)
-
-	case *cmd.UpdateRoleCommandResult:
-		pb := &authzrs.UpdateResult{
-			RoleResult: &authzrs.RoleResult{
-				Id:          v.Result.Id,
-				Name:        v.Result.Name,
-				Description: v.Result.Description,
-				CreateAt:    corem.ToProtoTime(v.Result.UpdatedAt),
-				UpdateAt:    corem.ToProtoTime(v.Result.UpdatedAt),
-			},
-		}
-		return corem.MustMarshalAny(pb)
-
-	case *cmd.DeleteRoleCommandResult:
-		pb := &authzrs.DeleteResult{}
-		return corem.MustMarshalAny(pb)
-
-	default:
-		corem.Must(fmt.Sprintf("unknown result type: %T", data))
-		return nil
 	}
 }

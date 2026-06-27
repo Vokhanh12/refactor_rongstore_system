@@ -19,7 +19,7 @@ type CreateRoleCommand struct {
 }
 
 type CreateRoleCommandResult struct {
-	Result *common.RoleResult
+	Role *common.Role
 }
 
 type UpdateRoleCommand struct {
@@ -37,7 +37,7 @@ type UpdateRoleCommand struct {
 }
 
 type UpdateRoleCommandResult struct {
-	Result common.RoleResult
+	Role common.Role
 }
 
 type DeleteRoleCommand struct {

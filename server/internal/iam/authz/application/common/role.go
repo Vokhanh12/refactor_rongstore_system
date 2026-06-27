@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type RoleResult struct {
+type Role struct {
 	Id          string
 	Name        string
 	Description string
