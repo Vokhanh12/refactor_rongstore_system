@@ -1,136 +1,136 @@
-package usecases
+// package usecases
 
-import (
-	"context"
+// import (
+// 	"context"
 
-	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
-	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	ques "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
-	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
-	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
-	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
-)
+// 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
+// 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
+// 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
+// 	ques "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
+// 	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
+// 	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+// 	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
+// 	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+// 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+// 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+// 	dtos "github.com/vokhanh12/refactor-rongstore-system/server/pkg/common/v1"
+// )
 
-type RoleMutation struct {
-	Create *c.CreateRoleCommand
-	Update *c.UpdateRoleCommand
-	Delete *c.DeleteRoleCommand
-}
+// type RoleMutation struct {
+// 	Create *c.CreateRoleCommand
+// 	Update *c.UpdateRoleCommand
+// 	Delete *c.DeleteRoleCommand
+// }
 
-type RoleMutationBatch struct {
-	Items []coreuc.Operation[RoleMutation]
-}
+// type RoleMutationBatch struct {
+// 	Items []coreuc.Operation[RoleMutation]
+// }
 
-type MutateRoleUsecase struct {
-	command repos.RoleRepository
-	engine  *coreuc.MutateEngine[RoleMutation]
-}
+// type MutateRoleUsecase struct {
+// 	command repos.RoleRepository
+// 	engine  *coreuc.MutateEngine[RoleMutation]
+// }
 
-func NewMutateRoleUsecase(c repos.RoleRepository, q ques.RoleQueryRepository) *MutateRoleUsecase {
+// func NewMutateRoleUsecase(c repos.RoleRepository, q ques.RoleQueryRepository) *MutateRoleUsecase {
 
-	u := &MutateRoleUsecase{
-		command: c,
-	}
+// 	u := &MutateRoleUsecase{
+// 		command: c,
+// 	}
 
-	handlers := []coreuc.Handler[RoleMutation]{
-		{
-			Cond: func(p RoleMutation) bool { return p.Create != nil },
-			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
-				return u.handleCreate(ctx, *p.Create)
-			},
-		},
-		{
-			Cond: func(p RoleMutation) bool { return p.Update != nil },
-			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
-				return u.handleUpdate(ctx, *p.Update)
-			},
-		},
-		{
-			Cond: func(p RoleMutation) bool { return p.Delete != nil },
-			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
-				return u.handleDelete(ctx, *p.Delete)
-			},
-		},
-	}
+// 	handlers := []coreuc.Handler[RoleMutation]{
+// 		{
+// 			Cond: func(p RoleMutation) bool { return p.Create != nil },
+// 			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
+// 				return u.handleCreate(ctx, *p.Create)
+// 			},
+// 		},
+// 		{
+// 			Cond: func(p RoleMutation) bool { return p.Update != nil },
+// 			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
+// 				return u.handleUpdate(ctx, *p.Update)
+// 			},
+// 		},
+// 		{
+// 			Cond: func(p RoleMutation) bool { return p.Delete != nil },
+// 			Exec: func(ctx context.Context, p RoleMutation) (any, *aerrs.AppError) {
+// 				return u.handleDelete(ctx, *p.Delete)
+// 			},
+// 		},
+// 	}
 
-	u.engine = coreuc.NewMutateEngine(handlers)
+// 	u.engine = coreuc.NewMutateEngine(handlers)
 
-	return u
-}
+// 	return u
+// }
 
-func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) dtos.MutateResultDTO {
+// func (u *MutateRoleUsecase) Execute(ctx context.Context, batch RoleMutationBatch) dtos.MutateResultDTO {
 
-	results := u.engine.Execute(ctx, batch.Items)
+// 	results := u.engine.Execute(ctx, batch.Items)
 
-	return dtos.MutateResultDTO{Items: results}
-}
+// 	return dtos.MutateResultDTO{Items: results}
+// }
 
-func (u *MutateRoleUsecase) handleCreate(
-	ctx context.Context,
-	cmd c.CreateRoleCommand,
-) (*c.CreateRoleCommandResult, *aerrs.AppError) {
+// func (u *MutateRoleUsecase) handleCreate(
+// 	ctx context.Context,
+// 	cmd c.CreateRoleCommand,
+// ) (*c.CreateRoleCommandResult, *aerrs.AppError) {
 
-	roleKey, err := vo.NewRoleKey(cmd.ScopeID, cmd.Code)
-	if err != nil {
-		return nil, err
-	}
+// 	roleKey, err := vo.NewRoleKey(cmd.ScopeID, cmd.Code)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	scope, err := enu.NewRoleAccessScope(cmd.RoleAccessScope)
-	if err != nil {
-		return nil, err
-	}
+// 	scope, err := enu.NewRoleAccessScope(cmd.RoleAccessScope)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	scopeType, err := enu.NewRoleScopeType(cmd.RoleScopeType)
-	if err != nil {
-		return nil, err
-	}
+// 	scopeType, err := enu.NewRoleScopeType(cmd.RoleScopeType)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	exists, err := u.command.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
-	if err != nil {
-		return nil, coreuc.Translate(err)
-	}
+// 	exists, err := u.command.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
+// 	if err != nil {
+// 		return nil, coreuc.Translate(err)
+// 	}
 
-	if exists {
-		return nil, aerrs.New(core.ENTITY_ALREADY_EXISTS)
-	}
+// 	if exists {
+// 		return nil, aerrs.New(core.ENTITY_ALREADY_EXISTS)
+// 	}
 
-	role, err := en.NewRole(
-		en.RolePayload{
-			RoleKey:         roleKey,
-			RoleScopeType:   scopeType,
-			Name:            cmd.Name,
-			RoleAccessScope: scope,
-			Level:           cmd.Level,
-			Description:     cmd.Description,
-			IsSystem:        cmd.IsSystem,
-			IsSuper:         cmd.IsSuper,
-			IsActive:        cmd.IsActive,
-		},
-	)
+// 	role, err := en.NewRole(
+// 		en.RolePayload{
+// 			RoleKey:         roleKey,
+// 			RoleScopeType:   scopeType,
+// 			Name:            cmd.Name,
+// 			RoleAccessScope: scope,
+// 			Level:           cmd.Level,
+// 			Description:     cmd.Description,
+// 			IsSystem:        cmd.IsSystem,
+// 			IsSuper:         cmd.IsSuper,
+// 			IsActive:        cmd.IsActive,
+// 		},
+// 	)
 
-	if err != nil {
-		return nil, err
-	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	savedRole, err := u.command.Create(ctx, role)
-	if err != nil {
-		return nil, coreuc.Translate(err)
-	}
+// 	savedRole, err := u.command.Create(ctx, role)
+// 	if err != nil {
+// 		return nil, coreuc.Translate(err)
+// 	}
 
-	return &c.CreateRoleCommandResult{
-		Result: mapper.NewRoleResultFromEntity(savedRole),
-	}, nil
-}
+// 	return &c.CreateRoleCommandResult{
+// 		Result: mapper.NewRoleResultFromEntity(savedRole),
+// 	}, nil
+// }
 
-func (u *MutateRoleUsecase) handleUpdate(ctx context.Context, cmd c.UpdateRoleCommand) (*c.UpdateRoleCommandResult, *aerrs.AppError) {
-	return nil, nil
-}
+// func (u *MutateRoleUsecase) handleUpdate(ctx context.Context, cmd c.UpdateRoleCommand) (*c.UpdateRoleCommandResult, *aerrs.AppError) {
+// 	return nil, nil
+// }
 
-func (u *MutateRoleUsecase) handleDelete(ctx context.Context, cmd c.DeleteRoleCommand) (*c.DeleteRoleCommandResult, *aerrs.AppError) {
-	return nil, nil
-}
+// func (u *MutateRoleUsecase) handleDelete(ctx context.Context, cmd c.DeleteRoleCommand) (*c.DeleteRoleCommandResult, *aerrs.AppError) {
+// 	return nil, nil
+// }
