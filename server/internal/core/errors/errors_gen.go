@@ -165,6 +165,22 @@ var (
 		ServerAction: "",
 	}
 
+	INVALID_COMMAND_TYPE = apperrors.AppError{
+		Key: "INVALID_COMMAND_TYPE",
+		Code: "CORE-APP-008",
+		Layer: "APP",
+		Component: "dispatcher",
+		Tags: []string{"application"},
+		Status: 400,
+		GRPCCode: "InvalidArgument",
+		Message: "Invalid command type",
+		Severity: "S3",
+		Retryable: false,
+		Cause: "",
+		ClientAction: "",
+		ServerAction: "",
+	}
+
 	INVALID_REQUEST_PAYLOAD = apperrors.AppError{
 		Key: "INVALID_REQUEST_PAYLOAD",
 		Code: "CORE-TRANS-001",
@@ -383,6 +399,7 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-APP-005": APP_OPERATION_FAILED,
 	"CORE-APP-006": ENTITY_ALREADY_EXISTS,
 	"CORE-APP-007": HANDLER_NOT_FOUND,
+	"CORE-APP-008": INVALID_COMMAND_TYPE,
 	"CORE-TRANS-001": INVALID_REQUEST_PAYLOAD,
 	"CORE-PARSE-001": STRING_SPLIT_INVALID,
 	"CORE-PARSE-002": UUID_INVALID,

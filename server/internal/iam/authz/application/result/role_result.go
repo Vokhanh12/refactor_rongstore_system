@@ -5,12 +5,12 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
 )
 
-func NewRoleResultFromEntity(role *entities.Role) *common.RoleResult {
+func NewRoleFromEntity(role *entities.Role) *common.Role {
 	if role == nil {
 		return nil
 	}
 
-	return &common.RoleResult{
+	return &common.Role{
 		Id:          role.ID().String(),
 		Name:        role.Name(),
 		Description: *role.Description(),

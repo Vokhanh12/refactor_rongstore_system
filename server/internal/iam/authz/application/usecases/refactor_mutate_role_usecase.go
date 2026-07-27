@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 
-	capp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application"
+	dpc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
@@ -16,13 +16,14 @@ import (
 )
 
 const (
-	RoleCreate = "role.create"
-	RoleUpdate = "role.update"
+	RoleCreate dpc.Operation = "role.create"
+	RoleUpdate dpc.Operation = "role.update"
+	RoleDelete dpc.Operation = "role.delete"
 )
 
 type MutateRoleUsecase struct {
 	repo       repos.RoleRepository
-	dispatcher *capp.Dispatcher
+	dispatcher *dpc.Dispatcher
 }
 
 func NewMutateRoleUsecase(
@@ -31,26 +32,37 @@ func NewMutateRoleUsecase(
 
 	u := &MutateRoleUsecase{
 		repo:       repo,
-		dispatcher: capp.NewDispatcher(),
+		dispatcher: dpc.NewDispatcher(),
 	}
 
-	u.dispatcher.Register(
-		RoleCreate,
-		u.dispatchCreate,
-	)
+	u.dispatcher.
+		Register(
+			RoleCreate,
+			dpc.Wrap(u.handleCreate),
+		).
+		Register(
+			RoleUpdate,
+			dpc.Wrap(u.handleUpdate),
+		).
+		Register(
+			RoleDelete,
+			dpc.Wrap(u.handleDelete),
+		)
 
 	return u
 }
 
-func (u *MutateRoleUsecase) dispatchCreate(
+func (u *MutateRoleUsecase) Execute(
 	ctx context.Context,
+	op dpc.Operation,
 	payload any,
 ) (any, *aerrs.AppError) {
 
-	cmd := payload.(c.CreateRoleCommand)
-
-	return u.handleCreate(ctx, cmd)
-
+	return u.dispatcher.Dispatch(
+		ctx,
+		op,
+		payload,
+	)
 }
 
 func (u *MutateRoleUsecase) handleCreate(
@@ -73,7 +85,7 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	exists, err := u.command.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
+	exists, err := u.repo.ExistsRoleByCodeScope(ctx, scopeType, roleKey)
 	if err != nil {
 		return nil, coreuc.Translate(err)
 	}
@@ -100,13 +112,13 @@ func (u *MutateRoleUsecase) handleCreate(
 		return nil, err
 	}
 
-	savedRole, err := u.command.Create(ctx, role)
+	savedRole, err := u.repo.Create(ctx, role)
 	if err != nil {
 		return nil, coreuc.Translate(err)
 	}
 
 	return &c.CreateRoleCommandResult{
-		Result: mapper.NewRoleResultFromEntity(savedRole),
+		Role: mapper.NewRoleFromEntity(savedRole),
 	}, nil
 }
 
