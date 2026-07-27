@@ -3,11 +3,16 @@ package usecases
 import (
 	"context"
 
-	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-
+	capp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application"
+	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
+	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	c "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	mapper "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/result"
+	en "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/entities"
+	enu "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enums"
+	repos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/repositories"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
+	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 const (
@@ -15,48 +20,9 @@ const (
 	RoleUpdate = "role.update"
 )
 
-type HandlerFunc func(ctx context.Context, payload any) (any, *aerrs.AppError)
-
-type Dispatcher struct {
-	handlers map[string]HandlerFunc
-}
-
-func NewDispatcher() *Dispatcher {
-
-	return &Dispatcher{
-		handlers: make(map[string]HandlerFunc),
-	}
-
-}
-
-func (d *Dispatcher) Register(operation string, handler HandlerFunc) {
-
-	d.handlers[operation] = handler
-
-}
-
-func (d *Dispatcher) Dispatch(
-	ctx context.Context,
-
-	operation string,
-
-	payload any,
-
-) (any, *aerrs.AppError) {
-
-	handler, ok := d.handlers[operation]
-
-	if !ok {
-		return nil, ErrHandlerNotFound
-	}
-
-	return handler(ctx, payload)
-
-}
-
 type MutateRoleUsecase struct {
 	repo       repos.RoleRepository
-	dispatcher *Dispatcher
+	dispatcher *capp.Dispatcher
 }
 
 func NewMutateRoleUsecase(
@@ -65,7 +31,7 @@ func NewMutateRoleUsecase(
 
 	u := &MutateRoleUsecase{
 		repo:       repo,
-		dispatcher: NewDispatcher(),
+		dispatcher: capp.NewDispatcher(),
 	}
 
 	u.dispatcher.Register(

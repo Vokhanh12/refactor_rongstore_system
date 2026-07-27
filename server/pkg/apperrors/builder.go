@@ -13,7 +13,7 @@ func New(template AppError, opts ...func(*AppError)) *AppError {
 }
 
 // ============================
-// DETAIL BUILDER
+// DETAIL BUILDERP
 // ============================
 
 func NewDetail(template AppErrorDetail, opts ...func(*AppErrorDetail)) AppErrorDetail {

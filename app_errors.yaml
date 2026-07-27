@@ -136,6 +136,16 @@ services:
           severity: S3
           retryable: false
 
+        - code: CORE-APP-007
+          key: HANDLER_NOT_FOUND
+          component: dispatcher
+          tags: [application]
+          http_status: 400
+          grpc_code: InvalidArgument
+          message: "Handler not found"
+          severity: S3
+          retryable: false
+
       TRANS:
         - code: CORE-TRANS-001
           key: INVALID_REQUEST_PAYLOAD
