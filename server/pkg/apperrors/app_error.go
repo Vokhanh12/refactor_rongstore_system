@@ -29,15 +29,15 @@ type AppError struct {
 	ServerAction string
 
 	// ===== Debug =====
-	Source      string // service name
-	Cause       string // short cause (safe)
-	CauseDetail error  // raw error (internal only)
+	Source string // service name
+	Cause  string // short cause (safe)
+	Err    error  // raw error (internal only)
 
 	// ===== Data =====
 	Data map[string]interface{}
 
 	// ===== Validation details =====
-	ErrorDetails []AppErrorDetail
+	Violations []Violation
 }
 
 func (e *AppError) Error() string {

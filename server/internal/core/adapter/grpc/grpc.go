@@ -42,7 +42,7 @@ func toCode(code string) codes.Code {
 	return codes.Unknown
 }
 
-// func mapDetailToProto(d aerrs.AppErrorDetail) *protos.ErrorDetail {
+// func mapDetailToProto(d aerrs.Violation) *protos.ErrorDetail {
 // 	return &protos.ErrorDetail{
 // 		Field:   d.Field,
 // 		Code:    d.Code,
@@ -51,7 +51,7 @@ func toCode(code string) codes.Code {
 // 	}
 // }
 
-// func mapDetailsToProto(details []aerrs.AppErrorDetail) []interface{} {
+// func mapDetailsToProto(details []aerrs.Violation) []interface{} {
 // 	if len(details) == 0 {
 // 		return nil
 // 	}

@@ -1,7 +1,7 @@
 package apperrors
 
 func MergeErrors(errs ...*AppError) *AppError {
-	var details []AppErrorDetail
+	var details []Violation
 
 	for _, err := range errs {
 		if err == nil {
@@ -42,12 +42,12 @@ func copyDataMap(src map[string]interface{}) map[string]interface{} {
 	return dst
 }
 
-func copyDetails(src []AppErrorDetail) []AppErrorDetail {
+func copyDetails(src []Violation) []Violation {
 	if src == nil {
 		return nil
 	}
 
-	dst := make([]AppErrorDetail, len(src))
+	dst := make([]Violation, len(src))
 	copy(dst, src)
 	return dst
 }

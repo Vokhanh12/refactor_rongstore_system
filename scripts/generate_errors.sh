@@ -254,7 +254,7 @@ EOF
 		message=$(echo "$pair" | cut -d':' -f3-)
 
 		cat <<EOF >> "$OUTPUT_FILE"
-	$const_name = apperrors.AppErrorDetail{
+	$const_name = apperrors.Violation{
 		Code: "$code",
 		Message: "$message",
 	}
@@ -288,7 +288,7 @@ EOF
 	# ERROR DETAIL BY CODE
 	# ========================================================
 
-	echo "var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{" >> "$OUTPUT_FILE"
+	echo "var ErrorDetailByCode = map[string]apperrors.Violation{" >> "$OUTPUT_FILE"
 
 	for pair in "${DETAIL_KEYS[@]}"; do
 

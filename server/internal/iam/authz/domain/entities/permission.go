@@ -29,10 +29,10 @@ type Permission struct {
 }
 
 // ============================================================
-// PAYLOAD
+// ARGS
 // ============================================================
 
-type PermissionPayload struct {
+type PermissionArgs struct {
 	Code string
 
 	Name        *string
@@ -49,10 +49,19 @@ type PermissionPayload struct {
 // ============================================================
 
 func NewPermission(
-	payload PermissionPayload,
+	payload PermissionArgs,
 ) (*Permission, *aerrs.AppError) {
 
-	if err := validatePermissionPayload(payload); err != nil {
+	v := validator.New()
+
+	err := v.
+		Required("code", payload.Code).
+		MaxLen("code", payload.Code, 100).
+		Required("resource", payload.Resource).
+		Required("action", payload.Action).
+		Err()
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -87,7 +96,7 @@ func NewPermission(
 
 func RestorePermission(
 	id uuid.UUID,
-	payload PermissionPayload,
+	payload PermissionArgs,
 ) *Permission {
 
 	resourceAction := vo.RestoreResourceAction(
@@ -107,24 +116,6 @@ func RestorePermission(
 
 		isActive: payload.IsActive,
 	}
-}
-
-// ============================================================
-// VALIDATION
-// ============================================================
-
-func validatePermissionPayload(
-	payload PermissionPayload,
-) *aerrs.AppError {
-
-	v := validator.New()
-
-	return v.
-		Required("code", payload.Code).
-		MaxLen("code", payload.Code, 100).
-		Required("resource", payload.Resource).
-		Required("action", payload.Action).
-		Err()
 }
 
 // ============================================================

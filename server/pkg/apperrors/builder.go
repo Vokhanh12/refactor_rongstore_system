@@ -16,7 +16,7 @@ func New(template AppError, opts ...func(*AppError)) *AppError {
 // DETAIL BUILDERP
 // ============================
 
-func NewDetail(template AppErrorDetail, opts ...func(*AppErrorDetail)) AppErrorDetail {
+func NewDetail(template Violation, opts ...func(*Violation)) Violation {
 	e := template
 	for _, opt := range opts {
 		opt(&e)

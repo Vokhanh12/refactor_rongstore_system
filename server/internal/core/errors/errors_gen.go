@@ -296,92 +296,92 @@ var (
 )
 
 var (
-	REASON_VAL_REQUIRED = apperrors.AppErrorDetail{
+	REASON_VAL_REQUIRED = apperrors.Violation{
 		Code: "VAL_REQUIRED",
 		Message: "Field is required",
 	}
 
-	REASON_VAL_NULL = apperrors.AppErrorDetail{
+	REASON_VAL_NULL = apperrors.Violation{
 		Code: "VAL_NULL",
 		Message: "Field must not be null",
 	}
 
-	REASON_VAL_INVALID_FORMAT = apperrors.AppErrorDetail{
+	REASON_VAL_INVALID_FORMAT = apperrors.Violation{
 		Code: "VAL_INVALID_FORMAT",
 		Message: "Invalid format",
 	}
 
-	REASON_VAL_INVALID_TYPE = apperrors.AppErrorDetail{
+	REASON_VAL_INVALID_TYPE = apperrors.Violation{
 		Code: "VAL_INVALID_TYPE",
 		Message: "Invalid data type",
 	}
 
-	REASON_VAL_INVALID_ENUM = apperrors.AppErrorDetail{
+	REASON_VAL_INVALID_ENUM = apperrors.Violation{
 		Code: "VAL_INVALID_ENUM",
 		Message: "Invalid enum value",
 	}
 
-	REASON_VAL_OUT_OF_RANGE = apperrors.AppErrorDetail{
+	REASON_VAL_OUT_OF_RANGE = apperrors.Violation{
 		Code: "VAL_OUT_OF_RANGE",
 		Message: "Out of range",
 	}
 
-	REASON_VAL_TOO_SHORT = apperrors.AppErrorDetail{
+	REASON_VAL_TOO_SHORT = apperrors.Violation{
 		Code: "VAL_TOO_SHORT",
 		Message: "Value is too short",
 	}
 
-	REASON_VAL_TOO_LONG = apperrors.AppErrorDetail{
+	REASON_VAL_TOO_LONG = apperrors.Violation{
 		Code: "VAL_TOO_LONG",
 		Message: "Value is too long",
 	}
 
-	REASON_APP_DUPLICATE = apperrors.AppErrorDetail{
+	REASON_APP_DUPLICATE = apperrors.Violation{
 		Code: "APP_DUPLICATE",
 		Message: "Duplicate value",
 	}
 
-	REASON_APP_CONFLICT = apperrors.AppErrorDetail{
+	REASON_APP_CONFLICT = apperrors.Violation{
 		Code: "APP_CONFLICT",
 		Message: "Value conflicts with existing data",
 	}
 
-	REASON_APP_NOT_ALLOWED = apperrors.AppErrorDetail{
+	REASON_APP_NOT_ALLOWED = apperrors.Violation{
 		Code: "APP_NOT_ALLOWED",
 		Message: "Operation not allowed",
 	}
 
-	REASON_APP_FORBIDDEN_STATE = apperrors.AppErrorDetail{
+	REASON_APP_FORBIDDEN_STATE = apperrors.Violation{
 		Code: "APP_FORBIDDEN_STATE",
 		Message: "Invalid state for operation",
 	}
 
-	REASON_APP_NOT_FOUND = apperrors.AppErrorDetail{
+	REASON_APP_NOT_FOUND = apperrors.Violation{
 		Code: "APP_NOT_FOUND",
 		Message: "Not found",
 	}
 
-	REASON_APP_ALREADY_EXISTS = apperrors.AppErrorDetail{
+	REASON_APP_ALREADY_EXISTS = apperrors.Violation{
 		Code: "APP_ALREADY_EXISTS",
 		Message: "Already exists",
 	}
 
-	REASON_PARSE_INVALID_REFERENCE = apperrors.AppErrorDetail{
+	REASON_PARSE_INVALID_REFERENCE = apperrors.Violation{
 		Code: "PARSE_INVALID_REFERENCE",
 		Message: "Invalid reference",
 	}
 
-	REASON_PARSE_INVALID_TIME_RANGE = apperrors.AppErrorDetail{
+	REASON_PARSE_INVALID_TIME_RANGE = apperrors.Violation{
 		Code: "PARSE_INVALID_TIME_RANGE",
 		Message: "Invalid time range",
 	}
 
-	REASON_SEC_UNSAFE_INPUT = apperrors.AppErrorDetail{
+	REASON_SEC_UNSAFE_INPUT = apperrors.Violation{
 		Code: "SEC_UNSAFE_INPUT",
 		Message: "Unsafe input detected",
 	}
 
-	REASON_SEC_INVALID = apperrors.AppErrorDetail{
+	REASON_SEC_INVALID = apperrors.Violation{
 		Code: "SEC_INVALID",
 		Message: "Invalid value",
 	}
@@ -409,7 +409,7 @@ var ErrorByCode = map[string]apperrors.AppError{
 	"CORE-SYS-002": REQUEST_CANCELED,
 }
 
-var ErrorDetailByCode = map[string]apperrors.AppErrorDetail{
+var ErrorDetailByCode = map[string]apperrors.Violation{
 	"VAL_REQUIRED": REASON_VAL_REQUIRED,
 	"VAL_NULL": REASON_VAL_NULL,
 	"VAL_INVALID_FORMAT": REASON_VAL_INVALID_FORMAT,

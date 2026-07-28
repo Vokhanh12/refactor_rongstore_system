@@ -28,7 +28,7 @@ func Translate(repoer *aerrs.AppError) *aerrs.AppError {
 
 func wrapOperationFailure(
 	err *aerrs.AppError,
-	reason aerrs.AppErrorDetail,
+	reason aerrs.Violation,
 ) *aerrs.AppError {
 	return aerrs.New(
 		core.APP_OPERATION_FAILED,

@@ -26,19 +26,19 @@ func WithCauseDetail(err error) func(*AppError) {
 	}
 }
 
-func WithErrorDetails(details []AppErrorDetail) func(*AppError) {
+func WithErrorDetails(details []Violation) func(*AppError) {
 	return func(e *AppError) {
 		e.ErrorDetails = copyDetails(details)
 	}
 }
 
-func WithAppendErrorDetails(details []AppErrorDetail) func(*AppError) {
+func WithAppendErrorDetails(details []Violation) func(*AppError) {
 	return func(e *AppError) {
 		e.ErrorDetails = append(e.ErrorDetails, details...)
 	}
 }
 
-func WithAppendErrorDetail(detail AppErrorDetail) func(*AppError) {
+func WithAppendErrorDetail(detail Violation) func(*AppError) {
 	return func(e *AppError) {
 		e.ErrorDetails = append(e.ErrorDetails, detail)
 	}

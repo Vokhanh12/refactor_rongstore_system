@@ -6,12 +6,12 @@ import (
 )
 
 type Validator struct {
-	details []aerrs.AppErrorDetail
+	violations []aerrs.Violation
 }
 
 func New() *Validator {
 	return &Validator{
-		details: make([]aerrs.AppErrorDetail, 0),
+		violations: make([]aerrs.Violation, 0),
 	}
 }
 
@@ -19,8 +19,8 @@ func New() *Validator {
 // INTERNAL
 // ============================
 
-func (v *Validator) add(reason aerrs.AppErrorDetail, field string) {
-	v.details = append(v.details,
+func (v *Validator) add(reason aerrs.Violation, field string) {
+	v.violations = append(v.violations,
 		aerrs.NewDetail(reason, aerrs.WithField(field)),
 	)
 }
@@ -138,12 +138,12 @@ func (v *Validator) Pattern(field string, valid bool) *Validator {
 // ============================
 
 func (v *Validator) Err() *aerrs.AppError {
-	if len(v.details) == 0 {
+	if len(v.violations) == 0 {
 		return nil
 	}
 
 	return aerrs.New(
 		domain.VALIDATION_FAILED,
-		aerrs.WithAppendErrorDetails(v.details),
+		aerrs.WithAppendErrorviolations(v.violations),
 	)
 }

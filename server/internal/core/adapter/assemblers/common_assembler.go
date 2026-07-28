@@ -21,7 +21,7 @@ func appErrorToProto(it *dtos.ErrorDTO) *protos.Error {
 	items := make([]*protos.ErrorDetail, 0, len(it.External.Details))
 
 	for _, d := range it.External.Details {
-		items = append(items, appErrorDetailToProto(d))
+		items = append(items, ViolationToProto(d))
 	}
 
 	return &protos.Error{
@@ -42,7 +42,7 @@ func appErrorToProto(it *dtos.ErrorDTO) *protos.Error {
 	}
 }
 
-func appErrorDetailToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
+func ViolationToProto(it dtos.ErrorDetailDTO) *protos.ErrorDetail {
 	return &protos.ErrorDetail{
 		Field:   it.Field,
 		Message: it.Message,
@@ -80,7 +80,7 @@ func appErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
 	details := make([]dtos.ErrorDetailDTO, 0)
 	if it.ErrorDetails != nil {
 		for _, d := range it.ErrorDetails {
-			details = append(details, appErrorDetailToDTO(d))
+			details = append(details, ViolationToDTO(d))
 		}
 	}
 
@@ -105,7 +105,7 @@ func appErrorToDTO(it *aerrs.AppError) *dtos.ErrorDTO {
 	}
 }
 
-func appErrorDetailToDTO(it aerrs.AppErrorDetail) dtos.ErrorDetailDTO {
+func ViolationToDTO(it aerrs.Violation) dtos.ErrorDetailDTO {
 	return dtos.ErrorDetailDTO{
 		Field:   it.Field,
 		Message: it.Message,
