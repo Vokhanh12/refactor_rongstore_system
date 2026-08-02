@@ -1,3 +1,9 @@
 package dispatcher
 
-type Operation string
+type Action string
+
+type Operation struct {
+	OpID    string
+	Action  Action
+	Payload any
+}

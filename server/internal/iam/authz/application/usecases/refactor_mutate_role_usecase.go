@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	dpc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	coreuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/usecase"
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
@@ -16,10 +17,14 @@ import (
 )
 
 const (
-	RoleCreate dpc.Operation = "role.create"
-	RoleUpdate dpc.Operation = "role.update"
-	RoleDelete dpc.Operation = "role.delete"
+	RoleCreate dpc.Action = "role.create"
+	RoleUpdate dpc.Action = "role.update"
+	RoleDelete dpc.Action = "role.delete"
 )
+
+type RoleMutationBatch struct {
+	Items []dp.Operation
+}
 
 type MutateRoleUsecase struct {
 	repo       repos.RoleRepository
@@ -54,13 +59,13 @@ func NewMutateRoleUsecase(
 
 func (u *MutateRoleUsecase) Execute(
 	ctx context.Context,
-	op dpc.Operation,
+	action dpc.Action,
 	payload any,
 ) (any, *aerrs.AppError) {
 
 	return u.dispatcher.Dispatch(
 		ctx,
-		op,
+		action,
 		payload,
 	)
 }

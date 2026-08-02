@@ -29,24 +29,35 @@ func BuildResponse(ctx context.Context, results dp.Result, mapActionData func(da
 	}
 }
 
-func BuildBatch[T any, R any](
+func BuildBatch[T any](
 	items []T,
-	decode func(T) (R, *aerrs.AppError),
-	getID func(T) string,
-) []uc.Operation[R] {
+	decode func(T) (
+		dp.Operation,
+		*aerrs.AppError,
+	),
+) (
+	[]dp.Operation,
+	*aerrs.AppError,
+) {
 
-	out := make([]uc.Operation[R], 0, len(items))
+	out := make(
+		[]dp.Operation,
+		0,
+		len(items),
+	)
 
 	for _, item := range items {
 
-		payload, err := decode(item)
+		operation, err := decode(item)
+		if err != nil {
+			return nil, err
+		}
 
-		out = append(out, uc.Operation[R]{
-			OpID:    getID(item),
-			Payload: payload,
-			Error:   err,
-		})
+		out = append(
+			out,
+			operation,
+		)
 	}
 
-	return out
+	return out, nil
 }

@@ -13,17 +13,17 @@ type HandlerFunc func(
 ) (any, *aerrs.AppError)
 
 type Dispatcher struct {
-	handlers map[Operation]HandlerFunc
+	handlers map[Action]HandlerFunc
 }
 
 func NewDispatcher() *Dispatcher {
 	return &Dispatcher{
-		handlers: make(map[Operation]HandlerFunc),
+		handlers: make(map[Action]HandlerFunc),
 	}
 }
 
 func (d *Dispatcher) Register(
-	op Operation,
+	action Action,
 	handler HandlerFunc,
 ) *Dispatcher {
 
@@ -31,26 +31,32 @@ func (d *Dispatcher) Register(
 		panic("dispatcher: nil handler")
 	}
 
-	if _, ok := d.handlers[op]; ok {
-		panic("dispatcher: duplicate handler " + string(op))
+	if _, ok := d.handlers[action]; ok {
+		panic(
+			"dispatcher: duplicate handler " +
+				string(action),
+		)
 	}
 
-	d.handlers[op] = handler
+	d.handlers[action] = handler
 
 	return d
 }
 
 func (d *Dispatcher) Dispatch(
 	ctx context.Context,
-	op Operation,
+	action Action,
 	payload any,
 ) (any, *aerrs.AppError) {
 
-	handler, ok := d.handlers[op]
+	handler, ok := d.handlers[action]
 
 	if !ok {
 		return nil, &core.HANDLER_NOT_FOUND
 	}
 
-	return handler(ctx, payload)
+	return handler(
+		ctx,
+		payload,
+	)
 }
