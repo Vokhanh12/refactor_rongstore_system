@@ -16,7 +16,7 @@ func dispatcherResultToProto(result dp.Result, mapActionData func(data any) *any
 		items = append(items, &protos.MutateResultItem{
 			OpId:  it.OpID,
 			Data:  mapActionData(it.Data),
-			Error: errToProto(it.Error),
+			Error: violationsToProto(it.Error),
 		})
 	}
 
@@ -25,7 +25,7 @@ func dispatcherResultToProto(result dp.Result, mapActionData func(data any) *any
 	}
 }
 
-func errToProto(it *aerrs.AppError) *protos.Error {
+func violationsToProto(it *aerrs.AppError) *protos.Error {
 
 	if it == nil {
 		return nil

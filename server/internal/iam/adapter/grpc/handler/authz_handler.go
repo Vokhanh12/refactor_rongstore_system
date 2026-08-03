@@ -26,9 +26,8 @@ func NewAuthzHandler(roleMutateUc uc.MutateRoleUsecase, logger logger.Logger) *A
 
 // RoleMutate implements [grpc.AuthzPort].
 func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRequest) (*commonv1.MutateResponse, error) {
-	batch := assemblers.RoleMutateRequestToBatch(req)
 
-	results := a.roleMutateUsecase.Execute(ctx, batch)
+	results := a.roleMutateUsecase.Execute(ctx, assemblers.RoleMutateRequestToBatch(req))
 
 	for _, item := range results.Items {
 		if item.Error != nil {

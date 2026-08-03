@@ -29,7 +29,25 @@ func BuildResponse(ctx context.Context, results dp.Result, mapActionData func(da
 	}
 }
 
-func BuildBatch[T any](
+func BuildMutateResponse(ctx context.Context, results dp.Result, mapActionData func(data any) *anypb.Any) *protos.MutateResponse {
+
+	requestctx := ctxutil.MustRequest(ctx)
+	locatectx := ctxutil.MustLocale(ctx)
+
+	return &protos.MutateResponse{
+		Metadata: &protos.Metadata{
+			TraceId:    requestctx.TraceID,
+			RequestId:  requestctx.RequestID,
+			Locale:     locatectx.Locale,
+			Region:     locatectx.Region,
+			Degraded:   false,
+			ServerTime: time.Now().UnixMilli(),
+		},
+		MutateResults: dispatcherResultToProto(results, mapActionData),
+	}
+}
+
+func BuildBatch[T any, R any](
 	items []T,
 	decode func(T) (
 		dp.Operation,
