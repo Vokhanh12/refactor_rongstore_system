@@ -28,10 +28,11 @@ type ViewResult struct {
 	ResourceId    string                 `protobuf:"bytes,2,opt,name=resource_id,json=resourceId,proto3" json:"resource_id,omitempty"`
 	Success       bool                   `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
 	Items         *anypb.Any             `protobuf:"bytes,4,opt,name=items,proto3" json:"items,omitempty"`
-	Error         *Error                 `protobuf:"bytes,7,opt,name=error,proto3" json:"error,omitempty"`
-	Pagination    *Pagination            `protobuf:"bytes,8,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	Warnings      []*Warning             `protobuf:"bytes,9,rep,name=warnings,proto3" json:"warnings,omitempty"`
-	Details       map[string]string      `protobuf:"bytes,10,rep,name=details,proto3" json:"details,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ClientErr     *ClientError           `protobuf:"bytes,5,opt,name=client_err,json=clientErr,proto3" json:"client_err,omitempty"`
+	ServerErr     *ServerError           `protobuf:"bytes,6,opt,name=server_err,json=serverErr,proto3" json:"server_err,omitempty"`
+	Pagination    *Pagination            `protobuf:"bytes,7,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Warnings      []*Warning             `protobuf:"bytes,8,rep,name=warnings,proto3" json:"warnings,omitempty"`
+	Details       map[string]string      `protobuf:"bytes,9,rep,name=details,proto3" json:"details,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -94,9 +95,16 @@ func (x *ViewResult) GetItems() *anypb.Any {
 	return nil
 }
 
-func (x *ViewResult) GetError() *Error {
+func (x *ViewResult) GetClientErr() *ClientError {
 	if x != nil {
-		return x.Error
+		return x.ClientErr
+	}
+	return nil
+}
+
+func (x *ViewResult) GetServerErr() *ServerError {
+	if x != nil {
+		return x.ServerErr
 	}
 	return nil
 }
@@ -126,21 +134,23 @@ var File_core_common_v1_resources_view_result_proto protoreflect.FileDescriptor
 
 const file_core_common_v1_resources_view_result_proto_rawDesc = "" +
 	"\n" +
-	"*core/common/v1/resources/view_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a$core/common/v1/resources/error.proto\x1a)core/common/v1/resources/pagination.proto\x1a&core/common/v1/resources/warning.proto\"\x91\x03\n" +
+	"*core/common/v1/resources/view_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a$core/common/v1/resources/error.proto\x1a)core/common/v1/resources/pagination.proto\x1a&core/common/v1/resources/warning.proto\"\xd7\x03\n" +
 	"\n" +
 	"ViewResult\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opId\x12\x1f\n" +
 	"\vresource_id\x18\x02 \x01(\tR\n" +
 	"resourceId\x12\x18\n" +
 	"\asuccess\x18\x03 \x01(\bR\asuccess\x12*\n" +
-	"\x05items\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\x05items\x12&\n" +
-	"\x05error\x18\a \x01(\v2\x10.common.v1.ErrorR\x05error\x125\n" +
+	"\x05items\x18\x04 \x01(\v2\x14.google.protobuf.AnyR\x05items\x125\n" +
 	"\n" +
-	"pagination\x18\b \x01(\v2\x15.common.v1.PaginationR\n" +
+	"client_err\x18\x05 \x01(\v2\x16.common.v1.ClientErrorR\tclientErr\x125\n" +
+	"\n" +
+	"server_err\x18\x06 \x01(\v2\x16.common.v1.ServerErrorR\tserverErr\x125\n" +
+	"\n" +
+	"pagination\x18\a \x01(\v2\x15.common.v1.PaginationR\n" +
 	"pagination\x12.\n" +
-	"\bwarnings\x18\t \x03(\v2\x12.common.v1.WarningR\bwarnings\x12<\n" +
-	"\adetails\x18\n" +
-	" \x03(\v2\".common.v1.ViewResult.DetailsEntryR\adetails\x1a:\n" +
+	"\bwarnings\x18\b \x03(\v2\x12.common.v1.WarningR\bwarnings\x12<\n" +
+	"\adetails\x18\t \x03(\v2\".common.v1.ViewResult.DetailsEntryR\adetails\x1a:\n" +
 	"\fDetailsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01BYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
@@ -159,24 +169,26 @@ func file_core_common_v1_resources_view_result_proto_rawDescGZIP() []byte {
 
 var file_core_common_v1_resources_view_result_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_core_common_v1_resources_view_result_proto_goTypes = []any{
-	(*ViewResult)(nil), // 0: common.v1.ViewResult
-	nil,                // 1: common.v1.ViewResult.DetailsEntry
-	(*anypb.Any)(nil),  // 2: google.protobuf.Any
-	(*Error)(nil),      // 3: common.v1.Error
-	(*Pagination)(nil), // 4: common.v1.Pagination
-	(*Warning)(nil),    // 5: common.v1.Warning
+	(*ViewResult)(nil),  // 0: common.v1.ViewResult
+	nil,                 // 1: common.v1.ViewResult.DetailsEntry
+	(*anypb.Any)(nil),   // 2: google.protobuf.Any
+	(*ClientError)(nil), // 3: common.v1.ClientError
+	(*ServerError)(nil), // 4: common.v1.ServerError
+	(*Pagination)(nil),  // 5: common.v1.Pagination
+	(*Warning)(nil),     // 6: common.v1.Warning
 }
 var file_core_common_v1_resources_view_result_proto_depIdxs = []int32{
 	2, // 0: common.v1.ViewResult.items:type_name -> google.protobuf.Any
-	3, // 1: common.v1.ViewResult.error:type_name -> common.v1.Error
-	4, // 2: common.v1.ViewResult.pagination:type_name -> common.v1.Pagination
-	5, // 3: common.v1.ViewResult.warnings:type_name -> common.v1.Warning
-	1, // 4: common.v1.ViewResult.details:type_name -> common.v1.ViewResult.DetailsEntry
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	3, // 1: common.v1.ViewResult.client_err:type_name -> common.v1.ClientError
+	4, // 2: common.v1.ViewResult.server_err:type_name -> common.v1.ServerError
+	5, // 3: common.v1.ViewResult.pagination:type_name -> common.v1.Pagination
+	6, // 4: common.v1.ViewResult.warnings:type_name -> common.v1.Warning
+	1, // 5: common.v1.ViewResult.details:type_name -> common.v1.ViewResult.DetailsEntry
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_core_common_v1_resources_view_result_proto_init() }

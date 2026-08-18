@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ErrorDetail struct {
+type Violation struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
@@ -31,20 +31,20 @@ type ErrorDetail struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ErrorDetail) Reset() {
-	*x = ErrorDetail{}
+func (x *Violation) Reset() {
+	*x = Violation{}
 	mi := &file_core_common_v1_resources_error_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ErrorDetail) String() string {
+func (x *Violation) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ErrorDetail) ProtoMessage() {}
+func (*Violation) ProtoMessage() {}
 
-func (x *ErrorDetail) ProtoReflect() protoreflect.Message {
+func (x *Violation) ProtoReflect() protoreflect.Message {
 	mi := &file_core_common_v1_resources_error_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -56,62 +56,62 @@ func (x *ErrorDetail) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ErrorDetail.ProtoReflect.Descriptor instead.
-func (*ErrorDetail) Descriptor() ([]byte, []int) {
+// Deprecated: Use Violation.ProtoReflect.Descriptor instead.
+func (*Violation) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_error_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ErrorDetail) GetField() string {
+func (x *Violation) GetField() string {
 	if x != nil {
 		return x.Field
 	}
 	return ""
 }
 
-func (x *ErrorDetail) GetMessage() string {
+func (x *Violation) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
-func (x *ErrorDetail) GetCode() string {
+func (x *Violation) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *ErrorDetail) GetHint() string {
+func (x *Violation) GetHint() string {
 	if x != nil {
 		return x.Hint
 	}
 	return ""
 }
 
-type ExternalError struct {
+type ClientError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	Details       []*ErrorDetail         `protobuf:"bytes,3,rep,name=details,proto3" json:"details,omitempty"`
+	Violations    []*Violation           `protobuf:"bytes,3,rep,name=violations,proto3" json:"violations,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ExternalError) Reset() {
-	*x = ExternalError{}
+func (x *ClientError) Reset() {
+	*x = ClientError{}
 	mi := &file_core_common_v1_resources_error_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ExternalError) String() string {
+func (x *ClientError) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ExternalError) ProtoMessage() {}
+func (*ClientError) ProtoMessage() {}
 
-func (x *ExternalError) ProtoReflect() protoreflect.Message {
+func (x *ClientError) ProtoReflect() protoreflect.Message {
 	mi := &file_core_common_v1_resources_error_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -123,33 +123,33 @@ func (x *ExternalError) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ExternalError.ProtoReflect.Descriptor instead.
-func (*ExternalError) Descriptor() ([]byte, []int) {
+// Deprecated: Use ClientError.ProtoReflect.Descriptor instead.
+func (*ClientError) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_error_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ExternalError) GetCode() string {
+func (x *ClientError) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *ExternalError) GetMessage() string {
+func (x *ClientError) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
-func (x *ExternalError) GetDetails() []*ErrorDetail {
+func (x *ClientError) GetViolations() []*Violation {
 	if x != nil {
-		return x.Details
+		return x.Violations
 	}
 	return nil
 }
 
-type InternalError struct {
+type ServerError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
 	Severity      string                 `protobuf:"bytes,2,opt,name=severity,proto3" json:"severity,omitempty"`
@@ -162,20 +162,20 @@ type InternalError struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *InternalError) Reset() {
-	*x = InternalError{}
+func (x *ServerError) Reset() {
+	*x = ServerError{}
 	mi := &file_core_common_v1_resources_error_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *InternalError) String() string {
+func (x *ServerError) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*InternalError) ProtoMessage() {}
+func (*ServerError) ProtoMessage() {}
 
-func (x *InternalError) ProtoReflect() protoreflect.Message {
+func (x *ServerError) ProtoReflect() protoreflect.Message {
 	mi := &file_core_common_v1_resources_error_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -187,54 +187,54 @@ func (x *InternalError) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use InternalError.ProtoReflect.Descriptor instead.
-func (*InternalError) Descriptor() ([]byte, []int) {
+// Deprecated: Use ServerError.ProtoReflect.Descriptor instead.
+func (*ServerError) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_error_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *InternalError) GetKey() string {
+func (x *ServerError) GetKey() string {
 	if x != nil {
 		return x.Key
 	}
 	return ""
 }
 
-func (x *InternalError) GetSeverity() string {
+func (x *ServerError) GetSeverity() string {
 	if x != nil {
 		return x.Severity
 	}
 	return ""
 }
 
-func (x *InternalError) GetRetryable() bool {
+func (x *ServerError) GetRetryable() bool {
 	if x != nil {
 		return x.Retryable
 	}
 	return false
 }
 
-func (x *InternalError) GetSource() string {
+func (x *ServerError) GetSource() string {
 	if x != nil {
 		return x.Source
 	}
 	return ""
 }
 
-func (x *InternalError) GetGrpcCode() string {
+func (x *ServerError) GetGrpcCode() string {
 	if x != nil {
 		return x.GrpcCode
 	}
 	return ""
 }
 
-func (x *InternalError) GetClientAction() string {
+func (x *ServerError) GetClientAction() string {
 	if x != nil {
 		return x.ClientAction
 	}
 	return ""
 }
 
-func (x *InternalError) GetServerAction() string {
+func (x *ServerError) GetServerAction() string {
 	if x != nil {
 		return x.ServerAction
 	}
@@ -243,8 +243,8 @@ func (x *InternalError) GetServerAction() string {
 
 type Error struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	External      *ExternalError         `protobuf:"bytes,1,opt,name=external,proto3" json:"external,omitempty"`
-	Internal      *InternalError         `protobuf:"bytes,2,opt,name=internal,proto3" json:"internal,omitempty"`
+	Client        *ClientError           `protobuf:"bytes,1,opt,name=client,proto3" json:"client,omitempty"`
+	Server        *ServerError           `protobuf:"bytes,2,opt,name=server,proto3" json:"server,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -279,16 +279,16 @@ func (*Error) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_error_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Error) GetExternal() *ExternalError {
+func (x *Error) GetClient() *ClientError {
 	if x != nil {
-		return x.External
+		return x.Client
 	}
 	return nil
 }
 
-func (x *Error) GetInternal() *InternalError {
+func (x *Error) GetServer() *ServerError {
 	if x != nil {
-		return x.Internal
+		return x.Server
 	}
 	return nil
 }
@@ -297,27 +297,29 @@ var File_core_common_v1_resources_error_proto protoreflect.FileDescriptor
 
 const file_core_common_v1_resources_error_proto_rawDesc = "" +
 	"\n" +
-	"$core/common/v1/resources/error.proto\x12\tcommon.v1\"e\n" +
-	"\vErrorDetail\x12\x14\n" +
+	"$core/common/v1/resources/error.proto\x12\tcommon.v1\"c\n" +
+	"\tViolation\x12\x14\n" +
 	"\x05field\x18\x01 \x01(\tR\x05field\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x12\n" +
 	"\x04code\x18\x03 \x01(\tR\x04code\x12\x12\n" +
-	"\x04hint\x18\x04 \x01(\tR\x04hint\"o\n" +
-	"\rExternalError\x12\x12\n" +
+	"\x04hint\x18\x04 \x01(\tR\x04hint\"q\n" +
+	"\vClientError\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x120\n" +
-	"\adetails\x18\x03 \x03(\v2\x16.common.v1.ErrorDetailR\adetails\"\xda\x01\n" +
-	"\rInternalError\x12\x10\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x124\n" +
+	"\n" +
+	"violations\x18\x03 \x03(\v2\x14.common.v1.ViolationR\n" +
+	"violations\"\xd8\x01\n" +
+	"\vServerError\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x1a\n" +
 	"\bseverity\x18\x02 \x01(\tR\bseverity\x12\x1c\n" +
 	"\tretryable\x18\x03 \x01(\bR\tretryable\x12\x16\n" +
 	"\x06source\x18\x04 \x01(\tR\x06source\x12\x1b\n" +
 	"\tgrpc_code\x18\x05 \x01(\tR\bgrpcCode\x12#\n" +
 	"\rclient_action\x18\x06 \x01(\tR\fclientAction\x12#\n" +
-	"\rserver_action\x18\a \x01(\tR\fserverAction\"s\n" +
-	"\x05Error\x124\n" +
-	"\bexternal\x18\x01 \x01(\v2\x18.common.v1.ExternalErrorR\bexternal\x124\n" +
-	"\binternal\x18\x02 \x01(\v2\x18.common.v1.InternalErrorR\binternalBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
+	"\rserver_action\x18\a \x01(\tR\fserverAction\"g\n" +
+	"\x05Error\x12.\n" +
+	"\x06client\x18\x01 \x01(\v2\x16.common.v1.ClientErrorR\x06client\x12.\n" +
+	"\x06server\x18\x02 \x01(\v2\x16.common.v1.ServerErrorR\x06serverBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
 	file_core_common_v1_resources_error_proto_rawDescOnce sync.Once
@@ -333,15 +335,15 @@ func file_core_common_v1_resources_error_proto_rawDescGZIP() []byte {
 
 var file_core_common_v1_resources_error_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_core_common_v1_resources_error_proto_goTypes = []any{
-	(*ErrorDetail)(nil),   // 0: common.v1.ErrorDetail
-	(*ExternalError)(nil), // 1: common.v1.ExternalError
-	(*InternalError)(nil), // 2: common.v1.InternalError
-	(*Error)(nil),         // 3: common.v1.Error
+	(*Violation)(nil),   // 0: common.v1.Violation
+	(*ClientError)(nil), // 1: common.v1.ClientError
+	(*ServerError)(nil), // 2: common.v1.ServerError
+	(*Error)(nil),       // 3: common.v1.Error
 }
 var file_core_common_v1_resources_error_proto_depIdxs = []int32{
-	0, // 0: common.v1.ExternalError.details:type_name -> common.v1.ErrorDetail
-	1, // 1: common.v1.Error.external:type_name -> common.v1.ExternalError
-	2, // 2: common.v1.Error.internal:type_name -> common.v1.InternalError
+	0, // 0: common.v1.ClientError.violations:type_name -> common.v1.Violation
+	1, // 1: common.v1.Error.client:type_name -> common.v1.ClientError
+	2, // 2: common.v1.Error.server:type_name -> common.v1.ServerError
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

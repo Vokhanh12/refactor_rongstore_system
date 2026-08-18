@@ -13,8 +13,9 @@ message ViewResult {
   string resource_id = 2;
   bool success = 3;
   google.protobuf.Any items = 4;
-  Error error = 7;               
-  Pagination pagination = 8;     
-  repeated Warning warnings = 9; 
-  map<string, string> details = 10; 
+  ClientError client_err = 5;           
+  ServerError server_err = 6;        
+  Pagination pagination = 7;     
+  repeated Warning warnings = 8; 
+  map<string, string> details = 9; 
 }

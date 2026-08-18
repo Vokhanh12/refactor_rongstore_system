@@ -11,6 +11,21 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
+func BuildMutateResult(ctx context.Context, Operation, err aerrs.AppError) *protos.MutateResult
+{
+
+
+	return &protos.MutateResult{
+		OpId:      opID,
+		ResourceId: resourceId,
+		Data:       &anypb.Any{},
+		Success:    false,
+		ClientErr:  &protos.ClientError{},
+		ServerErr:  &protos.ServerError{},
+	}
+}
+
+
 func BuildResponse(ctx context.Context, results dp.Result, mapActionData func(data any) *anypb.Any) *protos.MutateResponse {
 
 	requestctx := ctxutil.MustRequest(ctx)

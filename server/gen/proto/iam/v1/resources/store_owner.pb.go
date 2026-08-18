@@ -7,15 +7,15 @@
 package resourcespb
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
+	_ "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/common/v1"
+	v1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (

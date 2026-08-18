@@ -341,35 +341,7 @@
         }
       }
     },
-    "v1Error": {
-      "type": "object",
-      "properties": {
-        "external": {
-          "$ref": "#/definitions/v1ExternalError"
-        },
-        "internal": {
-          "$ref": "#/definitions/v1InternalError"
-        }
-      }
-    },
-    "v1ErrorDetail": {
-      "type": "object",
-      "properties": {
-        "field": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
-        },
-        "hint": {
-          "type": "string"
-        }
-      }
-    },
-    "v1ExternalError": {
+    "v1ClientError": {
       "type": "object",
       "properties": {
         "code": {
@@ -378,12 +350,23 @@
         "message": {
           "type": "string"
         },
-        "details": {
+        "violations": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1ErrorDetail"
+            "$ref": "#/definitions/v1Violation"
           }
+        }
+      }
+    },
+    "v1Error": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "$ref": "#/definitions/v1ClientError"
+        },
+        "server": {
+          "$ref": "#/definitions/v1ServerError"
         }
       }
     },
@@ -443,32 +426,6 @@
         }
       }
     },
-    "v1InternalError": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": "string"
-        },
-        "severity": {
-          "type": "string"
-        },
-        "retryable": {
-          "type": "boolean"
-        },
-        "source": {
-          "type": "string"
-        },
-        "grpcCode": {
-          "type": "string"
-        },
-        "clientAction": {
-          "type": "string"
-        },
-        "serverAction": {
-          "type": "string"
-        }
-      }
-    },
     "v1LoginRequest": {
       "type": "object",
       "properties": {
@@ -521,19 +478,10 @@
     "v1MutateResult": {
       "type": "object",
       "properties": {
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1MutateResultItem"
-          }
-        }
-      }
-    },
-    "v1MutateResultItem": {
-      "type": "object",
-      "properties": {
         "opId": {
+          "type": "string"
+        },
+        "resourceId": {
           "type": "string"
         },
         "data": {
@@ -542,8 +490,11 @@
         "success": {
           "type": "boolean"
         },
-        "error": {
-          "$ref": "#/definitions/v1Error"
+        "clientErr": {
+          "$ref": "#/definitions/v1ClientError"
+        },
+        "serverErr": {
+          "$ref": "#/definitions/v1ServerError"
         }
       }
     },
@@ -582,6 +533,32 @@
         },
         "pagination": {
           "$ref": "#/definitions/v1Pagination"
+        }
+      }
+    },
+    "v1ServerError": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string"
+        },
+        "grpcCode": {
+          "type": "string"
+        },
+        "clientAction": {
+          "type": "string"
+        },
+        "serverAction": {
+          "type": "string"
         }
       }
     },
@@ -674,8 +651,11 @@
         "items": {
           "$ref": "#/definitions/protobufAny"
         },
-        "error": {
-          "$ref": "#/definitions/v1Error"
+        "clientErr": {
+          "$ref": "#/definitions/v1ClientError"
+        },
+        "serverErr": {
+          "$ref": "#/definitions/v1ServerError"
         },
         "pagination": {
           "$ref": "#/definitions/v1Pagination"
@@ -692,6 +672,23 @@
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "v1Violation": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
         }
       }
     },

@@ -8,13 +8,11 @@ import "google/protobuf/any.proto";
 
 
 message MutateResult{
-  repeated MutateResultItem items = 1;
-}
-
-message MutateResultItem {
   string op_id = 1;
-  google.protobuf.Any data = 2;
-  bool success = 3;
-  Error error = 5;               
+  string resource_id = 2;
+  google.protobuf.Any data = 3;
+  bool success = 4;
+  ClientError client_err = 5;
+  ServerError server_err = 6;        
 }
 

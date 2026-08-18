@@ -7,7 +7,6 @@ import (
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
 	crm "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/assemblers"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/assemblers"
-	mps "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/assemblers"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
@@ -25,15 +24,39 @@ func NewAuthzHandler(roleMutateUc uc.MutateRoleUsecase, logger logger.Logger) *A
 }
 
 // RoleMutate implements [grpc.AuthzPort].
-func (a *AuthzHandler) RoleMutate(ctx context.Context, req *authzrs.RoleMutateRequest) (*commonv1.MutateResponse, error) {
+func (a *AuthzHandler) RoleMutate(
+	ctx context.Context,
+	req *authzrs.RoleMutateRequest,
+) (*commonv1.MutateResponse, error) {
 
-	results := a.roleMutateUsecase.Execute(ctx, assemblers.RoleMutateRequestToBatch(req))
+	results := make([]*commonv1.MutateResult, 0, len(req.Mutations))
 
-	for _, item := range results.Items {
-		if item.Error != nil {
-			a.logger.Error(ctx, "iam_handler.role_mutate", item.Error.Internal, nil)
+	for _, mutation := range req.Mutations {
+		op, err := assemblers.RoleMToBatch(mutation)
+		if err != nil {
+			results = append(results, crm.BuildMutateResult(ctx, err))
+			continue
 		}
+
+		result, err := a.roleMutateUsecase.Execute(
+			ctx,
+			op.Action,
+			op.Payload,
+		)
+
+		if err != nil {
+			results = append(results, crm.BuildMutateResult(ctx, err))
+			continue
+		}
+
+		results = append(results, assemblers.RoleMToHandler(result))
 	}
 
-	return crm.BuildMutateResponse(ctx, results, mps.EncoreRoleMutation), nil
+	// for _, r := range results {
+	// 	if item != nil {
+	// 		a.logger.Error(ctx, "iam_handler.role_mutate", item.Error.Internal, nil)
+	// 	}
+	// }
+
+	return crm.BuildMutate(ctx, results), nil
 }
