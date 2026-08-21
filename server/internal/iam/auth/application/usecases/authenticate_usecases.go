@@ -4,16 +4,17 @@ import (
 	"context"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
-	jwtport "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/ports"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 )
 
 type AuthenticateUsecase struct {
-	tokenDecoreder jwtport.TokenDecoreder
+	tokenDecoreder security.TokenDecoreder
 }
 
 func NewAuthenticateUsecase(
-	tokenDecoreder jwtport.TokenDecoreder,
+	tokenDecoreder security.TokenDecoreder,
 ) *AuthenticateUsecase {
 	return &AuthenticateUsecase{
 		tokenDecoreder: tokenDecoreder,
@@ -25,13 +26,23 @@ func (u *AuthenticateUsecase) Execute(
 	cmd com.AuthenticateCommand,
 ) (*com.AuthenticateCommandResult, *aerrs.AppError) {
 
-	payload, err := u.tokenDecoreder.DecorePayload(cmd.Token)
+	token, err := u.tokenDecoreder.DecoreToken(cmd.Token)
+
 	if err != nil {
-		return nil, err
+		return &com.AuthenticateCommandResult{
+			Allowed: false,
+		}, err
 	}
 
+	ctx = ctxutil.WithUser(
+		ctx,
+		ctxutil.UserContext{
+			UserID:      token.UserID,
+			RoleKeyStrs: token.RoleKeyStrs,
+		},
+	)
+
 	return &com.AuthenticateCommandResult{
-		UserID:      payload.UserID,
-		RoleKeyStrs: payload.RoleKeyStrs,
+		Allowed: true,
 	}, nil
 }

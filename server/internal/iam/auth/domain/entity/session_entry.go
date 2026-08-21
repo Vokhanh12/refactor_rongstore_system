@@ -1,6 +1,6 @@
 package entities
 
-import "time"
+import "../entities/time"
 
 type SessionEntry struct {
 	SessionID string

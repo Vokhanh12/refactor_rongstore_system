@@ -1,10 +1,19 @@
 package ctxutil
 
-import "context"
+import (
+	"context"
+)
 
 type UserContext struct {
-	UserID      string
-	RoleKeyStrs []string
+	UserID       string
+	RoleScopes   []roleScope
+	AuthzVersion int
+}
+
+type roleScope struct {
+	roleID    string
+	scopeID   string
+	scopeType string
 }
 
 type userCtxKeyType struct{}

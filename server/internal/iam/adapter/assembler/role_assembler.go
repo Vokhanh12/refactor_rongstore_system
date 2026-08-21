@@ -3,6 +3,7 @@ package assemblers
 import (
 	"fmt"
 
+	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
 	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
@@ -10,9 +11,10 @@ import (
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
 	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
-func RoleMToBatch(
+func RoleMToUsecase(
 	m *authzrs.RoleMutation,
 ) (dp.Operation, *aerrs.AppError) {
 
@@ -105,5 +107,27 @@ func RoleMToBatch(
 			"unsupported role mutation: %T",
 			m.Action,
 		))
+	}
+}
+
+func RoleMToHandler(op dp.Operation) commonv1.MutateResult {
+	switch op.Action {
+	case authzuc.RoleCreate:
+		r := op.Payload.(*cmd.CreateRoleCommandResult)
+
+		return commonv1.MutateResult{
+			OpId:       op.OpID,
+			ResourceId: "",
+			Data:       &anypb.Any{},
+			Success:    false,
+			ClientErr:  &commonv1.ClientError{},
+			ServerErr:  &commonv1.ServerError{},
+		}
+
+	case authzuc.RoleUpdate:
+		r := op.Payload.(*cmd.UpdateRoleCommandResult)
+
+	case authzuc.RoleDelete:
+		r := op.Payload.(*cmd.DeleteRoleCommandResult)
 	}
 }

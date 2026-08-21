@@ -1,8 +1,9 @@
 package command
 
 type AuthorizeCommand struct {
-	UserID      string
-	TenantID    string
+	UserID  string
+	ScopeID string
+
 	RoleKeyStrs []string
 
 	Resource   string

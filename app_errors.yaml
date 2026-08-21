@@ -317,16 +317,6 @@ services:
             retryable: false
 
           - code: AUTH-SEC-004
-            key: JWT_PAYLOAD_INVALID
-            component: jwt
-            tags: [security]
-            http_status: 401
-            grpc_code: Unauthenticated
-            message: "Invalid token payload"
-            severity: S3
-            retryable: false
-
-          - code: AUTH-SEC-005
             key: INVALID_CREDENTIALS
             component: auth_service
             tags: [security]

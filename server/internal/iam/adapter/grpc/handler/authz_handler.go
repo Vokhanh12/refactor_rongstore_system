@@ -32,7 +32,7 @@ func (a *AuthzHandler) RoleMutate(
 	results := make([]*commonv1.MutateResult, 0, len(req.Mutations))
 
 	for _, mutation := range req.Mutations {
-		op, err := assemblers.RoleMToBatch(mutation)
+		op, err := assemblers.RoleMToUsecase(mutation)
 		if err != nil {
 			results = append(results, crm.BuildMutateResult(ctx, err))
 			continue
@@ -49,7 +49,7 @@ func (a *AuthzHandler) RoleMutate(
 			continue
 		}
 
-		results = append(results, assemblers.RoleMToHandler(result))
+		results = append(results, assemblers.RoleMToHandler(op, result))
 	}
 
 	// for _, r := range results {

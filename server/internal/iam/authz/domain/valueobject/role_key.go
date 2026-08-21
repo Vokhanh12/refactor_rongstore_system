@@ -15,9 +15,10 @@ import (
 // VALUE OBJECT
 // ============================================================
 
-type RoleKey struct {
-	roleCode string
-	scopeID  *uuid.UUID
+type RoleScope struct {
+	roleID    *uuid.UUID
+	scopeID   *uuid.UUID
+	scopeType string
 }
 
 // ============================================================

@@ -5,6 +5,5 @@ type AuthenticateCommand struct {
 }
 
 type AuthenticateCommandResult struct {
-	UserID      string
-	RoleKeyStrs []string
+	Allowed bool
 }
