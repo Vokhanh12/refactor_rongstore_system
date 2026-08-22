@@ -4,20 +4,20 @@ import (
 	"context"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
+	lctx "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/localcontext"
+	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 )
 
 type AuthenticateUsecase struct {
-	tokenDecoreder security.TokenDecoreder
+	tokenDecoder sec.TokenDecoder
 }
 
 func NewAuthenticateUsecase(
-	tokenDecoreder security.TokenDecoreder,
+	tokendecoder sec.TokenDecoder,
 ) *AuthenticateUsecase {
 	return &AuthenticateUsecase{
-		tokenDecoreder: tokenDecoreder,
+		tokenDecoder: tokenDecoder,
 	}
 }
 
@@ -26,7 +26,7 @@ func (u *AuthenticateUsecase) Execute(
 	cmd com.AuthenticateCommand,
 ) (*com.AuthenticateCommandResult, *aerrs.AppError) {
 
-	token, err := u.tokenDecoreder.DecoreToken(cmd.Token)
+	claims, err := u.tokenDecoder.DecodeAccessToken(cmd.AccessToken)
 
 	if err != nil {
 		return &com.AuthenticateCommandResult{
@@ -34,11 +34,11 @@ func (u *AuthenticateUsecase) Execute(
 		}, err
 	}
 
-	ctx = ctxutil.WithUser(
-		ctx,
-		ctxutil.UserContext{
-			UserID:      token.UserID,
-			RoleKeyStrs: token.RoleKeyStrs,
+	ctx = lctx.WithIdentity(ctx,
+		lctx.IdentityContext{
+			UserID:       claims.Subject,
+			RoleScopes:   claims.Roles,
+			AuthzVersion: claims.AuthzVersion,
 		},
 	)
 

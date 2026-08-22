@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	authsur "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/error"
@@ -17,37 +18,21 @@ var _ authsur.TokenDecoder = (*JWTProvider)(nil)
 var _ authsur.TokenSigner = (*JWTProvider)(nil)
 
 type JWTProvider struct {
-	secret []byte
-	issuer string
-	ttl    time.Duration
+	secret     []byte
+	issuer     string
+	audience   string
+	accessTTL  time.Duration
+	refreshTTL time.Duration
 }
 
-func NewJWTProvider(secret []byte, issuer string, ttl time.Duration) *JWTProvider {
+func NewJWTProvider(secret []byte, issuer string, audience string, accessTTL time.Duration, refreshTTL time.Duration) *JWTProvider {
 	return &JWTProvider{
-		secret: secret,
-		issuer: issuer,
-		ttl:    ttl,
+		secret:     secret,
+		issuer:     issuer,
+		audience:   audience,
+		accessTTL:  accessTTL,
+		refreshTTL: refreshTTL,
 	}
-}
-
-func (j *JWTProvider) Sign(userID string, orgID string, unitID string, roles []string) (string, error) {
-	now := time.Now()
-
-	claims := Claims{
-		UserID: userID,
-		OrgID:  orgID,
-		UnitID: unitID,
-		Roles:  roles,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    j.issuer,
-			IssuedAt:  jwt.NewNumericDate(now),
-			ExpiresAt: jwt.NewNumericDate(now.Add(j.ttl)),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	return token.SignedString(j.secret)
 }
 
 // DecodeAccessToken implements [security.TokenDecoder].
@@ -156,8 +141,30 @@ func (j *JWTProvider) DecodeRefreshToken(
 	return &claims, nil
 }
 
-// SignAccessToken implements [security.TokenSigner].
-func (j *JWTProvider) SignAccessToken(claims authsur.AccessTokenClaims) (string, *aerr.AppError) {
+func (j *JWTProvider) SignAccessToken(
+	userID string,
+	tenantID string,
+	roles []authsur.RoleScope,
+	authzVersion int,
+) (string, *aerr.AppError) {
+
+	now := time.Now()
+
+	claims := authsur.AccessTokenClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   userID,
+			Issuer:    j.issuer,
+			Audience:  []string{j.audience},
+			IssuedAt:  jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(now.Add(j.accessTTL)),
+			ID:        uuid.NewString(),
+		},
+
+		TenantID:     tenantID,
+		Roles:        roles,
+		AuthzVersion: authzVersion,
+	}
+
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		claims,
