@@ -10,14 +10,14 @@ import (
 )
 
 type AuthenticateUsecase struct {
-	tokenDecoder sec.TokenDecoder
+	tokenParser sec.TokenParser
 }
 
 func NewAuthenticateUsecase(
-	tokendecoder sec.TokenDecoder,
+	td sec.TokenParser,
 ) *AuthenticateUsecase {
 	return &AuthenticateUsecase{
-		tokenDecoder: tokenDecoder,
+		tokenParser: td,
 	}
 }
 
@@ -26,7 +26,7 @@ func (u *AuthenticateUsecase) Execute(
 	cmd com.AuthenticateCommand,
 ) (*com.AuthenticateCommandResult, *aerrs.AppError) {
 
-	claims, err := u.tokenDecoder.DecodeAccessToken(cmd.AccessToken)
+	claims, err := u.tokenParser.ParseAccessTokenClaims(cmd.Payload)
 
 	if err != nil {
 		return &com.AuthenticateCommandResult{

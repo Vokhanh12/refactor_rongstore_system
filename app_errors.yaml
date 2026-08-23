@@ -11,13 +11,14 @@ conventions:
   code_format: "<DOMAIN>-<LAYER>-<NNN>"
 
   layers:
-    DOM: "Business invariant / domain rule"
-    APP: "Usecase orchestration / workflow"
-    TRANS: "Transport / DTO / request"
-    PARSE: "Technical parsing / conversion"
-    INFRA: "Infrastructure / external system"
-    SEC: "Authentication / authorization"
-    SYS: "Unexpected / fallback / system lifecycle"
+    DOM: "Domain rule / business invariant"
+    APP: "Application workflow / usecase orchestration"
+    TRANSPORT: "Transport / external contract"
+    PARSE: "Parsing / input interpretation"
+    SERIALIZER: "Serialization / data representation"
+    SEC: "Authentication / authorization / security"
+    INFRA: "Infrastructure / external dependency"
+    SYS: "System / unexpected failure"
 
   severity_scale:
     S1: "Critical outage / security risk"
@@ -156,8 +157,8 @@ services:
           severity: S3
           retryable: false
 
-      TRANS:
-        - code: CORE-TRANS-001
+      TRANSPORT:
+        - code: CORE-TRANSPORT-001
           key: INVALID_REQUEST_PAYLOAD
           component: transport
           tags: [transport]
@@ -198,14 +199,36 @@ services:
           severity: S3
           retryable: false
 
-      INFRA:
-        - code: CORE-INFRA-001
+      SERIALIZER:
+        - code: CORE-SERIALIZER-001
           key: JSON_SERIALIZATION_FAILED
-          component: serializer
-          tags: [infra]
+          component: json
+          tags: [serializer, json]
           http_status: 500
           grpc_code: Internal
-          message: "Failed to serialize request payload"
+          message: "Failed to serialize payload"
+          severity: S2
+          retryable: false
+
+        - code: CORE-SERIALIZER-002
+          key: JSON_DESERIALIZATION_FAILED
+          component: json
+          tags: [serializer, json]
+          http_status: 500
+          grpc_code: Internal
+          message: "Failed to deserialize payload"
+          severity: S2
+          retryable: false
+
+
+      INFRA:
+        - code: CORE-INFRA-001
+          key: NIL
+          component: nil
+          tags: [nil, nil]
+          http_status: 500
+          grpc_code: Nil
+          message: "Nil"
           severity: S2
           retryable: false
 
@@ -274,8 +297,8 @@ services:
             severity: S3
             retryable: false
 
-        TRANS:
-          - code: AUTH-TRANS-001
+        TRANSPORT:
+          - code: AUTH-TRANSPORT-001
             key: LOGIN_PAYLOAD_INVALID
             component: auth_transport
             tags: [transport]
@@ -356,8 +379,8 @@ services:
             severity: S3
             retryable: false
 
-        TRANS:
-          - code: AUTHZ-TRANS-001
+        TRANSPORT:
+          - code: AUTHZ-TRANSPORT-001
             key: AUTHORIZATION_INVALID
             component: authz_transport
             tags: [transport]
@@ -367,7 +390,7 @@ services:
             severity: S3
             retryable: false
 
-          - code: AUTHZ-TRANS-002
+          - code: AUTHZ-TRANSPORT-002
             key: RESOURCE_OR_ACTION_REQUIRED
             component: authz_transport
             tags: [transport]
@@ -377,7 +400,7 @@ services:
             severity: S3
             retryable: false
 
-          - code: AUTHZ-TRANS-003
+          - code: AUTHZ-TRANSPORT-003
             key: ROLE_REQUIRED
             component: authz_transport
             tags: [transport]

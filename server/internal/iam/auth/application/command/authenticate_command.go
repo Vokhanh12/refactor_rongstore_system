@@ -1,7 +1,7 @@
 package command
 
 type AuthenticateCommand struct {
-	AccessToken string
+	Payload string
 }
 
 type AuthenticateCommandResult struct {

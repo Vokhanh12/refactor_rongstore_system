@@ -6,13 +6,14 @@ import (
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/grpc"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/usecases"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 func AuthUnaryInterceptor(
-	authenticateUC *usecases.AuthenticateUsecase,
+	authUc *usecases.AuthenticateUsecase,
 ) grpc.UnaryServerInterceptor {
 
 	return func(
@@ -22,17 +23,20 @@ func AuthUnaryInterceptor(
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 
-		md, _ := metadata.FromIncomingContext(ctx)
-
-		values := md.Get("authorization")
-		if len(values) == 0 {
-			return handler(ctx, req)
+		md, ok := metadata.FromIncomingContext(ctx)
+		if !ok {
+			return nil, status.Error(codes.Unauthenticated, "missing metadata")
 		}
 
-		result, err := authenticateUC.Execute(
+		values := md.Get("x-jwt-payload")
+		if len(values) == 0 {
+			return nil, status.Error(codes.Unauthenticated, "missing jwt payload")
+		}
+
+		result, err := authUc.Execute(
 			ctx,
 			cmd.AuthenticateCommand{
-				Token: values[0],
+				Payload: values[0],
 			},
 		)
 
@@ -42,14 +46,6 @@ func AuthUnaryInterceptor(
 				err.Message,
 			)
 		}
-
-		ctx = ctxutil.WithUser(
-			ctx,
-			ctxutil.UserContext{
-				UserID:      result.UserID,
-				RoleKeyStrs: result.RoleKeyStrs,
-			},
-		)
 
 		return handler(ctx, req)
 	}
