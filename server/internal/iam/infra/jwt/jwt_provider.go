@@ -31,8 +31,8 @@ func NewJWTProvider(secret []byte, issuer string, audience string, accessTTL tim
 	}
 }
 
-// ParseAccessTokenClaims implements [security.TokenParser].
-func (j *JWTProvider) ParseAccessTokenClaims(payload string) (authsur.AccessTokenClaims, *aerr.AppError) {
+// ParseAccessToken implements [security.TokenParser].
+func (j *JWTProvider) ParseAccessToken(payload string) (authsur.AccessTokenClaims, *aerr.AppError) {
 	var claims authsur.AccessTokenClaims
 
 	if err := serializer.Unmarshal([]byte(payload), &claims); err != nil {
@@ -44,7 +44,6 @@ func (j *JWTProvider) ParseAccessTokenClaims(payload string) (authsur.AccessToke
 
 func (j *JWTProvider) SignAccessToken(
 	userID string,
-	tenantID string,
 	roles []authsur.RoleScope,
 	authzVersion int,
 ) (string, *aerr.AppError) {
@@ -61,7 +60,6 @@ func (j *JWTProvider) SignAccessToken(
 			ID:        uuid.NewString(),
 		},
 
-		TenantID:     tenantID,
 		Roles:        roles,
 		AuthzVersion: authzVersion,
 	}

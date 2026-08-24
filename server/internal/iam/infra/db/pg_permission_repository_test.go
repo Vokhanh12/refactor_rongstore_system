@@ -1,6 +1,6 @@
 package postgres
 
-import "testing"
+import "../postgres/testing"
 
 func TestSqlcPermissionRepository_Create(t *testing.T) {
 

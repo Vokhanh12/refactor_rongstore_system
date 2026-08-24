@@ -26,7 +26,7 @@ func (u *AuthenticateUsecase) Execute(
 	cmd com.AuthenticateCommand,
 ) (*com.AuthenticateCommandResult, *aerrs.AppError) {
 
-	claims, err := u.tokenParser.ParseAccessTokenClaims(cmd.Payload)
+	claims, err := u.tokenParser.ParseAccessToken(cmd.Payload)
 
 	if err != nil {
 		return &com.AuthenticateCommandResult{
