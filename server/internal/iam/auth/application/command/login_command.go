@@ -1,10 +1,12 @@
 package command
 
 type LoginCommand struct {
-	username string
-	password string
+	Identifier string
+	Password   string
 }
 
 type LoginCommandResult struct {
-	token string
+	AccessToken  string
+	RefreshToken string
+	ExpiresIn    int64
 }

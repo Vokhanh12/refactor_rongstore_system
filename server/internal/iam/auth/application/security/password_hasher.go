@@ -2,5 +2,5 @@ package security
 
 type PasswordHasher interface {
 	Hash(password string) (string, error)
-	Compare(hash, password string) bool
+	Verify(password, encodedHash string) bool
 }
