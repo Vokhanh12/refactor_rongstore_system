@@ -1,1 +1,1 @@
-package rediscache
+package cache

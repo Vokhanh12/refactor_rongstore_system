@@ -2,29 +2,20 @@ package serializer
 
 import (
 	"encoding/json"
-
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-func Marshal(v any) ([]byte, *aerrs.AppError) {
+func Marshal(v any) ([]byte, error) {
 	data, err := json.Marshal(v)
 	if err != nil {
-		return nil, aerrs.New(
-			core.JSON_SERIALIZATION_FAILED,
-			aerrs.WithCauseDetail(err),
-		)
+		wrap("marshal", err)
 	}
 
 	return data, nil
 }
 
-func Unmarshal(data []byte, v any) *aerrs.AppError {
+func Unmarshal(data []byte, v any) error {
 	if err := json.Unmarshal(data, v); err != nil {
-		return aerrs.New(
-			core.JSON_DESERIALIZATION_FAILED,
-			aerrs.WithCauseDetail(err),
-		)
+		wrap("unmarshal", err)
 	}
 
 	return nil

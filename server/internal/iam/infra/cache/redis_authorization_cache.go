@@ -1,9 +1,4 @@
-// ============================================================
-// AUTHZ REDIS ADAPTER
-// internal/iam/authz/infrastructure/caches/rediscache/authorization_cache.go
-// ============================================================
-
-package rediscache
+package cache
 
 import (
 	"context"
