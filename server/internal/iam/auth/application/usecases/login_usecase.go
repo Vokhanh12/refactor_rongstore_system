@@ -7,7 +7,9 @@ import (
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
 	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	repo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/repository"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/valueobject"
+	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/errors"
+	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type LoginUsecase struct {
@@ -33,9 +35,14 @@ func (u *LoginUsecase) Execute(
 	cmd com.LoginCommand,
 ) (*com.LoginCommandResult, error) {
 
+	identifier, err := vo.NewLoginIdentifier(cmd.Identifier)
+	if err != nil {
+		return nil, err
+	}
+
 	credential, err := u.credentialRepo.FindByIdentifier(
 		ctx,
-		cmd.Identifier,
+		identifier.Value(),
 	)
 
 	if err != nil {
@@ -46,7 +53,7 @@ func (u *LoginUsecase) Execute(
 		cmd.Password,
 		credential.PasswordHash,
 	) {
-		return nil, aerrs.New(
+		return nil, aerr.New(
 			errs.INVALID_CREDENTIALS,
 		)
 	}
@@ -56,12 +63,8 @@ func (u *LoginUsecase) Execute(
 		nil,
 		credential.AuthzVersion,
 	)
-
 	if err != nil {
-		return nil, aerrs.New(
-			errs.JWT_SIGN_FAILED,
-			aerrs.WithCauseDetail(err),
-		)
+		return nil, err
 	}
 
 	refreshToken, err := u.tokenSigner.SignRefreshToken(
@@ -72,10 +75,7 @@ func (u *LoginUsecase) Execute(
 	)
 
 	if err != nil {
-		return nil, aerrs.New(
-			errs.JWT_SIGN_FAILED,
-			aerrs.WithCauseDetail(err),
-		)
+		return nil, err
 	}
 
 	return &com.LoginCommandResult{

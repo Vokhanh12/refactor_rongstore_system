@@ -2,7 +2,7 @@ package rediscache
 
 import "fmt"
 
-func (c *RedisCache) Wrap(operation string, err error) error {
+func (c *RedisCache) wrap(operation string, err error) error {
 	if err == nil {
 		return nil
 	}

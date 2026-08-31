@@ -1,6 +1,6 @@
 package fields
 
-import "../../postgres/fields/github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/querydsl"
+import "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/querydsl"
 
 var RoleFields = map[string]querydsl.Field{
 

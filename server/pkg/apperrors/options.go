@@ -1,7 +1,5 @@
 package apperrors
 
-// ===== AppError options =====
-
 func WithMessage(msg string) func(*AppError) {
 	return func(e *AppError) {
 		e.Message = msg
@@ -20,26 +18,26 @@ func WithData(data map[string]interface{}) func(*AppError) {
 	}
 }
 
-func WithCauseDetail(err error) func(*AppError) {
+func WithErr(err error) func(*AppError) {
 	return func(e *AppError) {
-		e.CauseDetail = err
+		e.Err = err
 	}
 }
 
-func WithErrorDetails(details []Violation) func(*AppError) {
+func WithViolation(details []Violation) func(*AppError) {
 	return func(e *AppError) {
-		e.ErrorDetails = copyDetails(details)
+		e.Violations = copyDetails(details)
 	}
 }
 
-func WithAppendErrorDetails(details []Violation) func(*AppError) {
+func WithAppendViolations(details []Violation) func(*AppError) {
 	return func(e *AppError) {
-		e.ErrorDetails = append(e.ErrorDetails, details...)
+		e.Violations = append(e.Violations, details...)
 	}
 }
 
-func WithAppendErrorDetail(detail Violation) func(*AppError) {
+func WithAppendViolation(detail Violation) func(*AppError) {
 	return func(e *AppError) {
-		e.ErrorDetails = append(e.ErrorDetails, detail)
+		e.Violations = append(e.Violations, detail)
 	}
 }

@@ -3,11 +3,11 @@ package query
 import (
 	"context"
 
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 )
 
 type RoleQueryRepository interface {
-	Search(ctx context.Context, q SearchRoleQuery) (SearchRoleQueryResult, *aerrs.AppError)
-	Export(ctx context.Context, q ExportRoleQuery) (ExportRoleQueryResult, *aerrs.AppError)
-	GetById(ctx context.Context, q GetRoleQuery) (GetRoleQueryResult, *aerrs.AppError)
+	Search(ctx context.Context, q query.SearchRoleQuery) (query.SearchRoleQueryResult, error)
+	Export(ctx context.Context, q query.ExportRoleQuery) (query.ExportRoleQueryResult, error)
+	GetById(ctx context.Context, q query.GetRoleQuery) (query.GetRoleQueryResult, error)
 }

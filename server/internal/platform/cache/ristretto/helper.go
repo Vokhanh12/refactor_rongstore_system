@@ -2,7 +2,7 @@ package ristretto
 
 import "fmt"
 
-func (c *RistrettoCache) Wrap(operation string, err error) error {
+func (c *RistrettoCache) wrap(operation string, err error) error {
 	if err == nil {
 		return nil
 	}

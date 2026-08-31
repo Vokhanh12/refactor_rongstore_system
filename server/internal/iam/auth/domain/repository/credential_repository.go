@@ -1,5 +1,10 @@
 package repository
 
+import "context"
+
 type CredentialRepository interface {
-	fin
+	FindByIdentifier(
+		ctx context.Context,
+		identifier string,
+	) (*Credential, error)
 }

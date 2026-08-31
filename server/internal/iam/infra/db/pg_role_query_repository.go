@@ -3,38 +3,46 @@ package postgres
 import (
 	"context"
 
-	authzrepos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	q "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/fields"
-	srs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/postgres/scanrows"
-	pg "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/postgres"
+	"github.com/jackc/pgx/v5/pgxpool"
+	repo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/repository"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/db/fields"
+	srs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/infra/db/scanrows"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/pgx"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/querydsl"
+	sqlc "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 )
 
-var _ authzrepos.RoleQueryRepository = (*RoleQueryRepository)(nil)
+var _ repo.RoleQueryRepository = (*PgRoleQueryRepository)(nil)
 
-type RoleQueryRepository struct {
-	dba     *pg.DbAdapter
+type PgRoleQueryRepository struct {
+	queries *sqlc.Queries
+	pool    *pgxpool.Pool
 	builder *querydsl.Builder
 }
 
-func NewRoleQueryRepository(
-	dba *pg.DbAdapter,
-) authzrepos.RoleQueryRepository {
-
-	return &RoleQueryRepository{
-		dba:     dba,
+func NewRoleQueryRepository(q *sqlc.Queries, p *pgxpool.Pool, b *querydsl.Builder) repo.RoleQueryRepository {
+	return &PgRoleQueryRepository{
+		queries: q,
+		pool:    p,
 		builder: querydsl.NewBuilder(fields.RoleFields),
 	}
 }
 
-func (s *RoleQueryRepository) Search(ctx context.Context, query q.SearchRoleQuery) (
-	q.SearchRoleQueryResult,
-	*apperrors.AppError,
-) {
+// Export implements [query.RoleQueryRepository].
+func (p *PgRoleQueryRepository) Export(ctx context.Context, q query.ExportRoleQuery) (query.ExportRoleQueryResult, error) {
+	panic("unimplemented")
+}
+
+// GetById implements [query.RoleQueryRepository].
+func (p *PgRoleQueryRepository) GetById(ctx context.Context, q query.GetRoleQuery) (query.GetRoleQueryResult, error) {
+	panic("unimplemented")
+}
+
+// Search implements [query.RoleQueryRepository].
+func (p *PgRoleQueryRepository) Search(ctx context.Context, q query.SearchRoleQuery) (query.SearchRoleQueryResult, error) {
 
 	qb := sq.
 		Select(
@@ -55,56 +63,39 @@ func (s *RoleQueryRepository) Search(ctx context.Context, query q.SearchRoleQuer
 		From("roles r").
 		PlaceholderFormat(sq.Dollar)
 
-	qb = s.builder.ApplySearch(
+	qb = p.builder.ApplySearch(
 		qb,
-		query.Criteria.Keyword,
+		q.Criteria.Keyword,
 	)
 
-	qb = s.builder.ApplyFilters(
+	qb = p.builder.ApplyFilters(
 		qb,
-		query.Criteria.Filters,
+		q.Criteria.Filters,
 	)
 
-	qb = s.builder.ApplySorts(
+	qb = p.builder.ApplySorts(
 		qb,
-		query.Criteria.Sorts,
+		q.Criteria.Sorts,
 	)
 
-	qb = s.builder.ApplyPagination(
+	qb = p.builder.ApplyPagination(
 		qb,
-		query.Criteria.Pagination,
+		q.Criteria.Pagination,
 	)
 
-	sql, args, err := pg.BuildSQL(qb)
-
-	if err != nil {
-		return q.SearchRoleQueryResult{}, err
-	}
-
-	results, err := pg.QueryMany(
+	results, err := pgx.QueryMany(
 		ctx,
-		s.dba.P,
-		sql,
-		args,
+		p.pool,
+		qb,
 		srs.ScanRoleView,
 	)
 
 	if err != nil {
-		return q.SearchRoleQueryResult{}, err
+		return query.SearchRoleQueryResult{}, err
 	}
 
-	return q.SearchRoleQueryResult{
+	return query.SearchRoleQueryResult{
 		Items: results,
 		Total: len(results),
 	}, nil
-}
-
-// Export implements [query.RoleQuery].
-func (s *RoleQueryRepository) Export(ctx context.Context, q q.ExportRoleQuery) (q.ExportRoleQueryResult, *apperrors.AppError) {
-	panic("unimplemented")
-}
-
-// GetById implements [query.RoleQueryRepository].
-func (s *RoleQueryRepository) GetById(ctx context.Context, q q.GetRoleQuery) (q.GetRoleQueryResult, *apperrors.AppError) {
-	panic("unimplemented")
 }

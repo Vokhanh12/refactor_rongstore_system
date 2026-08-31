@@ -7,14 +7,14 @@ func MergeErrors(errs ...*AppError) *AppError {
 		if err == nil {
 			continue
 		}
-		details = append(details, err.ErrorDetails...)
+		details = append(details, err.Violations...)
 	}
 
 	if len(details) == 0 {
 		return nil
 	}
 
-	return New(errs[0], WithAppendErrorDetails(details))
+	return New(errs[0], WithAppendViolations(details))
 }
 
 func copyError(src AppError) *AppError {
