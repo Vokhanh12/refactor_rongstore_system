@@ -29,7 +29,7 @@ func InitializeIAM(
 		infra.Postgres,
 	)
 
-	queryRepo := sqlc.NewSqlcStoreOwnerQueryRepository(
+	queryRepo := sqlc.NewSqlcStoreOwnerReader(
 		infra.Postgres,
 	)
 

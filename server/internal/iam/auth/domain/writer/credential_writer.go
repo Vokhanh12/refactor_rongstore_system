@@ -1,6 +1,6 @@
 package repository
 
-import "context"
+import "../repository/context"
 
 type CredentialRepository interface {
 	FindByIdentifier(

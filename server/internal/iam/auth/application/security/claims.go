@@ -1,6 +1,9 @@
 package security
 
-import "github.com/golang-jwt/jwt/v5"
+import (
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+)
 
 const (
 	TokenTypeAccess  = "access"
@@ -23,7 +26,7 @@ type RefreshTokenClaims struct {
 }
 
 type RoleScope struct {
-	RoleID    string `json:"role_id"`
-	ScopeID   string `json:"scope_id"`
-	ScopeType string `json:"scope_type"`
+	RoleID    uuid.UUID `json:"role_id"`
+	ScopeID   uuid.UUID `json:"scope_id"`
+	ScopeType string    `json:"scope_type"`
 }

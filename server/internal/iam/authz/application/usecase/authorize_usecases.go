@@ -17,10 +17,10 @@ const permissionCacheTTL = 15 * time.Minute
 
 type AuthorizeUsecase struct {
 	cache cs.AuthorizationCache
-	query repos.AuthorizationQueryRepository
+	query repos.AuthorizationReader
 }
 
-func NewAuthorizeUsecase(c cs.AuthorizationCache, q repos.AuthorizationQueryRepository) *AuthorizeUsecase {
+func NewAuthorizeUsecase(c cs.AuthorizationCache, q repos.AuthorizationReader) *AuthorizeUsecase {
 	return &AuthorizeUsecase{
 		cache: c,
 		query: q,

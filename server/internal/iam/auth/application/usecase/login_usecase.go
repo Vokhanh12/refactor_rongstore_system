@@ -1,10 +1,11 @@
-package usecases
+package usecase
 
 import (
 	"context"
 	"time"
 
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/port"
 	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	repo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/repository"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/valueobject"
@@ -13,20 +14,23 @@ import (
 )
 
 type LoginUsecase struct {
-	passwordHasher sec.PasswordHasher
-	credentialRepo repo.CredentialRepository
-	tokenSigner    sec.TokenSigner
+	passwordHasher      sec.PasswordHasher
+	credentialRepo      repo.CredentialRepository
+	tokenSigner         sec.TokenSigner
+	authorizationReader port.AuthorizationReader
 }
 
 func NewLoginUsecase(
 	passwordHasher sec.PasswordHasher,
 	credentialRepo repo.CredentialRepository,
 	tokenSigner sec.TokenSigner,
+	authorizationReader port.AuthorizationReader,
 ) *LoginUsecase {
 	return &LoginUsecase{
-		passwordHasher: passwordHasher,
-		credentialRepo: credentialRepo,
-		tokenSigner:    tokenSigner,
+		passwordHasher:      passwordHasher,
+		credentialRepo:      credentialRepo,
+		tokenSigner:         tokenSigner,
+		authorizationReader: authorizationReader,
 	}
 }
 
@@ -42,7 +46,7 @@ func (u *LoginUsecase) Execute(
 
 	credential, err := u.credentialRepo.FindByIdentifier(
 		ctx,
-		identifier.Value(),
+		identifier,
 	)
 
 	if err != nil {
@@ -58,11 +62,21 @@ func (u *LoginUsecase) Execute(
 		)
 	}
 
+	roleScopes, err := u.authorizationReader.GetRoleScopesByUserID(
+		ctx,
+		credential.UserID,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
 	accessToken, err := u.tokenSigner.SignAccessToken(
 		credential.UserID.String(),
-		nil,
+		roleScopes,
 		credential.AuthzVersion,
 	)
+
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +87,6 @@ func (u *LoginUsecase) Execute(
 			ExpiresAt: time.Now().Add(30 * 24 * time.Hour),
 		},
 	)
-
 	if err != nil {
 		return nil, err
 	}

@@ -38,7 +38,7 @@ func Initialize(ctx context.Context, cfg *config.Config) *RootDeps {
 
 func InitializeIamHandler(infra *Infra) IamDeps {
 	commandRepo := gorm.NewGormStoreOwnerCommandRepository(infra.DB)
-	queryRepo := sqlc.NewSqlcStoreOwnerQueryRepository(infra.DB)
+	queryRepo := sqlc.NewSqlcStoreOwnerReader(infra.DB)
 
 	loginUC := auth.NewLoginUsecase(infra.Keycloak)
 	handshakeUC := auth.NewHandshakeUsecase(infra.Redis)

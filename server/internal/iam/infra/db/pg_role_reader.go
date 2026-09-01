@@ -15,34 +15,34 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
 )
 
-var _ repo.RoleQueryRepository = (*PgRoleQueryRepository)(nil)
+var _ repo.RoleReader = (*PgRoleReader)(nil)
 
-type PgRoleQueryRepository struct {
+type PgRoleReader struct {
 	queries *sqlc.Queries
 	pool    *pgxpool.Pool
 	builder *querydsl.Builder
 }
 
-func NewRoleQueryRepository(q *sqlc.Queries, p *pgxpool.Pool, b *querydsl.Builder) repo.RoleQueryRepository {
-	return &PgRoleQueryRepository{
+func NewRoleReader(q *sqlc.Queries, p *pgxpool.Pool, b *querydsl.Builder) repo.RoleReader {
+	return &PgRoleReader{
 		queries: q,
 		pool:    p,
 		builder: querydsl.NewBuilder(fields.RoleFields),
 	}
 }
 
-// Export implements [query.RoleQueryRepository].
-func (p *PgRoleQueryRepository) Export(ctx context.Context, q query.ExportRoleQuery) (query.ExportRoleQueryResult, error) {
+// Export implements [query.RoleReader].
+func (p *PgRoleReader) Export(ctx context.Context, q query.ExportRoleQuery) (query.ExportRoleQueryResult, error) {
 	panic("unimplemented")
 }
 
-// GetById implements [query.RoleQueryRepository].
-func (p *PgRoleQueryRepository) GetById(ctx context.Context, q query.GetRoleQuery) (query.GetRoleQueryResult, error) {
+// GetById implements [query.RoleReader].
+func (p *PgRoleReader) GetById(ctx context.Context, q query.GetRoleQuery) (query.GetRoleQueryResult, error) {
 	panic("unimplemented")
 }
 
-// Search implements [query.RoleQueryRepository].
-func (p *PgRoleQueryRepository) Search(ctx context.Context, q query.SearchRoleQuery) (query.SearchRoleQueryResult, error) {
+// Search implements [query.RoleReader].
+func (p *PgRoleReader) Search(ctx context.Context, q query.SearchRoleQuery) (query.SearchRoleQueryResult, error) {
 
 	qb := sq.
 		Select(

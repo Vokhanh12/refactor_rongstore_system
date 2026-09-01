@@ -21,11 +21,11 @@ type RoleViewBatch struct {
 }
 
 type ViewRoleUsecase struct {
-	query  repos.RoleQueryRepository
+	query  repos.RoleReader
 	engine *coreuc.ViewEngine[RoleView]
 }
 
-func NewViewRoleUsecase(q repos.RoleQueryRepository) *ViewRoleUsecase {
+func NewViewRoleUsecase(q repos.RoleReader) *ViewRoleUsecase {
 
 	u := &ViewRoleUsecase{
 		query: q,

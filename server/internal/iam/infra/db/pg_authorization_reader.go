@@ -7,26 +7,25 @@ import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/serialization"
 	pr "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/projection"
 	authzrepos "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/valueobjects"
 	sqlc "github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/db/sqlc"
 )
 
-var _ authzrepos.AuthorizationQueryRepository = (*AuthorizationQueryRepository)(nil)
+var _ authzrepos.AuthorizationReader = (*PgAuthorizationReader)(nil)
 
-type AuthorizationQueryRepository struct {
+type PgAuthorizationReader struct {
 	queries *sqlc.Queries
 	pool    *pgxpool.Pool
 }
 
-func NewAuthorizationQueryRepository(q *sqlc.Queries, p *pgxpool.Pool) authzrepos.AuthorizationQueryRepository {
-	return &AuthorizationQueryRepository{
+func NewPgAuthorizationReader(q *sqlc.Queries, p *pgxpool.Pool) authzrepos.AuthorizationReader {
+	return &PgAuthorizationReader{
 		queries: q,
 		pool:    p,
 	}
 }
 
 // ListGrantsByRoleKeys implements [query.AuthorizationQuery].
-func (s *AuthorizationQueryRepository) ListGrantsByRoleKeys(ctx context.Context, RoleKeys []vo.RoleKey) ([]pr.AuthorizationGrant, error) {
+func (s *PgAuthorizationReader) ListGrantsByRoleKeys(ctx context.Context, RoleKeys []vo.RoleKey) ([]pr.AuthorizationGrant, error) {
 
 	payload, aerr := serialization.MustMarshal(RoleKeys)
 	if aerr != nil {

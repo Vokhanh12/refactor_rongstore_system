@@ -1,4 +1,4 @@
-package repositories
+package writer
 
 import (
 	"github.com/google/uuid"
@@ -6,7 +6,7 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-type RoleAssignmentRepository interface {
+type RoleAssignmentWriter interface {
 	Create(roleAssignment *entities.RoleAssignment) (*entities.RoleAssignment, *aerrs.AppError)
 	Update(roleAssignment *entities.RoleAssignment) (*entities.RoleAssignment, *aerrs.AppError)
 	Delete(id uuid.UUID) *aerrs.AppError

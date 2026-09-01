@@ -31,7 +31,7 @@
 // 	engine  *coreuc.MutateEngine[RoleMutation]
 // }
 
-// func NewMutateRoleUsecase(c repos.RoleRepository, q ques.RoleQueryRepository) *MutateRoleUsecase {
+// func NewMutateRoleUsecase(c repos.RoleRepository, q ques.RoleReader) *MutateRoleUsecase {
 
 // 	u := &MutateRoleUsecase{
 // 		command: c,

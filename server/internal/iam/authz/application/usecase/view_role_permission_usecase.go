@@ -18,10 +18,10 @@ type RolePermissionViewBatch struct {
 }
 
 type ViewRolePermissionUsecase struct {
-	repo repos.RolePermissionQueryRepository
+	repo repos.RolePermissionReader
 }
 
-func NewViewRolePermissionUsecase(repo repos.RolePermissionQueryRepository) *ViewRolePermissionUsecase {
+func NewViewRolePermissionUsecase(repo repos.RolePermissionReader) *ViewRolePermissionUsecase {
 	return &ViewRolePermissionUsecase{repo: repo}
 }
 

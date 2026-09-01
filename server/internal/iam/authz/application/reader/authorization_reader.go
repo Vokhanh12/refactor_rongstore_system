@@ -1,4 +1,4 @@
-package query
+package reader
 
 import (
 	"context"
@@ -8,6 +8,6 @@ import (
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
-type AuthorizationQueryRepository interface {
+type AuthorizationReader interface {
 	ListGrantsByRoleKeys(ctx context.Context, RoleKeys []vo.RoleKey) ([]pr.AuthorizationGrant, *aerrs.AppError)
 }

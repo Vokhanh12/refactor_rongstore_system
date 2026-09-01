@@ -15,10 +15,10 @@ type PermissionViewBatch struct {
 }
 
 type ViewPermissionUsecase struct {
-	repo repos.PermissionQueryRepository
+	repo repos.PermissionReader
 }
 
-func NewViewPermissionUsecase(repo repos.PermissionQueryRepository) *ViewPermissionUsecase {
+func NewViewPermissionUsecase(repo repos.PermissionReader) *ViewPermissionUsecase {
 	return &ViewPermissionUsecase{repo: repo}
 }
 
