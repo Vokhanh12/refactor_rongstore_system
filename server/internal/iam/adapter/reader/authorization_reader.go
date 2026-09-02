@@ -5,8 +5,7 @@ import (
 
 	authport "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/port"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/query"
-	authzrepo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/repository"
+	authzrepo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/reader"
 
 	"github.com/google/uuid"
 )
@@ -32,9 +31,7 @@ func (a *AuthorizationReader) GetRoleScopesByUserID(
 
 	roleScopeResults, err := a.roleAssignmentRepo.GetRoleScopesByUserID(
 		ctx,
-		query.GetRoleScopesQuery{
-			UserID: userID,
-		},
+		userID,
 	)
 	if err != nil {
 		return nil, err

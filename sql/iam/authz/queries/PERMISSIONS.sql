@@ -1,4 +1,0 @@
--- name: GetPermissionByCode :one
-SELECT ID, CODE, NAME, RESOURCE, ACTION
-FROM PERMISSIONS
-WHERE code = $1;

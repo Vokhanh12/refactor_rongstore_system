@@ -1,12 +1,12 @@
 package query
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/domain/enum"
+)
 
-type GetRoleScopesQuery struct {
-	UserID uuid.UUID
-}
-type GetRoleScopesQueryResult struct {
+type GetRoleScopesByUserIDQueryResult struct {
 	RoleID    uuid.UUID
-	ScopeID   uuid.UUID
-	ScopeType string
+	ScopeID   *uuid.UUID
+	ScopeType enum.RoleScopeType
 }

@@ -10,49 +10,48 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type RoleAccessScope string
+type PermissionAccessScope string
 
 const (
-	RoleAccessScopeALL RoleAccessScope = "ALL"
-	RoleAccessScopeOWN RoleAccessScope = "OWN"
+	PermissionAccessScopeALL PermissionAccessScope = "ALL"
+	PermissionAccessScopeOWN PermissionAccessScope = "OWN"
 )
 
-func (e *RoleAccessScope) Scan(src interface{}) error {
+func (e *PermissionAccessScope) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = RoleAccessScope(s)
+		*e = PermissionAccessScope(s)
 	case string:
-		*e = RoleAccessScope(s)
+		*e = PermissionAccessScope(s)
 	default:
-		return fmt.Errorf("unsupported scan type for RoleAccessScope: %T", src)
+		return fmt.Errorf("unsupported scan type for PermissionAccessScope: %T", src)
 	}
 	return nil
 }
 
-type NullRoleAccessScope struct {
-	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
-	Valid           bool            `json:"valid"` // Valid is true if RoleAccessScope is not NULL
+type NullPermissionAccessScope struct {
+	PermissionAccessScope PermissionAccessScope `json:"permission_access_scope"`
+	Valid                 bool                  `json:"valid"` // Valid is true if PermissionAccessScope is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullRoleAccessScope) Scan(value interface{}) error {
+func (ns *NullPermissionAccessScope) Scan(value interface{}) error {
 	if value == nil {
-		ns.RoleAccessScope, ns.Valid = "", false
+		ns.PermissionAccessScope, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.RoleAccessScope.Scan(value)
+	return ns.PermissionAccessScope.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullRoleAccessScope) Value() (driver.Value, error) {
+func (ns NullPermissionAccessScope) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.RoleAccessScope), nil
+	return string(ns.PermissionAccessScope), nil
 }
 
 type RoleScopeType string
@@ -99,44 +98,56 @@ func (ns NullRoleScopeType) Value() (driver.Value, error) {
 }
 
 type Permission struct {
-	ID          uuid.UUID        `json:"id"`
-	Code        string           `json:"code"`
-	Name        pgtype.Text      `json:"name"`
-	Description *string          `json:"description"`
-	Resource    string           `json:"resource"`
-	Action      string           `json:"action"`
-	IsActive    bool             `json:"is_active"`
-	CreatedAt   pgtype.Timestamp `json:"created_at"`
-	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
-	CreatedBy   *uuid.UUID       `json:"created_by"`
-	UpdatedBy   *uuid.UUID       `json:"updated_by"`
+	ID          uuid.UUID  `json:"id"`
+	Code        string     `json:"code"`
+	Name        string     `json:"name"`
+	Description *string    `json:"description"`
+	Resource    string     `json:"resource"`
+	Action      string     `json:"action"`
+	IsActive    bool       `json:"is_active"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	CreatedBy   *uuid.UUID `json:"created_by"`
+	UpdatedBy   *uuid.UUID `json:"updated_by"`
 }
 
 type Role struct {
-	ID              uuid.UUID       `json:"id"`
-	ScopeID         *uuid.UUID      `json:"scope_id"`
-	RoleScopeType   RoleScopeType   `json:"role_scope_type"`
-	Code            string          `json:"code"`
-	Name            string          `json:"name"`
-	Description     *string         `json:"description"`
-	RoleAccessScope RoleAccessScope `json:"role_access_scope"`
-	Level           int32           `json:"level"`
-	IsSystem        bool            `json:"is_system"`
-	IsActive        bool            `json:"is_active"`
-	IsSuper         bool            `json:"is_super"`
-	CreatedAt       *time.Time      `json:"created_at"`
-	UpdatedAt       *time.Time      `json:"updated_at"`
-	CreatedBy       *uuid.UUID      `json:"created_by"`
-	UpdatedBy       *uuid.UUID      `json:"updated_by"`
+	ID          uuid.UUID  `json:"id"`
+	Code        string     `json:"code"`
+	Name        string     `json:"name"`
+	Level       int32      `json:"level"`
+	Description *string    `json:"description"`
+	IsSystem    bool       `json:"is_system"`
+	IsActive    bool       `json:"is_active"`
+	IsSuper     bool       `json:"is_super"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	CreatedBy   *uuid.UUID `json:"created_by"`
+	UpdatedBy   *uuid.UUID `json:"updated_by"`
+}
+
+type RoleAssignment struct {
+	ID         uuid.UUID     `json:"id"`
+	UserID     uuid.UUID     `json:"user_id"`
+	RoleID     uuid.UUID     `json:"role_id"`
+	ScopeID    *uuid.UUID    `json:"scope_id"`
+	ScopeType  RoleScopeType `json:"scope_type"`
+	AssignedAt time.Time     `json:"assigned_at"`
+	AssignedBy *uuid.UUID    `json:"assigned_by"`
+	CreatedAt  time.Time     `json:"created_at"`
+	UpdatedAt  time.Time     `json:"updated_at"`
+	CreatedBy  *uuid.UUID    `json:"created_by"`
+	UpdatedBy  *uuid.UUID    `json:"updated_by"`
 }
 
 type RolePermission struct {
-	RoleID       uuid.UUID        `json:"role_id"`
-	PermissionID uuid.UUID        `json:"permission_id"`
-	GrantedAt    pgtype.Timestamp `json:"granted_at"`
-	GrantedBy    *uuid.UUID       `json:"granted_by"`
-	CreatedAt    pgtype.Timestamp `json:"created_at"`
-	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
-	CreatedBy    *uuid.UUID       `json:"created_by"`
-	UpdatedBy    *uuid.UUID       `json:"updated_by"`
+	RoleID       uuid.UUID             `json:"role_id"`
+	PermissionID uuid.UUID             `json:"permission_id"`
+	AccessScope  PermissionAccessScope `json:"access_scope"`
+	GrantedAt    time.Time             `json:"granted_at"`
+	GrantedBy    *uuid.UUID            `json:"granted_by"`
+	CreatedAt    time.Time             `json:"created_at"`
+	UpdatedAt    time.Time             `json:"updated_at"`
+	CreatedBy    *uuid.UUID            `json:"created_by"`
+	UpdatedBy    *uuid.UUID            `json:"updated_by"`
 }

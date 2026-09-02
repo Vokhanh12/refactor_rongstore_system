@@ -3,5 +3,5 @@ SELECT
     role_id,
     scope_id,
     scope_type
-FROM role_assignment
+FROM ROLE_ASSIGNMENTS
 WHERE user_id = $1;

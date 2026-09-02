@@ -1,8 +1,7 @@
-package enums
+package enum
 
 import (
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/domain/validator"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type RoleScopeType string
@@ -19,7 +18,7 @@ var validRoleScopes = map[RoleScopeType]struct{}{
 	RoleScopeUnit:   {},
 }
 
-func NewRoleScopeType(value string) (RoleScopeType, *aerrs.AppError) {
+func NewRoleScopeType(value string) (RoleScopeType, error) {
 
 	v := validator.New().
 		Required("RoleScopeType", value)
