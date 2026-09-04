@@ -31,13 +31,12 @@ func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInter
 		}
 
 		result, aerr := authorize.Execute(ctx, command.AuthorizeCommand{
-			UserID:      userctx.UserID,
-			ScopeID: ,
-			
-			RoleKeyStrs: userctx.RoleKeyStrs,
-			Resource:    authOpt.Resource,
-			Action:      authOpt.Action,
-			ResourceID:  extractResourceID(protoReq, authOpt.ResourceIDField),
+			UserID:     userctx.UserID,
+			RoleScopes: userctx.RoleScopes,
+
+			Resource:   authOpt.Resource,
+			Action:     authOpt.Action,
+			ResourceID: extractResourceID(protoReq, authOpt.ResourceIDField),
 		})
 
 		if aerr != nil {

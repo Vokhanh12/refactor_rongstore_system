@@ -1,15 +1,21 @@
-package test
+package ctxutil
 
 import (
 	"context"
 
-	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
+	"github.com/google/uuid"
 )
 
 type IdentityContext struct {
 	UserID       string
-	RoleScopes   []sec.RoleScope
+	RoleScopes   []RoleScope
 	AuthzVersion int
+}
+
+type RoleScope struct {
+	RoleID    uuid.UUID
+	ScopeID   uuid.UUID
+	ScopeType string
 }
 
 type identityCtxKeyType struct{}

@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
-	lctx "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/localcontext"
 	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
@@ -27,22 +27,16 @@ func (u *AuthenticateUsecase) Execute(
 ) (*com.AuthenticateCommandResult, *aerrs.AppError) {
 
 	claims, err := u.tokenParser.ParseAccessToken(cmd.Payload)
-
 	if err != nil {
 		return &com.AuthenticateCommandResult{
 			Allowed: false,
 		}, err
 	}
 
-	ctx = lctx.WithIdentity(ctx,
-		lctx.IdentityContext{
-			UserID:       claims.Subject,
-			RoleScopes:   claims.Roles,
-			AuthzVersion: claims.AuthzVersion,
-		},
-	)
+	identity := mapper.ToIdentityContext(claims)
 
 	return &com.AuthenticateCommandResult{
-		Allowed: true,
+		Allowed:  true,
+		Identity: identity,
 	}, nil
 }

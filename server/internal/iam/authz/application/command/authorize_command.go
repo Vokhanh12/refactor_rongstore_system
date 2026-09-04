@@ -1,10 +1,11 @@
 package command
 
-type AuthorizeCommand struct {
-	UserID  string
-	ScopeID string
+import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 
-	RoleKeyStrs []string
+type AuthorizeCommand struct {
+	UserID string
+
+	RoleScopes []ctxutil.RoleScope
 
 	Resource   string
 	Action     string

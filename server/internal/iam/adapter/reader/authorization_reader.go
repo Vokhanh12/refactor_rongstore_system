@@ -27,7 +27,7 @@ func NewAuthorizationReader(
 func (a *AuthorizationReader) GetRoleScopesByUserID(
 	ctx context.Context,
 	userID uuid.UUID,
-) ([]security.RoleScope, error) {
+) ([]security.TokenRole, error) {
 
 	roleScopeResults, err := a.roleAssignmentRepo.GetRoleScopesByUserID(
 		ctx,
@@ -37,13 +37,13 @@ func (a *AuthorizationReader) GetRoleScopesByUserID(
 		return nil, err
 	}
 
-	roleScopes := make([]security.RoleScope, 0, len(roleScopeResults))
+	roleScopes := make([]security.TokenRole, 0, len(roleScopeResults))
 
 	for _, result := range roleScopeResults {
-		roleScopes = append(roleScopes, security.RoleScope{
+		roleScopes = append(roleScopes, security.TokenRole{
 			RoleID:    result.RoleID,
 			ScopeID:   result.ScopeID,
-			ScopeType: result.ScopeType,
+			ScopeType: string(result.ScopeType),
 		})
 	}
 

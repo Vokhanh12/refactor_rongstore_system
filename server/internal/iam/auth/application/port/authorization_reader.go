@@ -11,5 +11,5 @@ type AuthorizationReader interface {
 	GetRoleScopesByUserID(
 		ctx context.Context,
 		userID uuid.UUID,
-	) ([]sec.RoleScope, error)
+	) ([]sec.TokenRole, error)
 }

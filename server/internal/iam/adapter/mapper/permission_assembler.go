@@ -1,4 +1,4 @@
-package assemblers
+package mapper
 
 import (
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"

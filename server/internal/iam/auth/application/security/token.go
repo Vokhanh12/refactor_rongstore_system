@@ -9,7 +9,7 @@ type TokenParser interface {
 type TokenSigner interface {
 	SignAccessToken(
 		userID string,
-		roles []RoleScope,
+		roles []TokenRole,
 		authzVersion int,
 	) (string, *aerrs.AppError)
 

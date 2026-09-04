@@ -87,6 +87,7 @@ func (u *LoginUsecase) Execute(
 			ExpiresAt: time.Now().Add(30 * 24 * time.Hour),
 		},
 	)
+
 	if err != nil {
 		return nil, err
 	}
