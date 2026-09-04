@@ -3,7 +3,6 @@ package grpc
 import (
 	"context"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/grpc"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/usecase"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
@@ -42,10 +41,7 @@ func AuthUnaryInterceptor(
 		)
 
 		if err != nil {
-			return nil, core.ToGRPCError(
-				err.Code,
-				err.Message,
-			)
+			return nil, err
 		}
 
 		ctx = ctxutil.WithIdentity(ctx, result.Identity)

@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/serializer"
 	authsur "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
-	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 var _ authsur.TokenParser = (*JWTProvider)(nil)
@@ -32,7 +31,7 @@ func NewJWTProvider(secret []byte, issuer string, audience string, accessTTL tim
 }
 
 // ParseAccessToken implements [security.TokenParser].
-func (j *JWTProvider) ParseAccessToken(payload string) (authsur.AccessTokenClaims, *aerr.AppError) {
+func (j *JWTProvider) ParseAccessToken(payload string) (authsur.AccessTokenClaims, error) {
 	var claims authsur.AccessTokenClaims
 
 	if err := serializer.Unmarshal([]byte(payload), &claims); err != nil {
@@ -44,9 +43,9 @@ func (j *JWTProvider) ParseAccessToken(payload string) (authsur.AccessTokenClaim
 
 func (j *JWTProvider) SignAccessToken(
 	userID string,
-	roles []authsur.RoleScope,
+	roles []authsur.TokenRole,
 	authzVersion int,
-) (string, *aerr.AppError) {
+) (string, error) {
 
 	now := time.Now()
 
@@ -71,29 +70,33 @@ func (j *JWTProvider) SignAccessToken(
 
 	signed, err := token.SignedString(j.secret)
 	if err != nil {
-		return "", aerr.New(
-			errs.JWT_SIGN_FAILED,
-			aerr.WithCauseDetail(err),
-		)
+		return "", err
 	}
 
 	return signed, nil
 }
 
 // SignRefreshToken implements [security.TokenSigner].
-func (j *JWTProvider) SignRefreshToken(claims authsur.RefreshTokenClaims) (string, *aerr.AppError) {
+func (j *JWTProvider) SignRefreshToken(
+	userID string,
+) (string, error) {
+	now := time.Now()
+
+	claims := authsur.RefreshTokenClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   userID,
+			Issuer:    j.issuer,
+			Audience:  []string{j.audience},
+			IssuedAt:  jwt.NewNumericDate(now),
+			ExpiresAt: jwt.NewNumericDate(now.Add(j.refreshTTL)),
+			ID:        uuid.NewString(),
+		},
+	}
+
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		claims,
 	)
 
-	signed, err := token.SignedString(j.secret)
-	if err != nil {
-		return "", aerr.New(
-			errs.JWT_SIGN_FAILED,
-			aerr.WithCauseDetail(err),
-		)
-	}
-
-	return signed, nil
+	return token.SignedString(j.secret)
 }

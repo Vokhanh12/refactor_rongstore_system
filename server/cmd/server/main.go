@@ -49,8 +49,9 @@ func main() {
 		),
 		grpc.ChainUnaryInterceptor(
 
+			ErrorUnaryInterceptor(logger),
+			RecoveryUnaryInterceptor(logger),
 			obs_grpc.RequestContextInterceptor(),
-
 			obs_grpc.LoggingUnaryInterceptor("iam-service"),
 			obs_grpc.MetricsUnaryInterceptor("iam-service"),
 

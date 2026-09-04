@@ -1,4 +1,4 @@
-package grpc
+package interceptor
 
 import (
 	"google.golang.org/grpc/codes"

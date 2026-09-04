@@ -1,9 +1,7 @@
 package security
 
-import aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-
 type TokenParser interface {
-	ParseAccessToken(payload string) (AccessTokenClaims, *aerrs.AppError)
+	ParseAccessToken(payload string) (AccessTokenClaims, error)
 }
 
 type TokenSigner interface {
@@ -11,9 +9,9 @@ type TokenSigner interface {
 		userID string,
 		roles []TokenRole,
 		authzVersion int,
-	) (string, *aerrs.AppError)
+	) (string, error)
 
 	SignRefreshToken(
-		claims RefreshTokenClaims,
-	) (string, *aerrs.AppError)
+		userID string,
+	) (string, error)
 }

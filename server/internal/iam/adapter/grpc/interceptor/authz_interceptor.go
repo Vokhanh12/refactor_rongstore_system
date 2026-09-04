@@ -3,9 +3,8 @@ package grpc
 import (
 	"context"
 
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/grpc"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	ucs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
+	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecase"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -13,8 +12,17 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+func AuthZUnaryInterceptor(
+	authorize uc.AuthorizeUsecase,
+) grpc.UnaryServerInterceptor {
+
+	return func(
+		ctx context.Context,
+		req interface{},
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (interface{}, error) {
+
 		protoReq, ok := req.(proto.Message)
 		if !ok {
 			return handler(ctx, req)
@@ -25,26 +33,44 @@ func AuthZUnaryInterceptor(authorize ucs.AuthorizeUsecase) grpc.UnaryServerInter
 			return handler(ctx, req)
 		}
 
-		userctx, ok := ctxutil.User(ctx)
-		if !ok || userctx.UserID == "" || userctx.RoleKeyStrs == nil {
-			return nil, status.Errorf(codes.PermissionDenied, "unauthenticated")
+		identity, ok := ctxutil.Identity(ctx)
+		if !ok {
+			return nil, status.Error(
+				codes.Internal,
+				"identity context missing",
+			)
 		}
 
-		result, aerr := authorize.Execute(ctx, command.AuthorizeCommand{
-			UserID:     userctx.UserID,
-			RoleScopes: userctx.RoleScopes,
+		if identity.UserID == "" {
+			return nil, status.Error(
+				codes.Internal,
+				"invalid identity context",
+			)
+		}
 
-			Resource:   authOpt.Resource,
-			Action:     authOpt.Action,
-			ResourceID: extractResourceID(protoReq, authOpt.ResourceIDField),
-		})
+		result, err := authorize.Execute(
+			ctx,
+			command.AuthorizeCommand{
+				UserID:     identity.UserID,
+				RoleScopes: identity.RoleScopes,
+				Resource:   authOpt.Resource,
+				Action:     authOpt.Action,
+				ResourceID: extractResourceID(
+					protoReq,
+					authOpt.ResourceIDField,
+				),
+			},
+		)
 
-		if aerr != nil {
-			return nil, core.ToGRPCError(aerr.Code, aerr.Message)
+		if err != nil {
+			return nil, err
 		}
 
 		if !result.Allowed {
-			return nil, status.Errorf(codes.PermissionDenied, "unauthorized")
+			return nil, status.Error(
+				codes.PermissionDenied,
+				"unauthorized",
+			)
 		}
 
 		return handler(ctx, req)

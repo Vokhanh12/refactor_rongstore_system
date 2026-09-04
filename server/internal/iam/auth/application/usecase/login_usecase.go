@@ -7,30 +7,30 @@ import (
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/port"
 	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
-	repo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/repository"
 	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/valueobject"
+	wr "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/writer"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/errors"
 	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type LoginUsecase struct {
 	passwordHasher      sec.PasswordHasher
-	credentialRepo      repo.CredentialRepository
+	credentialWriter    wr.CredentialWriter
 	tokenSigner         sec.TokenSigner
 	authorizationReader port.AuthorizationReader
 }
 
 func NewLoginUsecase(
-	passwordHasher sec.PasswordHasher,
-	credentialRepo repo.CredentialRepository,
-	tokenSigner sec.TokenSigner,
-	authorizationReader port.AuthorizationReader,
+	ph sec.PasswordHasher,
+	cw wr.CredentialWriter,
+	ts sec.TokenSigner,
+	ar port.AuthorizationReader,
 ) *LoginUsecase {
 	return &LoginUsecase{
-		passwordHasher:      passwordHasher,
-		credentialRepo:      credentialRepo,
-		tokenSigner:         tokenSigner,
-		authorizationReader: authorizationReader,
+		passwordHasher:      ph,
+		credentialWriter:    cw,
+		tokenSigner:         ts,
+		authorizationReader: ar,
 	}
 }
 
@@ -82,10 +82,7 @@ func (u *LoginUsecase) Execute(
 	}
 
 	refreshToken, err := u.tokenSigner.SignRefreshToken(
-		sec.RefreshTokenClaims{
-			UserID:    credential.UserID.String(),
-			ExpiresAt: time.Now().Add(30 * 24 * time.Hour),
-		},
+		credential.UserID.String(),
 	)
 
 	if err != nil {
