@@ -13,13 +13,13 @@ const (
 type AccessTokenClaims struct {
 	jwt.RegisteredClaims
 
-	TenantID     uuid.UUID   `json:"tenant_id"`
-	Roles        []TokenRole `json:"roles,omitempty"`
-	AuthzVersion int         `json:"authz_version"`
-	TokenType    string      `json:"token_type"`
+	TenantID     uuid.UUID        `json:"tenant_id"`
+	Roles        []TokenRoleScope `json:"roles,omitempty"`
+	AuthzVersion int              `json:"authz_version"`
+	TokenType    string           `json:"token_type"`
 }
 
-type TokenRole struct {
+type TokenRoleScope struct {
 	RoleID    uuid.UUID  `json:"role_id"`
 	ScopeID   *uuid.UUID `json:"scope_id"`
 	ScopeType string     `json:"scope_type"`

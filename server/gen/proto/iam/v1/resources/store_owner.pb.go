@@ -1127,7 +1127,7 @@ var File_iam_v1_resources_store_owner_proto protoreflect.FileDescriptor
 
 const file_iam_v1_resources_store_owner_proto_rawDesc = "" +
 	"\n" +
-	"\"iam/v1/resources/store_owner.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/base_request.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.core/common/v1/resources/search_criteria.proto\"\xa2\x02\n" +
+	"\"iam/v1/resources/store_owner.proto\x12\x06iam.v1\x1a\x1avalidate/v1/validate.proto\x1a+core/common/v1/resources/auth_options.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.core/common/v1/resources/search_criteria.proto\"\xa2\x02\n" +
 	"\n" +
 	"StoreOwner\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +

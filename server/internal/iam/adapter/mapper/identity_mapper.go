@@ -30,4 +30,3 @@ func ToRoleScopes(roles []security.TokenRoleScope) []ctxutil.RoleScope {
 
 	return result
 }
-```

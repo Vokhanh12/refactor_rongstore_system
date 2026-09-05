@@ -14,7 +14,7 @@ type IdentityContext struct {
 
 type RoleScope struct {
 	RoleID    uuid.UUID
-	ScopeID   uuid.UUID
+	ScopeID   *uuid.UUID
 	ScopeType string
 }
 

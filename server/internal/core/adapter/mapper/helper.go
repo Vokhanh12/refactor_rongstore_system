@@ -1,4 +1,4 @@
-package assemblers
+package mapper
 
 import (
 	"time"

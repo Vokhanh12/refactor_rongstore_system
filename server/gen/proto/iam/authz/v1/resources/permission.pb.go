@@ -237,7 +237,6 @@ type isPermissionMutation_Action interface {
 }
 
 type PermissionMutation_Create_ struct {
-	// ⚠️ PGV không support required cho oneof → validate ở code
 	Create *PermissionMutation_Create `protobuf:"bytes,2,opt,name=create,proto3,oneof"`
 }
 

@@ -429,7 +429,7 @@
     "v1LoginRequest": {
       "type": "object",
       "properties": {
-        "email": {
+        "identifier": {
           "type": "string"
         },
         "password": {

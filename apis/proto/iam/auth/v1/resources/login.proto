@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package iam.v1;
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespb"; 
+option java_package = "com.aliasadi.iam.v1.resources";
+option java_multiple_files = true;
+
+message LoginRequest {
+    message Data {
+      string identifier = 1; 
+      string password = 2;
+    }
+    
+    common.v1.BaseRequest metadata = 1 [(validate.rules).message.required = true];
+    Data data = 2 [(validate.rules).message.required = true];
+  }
+  
+  message LoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+    string token_type = 3;
+    int64 expires_in = 4;
+    int64 refresh_expires_in = 5;
+  }
+  

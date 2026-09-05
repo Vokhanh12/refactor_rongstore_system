@@ -1,4 +1,4 @@
-package assemblers
+package mapper
 
 import (
 	"context"
@@ -26,12 +26,12 @@ func BuildMutateResult(ctx context.Context, Operation, err aerrs.AppError) *prot
 }
 
 
-func BuildResponse(ctx context.Context, results dp.Result, mapActionData func(data any) *anypb.Any) *protos.MutateResponse {
+func BuildBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseResponse {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
 
-	return &protos.MutateResponse{
+	return &protos.BaseResponse{
 		Metadata: &protos.Metadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
@@ -40,9 +40,53 @@ func BuildResponse(ctx context.Context, results dp.Result, mapActionData func(da
 			Degraded:   false,
 			ServerTime: time.Now().UnixMilli(),
 		},
-		MutateResults: dispatcherResultToProto(results, mapActionData),
+		Data: result,
+
+		Error: &protos.Error{
+			Client: &protos.ClientError{
+				Code:       "",
+				Message:    "",
+				Violations: []*protos.Violation{},
+			},
+		},
 	}
 }
+
+func BuildDevBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseResponse {
+
+	requestctx := ctxutil.MustRequest(ctx)
+	locatectx := ctxutil.MustLocale(ctx)
+
+	return &protos.BaseResponse{
+		Metadata: &protos.Metadata{
+			TraceId:    requestctx.TraceID,
+			RequestId:  requestctx.RequestID,
+			Locale:     locatectx.Locale,
+			Region:     locatectx.Region,
+			Degraded:   false,
+			ServerTime: time.Now().UnixMilli(),
+		},
+		Data: result,
+
+		Error: &protos.Error{
+			Client: &protos.ClientError{
+				Code:       "",
+				Message:    "",
+				Violations: []*protos.Violation{},
+			},
+			Server: &protos.ServerError{
+				Key:          "",
+				Severity:     "",
+				Retryable:    false,
+				Source:       "",
+				GrpcCode:     "",
+				ClientAction: "",
+				ServerAction: "",
+			},
+		},
+	}
+}
+
 
 func BuildMutateResponse(ctx context.Context, results dp.Result, mapActionData func(data any) *anypb.Any) *protos.MutateResponse {
 

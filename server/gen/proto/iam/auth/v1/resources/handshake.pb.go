@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.33.4
-// source: iam/v1/resources/handshake.proto
+// source: iam/auth/v1/resources/handshake.proto
 
 package resourcespb
 
@@ -30,7 +30,7 @@ type HandshakeRequest struct {
 
 func (x *HandshakeRequest) Reset() {
 	*x = HandshakeRequest{}
-	mi := &file_iam_v1_resources_handshake_proto_msgTypes[0]
+	mi := &file_iam_auth_v1_resources_handshake_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -42,7 +42,7 @@ func (x *HandshakeRequest) String() string {
 func (*HandshakeRequest) ProtoMessage() {}
 
 func (x *HandshakeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_v1_resources_handshake_proto_msgTypes[0]
+	mi := &file_iam_auth_v1_resources_handshake_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,7 +55,7 @@ func (x *HandshakeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandshakeRequest.ProtoReflect.Descriptor instead.
 func (*HandshakeRequest) Descriptor() ([]byte, []int) {
-	return file_iam_v1_resources_handshake_proto_rawDescGZIP(), []int{0}
+	return file_iam_auth_v1_resources_handshake_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *HandshakeRequest) GetClientPublicKey() string {
@@ -78,7 +78,7 @@ type HandshakeResponse struct {
 
 func (x *HandshakeResponse) Reset() {
 	*x = HandshakeResponse{}
-	mi := &file_iam_v1_resources_handshake_proto_msgTypes[1]
+	mi := &file_iam_auth_v1_resources_handshake_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -90,7 +90,7 @@ func (x *HandshakeResponse) String() string {
 func (*HandshakeResponse) ProtoMessage() {}
 
 func (x *HandshakeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_v1_resources_handshake_proto_msgTypes[1]
+	mi := &file_iam_auth_v1_resources_handshake_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -103,7 +103,7 @@ func (x *HandshakeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandshakeResponse.ProtoReflect.Descriptor instead.
 func (*HandshakeResponse) Descriptor() ([]byte, []int) {
-	return file_iam_v1_resources_handshake_proto_rawDescGZIP(), []int{1}
+	return file_iam_auth_v1_resources_handshake_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *HandshakeResponse) GetServerPublicKey() string {
@@ -141,11 +141,11 @@ func (x *HandshakeResponse) GetEncryptedSessionData() string {
 	return ""
 }
 
-var File_iam_v1_resources_handshake_proto protoreflect.FileDescriptor
+var File_iam_auth_v1_resources_handshake_proto protoreflect.FileDescriptor
 
-const file_iam_v1_resources_handshake_proto_rawDesc = "" +
+const file_iam_auth_v1_resources_handshake_proto_rawDesc = "" +
 	"\n" +
-	" iam/v1/resources/handshake.proto\x12\x06iam.v1\">\n" +
+	"%iam/auth/v1/resources/handshake.proto\x12\x06iam.v1\">\n" +
 	"\x10HandshakeRequest\x12*\n" +
 	"\x11client_public_key\x18\x01 \x01(\tR\x0fclientPublicKey\"\xd7\x01\n" +
 	"\x11HandshakeResponse\x12*\n" +
@@ -159,23 +159,23 @@ const file_iam_v1_resources_handshake_proto_rawDesc = "" +
 	"\x1dcom.aliasadi.iam.v1.resourcesP\x01Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
 
 var (
-	file_iam_v1_resources_handshake_proto_rawDescOnce sync.Once
-	file_iam_v1_resources_handshake_proto_rawDescData []byte
+	file_iam_auth_v1_resources_handshake_proto_rawDescOnce sync.Once
+	file_iam_auth_v1_resources_handshake_proto_rawDescData []byte
 )
 
-func file_iam_v1_resources_handshake_proto_rawDescGZIP() []byte {
-	file_iam_v1_resources_handshake_proto_rawDescOnce.Do(func() {
-		file_iam_v1_resources_handshake_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_iam_v1_resources_handshake_proto_rawDesc), len(file_iam_v1_resources_handshake_proto_rawDesc)))
+func file_iam_auth_v1_resources_handshake_proto_rawDescGZIP() []byte {
+	file_iam_auth_v1_resources_handshake_proto_rawDescOnce.Do(func() {
+		file_iam_auth_v1_resources_handshake_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_iam_auth_v1_resources_handshake_proto_rawDesc), len(file_iam_auth_v1_resources_handshake_proto_rawDesc)))
 	})
-	return file_iam_v1_resources_handshake_proto_rawDescData
+	return file_iam_auth_v1_resources_handshake_proto_rawDescData
 }
 
-var file_iam_v1_resources_handshake_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_iam_v1_resources_handshake_proto_goTypes = []any{
+var file_iam_auth_v1_resources_handshake_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_iam_auth_v1_resources_handshake_proto_goTypes = []any{
 	(*HandshakeRequest)(nil),  // 0: iam.v1.HandshakeRequest
 	(*HandshakeResponse)(nil), // 1: iam.v1.HandshakeResponse
 }
-var file_iam_v1_resources_handshake_proto_depIdxs = []int32{
+var file_iam_auth_v1_resources_handshake_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -183,26 +183,26 @@ var file_iam_v1_resources_handshake_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_iam_v1_resources_handshake_proto_init() }
-func file_iam_v1_resources_handshake_proto_init() {
-	if File_iam_v1_resources_handshake_proto != nil {
+func init() { file_iam_auth_v1_resources_handshake_proto_init() }
+func file_iam_auth_v1_resources_handshake_proto_init() {
+	if File_iam_auth_v1_resources_handshake_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_v1_resources_handshake_proto_rawDesc), len(file_iam_v1_resources_handshake_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_auth_v1_resources_handshake_proto_rawDesc), len(file_iam_auth_v1_resources_handshake_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_iam_v1_resources_handshake_proto_goTypes,
-		DependencyIndexes: file_iam_v1_resources_handshake_proto_depIdxs,
-		MessageInfos:      file_iam_v1_resources_handshake_proto_msgTypes,
+		GoTypes:           file_iam_auth_v1_resources_handshake_proto_goTypes,
+		DependencyIndexes: file_iam_auth_v1_resources_handshake_proto_depIdxs,
+		MessageInfos:      file_iam_auth_v1_resources_handshake_proto_msgTypes,
 	}.Build()
-	File_iam_v1_resources_handshake_proto = out.File
-	file_iam_v1_resources_handshake_proto_goTypes = nil
-	file_iam_v1_resources_handshake_proto_depIdxs = nil
+	File_iam_auth_v1_resources_handshake_proto = out.File
+	file_iam_auth_v1_resources_handshake_proto_goTypes = nil
+	file_iam_auth_v1_resources_handshake_proto_depIdxs = nil
 }

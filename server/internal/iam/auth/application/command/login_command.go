@@ -6,7 +6,9 @@ type LoginCommand struct {
 }
 
 type LoginCommandResult struct {
-	AccessToken  string
-	RefreshToken string
-	ExpiresIn    int64
+	AccessToken      string
+	RefreshToken     string
+	TokenType        string
+	ExpiresIn        int64
+	RefreshExpiresIn int64
 }
