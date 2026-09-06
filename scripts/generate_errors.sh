@@ -24,7 +24,6 @@ find ../server/pkg/apperrors -type f -name "errors_gen.go" -delete
 echo "✅ Old generated files removed"
 echo ""
 
-
 # ============================================================
 # GLOBAL TRACKING
 # ============================================================
@@ -44,11 +43,10 @@ DETAIL_CODES=""
 
 details_json=$(yq e '.error_details' -o=json "$YAML_FILE" 2>/dev/null || echo "{}")
 
-while IFS="|" read -r code message; do
+while IFS=$'\t' read -r code message; do
 
 	[ -z "$code" ] && continue
 
-	# duplicate detail code
 	if echo "$DETAIL_CODES" | grep -wq "$code"; then
 		echo "❌ Duplicate detail code: $code"
 		exit 1
@@ -56,7 +54,7 @@ while IFS="|" read -r code message; do
 
 	DETAIL_CODES="$DETAIL_CODES $code"
 
-	DETAIL_KEYS+=("REASON_${code}:$code:$message")
+	DETAIL_KEYS+=("$code"$'\t'"$message")
 
 done < <(
 	echo "$details_json" | jq -r '
@@ -66,7 +64,7 @@ done < <(
 			.code,
 			.message
 		]
-		| join("|")
+		| @tsv
 	'
 )
 
@@ -101,6 +99,19 @@ for svc in $services; do
 	error_keys=()
 
 	# ========================================================
+	# GET DOMAIN FROM SERVICE
+	# ========================================================
+
+	domain=$(yq e ".services.$svc.domain // \"\"" "$YAML_FILE")
+
+	if [ -z "$domain" ]; then
+		echo "❌ Missing domain for service: $svc"
+		exit 1
+	fi
+
+	echo "   Domain: $domain"
+
+	# ========================================================
 	# FILE HEADER
 	# ========================================================
 
@@ -109,7 +120,9 @@ for svc in $services; do
 
 package errors
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+import (
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+)
 
 var (
 EOF
@@ -131,14 +144,30 @@ EOF
 
 	flattened=$(echo "$errors_json" | jq -c '
 		to_entries[]
-		| .value[]
+		| {
+			layer: .key,
+			error: .value[]
+		}
 	')
 
 	# ========================================================
 	# GENERATE ERRORS
 	# ========================================================
 
-	while IFS="|" read -r key code component tags status grpc_code message severity retryable cause client_action server_action; do
+	while IFS=$'\t' read -r \
+		layer \
+		key \
+		code \
+		component \
+		tags \
+		status \
+		grpc_code \
+		message \
+		severity \
+		retryable \
+		cause \
+		client_action \
+		server_action; do
 
 		[ -z "$key" ] && continue
 
@@ -164,10 +193,22 @@ EOF
 		# VALIDATE LAYER
 		# ====================================================
 
-		layer=$(echo "$code" | cut -d'-' -f2)
-
 		if ! echo "$VALID_LAYERS" | grep -wq "$layer"; then
 			echo "❌ Invalid layer: $layer ($code)"
+			exit 1
+		fi
+
+		# ====================================================
+		# VALIDATE CODE LAYER CONSISTENCY
+		# ====================================================
+
+		code_layer=$(echo "$code" | cut -d'-' -f2)
+
+		if [ "$code_layer" != "$layer" ]; then
+			echo "❌ Layer mismatch:"
+			echo "   YAML layer: $layer"
+			echo "   Code layer: $code_layer"
+			echo "   Code: $code"
 			exit 1
 		fi
 
@@ -193,7 +234,7 @@ EOF
 
 		GLOBAL_SEEN_CODES="$GLOBAL_SEEN_CODES $code"
 
-		error_keys+=("$key:$code")
+		error_keys+=("$key"$'\t'"$code")
 
 		# ====================================================
 		# GENERATE ERROR
@@ -201,17 +242,18 @@ EOF
 
 		cat <<EOF >> "$OUTPUT_FILE"
 	$key = apperrors.AppError{
-		Key: "$key",
-		Code: "$code",
-		Layer: "$layer",
-		Component: "$component",
-		Tags: []string{$tags},
-		Status: $status,
-		GRPCCode: "$grpc_code",
-		Message: "$message",
-		Severity: "$severity",
-		Retryable: $retryable,
-		Cause: "$cause",
+		Key:        "$key",
+		Code:       "$code",
+		Domain:     "$domain",
+		Layer:      "$layer",
+		Component:  "$component",
+		Tags:       []string{$tags},
+		Status:     $status,
+		GRPCCode:   "$grpc_code",
+		Message:    "$message",
+		Severity:   "$severity",
+		Retryable:  $retryable,
+		Cause:      "$cause",
 		ClientAction: "$client_action",
 		ServerAction: "$server_action",
 	}
@@ -220,21 +262,22 @@ EOF
 
 	done < <(
 		echo "$flattened" | jq -r '
-		[
-			.key,
-			.code,
-			(.component // ""),
-			((.tags // []) | map("\""+.+"\"") | join(",")),
-			(.http_status | tostring),
-			.grpc_code,
-			.message,
-			(.severity // "S3"),
-			(.retryable // false | tostring),
-			(.cause // ""),
-			(.client_action // ""),
-			(.server_action // "")
-		]
-		| join("|")
+			[
+				.layer,
+				.error.key,
+				.error.code,
+				(.error.component // ""),
+				((.error.tags // []) | map("\""+.+"\"") | join(",")),
+				(.error.http_status | tostring),
+				.error.grpc_code,
+				.error.message,
+				(.error.severity // "S3"),
+				(.error.retryable // false | tostring),
+				(.error.cause // ""),
+				(.error.client_action // ""),
+				(.error.server_action // "")
+			]
+			| @tsv
 		'
 	)
 
@@ -247,15 +290,16 @@ EOF
 
 	echo "var (" >> "$OUTPUT_FILE"
 
-	for pair in "${DETAIL_KEYS[@]}"; do
+	for item in "${DETAIL_KEYS[@]}"; do
 
-		const_name=$(echo "$pair" | cut -d':' -f1)
-		code=$(echo "$pair" | cut -d':' -f2)
-		message=$(echo "$pair" | cut -d':' -f3-)
+		code="${item%%$'\t'*}"
+		message="${item#*$'\t'}"
+
+		const_name="REASON_${code}"
 
 		cat <<EOF >> "$OUTPUT_FILE"
 	$const_name = apperrors.Violation{
-		Code: "$code",
+		Code:    "$code",
 		Message: "$message",
 	}
 
@@ -274,10 +318,10 @@ EOF
 
 	for pair in "${error_keys[@]}"; do
 
-		key="${pair%%:*}"
-		code="${pair##*:}"
+		key="${pair%%$'\t'*}"
+		code="${pair#*$'\t'}"
 
-		echo -e "\t\"$code\": $key," >> "$OUTPUT_FILE"
+		printf '\t"%s": %s,\n' "$code" "$key" >> "$OUTPUT_FILE"
 
 	done
 
@@ -290,12 +334,12 @@ EOF
 
 	echo "var ErrorDetailByCode = map[string]apperrors.Violation{" >> "$OUTPUT_FILE"
 
-	for pair in "${DETAIL_KEYS[@]}"; do
+	for item in "${DETAIL_KEYS[@]}"; do
 
-		const_name=$(echo "$pair" | cut -d':' -f1)
-		code=$(echo "$pair" | cut -d':' -f2)
+		code="${item%%$'\t'*}"
+		const_name="REASON_${code}"
 
-		echo -e "\t\"$code\": $const_name," >> "$OUTPUT_FILE"
+		printf '\t"%s": %s,\n' "$code" "$const_name" >> "$OUTPUT_FILE"
 
 	done
 
@@ -317,7 +361,9 @@ cat <<EOF > "$OUTPUT_DEFAULT_FILE"
 // Code generated by generate_errors.sh. DO NOT EDIT.
 
 package apperrors
-x
+
+import "google.golang.org/grpc/codes"
+
 var (
 EOF
 
@@ -334,10 +380,17 @@ defaults=$(yq e ".defaults" -o=json "$YAML_FILE" | jq -r '
 		(.value.severity // "S1"),
 		(.value.retryable // false | tostring)
 	]
-	| join("|")
+	| @tsv
 ')
 
-while IFS="|" read -r key code status grpc_code message severity retryable; do
+while IFS=$'\t' read -r \
+	key \
+	code \
+	status \
+	grpc_code \
+	message \
+	severity \
+	retryable; do
 
 	[ -z "$key" ] && continue
 
@@ -354,17 +407,18 @@ while IFS="|" read -r key code status grpc_code message severity retryable; do
 
 	layer=$(echo "$code" | cut -d'-' -f2)
 
-	default_keys+=("$key:$code")
+	default_keys+=("$key"$'\t'"$code")
 
 	cat <<EOF >> "$OUTPUT_DEFAULT_FILE"
 	$key = AppError{
-		Key: "$key",
-		Code: "$code",
-		Layer: "$layer",
-		Status: $status,
-		GRPCCode: "$grpc_code",
-		Message: "$message",
-		Severity: "$severity",
+		Key:       "$key",
+		Code:      "$code",
+		Domain:    "core",
+		Layer:     "$layer",
+		Status:    $status,
+		GRPCCode:  codes.$grpc_code,
+		Message:   "$message",
+		Severity:  "$severity",
 		Retryable: $retryable,
 	}
 
@@ -383,10 +437,10 @@ echo "var ErrorByCode = map[string]AppError{" >> "$OUTPUT_DEFAULT_FILE"
 
 for pair in "${default_keys[@]}"; do
 
-	key="${pair%%:*}"
-	code="${pair##*:}"
+	key="${pair%%$'\t'*}"
+	code="${pair#*$'\t'}"
 
-	echo -e "\t\"$code\": $key," >> "$OUTPUT_DEFAULT_FILE"
+	printf '\t"%s": %s,\n' "$code" "$key" >> "$OUTPUT_DEFAULT_FILE"
 
 done
 

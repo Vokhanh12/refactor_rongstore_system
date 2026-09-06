@@ -3,10 +3,10 @@ package apperrors
 import "fmt"
 
 type Violation struct {
-	Field   string // field bị lỗi
-	Code    string // REQUIRED, INVALID_FORMAT...
-	Message string // message cụ thể
-	Hint    string // optional fix suggestion
+	Field   string `json:"field"`          // field bị lỗi
+	Code    string `json:"code"`           // REQUIRED, INVALID_FORMAT...
+	Message string `json:"message"`        // message cụ thể
+	Hint    string `json:"hint,omitempty"` // optional fix suggestion
 }
 
 func (e *Violation) Error() string {

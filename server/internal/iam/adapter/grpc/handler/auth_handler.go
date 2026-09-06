@@ -31,7 +31,7 @@ func (a *AuthHandler) Login(
 
 	result, err := a.loginUsecase.Execute(ctx, cmd)
 	if err != nil {
-		return nil, err
+		return mapper.FromLoginResult(result), err
 	}
 
 	return mapper.FromLoginResult(result), nil

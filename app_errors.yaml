@@ -8,6 +8,11 @@ owner: platform-auth
 
 conventions:
 
+  Domain : "bounded context / logical error owner"
+  Layer  : "DOM | APP | TRANSPORT | PARSE | SERIALIZER | SEC | INFRA | SYS"
+  Key    : "ErrorInfo.Reason"
+  Code   : "internal error identifier"
+
   code_format: "<DOMAIN>-<LAYER>-<NNN>"
 
   layers:
@@ -29,6 +34,23 @@ conventions:
     http_retryable: [408, 429, 500, 502, 503, 504]
     grpc_retryable: ["Unavailable", "DeadlineExceeded", "Aborted"]
 
+  domain_format:
+    pattern: "<bounded-context>.<sub-context>"
+
+  domains:
+    core:
+      description: "Shared application/domain concerns"
+
+    platform:
+      description: "Shared infrastructure and platform concerns"
+
+    iam.auth:
+      description: "Authentication and identity credential concerns"
+
+    iam.authz:
+      description: "Authorization and access-control concerns"
+
+
 # ============================================================
 # SERVICES
 # ============================================================
@@ -41,7 +63,7 @@ services:
 
   core:
 
-    domain: "CORE"
+    domain: "core"
 
     errors:
 
@@ -262,7 +284,7 @@ services:
 
     auth:
 
-      domain: "AUTH"
+      domain: "iam.auth"
 
       errors:
 
@@ -351,7 +373,7 @@ services:
 
     authz:
 
-      domain: "AUTHZ"
+      domain: "iam.authz"
 
       errors:
 
@@ -427,7 +449,7 @@ services:
 
   platform:
 
-    domain: "PLATFORM"
+    domain: "platform"
 
     errors:
 

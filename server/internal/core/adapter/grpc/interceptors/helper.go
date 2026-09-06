@@ -1,64 +1,31 @@
 package interceptor
 
-import (
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-)
+import "google.golang.org/grpc/codes"
 
 var grpcCodeMap = map[string]codes.Code{
-	"Internal":         codes.Internal,
-	"Unavailable":      codes.Unavailable,
-	"InvalidArgument":  codes.InvalidArgument,
-	"Unauthenticated":  codes.Unauthenticated,
-	"AlreadyExists":    codes.AlreadyExists,
-	"NotFound":         codes.NotFound,
-	"PermissionDenied": codes.PermissionDenied,
-	"DeadlineExceeded": codes.DeadlineExceeded,
+	"OK":                 codes.OK,
+	"Canceled":           codes.Canceled,
+	"Unknown":            codes.Unknown,
+	"InvalidArgument":    codes.InvalidArgument,
+	"DeadlineExceeded":   codes.DeadlineExceeded,
+	"NotFound":           codes.NotFound,
+	"AlreadyExists":      codes.AlreadyExists,
+	"PermissionDenied":   codes.PermissionDenied,
+	"ResourceExhausted":  codes.ResourceExhausted,
+	"FailedPrecondition": codes.FailedPrecondition,
+	"Aborted":            codes.Aborted,
+	"OutOfRange":         codes.OutOfRange,
+	"Unimplemented":      codes.Unimplemented,
+	"Internal":           codes.Internal,
+	"Unavailable":        codes.Unavailable,
+	"DataLoss":           codes.DataLoss,
+	"Unauthenticated":    codes.Unauthenticated,
 }
 
-func ToGRPCError(grpcCode string, msg string) error {
-
-	st := status.New(
-		toCode(grpcCode),
-		msg,
-	)
-
-	// if len(appErr.ErrorDetails) > 0 {
-	// 	protoDetails := mapDetailsToProto(appErr.ErrorDetails)
-
-	// 	stWithDetails, err := st.WithDetails(protoDetails...)
-	// 	if err == nil {
-	// 		st = stWithDetails
-	// 	}
-	// }
-
-	return st.Err()
-}
-
-func toCode(code string) codes.Code {
+func toGRPCCode(code string) codes.Code {
 	if c, ok := grpcCodeMap[code]; ok {
 		return c
 	}
-	return codes.Unknown
+
+	return codes.Internal
 }
-
-// func mapDetailToProto(d aerrs.Violation) *protos.ErrorDetail {
-// 	return &protos.ErrorDetail{
-// 		Field:   d.Field,
-// 		Code:    d.Code,
-// 		Message: d.Message,
-// 		Hint:    d.Hint,
-// 	}
-// }
-
-// func mapDetailsToProto(details []aerrs.Violation) []interface{} {
-// 	if len(details) == 0 {
-// 		return nil
-// 	}
-
-// 	result := make([]interface{}, 0, len(details))
-// 	for _, d := range details {
-// 		result = append(result, mapDetailToProto(d))
-// 	}
-// 	return result
-// }

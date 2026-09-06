@@ -7,6 +7,8 @@ type AppError struct {
 	Code string // AUTH-VAL-001
 	Key  string // LOGIN_EMAIL_EMPTY
 
+	Domain string // iam.auth
+
 	Layer string
 	// ===== Message =====
 	Message string // human readable
@@ -23,10 +25,6 @@ type AppError struct {
 	// ===== Behavior =====
 	Retryable bool
 	Expected  bool
-
-	// ===== Actions =====
-	ClientAction string
-	ServerAction string
 
 	// ===== Debug =====
 	Source string // service name

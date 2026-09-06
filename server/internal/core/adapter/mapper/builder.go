@@ -40,15 +40,8 @@ func BuildBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseRespo
 			Degraded:   false,
 			ServerTime: time.Now().UnixMilli(),
 		},
+		
 		Data: result,
-
-		Error: &protos.Error{
-			Client: &protos.ClientError{
-				Code:       "",
-				Message:    "",
-				Violations: []*protos.Violation{},
-			},
-		},
 	}
 }
 

@@ -2,261 +2,279 @@
 
 package errors
 
-import "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+import (
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
+)
 
 var (
 	DB_TIMEOUT = apperrors.AppError{
-		Key: "DB_TIMEOUT",
-		Code: "PLATFORM-INFRA-001",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 503,
-		GRPCCode: "Unavailable",
-		Message: "Database timeout",
-		Severity: "S1",
-		Retryable: true,
-		Cause: "",
+		Key:        "DB_TIMEOUT",
+		Code:       "PLATFORM-INFRA-001",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     503,
+		GRPCCode:   "Unavailable",
+		Message:    "Database timeout",
+		Severity:   "S1",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_QUERY_FAILED = apperrors.AppError{
-		Key: "DB_QUERY_FAILED",
-		Code: "PLATFORM-INFRA-002",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Database query failed",
-		Severity: "S2",
-		Retryable: false,
-		Cause: "",
+		Key:        "DB_QUERY_FAILED",
+		Code:       "PLATFORM-INFRA-002",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     500,
+		GRPCCode:   "Internal",
+		Message:    "Database query failed",
+		Severity:   "S2",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	REDIS_UNAVAILABLE = apperrors.AppError{
-		Key: "REDIS_UNAVAILABLE",
-		Code: "PLATFORM-INFRA-003",
-		Layer: "INFRA",
-		Component: "redis",
-		Tags: []string{"infra","cache"},
-		Status: 503,
-		GRPCCode: "Unavailable",
-		Message: "Redis unavailable",
-		Severity: "S1",
-		Retryable: true,
-		Cause: "",
+		Key:        "REDIS_UNAVAILABLE",
+		Code:       "PLATFORM-INFRA-003",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "redis",
+		Tags:       []string{"infra","cache"},
+		Status:     503,
+		GRPCCode:   "Unavailable",
+		Message:    "Redis unavailable",
+		Severity:   "S1",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	EXTERNAL_SERVICE_UNAVAILABLE = apperrors.AppError{
-		Key: "EXTERNAL_SERVICE_UNAVAILABLE",
-		Code: "PLATFORM-INFRA-004",
-		Layer: "INFRA",
-		Component: "external_service",
-		Tags: []string{"infra","external"},
-		Status: 503,
-		GRPCCode: "Unavailable",
-		Message: "External service unavailable",
-		Severity: "S1",
-		Retryable: true,
-		Cause: "",
+		Key:        "EXTERNAL_SERVICE_UNAVAILABLE",
+		Code:       "PLATFORM-INFRA-004",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "external_service",
+		Tags:       []string{"infra","external"},
+		Status:     503,
+		GRPCCode:   "Unavailable",
+		Message:    "External service unavailable",
+		Severity:   "S1",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	POSTGRES_UNAVAILABLE = apperrors.AppError{
-		Key: "POSTGRES_UNAVAILABLE",
-		Code: "PLATFORM-INFRA-005",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 503,
-		GRPCCode: "Unavailable",
-		Message: "Postgres unavailable",
-		Severity: "S1",
-		Retryable: true,
-		Cause: "",
+		Key:        "POSTGRES_UNAVAILABLE",
+		Code:       "PLATFORM-INFRA-005",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     503,
+		GRPCCode:   "Unavailable",
+		Message:    "Postgres unavailable",
+		Severity:   "S1",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	CACHE_SERIALIZATION_FAILED = apperrors.AppError{
-		Key: "CACHE_SERIALIZATION_FAILED",
-		Code: "PLATFORM-INFRA-006",
-		Layer: "INFRA",
-		Component: "cache",
-		Tags: []string{"infra","cache"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Failed to serialize cache payload",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:        "CACHE_SERIALIZATION_FAILED",
+		Code:       "PLATFORM-INFRA-006",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "cache",
+		Tags:       []string{"infra","cache"},
+		Status:     500,
+		GRPCCode:   "Internal",
+		Message:    "Failed to serialize cache payload",
+		Severity:   "S3",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	CACHE_DESERIALIZATION_FAILED = apperrors.AppError{
-		Key: "CACHE_DESERIALIZATION_FAILED",
-		Code: "PLATFORM-INFRA-007",
-		Layer: "INFRA",
-		Component: "cache",
-		Tags: []string{"infra","cache"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Failed to deserialize cache payload",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:        "CACHE_DESERIALIZATION_FAILED",
+		Code:       "PLATFORM-INFRA-007",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "cache",
+		Tags:       []string{"infra","cache"},
+		Status:     500,
+		GRPCCode:   "Internal",
+		Message:    "Failed to deserialize cache payload",
+		Severity:   "S3",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	CACHE_OPERATION_FAILED = apperrors.AppError{
-		Key: "CACHE_OPERATION_FAILED",
-		Code: "PLATFORM-INFRA-008",
-		Layer: "INFRA",
-		Component: "cache",
-		Tags: []string{"infra","cache"},
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Cache operation failed",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:        "CACHE_OPERATION_FAILED",
+		Code:       "PLATFORM-INFRA-008",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "cache",
+		Tags:       []string{"infra","cache"},
+		Status:     500,
+		GRPCCode:   "Internal",
+		Message:    "Cache operation failed",
+		Severity:   "S3",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_CONFLICT = apperrors.AppError{
-		Key: "DB_CONFLICT",
-		Code: "PLATFORM-INFRA-009",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 409,
-		GRPCCode: "AlreadyExists",
-		Message: "Database conflict",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:        "DB_CONFLICT",
+		Code:       "PLATFORM-INFRA-009",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     409,
+		GRPCCode:   "AlreadyExists",
+		Message:    "Database conflict",
+		Severity:   "S3",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_INVALID_REFERENCE = apperrors.AppError{
-		Key: "DB_INVALID_REFERENCE",
-		Code: "PLATFORM-INFRA-010",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Invalid database reference",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:        "DB_INVALID_REFERENCE",
+		Code:       "PLATFORM-INFRA-010",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     400,
+		GRPCCode:   "InvalidArgument",
+		Message:    "Invalid database reference",
+		Severity:   "S3",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_NOT_FOUND = apperrors.AppError{
-		Key: "DB_NOT_FOUND",
-		Code: "PLATFORM-INFRA-011",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 404,
-		GRPCCode: "NotFound",
-		Message: "Database record not found",
-		Severity: "S3",
-		Retryable: false,
-		Cause: "",
+		Key:        "DB_NOT_FOUND",
+		Code:       "PLATFORM-INFRA-011",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     404,
+		GRPCCode:   "NotFound",
+		Message:    "Database record not found",
+		Severity:   "S3",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_QUERY_CANCELED = apperrors.AppError{
-		Key: "DB_QUERY_CANCELED",
-		Code: "PLATFORM-INFRA-012",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database"},
-		Status: 499,
-		GRPCCode: "Canceled",
-		Message: "Database query canceled",
-		Severity: "S2",
-		Retryable: false,
-		Cause: "",
+		Key:        "DB_QUERY_CANCELED",
+		Code:       "PLATFORM-INFRA-012",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database"},
+		Status:     499,
+		GRPCCode:   "Canceled",
+		Message:    "Database query canceled",
+		Severity:   "S2",
+		Retryable:  false,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_SERIALIZATION_CONFLICT = apperrors.AppError{
-		Key: "DB_SERIALIZATION_CONFLICT",
-		Code: "PLATFORM-INFRA-013",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database","transaction"},
-		Status: 409,
-		GRPCCode: "Aborted",
-		Message: "Transaction serialization conflict",
-		Severity: "S2",
-		Retryable: true,
-		Cause: "",
+		Key:        "DB_SERIALIZATION_CONFLICT",
+		Code:       "PLATFORM-INFRA-013",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database","transaction"},
+		Status:     409,
+		GRPCCode:   "Aborted",
+		Message:    "Transaction serialization conflict",
+		Severity:   "S2",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_DEADLOCK = apperrors.AppError{
-		Key: "DB_DEADLOCK",
-		Code: "PLATFORM-INFRA-014",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database","transaction"},
-		Status: 409,
-		GRPCCode: "Aborted",
-		Message: "Database deadlock detected",
-		Severity: "S2",
-		Retryable: true,
-		Cause: "",
+		Key:        "DB_DEADLOCK",
+		Code:       "PLATFORM-INFRA-014",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database","transaction"},
+		Status:     409,
+		GRPCCode:   "Aborted",
+		Message:    "Database deadlock detected",
+		Severity:   "S2",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	DB_CONNECTION_LOST = apperrors.AppError{
-		Key: "DB_CONNECTION_LOST",
-		Code: "PLATFORM-INFRA-015",
-		Layer: "INFRA",
-		Component: "postgres",
-		Tags: []string{"infra","database","network"},
-		Status: 503,
-		GRPCCode: "Unavailable",
-		Message: "Database connection lost",
-		Severity: "S1",
-		Retryable: true,
-		Cause: "",
+		Key:        "DB_CONNECTION_LOST",
+		Code:       "PLATFORM-INFRA-015",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "postgres",
+		Tags:       []string{"infra","database","network"},
+		Status:     503,
+		GRPCCode:   "Unavailable",
+		Message:    "Database connection lost",
+		Severity:   "S1",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
 
 	CACHE_TIMEOUT = apperrors.AppError{
-		Key: "CACHE_TIMEOUT",
-		Code: "PLATFORM-INFRA-016",
-		Layer: "INFRA",
-		Component: "redis",
-		Tags: []string{"infra","cache"},
-		Status: 503,
-		GRPCCode: "DeadlineExceeded",
-		Message: "Cache timeout",
-		Severity: "S2",
-		Retryable: true,
-		Cause: "",
+		Key:        "CACHE_TIMEOUT",
+		Code:       "PLATFORM-INFRA-016",
+		Domain:     "platform",
+		Layer:      "INFRA",
+		Component:  "redis",
+		Tags:       []string{"infra","cache"},
+		Status:     503,
+		GRPCCode:   "DeadlineExceeded",
+		Message:    "Cache timeout",
+		Severity:   "S2",
+		Retryable:  true,
+		Cause:      "",
 		ClientAction: "",
 		ServerAction: "",
 	}
@@ -265,92 +283,92 @@ var (
 
 var (
 	REASON_VAL_REQUIRED = apperrors.Violation{
-		Code: "VAL_REQUIRED",
+		Code:    "VAL_REQUIRED",
 		Message: "Field is required",
 	}
 
 	REASON_VAL_NULL = apperrors.Violation{
-		Code: "VAL_NULL",
+		Code:    "VAL_NULL",
 		Message: "Field must not be null",
 	}
 
 	REASON_VAL_INVALID_FORMAT = apperrors.Violation{
-		Code: "VAL_INVALID_FORMAT",
+		Code:    "VAL_INVALID_FORMAT",
 		Message: "Invalid format",
 	}
 
 	REASON_VAL_INVALID_TYPE = apperrors.Violation{
-		Code: "VAL_INVALID_TYPE",
+		Code:    "VAL_INVALID_TYPE",
 		Message: "Invalid data type",
 	}
 
 	REASON_VAL_INVALID_ENUM = apperrors.Violation{
-		Code: "VAL_INVALID_ENUM",
+		Code:    "VAL_INVALID_ENUM",
 		Message: "Invalid enum value",
 	}
 
 	REASON_VAL_OUT_OF_RANGE = apperrors.Violation{
-		Code: "VAL_OUT_OF_RANGE",
+		Code:    "VAL_OUT_OF_RANGE",
 		Message: "Out of range",
 	}
 
 	REASON_VAL_TOO_SHORT = apperrors.Violation{
-		Code: "VAL_TOO_SHORT",
+		Code:    "VAL_TOO_SHORT",
 		Message: "Value is too short",
 	}
 
 	REASON_VAL_TOO_LONG = apperrors.Violation{
-		Code: "VAL_TOO_LONG",
+		Code:    "VAL_TOO_LONG",
 		Message: "Value is too long",
 	}
 
 	REASON_APP_DUPLICATE = apperrors.Violation{
-		Code: "APP_DUPLICATE",
+		Code:    "APP_DUPLICATE",
 		Message: "Duplicate value",
 	}
 
 	REASON_APP_CONFLICT = apperrors.Violation{
-		Code: "APP_CONFLICT",
+		Code:    "APP_CONFLICT",
 		Message: "Value conflicts with existing data",
 	}
 
 	REASON_APP_NOT_ALLOWED = apperrors.Violation{
-		Code: "APP_NOT_ALLOWED",
+		Code:    "APP_NOT_ALLOWED",
 		Message: "Operation not allowed",
 	}
 
 	REASON_APP_FORBIDDEN_STATE = apperrors.Violation{
-		Code: "APP_FORBIDDEN_STATE",
+		Code:    "APP_FORBIDDEN_STATE",
 		Message: "Invalid state for operation",
 	}
 
 	REASON_APP_NOT_FOUND = apperrors.Violation{
-		Code: "APP_NOT_FOUND",
+		Code:    "APP_NOT_FOUND",
 		Message: "Not found",
 	}
 
 	REASON_APP_ALREADY_EXISTS = apperrors.Violation{
-		Code: "APP_ALREADY_EXISTS",
+		Code:    "APP_ALREADY_EXISTS",
 		Message: "Already exists",
 	}
 
 	REASON_PARSE_INVALID_REFERENCE = apperrors.Violation{
-		Code: "PARSE_INVALID_REFERENCE",
+		Code:    "PARSE_INVALID_REFERENCE",
 		Message: "Invalid reference",
 	}
 
 	REASON_PARSE_INVALID_TIME_RANGE = apperrors.Violation{
-		Code: "PARSE_INVALID_TIME_RANGE",
+		Code:    "PARSE_INVALID_TIME_RANGE",
 		Message: "Invalid time range",
 	}
 
 	REASON_SEC_UNSAFE_INPUT = apperrors.Violation{
-		Code: "SEC_UNSAFE_INPUT",
+		Code:    "SEC_UNSAFE_INPUT",
 		Message: "Unsafe input detected",
 	}
 
 	REASON_SEC_INVALID = apperrors.Violation{
-		Code: "SEC_INVALID",
+		Code:    "SEC_INVALID",
 		Message: "Invalid value",
 	}
 

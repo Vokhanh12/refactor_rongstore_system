@@ -21,7 +21,11 @@ func RecoveryUnaryInterceptor(
 
 		defer func() {
 			if r := recover(); r != nil {
-				logger.Error("panic recovered", r)
+
+				logger.Error(
+					"panic recovered",
+					r,
+				)
 
 				err = status.Error(
 					codes.Internal,

@@ -2,26 +2,30 @@
 
 package apperrors
 
+import "google.golang.org/grpc/codes"
+
 var (
 	UNKNOWN_DOMAIN = AppError{
-		Key: "UNKNOWN_DOMAIN",
-		Code: "CORE-DOM-999",
-		Layer: "DOM",
-		Status: 400,
-		GRPCCode: "InvalidArgument",
-		Message: "Unknown domain error",
-		Severity: "S1",
+		Key:       "UNKNOWN_DOMAIN",
+		Code:      "CORE-DOM-999",
+		Domain:    "core",
+		Layer:     "DOM",
+		Status:    400,
+		GRPCCode:  codes.InvalidArgument,
+		Message:   "Unknown domain error",
+		Severity:  "S1",
 		Retryable: false,
 	}
 
 	INTERNAL_FALLBACK = AppError{
-		Key: "INTERNAL_FALLBACK",
-		Code: "CORE-SYS-999",
-		Layer: "SYS",
-		Status: 500,
-		GRPCCode: "Internal",
-		Message: "Internal server error",
-		Severity: "S1",
+		Key:       "INTERNAL_FALLBACK",
+		Code:      "CORE-SYS-999",
+		Domain:    "core",
+		Layer:     "SYS",
+		Status:    500,
+		GRPCCode:  codes.Internal,
+		Message:   "Internal server error",
+		Severity:  "S1",
 		Retryable: false,
 	}
 
