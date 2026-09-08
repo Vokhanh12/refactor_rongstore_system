@@ -4,13 +4,12 @@ import (
 	"context"
 
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type HandlerFunc func(
 	ctx context.Context,
 	payload any,
-) (any, *aerrs.AppError)
+) (any, error)
 
 type Dispatcher struct {
 	handlers map[Action]HandlerFunc
@@ -47,7 +46,7 @@ func (d *Dispatcher) Dispatch(
 	ctx context.Context,
 	action Action,
 	payload any,
-) (any, *aerrs.AppError) {
+) (any, error) {
 
 	handler, ok := d.handlers[action]
 

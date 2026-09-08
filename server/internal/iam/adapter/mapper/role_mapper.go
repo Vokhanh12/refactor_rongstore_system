@@ -14,9 +14,9 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
-func RoleMToUsecase(
+func ToMutateRoleCommand(
 	m *authzrs.RoleMutation,
-) (dp.Operation, *aerrs.AppError) {
+) (dp.Operation, error) {
 
 	switch v := m.Action.(type) {
 
@@ -110,7 +110,7 @@ func RoleMToUsecase(
 	}
 }
 
-func RoleMToHandler(op dp.Operation) commonv1.MutateResult {
+func FromMutateRoleResult(op dp.Operation) commonv1.MutateResult {
 	switch op.Action {
 	case authzuc.RoleCreate:
 		r := op.Payload.(*cmd.CreateRoleCommandResult)

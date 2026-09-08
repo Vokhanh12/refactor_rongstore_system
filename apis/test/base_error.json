@@ -1,0 +1,22 @@
+{
+  "code": 3,
+  "message": "Validation failed",
+  "details": [
+    {
+      "@type": "type.googleapis.com/myapp.AppErrorInfo",
+      "reason": "AUTH-APP-001",
+      "domain": "iam.auth",
+      "metadata": {
+        "layer": "APP"
+      },
+      "fieldViolations": [
+        {
+          "field": "email",
+          "code": "INVALID_FORMAT",
+          "message": "Email không hợp lệ",
+          "hint": "Nhập email đúng định dạng"
+        }
+      ]
+    }
+  ]
+}

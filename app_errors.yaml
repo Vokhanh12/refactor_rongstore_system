@@ -75,6 +75,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Validation failed"
+          client_message: "Validation failed"
           severity: S3
           retryable: false
 
@@ -85,6 +86,7 @@ services:
           http_status: 404
           grpc_code: NotFound
           message: "{{resource}} not found"
+          client_message: "{{resource}} not found"
           severity: S3
           retryable: false   
 
@@ -95,6 +97,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "{{resource}} contains invalid references"
+          client_message: "{{resource}} contains invalid references"
           severity: S3
           retryable: false
 
@@ -106,6 +109,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Unsupported mutate operation"
+          client_message: "Unsupported mutate operation"
           severity: S3
           retryable: false
 
@@ -116,6 +120,7 @@ services:
           http_status: 200
           grpc_code: OK
           message: "One or more operations failed"
+          client_message: "One or more operations failed"
           severity: S2
           retryable: false
 
@@ -126,6 +131,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Unsupported view operation"
+          client_message: "Unsupported view operation"
           severity: S3
           retryable: false
 
@@ -136,6 +142,7 @@ services:
           http_status: 200
           grpc_code: OK
           message: "One or more operations failed"
+          client_message: "One or more operations failed"
           severity: S2
           retryable: false
 
@@ -146,6 +153,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Application operation failed"
+          client_message: "The operation could not be completed. Please try again later"
           severity: S2
           retryable: false
 
@@ -156,6 +164,7 @@ services:
           http_status: 409
           grpc_code: AlreadyExists
           message: "{{resource}} already exists"
+          client_message: "{{resource}} already exists"
           severity: S3
           retryable: false
 
@@ -166,6 +175,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Handler not found"
+          client_message: "Handler not found"
           severity: S3
           retryable: false
 
@@ -176,6 +186,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid command type"
+          client_message: "Invalid command type"
           severity: S3
           retryable: false
 
@@ -187,6 +198,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid request payload"
+          client_message: "Invalid request payload"
           severity: S3
           retryable: false
 
@@ -198,6 +210,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid string format"
+          client_message: "Invalid string format"
           severity: S3
           retryable: false
 
@@ -208,6 +221,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid UUID format"
+          client_message: "Invalid UUID format"
           severity: S3
           retryable: false
 
@@ -218,6 +232,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Failed to parse mutation payload"
+          client_message: "Failed to parse mutation payload"
           severity: S3
           retryable: false
 
@@ -229,6 +244,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Failed to serialize payload"
+          client_message: "The request could not be processed"
           severity: S2
           retryable: false
 
@@ -239,6 +255,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Failed to deserialize payload"
+          client_message: "The request could not be processed"
           severity: S2
           retryable: false
 
@@ -251,6 +268,7 @@ services:
           http_status: 500
           grpc_code: Nil
           message: "Nil"
+          client_message: "Nil"
           severity: S2
           retryable: false
 
@@ -262,6 +280,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Internal server error"
+          client_message: "Something went wrong. Please try again later"
           severity: S1
           retryable: false
 
@@ -272,6 +291,7 @@ services:
           http_status: 499
           grpc_code: Canceled
           message: "Request canceled"
+          client_message: "Request canceled"
           severity: S3
           retryable: false
   
@@ -296,6 +316,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Email is required"
+            client_message: "Email is required"
             severity: S3
             retryable: false
 
@@ -306,6 +327,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Invalid email format"
+            client_message: "Invalid email format"
             severity: S3
             retryable: false
 
@@ -316,6 +338,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Password is required"
+            client_message: "Password is required"
             severity: S3
             retryable: false
 
@@ -327,6 +350,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Invalid login payload"
+            client_message: "Invalid login payload"
             severity: S3
             retryable: false
 
@@ -338,6 +362,7 @@ services:
             http_status: 401
             grpc_code: Unauthenticated
             message: "Token expired"
+            client_message: "Token expired"
             severity: S3
             retryable: false
 
@@ -348,6 +373,7 @@ services:
             http_status: 401
             grpc_code: Unauthenticated
             message: "Authentication required"
+            client_message: "Authentication required"
             severity: S3
             retryable: false
 
@@ -358,6 +384,7 @@ services:
             http_status: 401
             grpc_code: Unauthenticated
             message: "Invalid token"
+            client_message: "Invalid token"
             severity: S3
             retryable: false
 
@@ -368,6 +395,7 @@ services:
             http_status: 401
             grpc_code: Unauthenticated
             message: "Invalid credentials"
+            client_message: "Invalid credentials"
             severity: S3
             retryable: false
 
@@ -385,6 +413,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Invalid authorization"
+            client_message: "Invalid authorization"
             severity: S3
             retryable: false
 
@@ -398,6 +427,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Invalid authorization"
+            client_message: "Invalid authorization"
             severity: S3
             retryable: false
 
@@ -409,6 +439,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Invalid authorization"
+            client_message: "Invalid authorization"
             severity: S3
             retryable: false
 
@@ -419,6 +450,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Resource and action are required"
+            client_message: "Resource and action are required"
             severity: S3
             retryable: false
 
@@ -429,6 +461,7 @@ services:
             http_status: 400
             grpc_code: InvalidArgument
             message: "Role is required"
+            client_message: "Role is required"
             severity: S3
             retryable: false
 
@@ -440,6 +473,7 @@ services:
             http_status: 403
             grpc_code: PermissionDenied
             message: "Permission denied"
+            client_message: "Permission denied"
             severity: S3
             retryable: false
 
@@ -462,6 +496,7 @@ services:
           http_status: 503
           grpc_code: Unavailable
           message: "Database timeout"
+          client_message: "Service temporarily unavailable"
           severity: S1
           retryable: true
 
@@ -472,6 +507,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Database query failed"
+          client_message: "Something went wrong. Please try again later"
           severity: S2
           retryable: false
 
@@ -482,6 +518,7 @@ services:
           http_status: 503
           grpc_code: Unavailable
           message: "Redis unavailable"
+          client_message: "Service temporarily unavailable"
           severity: S1
           retryable: true
 
@@ -492,6 +529,7 @@ services:
           http_status: 503
           grpc_code: Unavailable
           message: "External service unavailable"
+          client_message: "Service temporarily unavailable"
           severity: S1
           retryable: true
 
@@ -502,6 +540,7 @@ services:
           http_status: 503
           grpc_code: Unavailable
           message: "Postgres unavailable"
+          client_message: "Service temporarily unavailable"
           severity: S1
           retryable: true
 
@@ -512,6 +551,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Failed to serialize cache payload"
+          client_message: "Something went wrong. Please try again later"
           severity: S3
           retryable: false
 
@@ -522,6 +562,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Failed to deserialize cache payload"
+          client_message: "Something went wrong. Please try again later"
           severity: S3
           retryable: false
 
@@ -532,6 +573,7 @@ services:
           http_status: 500
           grpc_code: Internal
           message: "Cache operation failed"
+          client_message: "Something went wrong. Please try again later"
           severity: S3
           retryable: false
 
@@ -542,6 +584,7 @@ services:
           http_status: 409
           grpc_code: AlreadyExists
           message: "Database conflict"
+          client_message: "The request conflicts with existing data"
           severity: S3
           retryable: false
 
@@ -552,6 +595,7 @@ services:
           http_status: 400
           grpc_code: InvalidArgument
           message: "Invalid database reference"
+          client_message: "The requested data is invalid"
           severity: S3
           retryable: false
 
@@ -562,6 +606,7 @@ services:
           http_status: 404
           grpc_code: NotFound
           message: "Database record not found"
+          client_message: "The requested resource was not found"
           severity: S3
           retryable: false
 
@@ -572,6 +617,7 @@ services:
           http_status: 499
           grpc_code: Canceled
           message: "Database query canceled"
+          client_message: "The request was canceled"
           severity: S2
           retryable: false
 
@@ -582,6 +628,7 @@ services:
           http_status: 409
           grpc_code: Aborted
           message: "Transaction serialization conflict"
+          client_message: "The request could not be completed. Please try again"
           severity: S2
           retryable: true
 
@@ -592,6 +639,7 @@ services:
           http_status: 409
           grpc_code: Aborted
           message: "Database deadlock detected"
+          client_message: "The request could not be completed. Please try again"
           severity: S2
           retryable: true
 
@@ -602,6 +650,7 @@ services:
           http_status: 503
           grpc_code: Unavailable
           message: "Database connection lost"
+          client_message: "Service temporarily unavailable"
           severity: S1
           retryable: true
 
@@ -612,6 +661,7 @@ services:
           http_status: 503
           grpc_code: DeadlineExceeded
           message: "Cache timeout"
+          client_message: "Service temporarily unavailable"
           severity: S2
           retryable: true
 

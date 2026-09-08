@@ -61,7 +61,7 @@ func (u *MutateRoleUsecase) Execute(
 	ctx context.Context,
 	action dpc.Action,
 	payload any,
-) (any, *aerrs.AppError) {
+) (any, error) {
 
 	return u.dispatcher.Dispatch(
 		ctx,
@@ -73,7 +73,7 @@ func (u *MutateRoleUsecase) Execute(
 func (u *MutateRoleUsecase) handleCreate(
 	ctx context.Context,
 	cmd c.CreateRoleCommand,
-) (*c.CreateRoleCommandResult, *aerrs.AppError) {
+) (*c.CreateRoleCommandResult, error) {
 
 	roleKey, err := vo.NewRoleKey(cmd.ScopeID, cmd.Code)
 	if err != nil {
@@ -127,10 +127,10 @@ func (u *MutateRoleUsecase) handleCreate(
 	}, nil
 }
 
-func (u *MutateRoleUsecase) handleUpdate(ctx context.Context, cmd c.UpdateRoleCommand) (*c.UpdateRoleCommandResult, *aerrs.AppError) {
+func (u *MutateRoleUsecase) handleUpdate(ctx context.Context, cmd c.UpdateRoleCommand) (*c.UpdateRoleCommandResult, error) {
 	return nil, nil
 }
 
-func (u *MutateRoleUsecase) handleDelete(ctx context.Context, cmd c.DeleteRoleCommand) (*c.DeleteRoleCommandResult, *aerrs.AppError) {
+func (u *MutateRoleUsecase) handleDelete(ctx context.Context, cmd c.DeleteRoleCommand) (*c.DeleteRoleCommandResult, error) {
 	return nil, nil
 }

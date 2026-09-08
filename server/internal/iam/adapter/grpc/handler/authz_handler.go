@@ -5,6 +5,7 @@ import (
 
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
@@ -30,9 +31,10 @@ func (a *AuthzHandler) RoleMutate(
 	results := make([]*commonv1.MutateResult, 0, len(req.Mutations))
 
 	for _, mutation := range req.Mutations {
-		op, err := assemblers.RoleMToUsecase(mutation)
+		op, err := mapper.ToMutateRoleCommand(mutation)
 		if err != nil {
-			results = append(results, crm.BuildMutateResult(ctx, err))
+			// ====> bug cmnr
+			results = append(results, mapper.FromMutateRoleResult(ctx, err))
 			continue
 		}
 

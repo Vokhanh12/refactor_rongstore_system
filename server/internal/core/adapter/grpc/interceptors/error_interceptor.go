@@ -6,6 +6,7 @@ import (
 
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
+	comv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -54,55 +55,67 @@ func translateRespError(resp any, err error) (any, error) {
 
 // ===>>> Điều chỉnh dispatcher result trả về nhiều error
 func ToGRPCError(resp any, appErr *apperrors.AppError) (any, error) {
+
 	st := status.New(
 		toGRPCCode(appErr.GRPCCode),
 		appErr.Message,
 	)
 
-	errorInfo := &errdetails.ErrorInfo{
-		Reason: appErr.Code,
-		Domain: appErr.Domain,
-		Metadata: map[string]string{
-			"layer": appErr.Layer,
-		},
-	}
+	_, ok := resp.(*comv1rs.BaseResponse)
 
-	if len(appErr.Violations) == 0 {
-		stWithDetails, err := st.WithDetails(errorInfo)
+	if ok {
+		errorInfo := &errdetails.ErrorInfo{
+			Reason: appErr.Code,
+			Domain: appErr.Domain,
+			Metadata: map[string]string{
+				"layer": appErr.Layer,
+			},
+		}
+
+		if len(appErr.Violations) == 0 {
+			stWithDetails, err := st.WithDetails(errorInfo)
+			if err != nil {
+				return resp, status.Error(
+					codes.Internal,
+					"internal server error",
+				)
+			}
+
+			return resp, stWithDetails.Err()
+		}
+
+		badRequest := &errdetails.BadRequest{}
+		for _, violation := range appErr.Violations {
+			badRequest.FieldViolations = append(
+				badRequest.FieldViolations,
+				&errdetails.BadRequest_FieldViolation{
+					Reason:      violation.Code,
+					Field:       violation.Field,
+					Description: violation.Message,
+				},
+			)
+		}
+
+		stWithDetails, err := st.WithDetails(
+			errorInfo,
+			badRequest,
+		)
+
 		if err != nil {
-			return status.Error(
+			return resp, status.Error(
 				codes.Internal,
 				"internal server error",
 			)
 		}
 
-		return stWithDetails.Err()
+		return resp, stWithDetails.Err()
+
 	}
 
-	badRequest := &errdetails.BadRequest{}
+	mutateResp, ok := resp.(*comv1rs.MutateResponse)
 
-	for _, violation := range appErr.Violations {
-		badRequest.FieldViolations = append(
-			badRequest.FieldViolations,
-			&errdetails.BadRequest_FieldViolation{
-				Reason:      violation.Code,
-				Field:       violation.Field,
-				Description: violation.Message,
-			},
-		)
+	if ok {
+		mutateResp.MutateResults
 	}
 
-	stWithDetails, err := st.WithDetails(
-		errorInfo,
-		badRequest,
-	)
-
-	if err != nil {
-		return status.Error(
-			codes.Internal,
-			"internal server error",
-		)
-	}
-
-	return stWithDetails.Err()
 }

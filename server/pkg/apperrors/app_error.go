@@ -11,7 +11,8 @@ type AppError struct {
 
 	Layer string
 	// ===== Message =====
-	Message string // human readable
+	Message       string // human readable
+	ClientMessage string // human readable
 
 	// ===== Protocol =====
 	Status   int    // HTTP status

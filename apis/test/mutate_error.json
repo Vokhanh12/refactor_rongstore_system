@@ -1,0 +1,56 @@
+{
+  "code": 3,
+  "message": "Multiple mutations failed",
+  "details": [
+    {
+      "@type": "type.googleapis.com/myapp.MutationErrors",
+      "errors": [
+        {
+          "operation": "create_user",
+          "code": "AUTH-APP-001",
+          "message": "Create user failed",
+          "violations": [
+            {
+              "field": "email",
+              "code": "INVALID_FORMAT",
+              "message": "Email không hợp lệ",
+              "hint": "Nhập email đúng định dạng"
+            },
+            {
+              "field": "password",
+              "code": "TOO_SHORT",
+              "message": "Password quá ngắn",
+              "hint": "Password phải có ít nhất 8 ký tự"
+            }
+          ]
+        },
+        {
+          "operation": "create_store",
+          "code": "STORE-APP-003",
+          "message": "Create store failed",
+          "violations": [
+            {
+              "field": "name",
+              "code": "DUPLICATE",
+              "message": "Tên store đã tồn tại",
+              "hint": "Chọn tên khác"
+            }
+          ]
+        },
+        {
+          "operation": "update_permission",
+          "code": "AUTHZ-SEC-002",
+          "message": "Permission denied",
+          "violations": [
+            {
+              "field": "permission",
+              "code": "FORBIDDEN",
+              "message": "Không có quyền thực hiện thao tác này",
+              "hint": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

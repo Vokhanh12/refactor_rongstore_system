@@ -11,13 +11,13 @@ func Wrap[T any, R any](
 	fn func(
 		context.Context,
 		T,
-	) (R, *aerrs.AppError),
+	) (R, error),
 ) HandlerFunc {
 
 	return func(
 		ctx context.Context,
 		payload any,
-	) (any, *aerrs.AppError) {
+	) (any, error) {
 
 		cmd, ok := payload.(T)
 		if !ok {

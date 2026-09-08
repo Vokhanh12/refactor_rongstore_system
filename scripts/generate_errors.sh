@@ -163,11 +163,10 @@ EOF
 		status \
 		grpc_code \
 		message \
+		client_message \
 		severity \
 		retryable \
-		cause \
-		client_action \
-		server_action; do
+		cause ; do
 
 		[ -z "$key" ] && continue
 
@@ -242,20 +241,19 @@ EOF
 
 		cat <<EOF >> "$OUTPUT_FILE"
 	$key = apperrors.AppError{
-		Key:        "$key",
-		Code:       "$code",
-		Domain:     "$domain",
-		Layer:      "$layer",
-		Component:  "$component",
-		Tags:       []string{$tags},
-		Status:     $status,
-		GRPCCode:   "$grpc_code",
-		Message:    "$message",
-		Severity:   "$severity",
-		Retryable:  $retryable,
-		Cause:      "$cause",
-		ClientAction: "$client_action",
-		ServerAction: "$server_action",
+		Key:           "$key",
+		Code:          "$code",
+		Domain:        "$domain",
+		Layer:         "$layer",
+		Component:     "$component",
+		Tags:          []string{$tags},
+		Status:        $status,
+		GRPCCode:      "$grpc_code",
+		Message:       "$message",
+		ClientMessage: "$client_message",
+		Severity:      "$severity",
+		Retryable:     $retryable,
+		Cause:         "$cause",
 	}
 
 EOF
@@ -271,11 +269,10 @@ EOF
 				(.error.http_status | tostring),
 				.error.grpc_code,
 				.error.message,
+				(.error.client_message // .error.message // ""),
 				(.error.severity // "S3"),
 				(.error.retryable // false | tostring),
-				(.error.cause // ""),
-				(.error.client_action // ""),
-				(.error.server_action // "")
+				(.error.cause // "")
 			]
 			| @tsv
 		'
@@ -377,6 +374,7 @@ defaults=$(yq e ".defaults" -o=json "$YAML_FILE" | jq -r '
 		(.value.http_status | tostring),
 		.value.grpc_code,
 		.value.message,
+		(.value.client_message // .value.message // ""),
 		(.value.severity // "S1"),
 		(.value.retryable // false | tostring)
 	]
@@ -389,6 +387,7 @@ while IFS=$'\t' read -r \
 	status \
 	grpc_code \
 	message \
+	client_message \
 	severity \
 	retryable; do
 
@@ -411,15 +410,16 @@ while IFS=$'\t' read -r \
 
 	cat <<EOF >> "$OUTPUT_DEFAULT_FILE"
 	$key = AppError{
-		Key:       "$key",
-		Code:      "$code",
-		Domain:    "core",
-		Layer:     "$layer",
-		Status:    $status,
-		GRPCCode:  codes.$grpc_code,
-		Message:   "$message",
-		Severity:  "$severity",
-		Retryable: $retryable,
+		Key:           "$key",
+		Code:          "$code",
+		Domain:        "core",
+		Layer:         "$layer",
+		Status:        $status,
+		GRPCCode:      codes.$grpc_code,
+		Message:       "$message",
+		ClientMessage: "$client_message",
+		Severity:      "$severity",
+		Retryable:     $retryable,
 	}
 
 EOF
