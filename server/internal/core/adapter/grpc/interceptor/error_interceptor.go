@@ -68,7 +68,9 @@ func ToGRPCError(resp any, appErr *apperrors.AppError) (any, error) {
 			Reason: appErr.Code,
 			Domain: appErr.Domain,
 			Metadata: map[string]string{
-				"layer": appErr.Layer,
+				"op_id":   op_id,
+				"message": message,
+				"layer":   appErr.Layer,
 			},
 		}
 

@@ -6,7 +6,7 @@ option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/p
 option java_package = "com.aliasadi.iam.v1.resources";
 option java_multiple_files = true;
 
-import "validate/v1/validate.proto";
+import "buf/validate/validate.proto";
 import "core/common/v1/resources/auth_options.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -39,79 +39,97 @@ message Permission {
 
 message PermissionMutation {
 
-    string op_id = 1 [
-      (validate.rules).string = {min_len: 1}
-    ];
-  
-    oneof action {
-      Create create = 2;
-      Update update = 3;
-      Delete delete = 4;
-    }
-  
-    // ---------------- CREATE ----------------
-    message Create {
-  
-      option (auth.resource) = "PERMISSION";
-      option (auth.action) = "CREATE";
-      option (auth.require_tenant) = true;
-  
-      message Data {
-        string code = 1 [(validate.rules).string = {min_len: 1}];
-        string name = 2 [(validate.rules).string = {min_len: 1}];
-        string description = 3;
-      }
-  
-      Data data = 1 [(validate.rules).message.required = true];
-    }
-  
-    // ---------------- UPDATE ----------------
-    message Update {
-  
-      option (auth.resource) = "PERMISSION";
-      option (auth.action) = "UPDATE";
-      option (auth.resource_id_field) = "id";
-      option (auth.require_tenant) = true;
-  
-      string id = 1 [
-        (validate.rules).string = {min_len: 1}
-      ];
-  
-      message Data {
-        string name = 1;
-        string description = 2;
-      }
-  
-      Data data = 2 [(validate.rules).message.required = true];
-    }
-  
-    // ---------------- DELETE ----------------
-    message Delete {
-  
-      option (auth.resource) = "PERMISSION";
-      option (auth.action) = "DELETE";
-      option (auth.resource_id_field) = "id";
-      option (auth.require_tenant) = true;
-  
-      string id = 1 [
-        (validate.rules).string = {min_len: 1}
-      ];
-    }
+  string op_id = 1 [
+    (buf.validate.field).string.min_len = 1
+  ];
+
+  oneof action {
+    Create create = 2;
+    Update update = 3;
+    Delete delete = 4;
   }
 
+  // ==========================================================
+  // CREATE
+  // ==========================================================
+
+  message Create {
+
+    option (auth.resource) = "PERMISSION";
+    option (auth.action) = "CREATE";
+    option (auth.require_tenant) = true;
+
+    message Data {
+      string code = 1 [
+        (buf.validate.field).string.min_len = 1
+      ];
+
+      string name = 2 [
+        (buf.validate.field).string.min_len = 1
+      ];
+
+      string description = 3;
+    }
+
+    Data data = 1 [
+      (buf.validate.field).required = true
+    ];
+  }
+
+  // ==========================================================
+  // UPDATE
+  // ==========================================================
+
+  message Update {
+
+    option (auth.resource) = "PERMISSION";
+    option (auth.action) = "UPDATE";
+    option (auth.resource_id_field) = "id";
+    option (auth.require_tenant) = true;
+
+    string id = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
+    message Data {
+      string name = 1;
+      string description = 2;
+    }
+
+    Data data = 2 [
+      (buf.validate.field).required = true
+    ];
+  }
+
+  // ==========================================================
+  // DELETE
+  // ==========================================================
+
+  message Delete {
+
+    option (auth.resource) = "PERMISSION";
+    option (auth.action) = "DELETE";
+    option (auth.resource_id_field) = "id";
+    option (auth.require_tenant) = true;
+
+    string id = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+  }
+}
 
 // ============================================================
-// QUERY (VIEW) (COMMAND)
+// QUERY (VIEW)
 // ============================================================
-
 
 // ============================================================
 // API
 // ============================================================
 
 message PermissionMutateRequest {
+
   repeated PermissionMutation mutations = 1 [
-    (validate.rules).repeated = {min_items: 1}
+    (buf.validate.field).repeated.min_items = 1
   ];
 }
 

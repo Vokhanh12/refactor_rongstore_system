@@ -4,50 +4,25 @@
   "details": [
     {
       "@type": "type.googleapis.com/myapp.MutationErrors",
-      "opid": "op_id",
       "reason": "AUTH-APP-001",
       "domain": "iam.auth",
-      "message": "Create user failed",
-      "violations": [{
+      "metadata" : {
+        "opID": "uuid",
+        "message": "Create user failed",
+        "layer": "domain"
+      },
+      "fieldViolations": [
+        {
           "field": "email",
-          "code": "INVALID_FORMAT",
-          "message": "Email không hợp lệ",
-          "hint": "Nhập email đúng định dạng"
+          "reason": "INVALID_FORMAT",
+          "description": "Email không hợp lệ"
         },
         {
           "field": "password",
-          "code": "TOO_SHORT",
-          "message": "Password quá ngắn",
-          "hint": "Password phải có ít nhất 8 ký tự"
+          "reason": "TOO_SHORT",
+          "description": "Password quá ngắn"
         }
       ]
-    },
-    {
-      "@type": "type.googleapis.com/myapp.MutationErrors",
-      "opid": "op_id",
-      "reason": "AUTH-APP-003",
-      "domain": "iam.auth",
-      "message": "Create store failed",
-      "violations": [{
-        "field": "name",
-        "code": "DUPLICATE",
-        "message": "Tên store đã tồn tại",
-        "hint": "Chọn tên khác"
-      }]
-    },
-    {
-      "@type": "type.googleapis.com/myapp.MutationErrors",
-      "opid": "op_id",
-      "reason": "AUTH-APP-004",
-      "domain": "iam.auth",
-      "message": "Permission denied",
-      "violations": [{
-        "field": "permission",
-        "code": "FORBIDDEN",
-        "message": "Không có quyền thực hiện thao tác này",
-        "hint": ""
-      }
-    ]
     }
   ]
 }

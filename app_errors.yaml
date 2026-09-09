@@ -674,46 +674,73 @@ error_details:
   DOM:
     - code: VAL_REQUIRED
       message: "Field is required"
+
     - code: VAL_NULL
       message: "Field must not be null"
+
+    - code: VAL_INVALID
+      message: "Invalid value"
+
     - code: VAL_INVALID_FORMAT
       message: "Invalid format"
+
     - code: VAL_INVALID_TYPE
       message: "Invalid data type"
+
     - code: VAL_INVALID_ENUM
       message: "Invalid enum value"
+
     - code: VAL_OUT_OF_RANGE
       message: "Out of range"
+
     - code: VAL_TOO_SHORT
       message: "Value is too short"
+
     - code: VAL_TOO_LONG
       message: "Value is too long"
+
 
   APP:
     - code: APP_DUPLICATE
       message: "Duplicate value"
+
     - code: APP_CONFLICT
       message: "Value conflicts with existing data"
+
     - code: APP_NOT_ALLOWED
       message: "Operation not allowed"
+
     - code: APP_FORBIDDEN_STATE
       message: "Invalid state for operation"
+
+    - code: APP_PRECONDITION_FAILED
+      message: "Precondition failed"
+
     - code: APP_NOT_FOUND
       message: "Not found"
+
     - code: APP_ALREADY_EXISTS
       message: "Already exists"
+
 
   PARSE:
     - code: PARSE_INVALID_REFERENCE
       message: "Invalid reference"
+
     - code: PARSE_INVALID_TIME_RANGE
       message: "Invalid time range"
+
+    - code: PARSE_INVALID_VALUE
+      message: "Invalid value"
+
 
   SEC:
     - code: SEC_UNSAFE_INPUT
       message: "Unsafe input detected"
+
     - code: SEC_INVALID
       message: "Invalid value"
+
 
 # ============================================================
 # DEFAULTS

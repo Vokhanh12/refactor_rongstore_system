@@ -3,7 +3,7 @@ syntax = "proto3";
 package common.v1;
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1"; 
 
-message Metadata {
+message MetadataRequest {
   string request_id = 1;
   string trace_id = 2;
   int64  server_time = 3;
@@ -12,4 +12,8 @@ message Metadata {
   // optional advanced
   string region = 5;          // ap-sg, ap-vn
   bool   degraded = 6;        // hệ thống đang degraded
+}
+
+message MetadataReponse{
+  string op_id = 1;
 }

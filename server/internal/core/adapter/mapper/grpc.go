@@ -1,4 +1,4 @@
-package interceptor
+package mapper
 
 import "google.golang.org/grpc/codes"
 
@@ -22,7 +22,7 @@ var grpcCodeMap = map[string]codes.Code{
 	"Unauthenticated":    codes.Unauthenticated,
 }
 
-func toGRPCCode(code string) codes.Code {
+func ToGRPCCode(code string) codes.Code {
 	if c, ok := grpcCodeMap[code]; ok {
 		return c
 	}

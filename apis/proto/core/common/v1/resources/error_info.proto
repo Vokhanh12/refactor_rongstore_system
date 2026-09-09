@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1";
+
+import "core/common/v1/resources/metadata.proto";
+
+message Violation {
+  string field = 1;
+  string message = 2;
+  string reason = 3;
+  string hint = 4;
+}
+
+message AppErrorInfo {
+  string reason = 1;
+  string domain = 2;
+  MetadataReponse metadata = 3;
+  string message = 4;
+  string layer =5;
+  repeated Violation violations = 6;
+}
+
+

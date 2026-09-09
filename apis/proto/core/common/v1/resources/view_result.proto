@@ -4,18 +4,11 @@ package common.v1;
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1"; 
 
 import "google/protobuf/any.proto";
-import "core/common/v1/resources/error.proto";
 import "core/common/v1/resources/pagination.proto";
 import "core/common/v1/resources/warning.proto";
 
 message ViewResult {
-  string op_id = 1;
-  string resource_id = 2;
-  bool success = 3;
-  google.protobuf.Any items = 4;
-  ClientError client_err = 5;           
-  ServerError server_err = 6;        
+  google.protobuf.Any data = 4;
   Pagination pagination = 7;     
   repeated Warning warnings = 8; 
-  map<string, string> details = 9; 
 }

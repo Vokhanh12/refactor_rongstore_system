@@ -5,14 +5,17 @@ option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/p
 option java_package = "com.aliasadi.iam.v1.resources";
 option java_multiple_files = true;
 
+import "core/common/v1/resources/base_request.proto";
+
+
 message LoginRequest {
     message Data {
       string identifier = 1; 
       string password = 2;
     }
     
-    common.v1.BaseRequest metadata = 1 [(validate.rules).message.required = true];
-    Data data = 2 [(validate.rules).message.required = true];
+    common.v1.BaseRequest metadata = 1;
+    Data data = 2 ;
   }
   
   message LoginResponse {

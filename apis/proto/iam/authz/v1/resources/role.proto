@@ -4,7 +4,7 @@ package iam.v1;
 
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespb";
 
-import "validate/v1/validate.proto";
+import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 import "core/common/v1/resources/auth_options.proto";
 import "core/common/v1/resources/search_criteria.proto";
@@ -42,12 +42,14 @@ message Role {
 // ============================================================
 
 message RoleMutation {
+
   string op_id = 1 [
-    (validate.rules).string = {min_len: 1}
+    (buf.validate.field).string.min_len = 1
   ];
 
   oneof action {
-    option (validate.required) = true;
+    option (buf.validate.oneof).required = true;
+
     Create create = 2;
     Update update = 3;
     Delete delete = 4;
@@ -55,12 +57,15 @@ message RoleMutation {
 }
 
 message RoleMutateRequest {
+
   repeated RoleMutation mutations = 1 [
-    (validate.rules).repeated = {min_items: 1}
+    (buf.validate.field).repeated.min_items = 1
   ];
 }
 
-// ---------------- CREATE ----------------
+// ============================================================
+// CREATE
+// ============================================================
 
 message Create {
 
@@ -68,24 +73,40 @@ message Create {
   option (auth.action) = "CREATE";
 
   message Data {
-    string code = 1 [(validate.rules).string = {min_len: 1}];
-    string name = 2 [(validate.rules).string = {min_len: 1}];
+
+    string code = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
+    string name = 2 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
     optional string description = 3;
 
     optional string scope_id = 4;
+
     string scope_type = 5;
+
     string access_scope = 6;
 
     int32 level = 7;
+
     bool is_system = 8;
+
     bool is_super = 9;
+
     bool is_active = 10;
   }
 
-  Data data = 1 [(validate.rules).message.required = true];
+  Data data = 1 [
+    (buf.validate.field).required = true
+  ];
 }
 
-// ---------------- UPDATE ----------------
+// ============================================================
+// UPDATE
+// ============================================================
 
 message Update {
 
@@ -94,28 +115,44 @@ message Update {
   option (auth.resource_id_field) = "id";
 
   string id = 1 [
-    (validate.rules).string = {min_len: 1}
+    (buf.validate.field).string.min_len = 1
   ];
 
   message Data {
-    string code = 1 [(validate.rules).string = {min_len: 1}];
-    string name = 2 [(validate.rules).string = {min_len: 1}];
+
+    string code = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
+    string name = 2 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
     optional string description = 3;
 
     optional string scope_id = 4;
+
     string scope_type = 5;
+
     string access_scope = 6;
 
     int32 level = 7;
+
     bool is_system = 8;
+
     bool is_super = 9;
+
     bool is_active = 10;
   }
 
-  Data data = 2 [(validate.rules).message.required = true];
+  Data data = 2 [
+    (buf.validate.field).required = true
+  ];
 }
 
-// ---------------- DELETE ----------------
+// ============================================================
+// DELETE
+// ============================================================
 
 message Delete {
 
@@ -124,12 +161,12 @@ message Delete {
   option (auth.resource_id_field) = "id";
 
   string id = 1 [
-    (validate.rules).string = {min_len: 1}
+    (buf.validate.field).string.min_len = 1
   ];
 }
 
 // ============================================================
-// MUTATION RESULT (WRITE RESPONSE)
+// MUTATION RESULT
 // ============================================================
 
 message CreateResult {
@@ -170,9 +207,8 @@ message RoleView {
   }
 }
 
-
-
-// VIEW RESULT (WRITE RESPONSE)
+// ============================================================
+// VIEW RESULT
 // ============================================================
 
 message GetResult {

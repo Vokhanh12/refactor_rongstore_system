@@ -3,16 +3,10 @@ syntax = "proto3";
 package common.v1;
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1"; 
 
-import "core/common/v1/resources/error.proto";
 import "google/protobuf/any.proto";
 
 
 message MutateResult{
-  string op_id = 1;
-  string resource_id = 2;
-  google.protobuf.Any data = 3;
-  bool success = 4;
-  ClientError client_err = 5;
-  ServerError server_err = 6;        
+  google.protobuf.Any data = 1;
 }
 
