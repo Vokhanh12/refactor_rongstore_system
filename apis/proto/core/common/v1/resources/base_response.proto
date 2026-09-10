@@ -13,12 +13,10 @@ message BaseResponse {
 }
 
 message MutateResponse {
-  MetadataReponse metadata = 1;
-  MutateResult mutate_results = 2;
+  repeated MutateResult mutate_results = 1;
 }
 
 message ViewResponse {
-  MetadataReponse metadata = 1;
-  ViewResult view_results = 2;
+  repeated ViewResult view_results = 1;
 }
 

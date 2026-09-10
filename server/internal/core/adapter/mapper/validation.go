@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"buf.build/go/protovalidate"
 	v "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
@@ -61,10 +62,28 @@ var validationCodeMap = map[string]aerr.Violation{
 	"message.required": v.REASON_VAL_REQUIRED,
 }
 
-func ToValidationViolation(code string) aerr.Violation {
-	if violation, ok := validationCodeMap[code]; ok {
+func ToValidationViolation(ruleID string) aerr.Violation {
+	if violation, ok := validationCodeMap[ruleID]; ok {
 		return violation
 	}
 
-	return v.REASON_VAL_INVALID_FORMAT
+	return v.REASON_VAL_INVALID
+}
+
+func ToValidationError(
+	err *protovalidate.ValidationError,
+) []aerr.Violation {
+
+	violations := make([]aerr.Violation, 0, len(err.Violations))
+
+	for _, violation := range err.Violations {
+
+		ruleID := violation.Proto.GetRuleId()
+
+		mapped := ToValidationViolation(ruleID)
+
+		violations = append(violations, mapped)
+	}
+
+	return violations
 }

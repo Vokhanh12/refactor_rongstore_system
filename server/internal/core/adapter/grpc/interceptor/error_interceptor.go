@@ -4,41 +4,46 @@ import (
 	"context"
 	"errors"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mapper"
+	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	comv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
-	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/protoadapt"
 )
 
 func ErrorUnaryInterceptor(
 	logger Logger,
 ) grpc.UnaryServerInterceptor {
-
 	return func(
 		ctx context.Context,
-		req interface{},
+		req any,
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
-	) (interface{}, error) {
-
+	) (any, error) {
 		resp, err := handler(ctx, req)
-
 		if err == nil {
 			return resp, nil
 		}
 
-		return translateRespError(resp, err)
+		return translateError(resp, err)
 	}
 }
 
-func translateRespError(resp any, err error) (any, error) {
+func translateError(resp any, err error) (any, error) {
+	// Dispatcher multiple errors.
+	var dispatcherErrors *dp.Errors
+	if errors.As(err, &dispatcherErrors) {
+		return translateDispatcherErrors(resp, dispatcherErrors)
+	}
+
 	// Application error.
 	var appErr *apperrors.AppError
 	if errors.As(err, &appErr) {
-		return ToGRPCError(resp, appErr)
+		return translateAppError(resp, appErr)
 	}
 
 	// Already a gRPC status.
@@ -53,71 +58,90 @@ func translateRespError(resp any, err error) (any, error) {
 	)
 }
 
-// ===>>> Điều chỉnh dispatcher result trả về nhiều error
-func ToGRPCError(resp any, appErr *apperrors.AppError) (any, error) {
+// ============================================================
+// Application error
+// ============================================================
 
+func translateAppError(
+	resp any,
+	appErr *apperrors.AppError,
+) (any, error) {
 	st := status.New(
-		toGRPCCode(appErr.GRPCCode),
+		mapper.ToGRPCCode(appErr.GRPCCode),
 		appErr.Message,
 	)
 
-	_, ok := resp.(*comv1rs.BaseResponse)
+	errorInfo := &comv1rs.AppErrorInfo{
+		Metadata: &comv1rs.MetadataReponse{
+			OpId: "uuid",
+		},
+		Reason:     appErr.Code,
+		Domain:     appErr.Domain,
+		Layer:      appErr.Layer,
+		Message:    appErr.Message,
+		Violations: mapper.ToProtoViolations(appErr.Violations),
+	}
 
-	if ok {
-		errorInfo := &errdetails.ErrorInfo{
-			Reason: appErr.Code,
-			Domain: appErr.Domain,
-			Metadata: map[string]string{
-				"op_id":   op_id,
-				"message": message,
-				"layer":   appErr.Layer,
-			},
-		}
-
-		if len(appErr.Violations) == 0 {
-			stWithDetails, err := st.WithDetails(errorInfo)
-			if err != nil {
-				return resp, status.Error(
-					codes.Internal,
-					"internal server error",
-				)
-			}
-
-			return resp, stWithDetails.Err()
-		}
-
-		badRequest := &errdetails.BadRequest{}
-		for _, violation := range appErr.Violations {
-			badRequest.FieldViolations = append(
-				badRequest.FieldViolations,
-				&errdetails.BadRequest_FieldViolation{
-					Reason:      violation.Code,
-					Field:       violation.Field,
-					Description: violation.Message,
-				},
-			)
-		}
-
-		stWithDetails, err := st.WithDetails(
-			errorInfo,
-			badRequest,
+	st, err := st.WithDetails(errorInfo)
+	if err != nil {
+		return resp, status.Error(
+			codes.Internal,
+			"internal server error",
 		)
+	}
 
-		if err != nil {
-			return resp, status.Error(
-				codes.Internal,
-				"internal server error",
-			)
+	return resp, st.Err()
+}
+
+// ============================================================
+// Dispatcher multiple errors
+// ============================================================
+
+func translateDispatcherErrors(
+	resp any,
+	dispatcherErrors *dp.Errors,
+) (any, error) {
+	mutateResp, ok := resp.(*comv1rs.MutateResponse)
+	if !ok {
+		return resp, status.Error(
+			codes.Internal,
+			"invalid mutation response",
+		)
+	}
+
+	errorInfos := make([]protoadapt.MessageV1, 0)
+
+	for _, mutation := range mutateResp.MutateResults {
+		if mutation.Error == nil {
+			continue
 		}
 
-		return resp, stWithDetails.Err()
-
+		errorInfos = append(
+			errorInfos,
+			protoadapt.MessageV1Of(mutation.Error),
+		)
 	}
 
-	mutateResp, ok := resp.(*comv1rs.MutateResponse)
-
-	if ok {
-		mutateResp.MutateResults
+	if len(errorInfos) == 0 {
+		return resp, status.Error(
+			codes.Internal,
+			"mutation failed without error details",
+		)
 	}
 
+	// Status code lấy từ error đầu tiên.
+	st := status.New(
+		mapper.ToGRPCCode(dispatcherErrors.Errors[0].Err.GRPCCode),
+		dispatcherErrors.Errors[0].Err.Message,
+	)
+
+	st, err := st.WithDetails(errorInfos...)
+	if err != nil {
+		return resp, status.Error(
+			codes.Internal,
+			"internal server error",
+		)
+	}
+
+	return resp, st.Err()
 }
