@@ -7,8 +7,7 @@ import (
 )
 
 type MultipleError struct {
-	Errors    []error
-	AppErrors []*aerr.AppError
+	Errors []error
 }
 
 func NewMultipleError(errs ...error) *MultipleError {
@@ -26,14 +25,7 @@ func NewMultipleError(errs ...error) *MultipleError {
 }
 
 func (e *MultipleError) Append(err error) {
-	if err == nil {
-		return
-	}
-
-	var appErr *aerr.AppError
-
-	if errors.As(err, &appErr) {
-		e.AppErrors = append(e.AppErrors, appErr)
+	if e == nil || err == nil {
 		return
 	}
 
@@ -41,8 +33,7 @@ func (e *MultipleError) Append(err error) {
 }
 
 func (e *MultipleError) Empty() bool {
-	return len(e.Errors) == 0 &&
-		len(e.AppErrors) == 0
+	return e == nil || len(e.Errors) == 0
 }
 
 func (e *MultipleError) Error() string {
@@ -50,13 +41,76 @@ func (e *MultipleError) Error() string {
 }
 
 func (e *MultipleError) Unwrap() []error {
-	errs := make([]error, 0, len(e.Errors)+len(e.AppErrors))
-
-	errs = append(errs, e.Errors...)
-
-	for _, err := range e.AppErrors {
-		errs = append(errs, err)
+	if e == nil {
+		return nil
 	}
 
-	return errs
+	return e.Errors
+}
+
+// ============================================================
+// Error information
+// ============================================================
+
+func (e *MultipleError) FirstError() error {
+	if e == nil || len(e.Errors) == 0 {
+		return nil
+	}
+
+	return e.Errors[0]
+}
+
+func (e *MultipleError) FirstAppError() *aerr.AppError {
+	if e == nil {
+		return nil
+	}
+
+	for _, err := range e.Errors {
+		var appErr *aerr.AppError
+
+		if errors.As(err, &appErr) {
+			return appErr
+		}
+	}
+
+	return nil
+}
+
+func (e *MultipleError) AppErrors() []*aerr.AppError {
+	if e == nil {
+		return nil
+	}
+
+	appErrors := make(
+		[]*aerr.AppError,
+		0,
+		len(e.Errors),
+	)
+
+	for _, err := range e.Errors {
+		var appErr *aerr.AppError
+
+		if !errors.As(err, &appErr) {
+			continue
+		}
+
+		appErrors = append(
+			appErrors,
+			appErr,
+		)
+	}
+
+	return appErrors
+}
+
+// ============================================================
+// Statistics
+// ============================================================
+
+func (e *MultipleError) Total() int {
+	if e == nil {
+		return 0
+	}
+
+	return len(e.Errors)
 }
