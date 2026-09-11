@@ -33,104 +33,102 @@ message Permission {
   google.protobuf.Timestamp update_date = 15;
 }
 
-// ============================================================
-// MUTATION (COMMAND)
-// ============================================================
-
-message PermissionMutation {
-
-  string op_id = 1 [
-    (buf.validate.field).string.min_len = 1
-  ];
-
-  oneof action {
-    Create create = 2;
-    Update update = 3;
-    Delete delete = 4;
-  }
-
-  // ==========================================================
-  // CREATE
-  // ==========================================================
-
-  message Create {
-
-    option (auth.resource) = "PERMISSION";
-    option (auth.action) = "CREATE";
-    option (auth.require_tenant) = true;
-
-    message Data {
-      string code = 1 [
-        (buf.validate.field).string.min_len = 1
-      ];
-
-      string name = 2 [
-        (buf.validate.field).string.min_len = 1
-      ];
-
-      string description = 3;
-    }
-
-    Data data = 1 [
-      (buf.validate.field).required = true
-    ];
-  }
-
-  // ==========================================================
-  // UPDATE
-  // ==========================================================
-
-  message Update {
-
-    option (auth.resource) = "PERMISSION";
-    option (auth.action) = "UPDATE";
-    option (auth.resource_id_field) = "id";
-    option (auth.require_tenant) = true;
-
-    string id = 1 [
-      (buf.validate.field).string.min_len = 1
-    ];
-
-    message Data {
-      string name = 1;
-      string description = 2;
-    }
-
-    Data data = 2 [
-      (buf.validate.field).required = true
-    ];
-  }
-
-  // ==========================================================
-  // DELETE
-  // ==========================================================
-
-  message Delete {
-
-    option (auth.resource) = "PERMISSION";
-    option (auth.action) = "DELETE";
-    option (auth.resource_id_field) = "id";
-    option (auth.require_tenant) = true;
-
-    string id = 1 [
-      (buf.validate.field).string.min_len = 1
-    ];
-  }
-}
-
-// ============================================================
-// QUERY (VIEW)
-// ============================================================
-
-// ============================================================
-// API
-// ============================================================
-
 message PermissionMutateRequest {
 
-  repeated PermissionMutation mutations = 1 [
+  message Mutation {
+
+    string op_id = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
+    oneof action {
+      Create create = 2;
+      Update update = 3;
+      Delete delete = 4;
+    }
+
+    message Create {
+
+      option (auth.resource) = "PERMISSION";
+      option (auth.action) = "CREATE";
+      option (auth.require_tenant) = true;
+
+      message Data {
+        string code = 1 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        string name = 2 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        string description = 3;
+      }
+
+      Data data = 1 [
+        (buf.validate.field).required = true
+      ];
+    }
+
+    message Update {
+
+      option (auth.resource) = "PERMISSION";
+      option (auth.action) = "UPDATE";
+      option (auth.resource_id_field) = "id";
+      option (auth.require_tenant) = true;
+
+      string id = 1 [
+        (buf.validate.field).string.min_len = 1
+      ];
+
+      message Data {
+        string name = 1;
+        string description = 2;
+      }
+
+      Data data = 2 [
+        (buf.validate.field).required = true
+      ];
+    }
+
+    message Delete {
+
+      option (auth.resource) = "PERMISSION";
+      option (auth.action) = "DELETE";
+      option (auth.resource_id_field) = "id";
+      option (auth.require_tenant) = true;
+
+      string id = 1 [
+        (buf.validate.field).string.min_len = 1
+      ];
+    }
+  }
+
+  repeated Mutation mutations = 1 [
     (buf.validate.field).repeated.min_items = 1
   ];
 }
+
+  message PermissionMutationResult {
+    oneof result {
+      CreateResult create = 2;
+      UpdateResult update = 3;
+      DeleteResult delete = 4;
+    }
+
+    message CreateResult {
+      string id = 1;
+    }
+
+    message UpdateResult {
+      string id = 1;
+    }
+
+    message DeleteResult {
+      string id = 1;
+    }
+  }
+
+
 
 message PermissionViewRequest {}

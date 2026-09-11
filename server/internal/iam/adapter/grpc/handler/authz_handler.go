@@ -5,6 +5,7 @@ import (
 
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
+	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
@@ -28,14 +29,17 @@ func (a *AuthzHandler) RoleMutate(
 	req *authzrs.RoleMutateRequest,
 ) (*commonv1.MutateResponse, error) {
 
-	results := make([]*commonv1.MutateResult, 0, len(req.Mutations))
+	results := make(
+		[]*commonv1.MutateResult,
+		0,
+		len(req.Mutations),
+	)
+	var multipleErr *dp.MultipleError
 
 	for _, mutation := range req.Mutations {
 		op, err := mapper.ToMutateRoleCommand(mutation)
 		if err != nil {
-			// ====> bug cmnr
-			results = append(results, mapper.FromMutateRoleResult(ctx, err))
-			continue
+			return nil, err
 		}
 
 		result, err := a.roleMutateUsecase.Execute(
@@ -45,11 +49,16 @@ func (a *AuthzHandler) RoleMutate(
 		)
 
 		if err != nil {
-			results = append(results, crm.BuildMutateResult(ctx, err))
-			continue
+			if multipleErr == nil {
+				multipleErr = dp.NewMultipleError(err)
+			} else {
+				multipleErr.Append(err)
+			}
 		}
 
-		results = append(results, assemblers.RoleMToHandler(op, result))
+		roleMapResult := mapper.FromMutateRoleResult(op)
+		results = append(results, &roleMapResult)
+
 	}
 
 	// for _, r := range results {

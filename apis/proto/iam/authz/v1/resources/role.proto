@@ -3,165 +3,187 @@ syntax = "proto3";
 package iam.v1;
 
 option go_package = "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespb";
+option java_package = "com.aliasadi.iam.v1.resources";
+option java_multiple_files = true;
 
 import "buf/validate/validate.proto";
-import "google/protobuf/timestamp.proto";
 import "core/common/v1/resources/auth_options.proto";
 import "core/common/v1/resources/search_criteria.proto";
-import "iam/authz/v1/resources/common.proto";
+import "google/protobuf/timestamp.proto";
 
 // ============================================================
-// READ MODEL (QUERY SIDE)
+// READ MODEL
 // ============================================================
 
 message Role {
+
   string id = 1;
+
   string code = 2;
+
   optional string scope_id = 3;
 
   string name = 4;
+
   string scope_type = 5;
+
   string access_scope = 6;
 
   int32 level = 7;
+
   optional string description = 8;
 
   bool is_system = 9;
+
   bool is_super = 10;
+
   bool is_active = 11;
 
   string created_by = 12;
+
   string updated_by = 13;
 
   google.protobuf.Timestamp created_at = 14;
+
   google.protobuf.Timestamp updated_at = 15;
 }
 
 // ============================================================
-// MUTATION API (WRITE SIDE)
+// MUTATION / WRITE SIDE
 // ============================================================
-
-message RoleMutation {
-
-  string op_id = 1 [
-    (buf.validate.field).string.min_len = 1
-  ];
-
-  oneof action {
-    option (buf.validate.oneof).required = true;
-
-    Create create = 2;
-    Update update = 3;
-    Delete delete = 4;
-  }
-}
 
 message RoleMutateRequest {
 
-  repeated RoleMutation mutations = 1 [
+  message Mutation {
+
+    string op_id = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
+    oneof action {
+      option (buf.validate.oneof).required = true;
+
+      Create create = 2;
+      Update update = 3;
+      Delete delete = 4;
+    }
+
+    // ========================================================
+    // CREATE
+    // ========================================================
+
+    message Create {
+
+      option (auth.resource) = "ROLE";
+      option (auth.action) = "CREATE";
+      option (auth.require_tenant) = true;
+
+      message Data {
+
+        string code = 1 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        string name = 2 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        optional string description = 3;
+
+        optional string scope_id = 4;
+
+        string scope_type = 5 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        string access_scope = 6 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        int32 level = 7;
+
+        bool is_system = 8;
+
+        bool is_super = 9;
+
+        bool is_active = 10;
+      }
+
+      Data data = 1 [
+        (buf.validate.field).required = true
+      ];
+    }
+
+    // ========================================================
+    // UPDATE
+    // ========================================================
+
+    message Update {
+
+      option (auth.resource) = "ROLE";
+      option (auth.action) = "UPDATE";
+      option (auth.resource_id_field) = "id";
+      option (auth.require_tenant) = true;
+
+      string id = 1 [
+        (buf.validate.field).string.min_len = 1
+      ];
+
+      message Data {
+
+        string code = 1 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        string name = 2 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        optional string description = 3;
+
+        optional string scope_id = 4;
+
+        string scope_type = 5 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        string access_scope = 6 [
+          (buf.validate.field).string.min_len = 1
+        ];
+
+        int32 level = 7;
+
+        bool is_system = 8;
+
+        bool is_super = 9;
+
+        bool is_active = 10;
+      }
+
+      Data data = 2 [
+        (buf.validate.field).required = true
+      ];
+    }
+
+    // ========================================================
+    // DELETE
+    // ========================================================
+
+    message Delete {
+
+      option (auth.resource) = "ROLE";
+      option (auth.action) = "DELETE";
+      option (auth.resource_id_field) = "id";
+      option (auth.require_tenant) = true;
+
+      string id = 1 [
+        (buf.validate.field).string.min_len = 1
+      ];
+    }
+  }
+
+  repeated Mutation mutations = 1 [
     (buf.validate.field).repeated.min_items = 1
-  ];
-}
-
-// ============================================================
-// CREATE
-// ============================================================
-
-message Create {
-
-  option (auth.resource) = "ROLE";
-  option (auth.action) = "CREATE";
-
-  message Data {
-
-    string code = 1 [
-      (buf.validate.field).string.min_len = 1
-    ];
-
-    string name = 2 [
-      (buf.validate.field).string.min_len = 1
-    ];
-
-    optional string description = 3;
-
-    optional string scope_id = 4;
-
-    string scope_type = 5;
-
-    string access_scope = 6;
-
-    int32 level = 7;
-
-    bool is_system = 8;
-
-    bool is_super = 9;
-
-    bool is_active = 10;
-  }
-
-  Data data = 1 [
-    (buf.validate.field).required = true
-  ];
-}
-
-// ============================================================
-// UPDATE
-// ============================================================
-
-message Update {
-
-  option (auth.resource) = "ROLE";
-  option (auth.action) = "UPDATE";
-  option (auth.resource_id_field) = "id";
-
-  string id = 1 [
-    (buf.validate.field).string.min_len = 1
-  ];
-
-  message Data {
-
-    string code = 1 [
-      (buf.validate.field).string.min_len = 1
-    ];
-
-    string name = 2 [
-      (buf.validate.field).string.min_len = 1
-    ];
-
-    optional string description = 3;
-
-    optional string scope_id = 4;
-
-    string scope_type = 5;
-
-    string access_scope = 6;
-
-    int32 level = 7;
-
-    bool is_system = 8;
-
-    bool is_super = 9;
-
-    bool is_active = 10;
-  }
-
-  Data data = 2 [
-    (buf.validate.field).required = true
-  ];
-}
-
-// ============================================================
-// DELETE
-// ============================================================
-
-message Delete {
-
-  option (auth.resource) = "ROLE";
-  option (auth.action) = "DELETE";
-  option (auth.resource_id_field) = "id";
-
-  string id = 1 [
-    (buf.validate.field).string.min_len = 1
   ];
 }
 
@@ -169,55 +191,176 @@ message Delete {
 // MUTATION RESULT
 // ============================================================
 
-message CreateResult {
-  RoleResult roleResult = 1;
-}
-
-message UpdateResult {
-  RoleResult roleResult = 1;
-}
-
-message DeleteResult {}
-
-// ============================================================
-// QUERY SIDE
-// ============================================================
-
-message RoleView {
+message RoleMutationResult {
 
   string op_id = 1;
 
-  oneof action {
-    Get get = 2;
-    List list = 3;
-    Search search = 4;
+  oneof result {
+    CreateResult create = 2;
+    UpdateResult update = 3;
+    DeleteResult delete = 4;
   }
 
-  message Get {
+  // ==========================================================
+  // CREATE RESULT
+  // ==========================================================
+
+  message CreateResult {
+
     string id = 1;
   }
 
-  message List {
-    int32 limit = 1;
-    int32 offset = 2;
+  // ==========================================================
+  // UPDATE RESULT
+  // ==========================================================
+
+  message UpdateResult {
+
+    string id = 1;
   }
 
-  message Search {
-    common.v1.SearchCriteria query = 1;
+  // ==========================================================
+  // DELETE RESULT
+  // ==========================================================
+
+  message DeleteResult {
+
+    string id = 1;
   }
 }
 
 // ============================================================
-// VIEW RESULT
+// MUTATION RESPONSE
 // ============================================================
 
-message GetResult {
-  string id = 1;
+message RoleMutateResponse {
+
+  repeated RoleMutationResult results = 1;
 }
 
-message ListResult {}
+// ============================================================
+// QUERY / READ SIDE
+// ============================================================
 
-message SearchResult {
-  repeated Role items = 1;
-  int64 total = 2;
+message RoleViewRequest {
+
+  message Query {
+
+    string op_id = 1 [
+      (buf.validate.field).string.min_len = 1
+    ];
+
+    oneof action {
+      option (buf.validate.oneof).required = true;
+
+      Get get = 2;
+      List list = 3;
+      Search search = 4;
+    }
+
+    // ========================================================
+    // GET
+    // ========================================================
+
+    message Get {
+
+      option (auth.resource) = "ROLE";
+      option (auth.action) = "READ";
+      option (auth.resource_id_field) = "id";
+      option (auth.require_tenant) = true;
+
+      string id = 1 [
+        (buf.validate.field).string.min_len = 1
+      ];
+    }
+
+    // ========================================================
+    // LIST
+    // ========================================================
+
+    message List {
+
+      option (auth.resource) = "ROLE";
+      option (auth.action) = "READ";
+      option (auth.require_tenant) = true;
+
+      int32 limit = 1;
+
+      int32 offset = 2;
+    }
+
+    // ========================================================
+    // SEARCH
+    // ========================================================
+
+    message Search {
+
+      option (auth.resource) = "ROLE";
+      option (auth.action) = "READ";
+      option (auth.require_tenant) = true;
+
+      common.v1.SearchCriteria criteria = 1 [
+        (buf.validate.field).required = true
+      ];
+    }
+  }
+
+  repeated Query queries = 1 [
+    (buf.validate.field).repeated.min_items = 1
+  ];
+}
+
+// ============================================================
+// QUERY RESULT
+// ============================================================
+
+message RoleViewResult {
+
+  string op_id = 1;
+
+  oneof result {
+    GetResult get = 2;
+    ListResult list = 3;
+    SearchResult search = 4;
+  }
+
+  // ==========================================================
+  // GET RESULT
+  // ==========================================================
+
+  message GetResult {
+
+    Role role = 1;
+  }
+
+  // ==========================================================
+  // LIST RESULT
+  // ==========================================================
+
+  message ListResult {
+
+    repeated Role items = 1;
+
+    int64 total = 2;
+  }
+
+  // ==========================================================
+  // SEARCH RESULT
+  // ==========================================================
+
+  message SearchResult {
+
+    repeated Role items = 1;
+
+    int64 total = 2;
+  }
+}
+
+// ============================================================
+// QUERY RESPONSE
+// ============================================================
+
+message RoleViewResponse {
+
+  repeated RoleViewResult results = 1;
 }

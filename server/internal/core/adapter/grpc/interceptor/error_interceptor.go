@@ -12,7 +12,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/protoadapt"
 )
 
 func ErrorUnaryInterceptor(
@@ -38,6 +37,11 @@ func translateError(resp any, err error) (any, error) {
 	var dispatcherErrors *dp.Errors
 	if errors.As(err, &dispatcherErrors) {
 		return translateDispatcherErrors(resp, dispatcherErrors)
+	}
+
+	var dispatcherAppErrors *dp.AppErrors
+	if errors.As(err, &dispatcherAppErrors) {
+		return translateDispatcherAppErrors(resp, dispatcherAppErrors)
 	}
 
 	// Application error.
@@ -99,34 +103,13 @@ func translateAppError(
 
 func translateDispatcherErrors(
 	resp any,
-	dispatcherErrors *dp.Errors,
+	dispatcherAppErrors *dp.AppErrors,
 ) (any, error) {
-	mutateResp, ok := resp.(*comv1rs.MutateResponse)
-	if !ok {
-		return resp, status.Error(
-			codes.Internal,
-			"invalid mutation response",
-		)
-	}
 
-	errorInfos := make([]protoadapt.MessageV1, 0)
+	errorInfo := []comv1rs.AppErrorInfo{}
 
-	for _, mutation := range mutateResp.MutateResults {
-		if mutation.Error == nil {
-			continue
-		}
-
-		errorInfos = append(
-			errorInfos,
-			protoadapt.MessageV1Of(mutation.Error),
-		)
-	}
-
-	if len(errorInfos) == 0 {
-		return resp, status.Error(
-			codes.Internal,
-			"mutation failed without error details",
-		)
+	for _, err := range dispatcherAppErrors {
+		// err là aerr.AppError
 	}
 
 	// Status code lấy từ error đầu tiên.
@@ -144,4 +127,8 @@ func translateDispatcherErrors(
 	}
 
 	return resp, st.Err()
+}
+
+func translateDispatcherAppErrors(resp any, dispatcherErrors *dp.Errors) (any, error) {
+
 }

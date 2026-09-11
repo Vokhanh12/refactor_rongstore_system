@@ -11,22 +11,19 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
-func BuildMutateResult(ctx context.Context, Operation, err aerrs.AppError) *protos.MutateResult
+func BuildMutateResult(ctx context.Context, opID string, data any) *protos.MutateResult
 {
 
-
 	return &protos.MutateResult{
-		OpId:      opID,
-		ResourceId: resourceId,
+		Metadata: &protos.MetadataReponse{
+			OpId: opID,
+		},
 		Data:       &anypb.Any{},
-		Success:    false,
-		ClientErr:  &protos.ClientError{},
-		ServerErr:  &protos.ServerError{},
 	}
 }
 
 
-func BuildBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseResponse {
+func BuildBaseResponse(ctx context.Context, result *anypb.Any, error) (*protos.BaseResponse, error) {
 
 	requestctx := ctxutil.MustRequest(ctx)
 	locatectx := ctxutil.MustLocale(ctx)
@@ -44,6 +41,7 @@ func BuildBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseRespo
 		Data: result,
 	}
 }
+
 
 func BuildDevBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseResponse {
 

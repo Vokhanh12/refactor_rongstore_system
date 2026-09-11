@@ -148,122 +148,16 @@ func (x *Permission) GetUpdateDate() *timestamppb.Timestamp {
 	return nil
 }
 
-type PermissionMutation struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	OpId  string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
-	// Types that are valid to be assigned to Action:
-	//
-	//	*PermissionMutation_Create_
-	//	*PermissionMutation_Update_
-	//	*PermissionMutation_Delete_
-	Action        isPermissionMutation_Action `protobuf_oneof:"action"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PermissionMutation) Reset() {
-	*x = PermissionMutation{}
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PermissionMutation) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PermissionMutation) ProtoMessage() {}
-
-func (x *PermissionMutation) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PermissionMutation.ProtoReflect.Descriptor instead.
-func (*PermissionMutation) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PermissionMutation) GetOpId() string {
-	if x != nil {
-		return x.OpId
-	}
-	return ""
-}
-
-func (x *PermissionMutation) GetAction() isPermissionMutation_Action {
-	if x != nil {
-		return x.Action
-	}
-	return nil
-}
-
-func (x *PermissionMutation) GetCreate() *PermissionMutation_Create {
-	if x != nil {
-		if x, ok := x.Action.(*PermissionMutation_Create_); ok {
-			return x.Create
-		}
-	}
-	return nil
-}
-
-func (x *PermissionMutation) GetUpdate() *PermissionMutation_Update {
-	if x != nil {
-		if x, ok := x.Action.(*PermissionMutation_Update_); ok {
-			return x.Update
-		}
-	}
-	return nil
-}
-
-func (x *PermissionMutation) GetDelete() *PermissionMutation_Delete {
-	if x != nil {
-		if x, ok := x.Action.(*PermissionMutation_Delete_); ok {
-			return x.Delete
-		}
-	}
-	return nil
-}
-
-type isPermissionMutation_Action interface {
-	isPermissionMutation_Action()
-}
-
-type PermissionMutation_Create_ struct {
-	Create *PermissionMutation_Create `protobuf:"bytes,2,opt,name=create,proto3,oneof"`
-}
-
-type PermissionMutation_Update_ struct {
-	Update *PermissionMutation_Update `protobuf:"bytes,3,opt,name=update,proto3,oneof"`
-}
-
-type PermissionMutation_Delete_ struct {
-	Delete *PermissionMutation_Delete `protobuf:"bytes,4,opt,name=delete,proto3,oneof"`
-}
-
-func (*PermissionMutation_Create_) isPermissionMutation_Action() {}
-
-func (*PermissionMutation_Update_) isPermissionMutation_Action() {}
-
-func (*PermissionMutation_Delete_) isPermissionMutation_Action() {}
-
 type PermissionMutateRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Mutations     []*PermissionMutation  `protobuf:"bytes,1,rep,name=mutations,proto3" json:"mutations,omitempty"`
+	state         protoimpl.MessageState              `protogen:"open.v1"`
+	Mutations     []*PermissionMutateRequest_Mutation `protobuf:"bytes,1,rep,name=mutations,proto3" json:"mutations,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PermissionMutateRequest) Reset() {
 	*x = PermissionMutateRequest{}
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[2]
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -275,7 +169,7 @@ func (x *PermissionMutateRequest) String() string {
 func (*PermissionMutateRequest) ProtoMessage() {}
 
 func (x *PermissionMutateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[2]
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -288,15 +182,113 @@ func (x *PermissionMutateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionMutateRequest.ProtoReflect.Descriptor instead.
 func (*PermissionMutateRequest) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{2}
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PermissionMutateRequest) GetMutations() []*PermissionMutation {
+func (x *PermissionMutateRequest) GetMutations() []*PermissionMutateRequest_Mutation {
 	if x != nil {
 		return x.Mutations
 	}
 	return nil
 }
+
+type PermissionMutationResult struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Result:
+	//
+	//	*PermissionMutationResult_Create
+	//	*PermissionMutationResult_Update
+	//	*PermissionMutationResult_Delete
+	Result        isPermissionMutationResult_Result `protobuf_oneof:"result"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionMutationResult) Reset() {
+	*x = PermissionMutationResult{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionMutationResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionMutationResult) ProtoMessage() {}
+
+func (x *PermissionMutationResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionMutationResult.ProtoReflect.Descriptor instead.
+func (*PermissionMutationResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PermissionMutationResult) GetResult() isPermissionMutationResult_Result {
+	if x != nil {
+		return x.Result
+	}
+	return nil
+}
+
+func (x *PermissionMutationResult) GetCreate() *PermissionMutationResult_CreateResult {
+	if x != nil {
+		if x, ok := x.Result.(*PermissionMutationResult_Create); ok {
+			return x.Create
+		}
+	}
+	return nil
+}
+
+func (x *PermissionMutationResult) GetUpdate() *PermissionMutationResult_UpdateResult {
+	if x != nil {
+		if x, ok := x.Result.(*PermissionMutationResult_Update); ok {
+			return x.Update
+		}
+	}
+	return nil
+}
+
+func (x *PermissionMutationResult) GetDelete() *PermissionMutationResult_DeleteResult {
+	if x != nil {
+		if x, ok := x.Result.(*PermissionMutationResult_Delete); ok {
+			return x.Delete
+		}
+	}
+	return nil
+}
+
+type isPermissionMutationResult_Result interface {
+	isPermissionMutationResult_Result()
+}
+
+type PermissionMutationResult_Create struct {
+	Create *PermissionMutationResult_CreateResult `protobuf:"bytes,2,opt,name=create,proto3,oneof"`
+}
+
+type PermissionMutationResult_Update struct {
+	Update *PermissionMutationResult_UpdateResult `protobuf:"bytes,3,opt,name=update,proto3,oneof"`
+}
+
+type PermissionMutationResult_Delete struct {
+	Delete *PermissionMutationResult_DeleteResult `protobuf:"bytes,4,opt,name=delete,proto3,oneof"`
+}
+
+func (*PermissionMutationResult_Create) isPermissionMutationResult_Result() {}
+
+func (*PermissionMutationResult_Update) isPermissionMutationResult_Result() {}
+
+func (*PermissionMutationResult_Delete) isPermissionMutationResult_Result() {}
 
 type PermissionViewRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -334,27 +326,33 @@ func (*PermissionViewRequest) Descriptor() ([]byte, []int) {
 	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{3}
 }
 
-type PermissionMutation_Create struct {
-	state         protoimpl.MessageState          `protogen:"open.v1"`
-	Data          *PermissionMutation_Create_Data `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+type PermissionMutateRequest_Mutation struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	OpId  string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	// Types that are valid to be assigned to Action:
+	//
+	//	*PermissionMutateRequest_Mutation_Create_
+	//	*PermissionMutateRequest_Mutation_Update_
+	//	*PermissionMutateRequest_Mutation_Delete_
+	Action        isPermissionMutateRequest_Mutation_Action `protobuf_oneof:"action"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PermissionMutation_Create) Reset() {
-	*x = PermissionMutation_Create{}
+func (x *PermissionMutateRequest_Mutation) Reset() {
+	*x = PermissionMutateRequest_Mutation{}
 	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PermissionMutation_Create) String() string {
+func (x *PermissionMutateRequest_Mutation) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PermissionMutation_Create) ProtoMessage() {}
+func (*PermissionMutateRequest_Mutation) ProtoMessage() {}
 
-func (x *PermissionMutation_Create) ProtoReflect() protoreflect.Message {
+func (x *PermissionMutateRequest_Mutation) ProtoReflect() protoreflect.Message {
 	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -366,41 +364,141 @@ func (x *PermissionMutation_Create) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PermissionMutation_Create.ProtoReflect.Descriptor instead.
-func (*PermissionMutation_Create) Descriptor() ([]byte, []int) {
+// Deprecated: Use PermissionMutateRequest_Mutation.ProtoReflect.Descriptor instead.
+func (*PermissionMutateRequest_Mutation) Descriptor() ([]byte, []int) {
 	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0}
 }
 
-func (x *PermissionMutation_Create) GetData() *PermissionMutation_Create_Data {
+func (x *PermissionMutateRequest_Mutation) GetOpId() string {
+	if x != nil {
+		return x.OpId
+	}
+	return ""
+}
+
+func (x *PermissionMutateRequest_Mutation) GetAction() isPermissionMutateRequest_Mutation_Action {
+	if x != nil {
+		return x.Action
+	}
+	return nil
+}
+
+func (x *PermissionMutateRequest_Mutation) GetCreate() *PermissionMutateRequest_Mutation_Create {
+	if x != nil {
+		if x, ok := x.Action.(*PermissionMutateRequest_Mutation_Create_); ok {
+			return x.Create
+		}
+	}
+	return nil
+}
+
+func (x *PermissionMutateRequest_Mutation) GetUpdate() *PermissionMutateRequest_Mutation_Update {
+	if x != nil {
+		if x, ok := x.Action.(*PermissionMutateRequest_Mutation_Update_); ok {
+			return x.Update
+		}
+	}
+	return nil
+}
+
+func (x *PermissionMutateRequest_Mutation) GetDelete() *PermissionMutateRequest_Mutation_Delete {
+	if x != nil {
+		if x, ok := x.Action.(*PermissionMutateRequest_Mutation_Delete_); ok {
+			return x.Delete
+		}
+	}
+	return nil
+}
+
+type isPermissionMutateRequest_Mutation_Action interface {
+	isPermissionMutateRequest_Mutation_Action()
+}
+
+type PermissionMutateRequest_Mutation_Create_ struct {
+	Create *PermissionMutateRequest_Mutation_Create `protobuf:"bytes,2,opt,name=create,proto3,oneof"`
+}
+
+type PermissionMutateRequest_Mutation_Update_ struct {
+	Update *PermissionMutateRequest_Mutation_Update `protobuf:"bytes,3,opt,name=update,proto3,oneof"`
+}
+
+type PermissionMutateRequest_Mutation_Delete_ struct {
+	Delete *PermissionMutateRequest_Mutation_Delete `protobuf:"bytes,4,opt,name=delete,proto3,oneof"`
+}
+
+func (*PermissionMutateRequest_Mutation_Create_) isPermissionMutateRequest_Mutation_Action() {}
+
+func (*PermissionMutateRequest_Mutation_Update_) isPermissionMutateRequest_Mutation_Action() {}
+
+func (*PermissionMutateRequest_Mutation_Delete_) isPermissionMutateRequest_Mutation_Action() {}
+
+type PermissionMutateRequest_Mutation_Create struct {
+	state         protoimpl.MessageState                        `protogen:"open.v1"`
+	Data          *PermissionMutateRequest_Mutation_Create_Data `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionMutateRequest_Mutation_Create) Reset() {
+	*x = PermissionMutateRequest_Mutation_Create{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionMutateRequest_Mutation_Create) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionMutateRequest_Mutation_Create) ProtoMessage() {}
+
+func (x *PermissionMutateRequest_Mutation_Create) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionMutateRequest_Mutation_Create.ProtoReflect.Descriptor instead.
+func (*PermissionMutateRequest_Mutation_Create) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0, 0}
+}
+
+func (x *PermissionMutateRequest_Mutation_Create) GetData() *PermissionMutateRequest_Mutation_Create_Data {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-type PermissionMutation_Update struct {
-	state         protoimpl.MessageState          `protogen:"open.v1"`
-	Id            string                          `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Data          *PermissionMutation_Update_Data `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+type PermissionMutateRequest_Mutation_Update struct {
+	state         protoimpl.MessageState                        `protogen:"open.v1"`
+	Id            string                                        `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Data          *PermissionMutateRequest_Mutation_Update_Data `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PermissionMutation_Update) Reset() {
-	*x = PermissionMutation_Update{}
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[5]
+func (x *PermissionMutateRequest_Mutation_Update) Reset() {
+	*x = PermissionMutateRequest_Mutation_Update{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PermissionMutation_Update) String() string {
+func (x *PermissionMutateRequest_Mutation_Update) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PermissionMutation_Update) ProtoMessage() {}
+func (*PermissionMutateRequest_Mutation_Update) ProtoMessage() {}
 
-func (x *PermissionMutation_Update) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[5]
+func (x *PermissionMutateRequest_Mutation_Update) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -411,47 +509,47 @@ func (x *PermissionMutation_Update) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PermissionMutation_Update.ProtoReflect.Descriptor instead.
-func (*PermissionMutation_Update) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 1}
+// Deprecated: Use PermissionMutateRequest_Mutation_Update.ProtoReflect.Descriptor instead.
+func (*PermissionMutateRequest_Mutation_Update) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0, 1}
 }
 
-func (x *PermissionMutation_Update) GetId() string {
+func (x *PermissionMutateRequest_Mutation_Update) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *PermissionMutation_Update) GetData() *PermissionMutation_Update_Data {
+func (x *PermissionMutateRequest_Mutation_Update) GetData() *PermissionMutateRequest_Mutation_Update_Data {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-type PermissionMutation_Delete struct {
+type PermissionMutateRequest_Mutation_Delete struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PermissionMutation_Delete) Reset() {
-	*x = PermissionMutation_Delete{}
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[6]
+func (x *PermissionMutateRequest_Mutation_Delete) Reset() {
+	*x = PermissionMutateRequest_Mutation_Delete{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PermissionMutation_Delete) String() string {
+func (x *PermissionMutateRequest_Mutation_Delete) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PermissionMutation_Delete) ProtoMessage() {}
+func (*PermissionMutateRequest_Mutation_Delete) ProtoMessage() {}
 
-func (x *PermissionMutation_Delete) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[6]
+func (x *PermissionMutateRequest_Mutation_Delete) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -462,19 +560,19 @@ func (x *PermissionMutation_Delete) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PermissionMutation_Delete.ProtoReflect.Descriptor instead.
-func (*PermissionMutation_Delete) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 2}
+// Deprecated: Use PermissionMutateRequest_Mutation_Delete.ProtoReflect.Descriptor instead.
+func (*PermissionMutateRequest_Mutation_Delete) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0, 2}
 }
 
-func (x *PermissionMutation_Delete) GetId() string {
+func (x *PermissionMutateRequest_Mutation_Delete) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-type PermissionMutation_Create_Data struct {
+type PermissionMutateRequest_Mutation_Create_Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -483,21 +581,21 @@ type PermissionMutation_Create_Data struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PermissionMutation_Create_Data) Reset() {
-	*x = PermissionMutation_Create_Data{}
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[7]
+func (x *PermissionMutateRequest_Mutation_Create_Data) Reset() {
+	*x = PermissionMutateRequest_Mutation_Create_Data{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PermissionMutation_Create_Data) String() string {
+func (x *PermissionMutateRequest_Mutation_Create_Data) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PermissionMutation_Create_Data) ProtoMessage() {}
+func (*PermissionMutateRequest_Mutation_Create_Data) ProtoMessage() {}
 
-func (x *PermissionMutation_Create_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[7]
+func (x *PermissionMutateRequest_Mutation_Create_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -508,33 +606,33 @@ func (x *PermissionMutation_Create_Data) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PermissionMutation_Create_Data.ProtoReflect.Descriptor instead.
-func (*PermissionMutation_Create_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0, 0}
+// Deprecated: Use PermissionMutateRequest_Mutation_Create_Data.ProtoReflect.Descriptor instead.
+func (*PermissionMutateRequest_Mutation_Create_Data) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0, 0, 0}
 }
 
-func (x *PermissionMutation_Create_Data) GetCode() string {
+func (x *PermissionMutateRequest_Mutation_Create_Data) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *PermissionMutation_Create_Data) GetName() string {
+func (x *PermissionMutateRequest_Mutation_Create_Data) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *PermissionMutation_Create_Data) GetDescription() string {
+func (x *PermissionMutateRequest_Mutation_Create_Data) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-type PermissionMutation_Update_Data struct {
+type PermissionMutateRequest_Mutation_Update_Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
@@ -542,21 +640,21 @@ type PermissionMutation_Update_Data struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PermissionMutation_Update_Data) Reset() {
-	*x = PermissionMutation_Update_Data{}
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[8]
+func (x *PermissionMutateRequest_Mutation_Update_Data) Reset() {
+	*x = PermissionMutateRequest_Mutation_Update_Data{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PermissionMutation_Update_Data) String() string {
+func (x *PermissionMutateRequest_Mutation_Update_Data) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PermissionMutation_Update_Data) ProtoMessage() {}
+func (*PermissionMutateRequest_Mutation_Update_Data) ProtoMessage() {}
 
-func (x *PermissionMutation_Update_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[8]
+func (x *PermissionMutateRequest_Mutation_Update_Data) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,21 +665,153 @@ func (x *PermissionMutation_Update_Data) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PermissionMutation_Update_Data.ProtoReflect.Descriptor instead.
-func (*PermissionMutation_Update_Data) Descriptor() ([]byte, []int) {
-	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 1, 0}
+// Deprecated: Use PermissionMutateRequest_Mutation_Update_Data.ProtoReflect.Descriptor instead.
+func (*PermissionMutateRequest_Mutation_Update_Data) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{1, 0, 1, 0}
 }
 
-func (x *PermissionMutation_Update_Data) GetName() string {
+func (x *PermissionMutateRequest_Mutation_Update_Data) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *PermissionMutation_Update_Data) GetDescription() string {
+func (x *PermissionMutateRequest_Mutation_Update_Data) GetDescription() string {
 	if x != nil {
 		return x.Description
+	}
+	return ""
+}
+
+type PermissionMutationResult_CreateResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionMutationResult_CreateResult) Reset() {
+	*x = PermissionMutationResult_CreateResult{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionMutationResult_CreateResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionMutationResult_CreateResult) ProtoMessage() {}
+
+func (x *PermissionMutationResult_CreateResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionMutationResult_CreateResult.ProtoReflect.Descriptor instead.
+func (*PermissionMutationResult_CreateResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{2, 0}
+}
+
+func (x *PermissionMutationResult_CreateResult) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type PermissionMutationResult_UpdateResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionMutationResult_UpdateResult) Reset() {
+	*x = PermissionMutationResult_UpdateResult{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionMutationResult_UpdateResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionMutationResult_UpdateResult) ProtoMessage() {}
+
+func (x *PermissionMutationResult_UpdateResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionMutationResult_UpdateResult.ProtoReflect.Descriptor instead.
+func (*PermissionMutationResult_UpdateResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{2, 1}
+}
+
+func (x *PermissionMutationResult_UpdateResult) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type PermissionMutationResult_DeleteResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionMutationResult_DeleteResult) Reset() {
+	*x = PermissionMutationResult_DeleteResult{}
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionMutationResult_DeleteResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionMutationResult_DeleteResult) ProtoMessage() {}
+
+func (x *PermissionMutationResult_DeleteResult) ProtoReflect() protoreflect.Message {
+	mi := &file_iam_authz_v1_resources_permission_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionMutationResult_DeleteResult.ProtoReflect.Descriptor instead.
+func (*PermissionMutationResult_DeleteResult) Descriptor() ([]byte, []int) {
+	return file_iam_authz_v1_resources_permission_proto_rawDescGZIP(), []int{2, 2}
+}
+
+func (x *PermissionMutationResult_DeleteResult) GetId() string {
+	if x != nil {
+		return x.Id
 	}
 	return ""
 }
@@ -605,22 +835,24 @@ const file_iam_authz_v1_resources_permission_proto_rawDesc = "" +
 	"\vcreate_date\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"createDate\x12;\n" +
 	"\vupdate_date\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"updateDate\"\xd5\x05\n" +
-	"\x12PermissionMutation\x12\x1c\n" +
-	"\x05op_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04opId\x12;\n" +
-	"\x06create\x18\x02 \x01(\v2!.iam.v1.PermissionMutation.CreateH\x00R\x06create\x12;\n" +
-	"\x06update\x18\x03 \x01(\v2!.iam.v1.PermissionMutation.UpdateH\x00R\x06update\x12;\n" +
-	"\x06delete\x18\x04 \x01(\v2!.iam.v1.PermissionMutation.DeleteH\x00R\x06delete\x1a\xce\x01\n" +
-	"\x06Create\x12B\n" +
-	"\x04data\x18\x01 \x01(\v2&.iam.v1.PermissionMutation.Create.DataB\x06\xbaH\x03\xc8\x01\x01R\x04data\x1ab\n" +
+	"updateDate\"\xff\x06\n" +
+	"\x17PermissionMutateRequest\x12P\n" +
+	"\tmutations\x18\x01 \x03(\v2(.iam.v1.PermissionMutateRequest.MutationB\b\xbaH\x05\x92\x01\x02\b\x01R\tmutations\x1a\x91\x06\n" +
+	"\bMutation\x12\x1c\n" +
+	"\x05op_id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04opId\x12I\n" +
+	"\x06create\x18\x02 \x01(\v2/.iam.v1.PermissionMutateRequest.Mutation.CreateH\x00R\x06create\x12I\n" +
+	"\x06update\x18\x03 \x01(\v2/.iam.v1.PermissionMutateRequest.Mutation.UpdateH\x00R\x06update\x12I\n" +
+	"\x06delete\x18\x04 \x01(\v2/.iam.v1.PermissionMutateRequest.Mutation.DeleteH\x00R\x06delete\x1a\xdc\x01\n" +
+	"\x06Create\x12P\n" +
+	"\x04data\x18\x01 \x01(\v24.iam.v1.PermissionMutateRequest.Mutation.Create.DataB\x06\xbaH\x03\xc8\x01\x01R\x04data\x1ab\n" +
 	"\x04Data\x12\x1b\n" +
 	"\x04code\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04code\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription:\x1c\x8a\xb5\x18\n" +
-	"PERMISSION\x92\xb5\x18\x06CREATE\xa8\xb5\x18\x01\x1a\xc7\x01\n" +
+	"PERMISSION\x92\xb5\x18\x06CREATE\xa8\xb5\x18\x01\x1a\xd5\x01\n" +
 	"\x06Update\x12\x17\n" +
-	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12B\n" +
-	"\x04data\x18\x02 \x01(\v2&.iam.v1.PermissionMutation.Update.DataB\x06\xbaH\x03\xc8\x01\x01R\x04data\x1a<\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id\x12P\n" +
+	"\x04data\x18\x02 \x01(\v24.iam.v1.PermissionMutateRequest.Mutation.Update.DataB\x06\xbaH\x03\xc8\x01\x01R\x04data\x1a<\n" +
 	"\x04Data\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription:\"\x8a\xb5\x18\n" +
@@ -628,9 +860,18 @@ const file_iam_authz_v1_resources_permission_proto_rawDesc = "" +
 	"\x06Delete\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x02id:\"\x8a\xb5\x18\n" +
 	"PERMISSION\x92\xb5\x18\x06DELETE\x9a\xb5\x18\x02id\xa8\xb5\x18\x01B\b\n" +
-	"\x06action\"]\n" +
-	"\x17PermissionMutateRequest\x12B\n" +
-	"\tmutations\x18\x01 \x03(\v2\x1a.iam.v1.PermissionMutationB\b\xbaH\x05\x92\x01\x02\b\x01R\tmutations\"\x17\n" +
+	"\x06action\"\xdf\x02\n" +
+	"\x18PermissionMutationResult\x12G\n" +
+	"\x06create\x18\x02 \x01(\v2-.iam.v1.PermissionMutationResult.CreateResultH\x00R\x06create\x12G\n" +
+	"\x06update\x18\x03 \x01(\v2-.iam.v1.PermissionMutationResult.UpdateResultH\x00R\x06update\x12G\n" +
+	"\x06delete\x18\x04 \x01(\v2-.iam.v1.PermissionMutationResult.DeleteResultH\x00R\x06delete\x1a\x1e\n" +
+	"\fCreateResult\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x1a\x1e\n" +
+	"\fUpdateResult\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x1a\x1e\n" +
+	"\fDeleteResult\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02idB\b\n" +
+	"\x06result\"\x17\n" +
 	"\x15PermissionViewRequestB\x7f\n" +
 	"\x1dcom.aliasadi.iam.v1.resourcesP\x01Z\\github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/resources;resourcespbb\x06proto3"
 
@@ -646,33 +887,40 @@ func file_iam_authz_v1_resources_permission_proto_rawDescGZIP() []byte {
 	return file_iam_authz_v1_resources_permission_proto_rawDescData
 }
 
-var file_iam_authz_v1_resources_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_iam_authz_v1_resources_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_iam_authz_v1_resources_permission_proto_goTypes = []any{
-	(*Permission)(nil),                     // 0: iam.v1.Permission
-	(*PermissionMutation)(nil),             // 1: iam.v1.PermissionMutation
-	(*PermissionMutateRequest)(nil),        // 2: iam.v1.PermissionMutateRequest
-	(*PermissionViewRequest)(nil),          // 3: iam.v1.PermissionViewRequest
-	(*PermissionMutation_Create)(nil),      // 4: iam.v1.PermissionMutation.Create
-	(*PermissionMutation_Update)(nil),      // 5: iam.v1.PermissionMutation.Update
-	(*PermissionMutation_Delete)(nil),      // 6: iam.v1.PermissionMutation.Delete
-	(*PermissionMutation_Create_Data)(nil), // 7: iam.v1.PermissionMutation.Create.Data
-	(*PermissionMutation_Update_Data)(nil), // 8: iam.v1.PermissionMutation.Update.Data
-	(*timestamppb.Timestamp)(nil),          // 9: google.protobuf.Timestamp
+	(*Permission)(nil),                                   // 0: iam.v1.Permission
+	(*PermissionMutateRequest)(nil),                      // 1: iam.v1.PermissionMutateRequest
+	(*PermissionMutationResult)(nil),                     // 2: iam.v1.PermissionMutationResult
+	(*PermissionViewRequest)(nil),                        // 3: iam.v1.PermissionViewRequest
+	(*PermissionMutateRequest_Mutation)(nil),             // 4: iam.v1.PermissionMutateRequest.Mutation
+	(*PermissionMutateRequest_Mutation_Create)(nil),      // 5: iam.v1.PermissionMutateRequest.Mutation.Create
+	(*PermissionMutateRequest_Mutation_Update)(nil),      // 6: iam.v1.PermissionMutateRequest.Mutation.Update
+	(*PermissionMutateRequest_Mutation_Delete)(nil),      // 7: iam.v1.PermissionMutateRequest.Mutation.Delete
+	(*PermissionMutateRequest_Mutation_Create_Data)(nil), // 8: iam.v1.PermissionMutateRequest.Mutation.Create.Data
+	(*PermissionMutateRequest_Mutation_Update_Data)(nil), // 9: iam.v1.PermissionMutateRequest.Mutation.Update.Data
+	(*PermissionMutationResult_CreateResult)(nil),        // 10: iam.v1.PermissionMutationResult.CreateResult
+	(*PermissionMutationResult_UpdateResult)(nil),        // 11: iam.v1.PermissionMutationResult.UpdateResult
+	(*PermissionMutationResult_DeleteResult)(nil),        // 12: iam.v1.PermissionMutationResult.DeleteResult
+	(*timestamppb.Timestamp)(nil),                        // 13: google.protobuf.Timestamp
 }
 var file_iam_authz_v1_resources_permission_proto_depIdxs = []int32{
-	9, // 0: iam.v1.Permission.create_date:type_name -> google.protobuf.Timestamp
-	9, // 1: iam.v1.Permission.update_date:type_name -> google.protobuf.Timestamp
-	4, // 2: iam.v1.PermissionMutation.create:type_name -> iam.v1.PermissionMutation.Create
-	5, // 3: iam.v1.PermissionMutation.update:type_name -> iam.v1.PermissionMutation.Update
-	6, // 4: iam.v1.PermissionMutation.delete:type_name -> iam.v1.PermissionMutation.Delete
-	1, // 5: iam.v1.PermissionMutateRequest.mutations:type_name -> iam.v1.PermissionMutation
-	7, // 6: iam.v1.PermissionMutation.Create.data:type_name -> iam.v1.PermissionMutation.Create.Data
-	8, // 7: iam.v1.PermissionMutation.Update.data:type_name -> iam.v1.PermissionMutation.Update.Data
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	13, // 0: iam.v1.Permission.create_date:type_name -> google.protobuf.Timestamp
+	13, // 1: iam.v1.Permission.update_date:type_name -> google.protobuf.Timestamp
+	4,  // 2: iam.v1.PermissionMutateRequest.mutations:type_name -> iam.v1.PermissionMutateRequest.Mutation
+	10, // 3: iam.v1.PermissionMutationResult.create:type_name -> iam.v1.PermissionMutationResult.CreateResult
+	11, // 4: iam.v1.PermissionMutationResult.update:type_name -> iam.v1.PermissionMutationResult.UpdateResult
+	12, // 5: iam.v1.PermissionMutationResult.delete:type_name -> iam.v1.PermissionMutationResult.DeleteResult
+	5,  // 6: iam.v1.PermissionMutateRequest.Mutation.create:type_name -> iam.v1.PermissionMutateRequest.Mutation.Create
+	6,  // 7: iam.v1.PermissionMutateRequest.Mutation.update:type_name -> iam.v1.PermissionMutateRequest.Mutation.Update
+	7,  // 8: iam.v1.PermissionMutateRequest.Mutation.delete:type_name -> iam.v1.PermissionMutateRequest.Mutation.Delete
+	8,  // 9: iam.v1.PermissionMutateRequest.Mutation.Create.data:type_name -> iam.v1.PermissionMutateRequest.Mutation.Create.Data
+	9,  // 10: iam.v1.PermissionMutateRequest.Mutation.Update.data:type_name -> iam.v1.PermissionMutateRequest.Mutation.Update.Data
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_iam_authz_v1_resources_permission_proto_init() }
@@ -680,10 +928,15 @@ func file_iam_authz_v1_resources_permission_proto_init() {
 	if File_iam_authz_v1_resources_permission_proto != nil {
 		return
 	}
-	file_iam_authz_v1_resources_permission_proto_msgTypes[1].OneofWrappers = []any{
-		(*PermissionMutation_Create_)(nil),
-		(*PermissionMutation_Update_)(nil),
-		(*PermissionMutation_Delete_)(nil),
+	file_iam_authz_v1_resources_permission_proto_msgTypes[2].OneofWrappers = []any{
+		(*PermissionMutationResult_Create)(nil),
+		(*PermissionMutationResult_Update)(nil),
+		(*PermissionMutationResult_Delete)(nil),
+	}
+	file_iam_authz_v1_resources_permission_proto_msgTypes[4].OneofWrappers = []any{
+		(*PermissionMutateRequest_Mutation_Create_)(nil),
+		(*PermissionMutateRequest_Mutation_Update_)(nil),
+		(*PermissionMutateRequest_Mutation_Delete_)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -691,7 +944,7 @@ func file_iam_authz_v1_resources_permission_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_iam_authz_v1_resources_permission_proto_rawDesc), len(file_iam_authz_v1_resources_permission_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
