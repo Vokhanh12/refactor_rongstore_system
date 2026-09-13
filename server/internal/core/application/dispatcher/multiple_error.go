@@ -7,7 +7,7 @@ import (
 )
 
 type MultipleError struct {
-	Errors []error
+	Errors []*OperationError
 }
 
 func NewMultipleError(errs ...error) *MultipleError {

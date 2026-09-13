@@ -48,7 +48,11 @@ func translateError(
 	// Dispatcher collected multiple operation errors.
 	var multipleErr *dp.MultipleError
 	if errors.As(err, &multipleErr) {
-		return translateDispatcherErrors(resp, multipleErr)
+		if _, ok := resp.(*comv1rs.MutateResponse); ok {
+			return translateMutateDispatcherErrors(resp, multipleErr)
+		}
+
+		return translateViewDispatcherErrors(resp, multipleErr)
 	}
 
 	// Application/domain error.
@@ -90,7 +94,7 @@ func translateAppError(
 	)
 
 	st, err := st.WithDetails(
-		toAppErrorInfo(appErr),
+		mapper.ToAppErrorInfo(appErr),
 	)
 	if err != nil {
 		return resp, status.Error(
@@ -110,117 +114,40 @@ func translateDispatcherErrors(
 	resp any,
 	multipleErr *dp.MultipleError,
 ) (any, error) {
+
 	if multipleErr == nil || multipleErr.Empty() {
 		return resp, nil
 	}
 
-	/*
-		MultipleError only contains failed operations.
-
-		Therefore:
-			- There is no success information here.
-			- We must not calculate success count here.
-			- The RPC is considered failed.
-	*/
-
-	firstErr := multipleErr.FirstError()
-	if firstErr == nil {
-		return resp, status.Error(
-			codes.Internal,
-			"internal server error",
-		)
-	}
-
-	/*
-		If the first error is an AppError, use it as the
-		representative gRPC status.
-
-		All other AppErrors are attached as status details.
-	*/
-	firstAppErr := multipleErr.FirstAppError()
-
-	if firstAppErr == nil {
-		return resp, status.Error(
-			codes.Internal,
-			"internal server error",
-		)
-	}
-
-	st := status.New(
-		mapper.ToGRPCCode(firstAppErr.GRPCCode),
-		firstAppErr.Message,
-	)
+	st := status.New(200, "OK")
 
 	details := make([]proto.Message, 0)
 
-	for _, appErr := range multipleErr.AppErrors() {
+	for _, opErr := range multipleErr.Errors {
+		if opErr == nil {
+			continue
+		}
+
+		var appErr *apperrors.AppError
+
+		if errors.As(opErr.Err, &appErr) {
+			details = append(
+				details,
+				mapper.ToAppErrorInfo(opErr.OpID, appErr),
+			)
+
+			continue
+		}
+
 		details = append(
-			details,
-			toAppErrorInfo(appErr),
-		)
+			details, mapper.ToAppErrorInfo(opErr.OpID, &apperrors.INTERNAL_FALLBACK))
+
 	}
 
-	/*
-		DispatchSummary is metadata describing the batch.
-
-		It is optional, but if you want the client to know that
-		multiple operations failed, it can be attached here.
-	*/
 	details = append(
 		details,
-		toDispatchSummary(multipleErr),
+		mapper.ToDispatchSummary(multipleErr),
 	)
 
-	st, err := st.WithDetails(details...)
-	if err != nil {
-		return resp, status.Error(
-			codes.Internal,
-			"internal server error",
-		)
-	}
-
 	return resp, st.Err()
-}
-
-// ============================================================
-// AppError → Proto
-// ============================================================
-
-func toAppErrorInfo(
-	appErr *apperrors.AppError,
-) *comv1rs.AppErrorInfo {
-	if appErr == nil {
-		return nil
-	}
-
-	return &comv1rs.AppErrorInfo{
-		Metadata: &comv1rs.MetadataReponse{
-			OpId: appErr.OpID,
-		},
-		Reason:     appErr.Code,
-		Domain:     appErr.Domain,
-		Layer:      appErr.Layer,
-		Message:    appErr.Message,
-		Violations: mapper.ToProtoViolations(appErr.Violations),
-	}
-}
-
-// ============================================================
-// Dispatcher summary
-// ============================================================
-
-func toDispatchSummary(
-	multipleErr *dp.MultipleError,
-) *comv1rs.DispatchSummary {
-	if multipleErr == nil {
-		return nil
-	}
-
-	total := multipleErr.Total()
-
-	return &comv1rs.DispatchSummary{
-		Total:     int32(total),
-		Succeeded: 0,
-		Failed:    int32(total),
-	}
 }
