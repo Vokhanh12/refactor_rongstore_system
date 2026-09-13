@@ -8,16 +8,14 @@ import (
 	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
-	comv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/protoadapt"
 )
 
-func ErrorUnaryInterceptor(
-	logger Logger,
-) grpc.UnaryServerInterceptor {
+func ErrorUnaryInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req any,
@@ -48,11 +46,7 @@ func translateError(
 	// Dispatcher collected multiple operation errors.
 	var multipleErr *dp.MultipleError
 	if errors.As(err, &multipleErr) {
-		if _, ok := resp.(*comv1rs.MutateResponse); ok {
-			return translateMutateDispatcherErrors(resp, multipleErr)
-		}
-
-		return translateViewDispatcherErrors(resp, multipleErr)
+		return translateDispatcherErrors(resp, multipleErr)
 	}
 
 	// Application/domain error.
@@ -94,8 +88,9 @@ func translateAppError(
 	)
 
 	st, err := st.WithDetails(
-		mapper.ToAppErrorInfo(appErr),
+		mapper.ToAppErrorInfo(nil, appErr),
 	)
+
 	if err != nil {
 		return resp, status.Error(
 			codes.Internal,
@@ -109,19 +104,15 @@ func translateAppError(
 // ============================================================
 // Dispatcher multiple errors
 // ============================================================
-
 func translateDispatcherErrors(
 	resp any,
 	multipleErr *dp.MultipleError,
 ) (any, error) {
-
 	if multipleErr == nil || multipleErr.Empty() {
 		return resp, nil
 	}
 
-	st := status.New(200, "OK")
-
-	details := make([]proto.Message, 0)
+	details := make([]proto.Message, 0, len(multipleErr.Errors)+1)
 
 	for _, opErr := range multipleErr.Errors {
 		if opErr == nil {
@@ -133,21 +124,44 @@ func translateDispatcherErrors(
 		if errors.As(opErr.Err, &appErr) {
 			details = append(
 				details,
-				mapper.ToAppErrorInfo(opErr.OpID, appErr),
+				mapper.ToAppErrorInfo(&opErr.OpID, appErr),
 			)
-
 			continue
 		}
 
 		details = append(
-			details, mapper.ToAppErrorInfo(opErr.OpID, &apperrors.INTERNAL_FALLBACK))
-
+			details,
+			mapper.ToAppErrorInfo(
+				&opErr.OpID,
+				&apperrors.INTERNAL_FALLBACK,
+			),
+		)
 	}
 
 	details = append(
 		details,
 		mapper.ToDispatchSummary(multipleErr),
 	)
+
+	// grpc-go expects MessageV1 here.
+	adapted := make([]protoadapt.MessageV1, 0, len(details))
+
+	for _, detail := range details {
+		adapted = append(
+			adapted,
+			protoadapt.MessageV1Of(detail),
+		)
+	}
+
+	st := status.New(codes.OK, "OK")
+
+	st, err := st.WithDetails(adapted...)
+	if err != nil {
+		return resp, status.Error(
+			codes.Internal,
+			"internal server error",
+		)
+	}
 
 	return resp, st.Err()
 }

@@ -31,8 +31,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type IamServiceClient interface {
-	Login(ctx context.Context, in *resources.LoginRequest, opts ...grpc.CallOption) (*v1.BaseResponse, error)
-	Handshake(ctx context.Context, in *resources.HandshakeRequest, opts ...grpc.CallOption) (*v1.BaseResponse, error)
+	Login(ctx context.Context, in *resources.LoginRequest, opts ...grpc.CallOption) (*v1.SuccessResponse, error)
+	Handshake(ctx context.Context, in *resources.HandshakeRequest, opts ...grpc.CallOption) (*v1.SuccessResponse, error)
 	StoreOwnerMutate(ctx context.Context, in *resources.StoreOwnerMutateRequest, opts ...grpc.CallOption) (*v1.MutateResponse, error)
 	StoreOwnerView(ctx context.Context, in *resources.StoreOwnerViewRequest, opts ...grpc.CallOption) (*v1.ViewResponse, error)
 }
@@ -45,9 +45,9 @@ func NewIamServiceClient(cc grpc.ClientConnInterface) IamServiceClient {
 	return &iamServiceClient{cc}
 }
 
-func (c *iamServiceClient) Login(ctx context.Context, in *resources.LoginRequest, opts ...grpc.CallOption) (*v1.BaseResponse, error) {
+func (c *iamServiceClient) Login(ctx context.Context, in *resources.LoginRequest, opts ...grpc.CallOption) (*v1.SuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.BaseResponse)
+	out := new(v1.SuccessResponse)
 	err := c.cc.Invoke(ctx, IamService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -55,9 +55,9 @@ func (c *iamServiceClient) Login(ctx context.Context, in *resources.LoginRequest
 	return out, nil
 }
 
-func (c *iamServiceClient) Handshake(ctx context.Context, in *resources.HandshakeRequest, opts ...grpc.CallOption) (*v1.BaseResponse, error) {
+func (c *iamServiceClient) Handshake(ctx context.Context, in *resources.HandshakeRequest, opts ...grpc.CallOption) (*v1.SuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.BaseResponse)
+	out := new(v1.SuccessResponse)
 	err := c.cc.Invoke(ctx, IamService_Handshake_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -89,8 +89,8 @@ func (c *iamServiceClient) StoreOwnerView(ctx context.Context, in *resources.Sto
 // All implementations must embed UnimplementedIamServiceServer
 // for forward compatibility.
 type IamServiceServer interface {
-	Login(context.Context, *resources.LoginRequest) (*v1.BaseResponse, error)
-	Handshake(context.Context, *resources.HandshakeRequest) (*v1.BaseResponse, error)
+	Login(context.Context, *resources.LoginRequest) (*v1.SuccessResponse, error)
+	Handshake(context.Context, *resources.HandshakeRequest) (*v1.SuccessResponse, error)
 	StoreOwnerMutate(context.Context, *resources.StoreOwnerMutateRequest) (*v1.MutateResponse, error)
 	StoreOwnerView(context.Context, *resources.StoreOwnerViewRequest) (*v1.ViewResponse, error)
 	mustEmbedUnimplementedIamServiceServer()
@@ -103,10 +103,10 @@ type IamServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedIamServiceServer struct{}
 
-func (UnimplementedIamServiceServer) Login(context.Context, *resources.LoginRequest) (*v1.BaseResponse, error) {
+func (UnimplementedIamServiceServer) Login(context.Context, *resources.LoginRequest) (*v1.SuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedIamServiceServer) Handshake(context.Context, *resources.HandshakeRequest) (*v1.BaseResponse, error) {
+func (UnimplementedIamServiceServer) Handshake(context.Context, *resources.HandshakeRequest) (*v1.SuccessResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Handshake not implemented")
 }
 func (UnimplementedIamServiceServer) StoreOwnerMutate(context.Context, *resources.StoreOwnerMutateRequest) (*v1.MutateResponse, error) {

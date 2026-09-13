@@ -29,11 +29,7 @@ func (a *AuthzHandler) RoleMutate(
 	req *authzrs.RoleMutateRequest,
 ) (*commonv1.MutateResponse, error) {
 
-	results := make(
-		[]*commonv1.MutateResult,
-		0,
-		len(req.Mutations),
-	)
+	results := make([]*commonv1.MutateResult, 0, len(req.Mutations))
 	var multipleErr *dp.MultipleError
 
 	for _, mutation := range req.Mutations {
@@ -56,16 +52,13 @@ func (a *AuthzHandler) RoleMutate(
 			}
 		}
 
-		roleMapResult := mapper.FromMutateRoleResult(op)
-		results = append(results, &roleMapResult)
+		roleMapResult, err := mapper.FromMutateRoleResult(op, result)
+		if err != nil {
+			return nil, err
+		}
+
+		results = append(result, &roleMapResult)
 
 	}
 
-	// for _, r := range results {
-	// 	if item != nil {
-	// 		a.logger.Error(ctx, "iam_handler.role_mutate", item.Error.Internal, nil)
-	// 	}
-	// }
-
-	return crm.BuildMutate(ctx, results), nil
 }

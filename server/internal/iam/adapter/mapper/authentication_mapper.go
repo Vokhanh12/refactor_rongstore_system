@@ -7,8 +7,8 @@ import (
 
 func ToLoginCommand(req *authv1rs.LoginRequest) cmd.LoginCommand {
 	return cmd.LoginCommand{
-		Identifier: req.Identifier,
-		Password:   req.Password,
+		Identifier: req.Data.Identifier,
+		Password:   req.Data.Password,
 	}
 }
 

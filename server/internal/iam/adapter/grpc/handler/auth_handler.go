@@ -25,7 +25,7 @@ func NewAuthHandler(loginUc uc.LoginUsecase, logger logger.Logger) *AuthHandler 
 func (a *AuthHandler) Login(
 	ctx context.Context,
 	req *authv1rs.LoginRequest,
-) (*comv1rs.BaseResponse, error) {
+) (*comv1rs.SuccessResponse, error) {
 
 	cmd := mapper.ToLoginCommand(req)
 
@@ -34,5 +34,5 @@ func (a *AuthHandler) Login(
 		return mapper.FromLoginResult(result), err
 	}
 
-	return mapper.FromLoginResult(result), nil
+	return nil, err
 }

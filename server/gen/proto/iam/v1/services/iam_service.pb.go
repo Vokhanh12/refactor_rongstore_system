@@ -27,11 +27,11 @@ var File_iam_v1_services_iam_service_proto protoreflect.FileDescriptor
 
 const file_iam_v1_services_iam_service_proto_rawDesc = "" +
 	"\n" +
-	"!iam/v1/services/iam_service.proto\x12\x06iam.v1\x1a\x1cgoogle/api/annotations.proto\x1a,core/common/v1/resources/base_response.proto\x1a\"iam/v1/resources/store_owner.proto\x1a!iam/auth/v1/resources/login.proto\x1a%iam/auth/v1/resources/handshake.proto2\x94\x03\n" +
+	"!iam/v1/services/iam_service.proto\x12\x06iam.v1\x1a\x1cgoogle/api/annotations.proto\x1a,core/common/v1/resources/base_response.proto\x1a\"iam/v1/resources/store_owner.proto\x1a!iam/auth/v1/resources/login.proto\x1a%iam/auth/v1/resources/handshake.proto2\x9a\x03\n" +
 	"\n" +
-	"IamService\x12L\n" +
-	"\x05Login\x12\x14.iam.v1.LoginRequest\x1a\x17.common.v1.BaseResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12X\n" +
-	"\tHandshake\x12\x18.iam.v1.HandshakeRequest\x1a\x17.common.v1.BaseResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/v1/handshake\x12r\n" +
+	"IamService\x12O\n" +
+	"\x05Login\x12\x14.iam.v1.LoginRequest\x1a\x1a.common.v1.SuccessResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12[\n" +
+	"\tHandshake\x12\x18.iam.v1.HandshakeRequest\x1a\x1a.common.v1.SuccessResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/v1/handshake\x12r\n" +
 	"\x10StoreOwnerMutate\x12\x1f.iam.v1.StoreOwnerMutateRequest\x1a\x19.common.v1.MutateResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1/store-owners:mutate\x12j\n" +
 	"\x0eStoreOwnerView\x12\x1d.iam.v1.StoreOwnerViewRequest\x1a\x17.common.v1.ViewResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/v1/store-owners:viewB|\n" +
 	"\x1ccom.aliasadi.iam.v1.servicesP\x01ZZgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/services;servicespbb\x06proto3"
@@ -41,7 +41,7 @@ var file_iam_v1_services_iam_service_proto_goTypes = []any{
 	(*resources.HandshakeRequest)(nil),        // 1: iam.v1.HandshakeRequest
 	(*resources.StoreOwnerMutateRequest)(nil), // 2: iam.v1.StoreOwnerMutateRequest
 	(*resources.StoreOwnerViewRequest)(nil),   // 3: iam.v1.StoreOwnerViewRequest
-	(*v1.BaseResponse)(nil),                   // 4: common.v1.BaseResponse
+	(*v1.SuccessResponse)(nil),                // 4: common.v1.SuccessResponse
 	(*v1.MutateResponse)(nil),                 // 5: common.v1.MutateResponse
 	(*v1.ViewResponse)(nil),                   // 6: common.v1.ViewResponse
 }
@@ -50,8 +50,8 @@ var file_iam_v1_services_iam_service_proto_depIdxs = []int32{
 	1, // 1: iam.v1.IamService.Handshake:input_type -> iam.v1.HandshakeRequest
 	2, // 2: iam.v1.IamService.StoreOwnerMutate:input_type -> iam.v1.StoreOwnerMutateRequest
 	3, // 3: iam.v1.IamService.StoreOwnerView:input_type -> iam.v1.StoreOwnerViewRequest
-	4, // 4: iam.v1.IamService.Login:output_type -> common.v1.BaseResponse
-	4, // 5: iam.v1.IamService.Handshake:output_type -> common.v1.BaseResponse
+	4, // 4: iam.v1.IamService.Login:output_type -> common.v1.SuccessResponse
+	4, // 5: iam.v1.IamService.Handshake:output_type -> common.v1.SuccessResponse
 	5, // 6: iam.v1.IamService.StoreOwnerMutate:output_type -> common.v1.MutateResponse
 	6, // 7: iam.v1.IamService.StoreOwnerView:output_type -> common.v1.ViewResponse
 	4, // [4:8] is the sub-list for method output_type

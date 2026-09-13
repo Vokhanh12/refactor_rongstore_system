@@ -23,7 +23,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1BaseResponse"
+              "$ref": "#/definitions/v1SuccessResponse"
             }
           },
           "default": {
@@ -55,7 +55,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1BaseResponse"
+              "$ref": "#/definitions/v1SuccessResponse"
             }
           },
           "default": {
@@ -256,17 +256,6 @@
         },
         "userAgent": {
           "type": "string"
-        }
-      }
-    },
-    "v1BaseResponse": {
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "$ref": "#/definitions/v1MetadataReponse"
-        },
-        "data": {
-          "$ref": "#/definitions/protobufAny"
         }
       }
     },
@@ -538,6 +527,17 @@
       "properties": {
         "common": {
           "$ref": "#/definitions/v1SearchCriteria"
+        }
+      }
+    },
+    "v1SuccessResponse": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/v1MetadataReponse"
+        },
+        "data": {
+          "$ref": "#/definitions/protobufAny"
         }
       }
     },

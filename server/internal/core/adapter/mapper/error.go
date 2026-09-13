@@ -54,17 +54,21 @@ func ToAppViolations(
 }
 
 func ToAppErrorInfo(
-	opID string,
+	opID *string,
 	appErr *apperrors.AppError,
 ) *comv1rs.AppErrorInfo {
 	if appErr == nil {
 		return nil
 	}
 
+	metadata := &comv1rs.MetadataReponse{}
+
+	if opID != nil {
+		metadata.OpId = *opID
+	}
+
 	return &comv1rs.AppErrorInfo{
-		Metadata: &comv1rs.MetadataReponse{
-			OpId: opID,
-		},
+		Metadata:   metadata,
 		Reason:     appErr.Code,
 		Domain:     appErr.Domain,
 		Layer:      appErr.Layer,

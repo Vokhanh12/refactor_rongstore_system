@@ -13,14 +13,14 @@ import "iam/auth/v1/resources/handshake.proto";
 
 
 service IamService {
-    rpc Login(LoginRequest) returns (common.v1.BaseResponse) {
+    rpc Login(LoginRequest) returns (common.v1.SuccessResponse) {
       option (google.api.http) = {
         post: "/v1/login"
         body: "*"
       };
     }
   
-    rpc Handshake(HandshakeRequest) returns (common.v1.BaseResponse) {
+    rpc Handshake(HandshakeRequest) returns (common.v1.SuccessResponse) {
       option (google.api.http) = {
         post: "/v1/handshake"
         body: "*"
