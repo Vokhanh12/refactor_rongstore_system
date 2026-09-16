@@ -16,7 +16,7 @@ message Violation {
 message AppErrorInfo {
   string reason = 1;
   string domain = 2;
-  MetadataReponse metadata = 3;
+  ResponseMetadata metadata = 3;
   string message = 4;
   string layer =5;
   repeated Violation violations = 6;

@@ -24,7 +24,7 @@ const (
 
 type MutateResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Metadata      *MetadataReponse       `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Metadata      *ResponseMetadata      `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	Data          *anypb.Any             `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -60,7 +60,7 @@ func (*MutateResult) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_mutate_result_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MutateResult) GetMetadata() *MetadataReponse {
+func (x *MutateResult) GetMetadata() *ResponseMetadata {
 	if x != nil {
 		return x.Metadata
 	}
@@ -78,9 +78,9 @@ var File_core_common_v1_resources_mutate_result_proto protoreflect.FileDescripto
 
 const file_core_common_v1_resources_mutate_result_proto_rawDesc = "" +
 	"\n" +
-	",core/common/v1/resources/mutate_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a'core/common/v1/resources/metadata.proto\"p\n" +
-	"\fMutateResult\x126\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x1a.common.v1.MetadataReponseR\bmetadata\x12(\n" +
+	",core/common/v1/resources/mutate_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a'core/common/v1/resources/metadata.proto\"q\n" +
+	"\fMutateResult\x127\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x1b.common.v1.ResponseMetadataR\bmetadata\x12(\n" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04dataBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
@@ -97,12 +97,12 @@ func file_core_common_v1_resources_mutate_result_proto_rawDescGZIP() []byte {
 
 var file_core_common_v1_resources_mutate_result_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_core_common_v1_resources_mutate_result_proto_goTypes = []any{
-	(*MutateResult)(nil),    // 0: common.v1.MutateResult
-	(*MetadataReponse)(nil), // 1: common.v1.MetadataReponse
-	(*anypb.Any)(nil),       // 2: google.protobuf.Any
+	(*MutateResult)(nil),     // 0: common.v1.MutateResult
+	(*ResponseMetadata)(nil), // 1: common.v1.ResponseMetadata
+	(*anypb.Any)(nil),        // 2: google.protobuf.Any
 }
 var file_core_common_v1_resources_mutate_result_proto_depIdxs = []int32{
-	1, // 0: common.v1.MutateResult.metadata:type_name -> common.v1.MetadataReponse
+	1, // 0: common.v1.MutateResult.metadata:type_name -> common.v1.ResponseMetadata
 	2, // 1: common.v1.MutateResult.data:type_name -> google.protobuf.Any
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type

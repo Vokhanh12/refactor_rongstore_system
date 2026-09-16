@@ -24,7 +24,7 @@ const (
 
 type ViewResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Metadata      *MetadataReponse       `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Metadata      *ResponseMetadata      `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	Data          *anypb.Any             `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	Pagination    *Pagination            `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	Warnings      []*Warning             `protobuf:"bytes,4,rep,name=warnings,proto3" json:"warnings,omitempty"`
@@ -62,7 +62,7 @@ func (*ViewResult) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_view_result_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ViewResult) GetMetadata() *MetadataReponse {
+func (x *ViewResult) GetMetadata() *ResponseMetadata {
 	if x != nil {
 		return x.Metadata
 	}
@@ -94,10 +94,10 @@ var File_core_common_v1_resources_view_result_proto protoreflect.FileDescriptor
 
 const file_core_common_v1_resources_view_result_proto_rawDesc = "" +
 	"\n" +
-	"*core/common/v1/resources/view_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a)core/common/v1/resources/pagination.proto\x1a&core/common/v1/resources/warning.proto\x1a'core/common/v1/resources/metadata.proto\"\xd5\x01\n" +
+	"*core/common/v1/resources/view_result.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a)core/common/v1/resources/pagination.proto\x1a&core/common/v1/resources/warning.proto\x1a'core/common/v1/resources/metadata.proto\"\xd6\x01\n" +
 	"\n" +
-	"ViewResult\x126\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x1a.common.v1.MetadataReponseR\bmetadata\x12(\n" +
+	"ViewResult\x127\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x1b.common.v1.ResponseMetadataR\bmetadata\x12(\n" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\x125\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x15.common.v1.PaginationR\n" +
@@ -118,14 +118,14 @@ func file_core_common_v1_resources_view_result_proto_rawDescGZIP() []byte {
 
 var file_core_common_v1_resources_view_result_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_core_common_v1_resources_view_result_proto_goTypes = []any{
-	(*ViewResult)(nil),      // 0: common.v1.ViewResult
-	(*MetadataReponse)(nil), // 1: common.v1.MetadataReponse
-	(*anypb.Any)(nil),       // 2: google.protobuf.Any
-	(*Pagination)(nil),      // 3: common.v1.Pagination
-	(*Warning)(nil),         // 4: common.v1.Warning
+	(*ViewResult)(nil),       // 0: common.v1.ViewResult
+	(*ResponseMetadata)(nil), // 1: common.v1.ResponseMetadata
+	(*anypb.Any)(nil),        // 2: google.protobuf.Any
+	(*Pagination)(nil),       // 3: common.v1.Pagination
+	(*Warning)(nil),          // 4: common.v1.Warning
 }
 var file_core_common_v1_resources_view_result_proto_depIdxs = []int32{
-	1, // 0: common.v1.ViewResult.metadata:type_name -> common.v1.MetadataReponse
+	1, // 0: common.v1.ViewResult.metadata:type_name -> common.v1.ResponseMetadata
 	2, // 1: common.v1.ViewResult.data:type_name -> google.protobuf.Any
 	3, // 2: common.v1.ViewResult.pagination:type_name -> common.v1.Pagination
 	4, // 3: common.v1.ViewResult.warnings:type_name -> common.v1.Warning

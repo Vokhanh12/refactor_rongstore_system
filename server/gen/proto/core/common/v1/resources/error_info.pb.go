@@ -93,7 +93,7 @@ type AppErrorInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Reason        string                 `protobuf:"bytes,1,opt,name=reason,proto3" json:"reason,omitempty"`
 	Domain        string                 `protobuf:"bytes,2,opt,name=domain,proto3" json:"domain,omitempty"`
-	Metadata      *MetadataReponse       `protobuf:"bytes,3,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Metadata      *ResponseMetadata      `protobuf:"bytes,3,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	Message       string                 `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
 	Layer         string                 `protobuf:"bytes,5,opt,name=layer,proto3" json:"layer,omitempty"`
 	Violations    []*Violation           `protobuf:"bytes,6,rep,name=violations,proto3" json:"violations,omitempty"`
@@ -145,7 +145,7 @@ func (x *AppErrorInfo) GetDomain() string {
 	return ""
 }
 
-func (x *AppErrorInfo) GetMetadata() *MetadataReponse {
+func (x *AppErrorInfo) GetMetadata() *ResponseMetadata {
 	if x != nil {
 		return x.Metadata
 	}
@@ -182,11 +182,11 @@ const file_core_common_v1_resources_error_info_proto_rawDesc = "" +
 	"\x05field\x18\x01 \x01(\tR\x05field\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\x12\n" +
-	"\x04hint\x18\x04 \x01(\tR\x04hint\"\xdc\x01\n" +
+	"\x04hint\x18\x04 \x01(\tR\x04hint\"\xdd\x01\n" +
 	"\fAppErrorInfo\x12\x16\n" +
 	"\x06reason\x18\x01 \x01(\tR\x06reason\x12\x16\n" +
-	"\x06domain\x18\x02 \x01(\tR\x06domain\x126\n" +
-	"\bmetadata\x18\x03 \x01(\v2\x1a.common.v1.MetadataReponseR\bmetadata\x12\x18\n" +
+	"\x06domain\x18\x02 \x01(\tR\x06domain\x127\n" +
+	"\bmetadata\x18\x03 \x01(\v2\x1b.common.v1.ResponseMetadataR\bmetadata\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12\x14\n" +
 	"\x05layer\x18\x05 \x01(\tR\x05layer\x124\n" +
 	"\n" +
@@ -207,12 +207,12 @@ func file_core_common_v1_resources_error_info_proto_rawDescGZIP() []byte {
 
 var file_core_common_v1_resources_error_info_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_core_common_v1_resources_error_info_proto_goTypes = []any{
-	(*Violation)(nil),       // 0: common.v1.Violation
-	(*AppErrorInfo)(nil),    // 1: common.v1.AppErrorInfo
-	(*MetadataReponse)(nil), // 2: common.v1.MetadataReponse
+	(*Violation)(nil),        // 0: common.v1.Violation
+	(*AppErrorInfo)(nil),     // 1: common.v1.AppErrorInfo
+	(*ResponseMetadata)(nil), // 2: common.v1.ResponseMetadata
 }
 var file_core_common_v1_resources_error_info_proto_depIdxs = []int32{
-	2, // 0: common.v1.AppErrorInfo.metadata:type_name -> common.v1.MetadataReponse
+	2, // 0: common.v1.AppErrorInfo.metadata:type_name -> common.v1.ResponseMetadata
 	0, // 1: common.v1.AppErrorInfo.violations:type_name -> common.v1.Violation
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type

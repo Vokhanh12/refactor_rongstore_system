@@ -10,7 +10,7 @@ import "core/common/v1/resources/metadata.proto";
 
 
 message ViewResult {
-  MetadataReponse metadata = 1;
+  ResponseMetadata metadata = 1;
   google.protobuf.Any data = 2;
   Pagination pagination = 3;     
   repeated Warning warnings = 4; 

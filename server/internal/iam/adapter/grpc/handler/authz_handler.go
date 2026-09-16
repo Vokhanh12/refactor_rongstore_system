@@ -5,9 +5,10 @@ import (
 
 	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
+	cm "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mapper"
 	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
-	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
+	im "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
+	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecase"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
 
@@ -30,10 +31,10 @@ func (a *AuthzHandler) RoleMutate(
 ) (*commonv1.MutateResponse, error) {
 
 	results := make([]*commonv1.MutateResult, 0, len(req.Mutations))
-	var multipleErr *dp.MultipleError
+	var multiErr dp.MultipleError
 
 	for _, mutation := range req.Mutations {
-		op, err := mapper.ToMutateRoleCommand(mutation)
+		op, err := im.ToMutateRoleCommand(mutation)
 		if err != nil {
 			return nil, err
 		}
@@ -45,20 +46,18 @@ func (a *AuthzHandler) RoleMutate(
 		)
 
 		if err != nil {
-			if multipleErr == nil {
-				multipleErr = dp.NewMultipleError(err)
-			} else {
-				multipleErr.Append(err)
-			}
+			multiErr.Add(op.OpID, err)
+			continue
 		}
 
-		roleMapResult, err := mapper.FromMutateRoleResult(op, result)
+		mapped, err := im.FromMutateRoleResult(op, result)
 		if err != nil {
-			return nil, err
+			multiErr.Add(op.OpID, err)
+			continue
 		}
 
-		results = append(result, &roleMapResult)
-
+		results = append(results, &mapped)
 	}
 
+	return cm.BuildMutateResponse(ctx, results, &multiErr)
 }

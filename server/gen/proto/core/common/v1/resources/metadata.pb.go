@@ -21,33 +21,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type MetadataRequest struct {
-	state      protoimpl.MessageState `protogen:"open.v1"`
-	RequestId  string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	TraceId    string                 `protobuf:"bytes,2,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
-	ServerTime int64                  `protobuf:"varint,3,opt,name=server_time,json=serverTime,proto3" json:"server_time,omitempty"`
-	Locale     string                 `protobuf:"bytes,4,opt,name=locale,proto3" json:"locale,omitempty"`
-	// optional advanced
-	Region        string `protobuf:"bytes,5,opt,name=region,proto3" json:"region,omitempty"`      // ap-sg, ap-vn
-	Degraded      bool   `protobuf:"varint,6,opt,name=degraded,proto3" json:"degraded,omitempty"` // hệ thống đang degraded
+type RequestMetadata struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestId     string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	Locale        string                 `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MetadataRequest) Reset() {
-	*x = MetadataRequest{}
+func (x *RequestMetadata) Reset() {
+	*x = RequestMetadata{}
 	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MetadataRequest) String() string {
+func (x *RequestMetadata) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MetadataRequest) ProtoMessage() {}
+func (*RequestMetadata) ProtoMessage() {}
 
-func (x *MetadataRequest) ProtoReflect() protoreflect.Message {
+func (x *RequestMetadata) ProtoReflect() protoreflect.Message {
 	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,74 +54,49 @@ func (x *MetadataRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MetadataRequest.ProtoReflect.Descriptor instead.
-func (*MetadataRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use RequestMetadata.ProtoReflect.Descriptor instead.
+func (*RequestMetadata) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_metadata_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MetadataRequest) GetRequestId() string {
+func (x *RequestMetadata) GetRequestId() string {
 	if x != nil {
 		return x.RequestId
 	}
 	return ""
 }
 
-func (x *MetadataRequest) GetTraceId() string {
-	if x != nil {
-		return x.TraceId
-	}
-	return ""
-}
-
-func (x *MetadataRequest) GetServerTime() int64 {
-	if x != nil {
-		return x.ServerTime
-	}
-	return 0
-}
-
-func (x *MetadataRequest) GetLocale() string {
+func (x *RequestMetadata) GetLocale() string {
 	if x != nil {
 		return x.Locale
 	}
 	return ""
 }
 
-func (x *MetadataRequest) GetRegion() string {
-	if x != nil {
-		return x.Region
-	}
-	return ""
-}
-
-func (x *MetadataRequest) GetDegraded() bool {
-	if x != nil {
-		return x.Degraded
-	}
-	return false
-}
-
-type MetadataReponse struct {
+type ResponseMetadata struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OpId          string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	RequestId     string                 `protobuf:"bytes,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	TraceId       string                 `protobuf:"bytes,2,opt,name=trace_id,json=traceId,proto3" json:"trace_id,omitempty"`
+	ServerTime    int64                  `protobuf:"varint,3,opt,name=server_time,json=serverTime,proto3" json:"server_time,omitempty"`
+	Degraded      bool                   `protobuf:"varint,4,opt,name=degraded,proto3" json:"degraded,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MetadataReponse) Reset() {
-	*x = MetadataReponse{}
+func (x *ResponseMetadata) Reset() {
+	*x = ResponseMetadata{}
 	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MetadataReponse) String() string {
+func (x *ResponseMetadata) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MetadataReponse) ProtoMessage() {}
+func (*ResponseMetadata) ProtoMessage() {}
 
-func (x *MetadataReponse) ProtoReflect() protoreflect.Message {
+func (x *ResponseMetadata) ProtoReflect() protoreflect.Message {
 	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -138,12 +108,77 @@ func (x *MetadataReponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MetadataReponse.ProtoReflect.Descriptor instead.
-func (*MetadataReponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ResponseMetadata.ProtoReflect.Descriptor instead.
+func (*ResponseMetadata) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_metadata_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *MetadataReponse) GetOpId() string {
+func (x *ResponseMetadata) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
+}
+
+func (x *ResponseMetadata) GetTraceId() string {
+	if x != nil {
+		return x.TraceId
+	}
+	return ""
+}
+
+func (x *ResponseMetadata) GetServerTime() int64 {
+	if x != nil {
+		return x.ServerTime
+	}
+	return 0
+}
+
+func (x *ResponseMetadata) GetDegraded() bool {
+	if x != nil {
+		return x.Degraded
+	}
+	return false
+}
+
+type OperationMetadata struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OpId          string                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OperationMetadata) Reset() {
+	*x = OperationMetadata{}
+	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OperationMetadata) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OperationMetadata) ProtoMessage() {}
+
+func (x *OperationMetadata) ProtoReflect() protoreflect.Message {
+	mi := &file_core_common_v1_resources_metadata_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OperationMetadata.ProtoReflect.Descriptor instead.
+func (*OperationMetadata) Descriptor() ([]byte, []int) {
+	return file_core_common_v1_resources_metadata_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *OperationMetadata) GetOpId() string {
 	if x != nil {
 		return x.OpId
 	}
@@ -154,17 +189,19 @@ var File_core_common_v1_resources_metadata_proto protoreflect.FileDescriptor
 
 const file_core_common_v1_resources_metadata_proto_rawDesc = "" +
 	"\n" +
-	"'core/common/v1/resources/metadata.proto\x12\tcommon.v1\"\xb8\x01\n" +
-	"\x0fMetadataRequest\x12\x1d\n" +
+	"'core/common/v1/resources/metadata.proto\x12\tcommon.v1\"H\n" +
+	"\x0fRequestMetadata\x12\x1d\n" +
+	"\n" +
+	"request_id\x18\x01 \x01(\tR\trequestId\x12\x16\n" +
+	"\x06locale\x18\x02 \x01(\tR\x06locale\"\x89\x01\n" +
+	"\x10ResponseMetadata\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x01 \x01(\tR\trequestId\x12\x19\n" +
 	"\btrace_id\x18\x02 \x01(\tR\atraceId\x12\x1f\n" +
 	"\vserver_time\x18\x03 \x01(\x03R\n" +
-	"serverTime\x12\x16\n" +
-	"\x06locale\x18\x04 \x01(\tR\x06locale\x12\x16\n" +
-	"\x06region\x18\x05 \x01(\tR\x06region\x12\x1a\n" +
-	"\bdegraded\x18\x06 \x01(\bR\bdegraded\"&\n" +
-	"\x0fMetadataReponse\x12\x13\n" +
+	"serverTime\x12\x1a\n" +
+	"\bdegraded\x18\x04 \x01(\bR\bdegraded\"(\n" +
+	"\x11OperationMetadata\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\tR\x04opIdBYZWgithub.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1;commonv1b\x06proto3"
 
 var (
@@ -179,10 +216,11 @@ func file_core_common_v1_resources_metadata_proto_rawDescGZIP() []byte {
 	return file_core_common_v1_resources_metadata_proto_rawDescData
 }
 
-var file_core_common_v1_resources_metadata_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_common_v1_resources_metadata_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_core_common_v1_resources_metadata_proto_goTypes = []any{
-	(*MetadataRequest)(nil), // 0: common.v1.MetadataRequest
-	(*MetadataReponse)(nil), // 1: common.v1.MetadataReponse
+	(*RequestMetadata)(nil),   // 0: common.v1.RequestMetadata
+	(*ResponseMetadata)(nil),  // 1: common.v1.ResponseMetadata
+	(*OperationMetadata)(nil), // 2: common.v1.OperationMetadata
 }
 var file_core_common_v1_resources_metadata_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -203,7 +241,7 @@ func file_core_common_v1_resources_metadata_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_common_v1_resources_metadata_proto_rawDesc), len(file_core_common_v1_resources_metadata_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -4,128 +4,50 @@ import (
 	"context"
 	"time"
 
-	protos "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
-	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
+
+	comv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
+	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
+	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 )
 
-func BuildMutateResult(ctx context.Context, opID string, data any) *protos.MutateResult
-{
-
-	return &protos.MutateResult{
-		Metadata: &protos.MetadataReponse{
-			OpId: opID,
-		},
-		Data:       &anypb.Any{},
-	}
-}
-
-
-func BuildBaseResponse(ctx context.Context, result *anypb.Any, error) (*protos.BaseResponse, error) {
+func BuildSuccessResponse(
+	ctx context.Context,
+	data proto.Message,
+) (*comv1rs.SuccessResponse, error) {
 
 	requestctx := ctxutil.MustRequest(ctx)
-	locatectx := ctxutil.MustLocale(ctx)
 
-	return &protos.BaseResponse{
-		Metadata: &protos.Metadata{
+	anyData, err := anypb.New(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &comv1rs.SuccessResponse{
+		Metadata: &comv1rs.ResponseMetadata{
 			TraceId:    requestctx.TraceID,
 			RequestId:  requestctx.RequestID,
-			Locale:     locatectx.Locale,
-			Region:     locatectx.Region,
 			Degraded:   false,
 			ServerTime: time.Now().UnixMilli(),
 		},
-		
-		Data: result,
-	}
+		Data: anyData,
+	}, nil
 }
 
+func BuildMutateResponse(
+	ctx context.Context,
+	results []*comv1rs.MutateResult,
+	multiErr *dp.MultipleError,
+) (*comv1rs.MutateResponse, error) {
 
-func BuildDevBaseResponse(ctx context.Context, result *anypb.Any) *protos.BaseResponse {
-
-	requestctx := ctxutil.MustRequest(ctx)
-	locatectx := ctxutil.MustLocale(ctx)
-
-	return &protos.BaseResponse{
-		Metadata: &protos.Metadata{
-			TraceId:    requestctx.TraceID,
-			RequestId:  requestctx.RequestID,
-			Locale:     locatectx.Locale,
-			Region:     locatectx.Region,
-			Degraded:   false,
-			ServerTime: time.Now().UnixMilli(),
-		},
-		Data: result,
-
-		Error: &protos.Error{
-			Client: &protos.ClientError{
-				Code:       "",
-				Message:    "",
-				Violations: []*protos.Violation{},
-			},
-			Server: &protos.ServerError{
-				Key:          "",
-				Severity:     "",
-				Retryable:    false,
-				Source:       "",
-				GrpcCode:     "",
-				ClientAction: "",
-				ServerAction: "",
-			},
-		},
-	}
-}
-
-
-func BuildMutateResponse(ctx context.Context, results dp.Result, mapActionData func(data any) *anypb.Any) *protos.MutateResponse {
-
-	requestctx := ctxutil.MustRequest(ctx)
-	locatectx := ctxutil.MustLocale(ctx)
-
-	return &protos.MutateResponse{
-		Metadata: &protos.Metadata{
-			TraceId:    requestctx.TraceID,
-			RequestId:  requestctx.RequestID,
-			Locale:     locatectx.Locale,
-			Region:     locatectx.Region,
-			Degraded:   false,
-			ServerTime: time.Now().UnixMilli(),
-		},
-		MutateResults: dispatcherResultToProto(results, mapActionData),
-	}
-}
-
-func BuildBatch[T any, R any](
-	items []T,
-	decode func(T) (
-		dp.Operation,
-		*aerrs.AppError,
-	),
-) (
-	[]dp.Operation,
-	*aerrs.AppError,
-) {
-
-	out := make(
-		[]dp.Operation,
-		0,
-		len(items),
-	)
-
-	for _, item := range items {
-
-		operation, err := decode(item)
-		if err != nil {
-			return nil, err
-		}
-
-		out = append(
-			out,
-			operation,
-		)
+	resp := &comv1rs.MutateResponse{
+		MutateResults: results,
 	}
 
-	return out, nil
+	if !multiErr.Empty() {
+		return resp, multiErr
+	}
+
+	return resp, nil
 }

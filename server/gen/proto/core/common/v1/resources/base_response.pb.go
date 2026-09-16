@@ -24,7 +24,7 @@ const (
 
 type SuccessResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Metadata      *MetadataReponse       `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Metadata      *ResponseMetadata      `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	Data          *anypb.Any             `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -60,7 +60,7 @@ func (*SuccessResponse) Descriptor() ([]byte, []int) {
 	return file_core_common_v1_resources_base_response_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SuccessResponse) GetMetadata() *MetadataReponse {
+func (x *SuccessResponse) GetMetadata() *ResponseMetadata {
 	if x != nil {
 		return x.Metadata
 	}
@@ -166,9 +166,9 @@ var File_core_common_v1_resources_base_response_proto protoreflect.FileDescripto
 
 const file_core_common_v1_resources_base_response_proto_rawDesc = "" +
 	"\n" +
-	",core/common/v1/resources/base_response.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a'core/common/v1/resources/metadata.proto\x1a,core/common/v1/resources/mutate_result.proto\x1a*core/common/v1/resources/view_result.proto\"s\n" +
-	"\x0fSuccessResponse\x126\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x1a.common.v1.MetadataReponseR\bmetadata\x12(\n" +
+	",core/common/v1/resources/base_response.proto\x12\tcommon.v1\x1a\x19google/protobuf/any.proto\x1a'core/common/v1/resources/metadata.proto\x1a,core/common/v1/resources/mutate_result.proto\x1a*core/common/v1/resources/view_result.proto\"t\n" +
+	"\x0fSuccessResponse\x127\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x1b.common.v1.ResponseMetadataR\bmetadata\x12(\n" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\"P\n" +
 	"\x0eMutateResponse\x12>\n" +
 	"\x0emutate_results\x18\x01 \x03(\v2\x17.common.v1.MutateResultR\rmutateResults\"H\n" +
@@ -189,16 +189,16 @@ func file_core_common_v1_resources_base_response_proto_rawDescGZIP() []byte {
 
 var file_core_common_v1_resources_base_response_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_core_common_v1_resources_base_response_proto_goTypes = []any{
-	(*SuccessResponse)(nil), // 0: common.v1.SuccessResponse
-	(*MutateResponse)(nil),  // 1: common.v1.MutateResponse
-	(*ViewResponse)(nil),    // 2: common.v1.ViewResponse
-	(*MetadataReponse)(nil), // 3: common.v1.MetadataReponse
-	(*anypb.Any)(nil),       // 4: google.protobuf.Any
-	(*MutateResult)(nil),    // 5: common.v1.MutateResult
-	(*ViewResult)(nil),      // 6: common.v1.ViewResult
+	(*SuccessResponse)(nil),  // 0: common.v1.SuccessResponse
+	(*MutateResponse)(nil),   // 1: common.v1.MutateResponse
+	(*ViewResponse)(nil),     // 2: common.v1.ViewResponse
+	(*ResponseMetadata)(nil), // 3: common.v1.ResponseMetadata
+	(*anypb.Any)(nil),        // 4: google.protobuf.Any
+	(*MutateResult)(nil),     // 5: common.v1.MutateResult
+	(*ViewResult)(nil),       // 6: common.v1.ViewResult
 }
 var file_core_common_v1_resources_base_response_proto_depIdxs = []int32{
-	3, // 0: common.v1.SuccessResponse.metadata:type_name -> common.v1.MetadataReponse
+	3, // 0: common.v1.SuccessResponse.metadata:type_name -> common.v1.ResponseMetadata
 	4, // 1: common.v1.SuccessResponse.data:type_name -> google.protobuf.Any
 	5, // 2: common.v1.MutateResponse.mutate_results:type_name -> common.v1.MutateResult
 	6, // 3: common.v1.ViewResponse.view_results:type_name -> common.v1.ViewResult

@@ -337,14 +337,6 @@
         }
       }
     },
-    "v1MetadataReponse": {
-      "type": "object",
-      "properties": {
-        "opId": {
-          "type": "string"
-        }
-      }
-    },
     "v1MutateResponse": {
       "type": "object",
       "properties": {
@@ -361,7 +353,7 @@
       "type": "object",
       "properties": {
         "metadata": {
-          "$ref": "#/definitions/v1MetadataReponse"
+          "$ref": "#/definitions/v1ResponseMetadata"
         },
         "data": {
           "$ref": "#/definitions/protobufAny"
@@ -378,6 +370,24 @@
         "offset": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "v1ResponseMetadata": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string"
+        },
+        "traceId": {
+          "type": "string"
+        },
+        "serverTime": {
+          "type": "string",
+          "format": "int64"
+        },
+        "degraded": {
+          "type": "boolean"
         }
       }
     },
@@ -534,7 +544,7 @@
       "type": "object",
       "properties": {
         "metadata": {
-          "$ref": "#/definitions/v1MetadataReponse"
+          "$ref": "#/definitions/v1ResponseMetadata"
         },
         "data": {
           "$ref": "#/definitions/protobufAny"
@@ -557,7 +567,7 @@
       "type": "object",
       "properties": {
         "metadata": {
-          "$ref": "#/definitions/v1MetadataReponse"
+          "$ref": "#/definitions/v1ResponseMetadata"
         },
         "data": {
           "$ref": "#/definitions/protobufAny"

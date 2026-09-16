@@ -37,11 +37,11 @@ func NewLoginUsecase(
 func (u *LoginUsecase) Execute(
 	ctx context.Context,
 	cmd com.LoginCommand,
-) (*com.LoginCommandResult, error) {
+) (com.LoginCommandResult, error) {
 
 	identifier, err := vo.NewLoginIdentifier(cmd.Identifier)
 	if err != nil {
-		return nil, err
+		return com.LoginCommandResult{}, err
 	}
 
 	credential, err := u.credentialRepo.FindByIdentifier(
@@ -50,14 +50,14 @@ func (u *LoginUsecase) Execute(
 	)
 
 	if err != nil {
-		return nil, err
+		return com.LoginCommandResult{}, err
 	}
 
 	if !u.passwordHasher.Verify(
 		cmd.Password,
 		credential.PasswordHash,
 	) {
-		return nil, aerr.New(
+		return com.LoginCommandResult{}, aerr.New(
 			errs.INVALID_CREDENTIALS,
 		)
 	}
@@ -68,7 +68,7 @@ func (u *LoginUsecase) Execute(
 	)
 
 	if err != nil {
-		return nil, err
+		return com.LoginCommandResult{}, err
 	}
 
 	accessToken, err := u.tokenSigner.SignAccessToken(
@@ -78,7 +78,7 @@ func (u *LoginUsecase) Execute(
 	)
 
 	if err != nil {
-		return nil, err
+		return com.LoginCommandResult{}, err
 	}
 
 	refreshToken, err := u.tokenSigner.SignRefreshToken(
@@ -86,10 +86,10 @@ func (u *LoginUsecase) Execute(
 	)
 
 	if err != nil {
-		return nil, err
+		return com.LoginCommandResult{}, err
 	}
 
-	return &com.LoginCommandResult{
+	return com.LoginCommandResult{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpiresIn:    int64((15 * time.Minute).Seconds()),

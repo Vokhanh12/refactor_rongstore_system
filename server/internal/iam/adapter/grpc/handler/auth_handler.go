@@ -5,7 +5,8 @@ import (
 
 	comv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/auth/v1/resources"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
+	cm "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/mapper"
+	im "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
 	uc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/usecase"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/logger"
 )
@@ -27,12 +28,14 @@ func (a *AuthHandler) Login(
 	req *authv1rs.LoginRequest,
 ) (*comv1rs.SuccessResponse, error) {
 
-	cmd := mapper.ToLoginCommand(req)
+	cmd := im.ToLoginCommand(req)
 
 	result, err := a.loginUsecase.Execute(ctx, cmd)
 	if err != nil {
-		return mapper.FromLoginResult(result), err
+		return nil, err
 	}
 
-	return nil, err
+	data := im.FromLoginResult(result)
+
+	return cm.BuildSuccessResponse(ctx, data)
 }
