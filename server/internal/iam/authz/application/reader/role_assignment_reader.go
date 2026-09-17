@@ -8,5 +8,5 @@ import (
 )
 
 type RoleAssignmentReader interface {
-	GetRoleScopesByUserID(ctx context.Context, userID uuid.UUID) ([]query.GetRoleScopesByUserIDQueryResult, error)
+	ListRoleScopes(ctx context.Context, userID uuid.UUID) ([]query.ListRoleScopesQueryResult, error)
 }

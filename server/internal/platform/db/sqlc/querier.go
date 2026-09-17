@@ -11,7 +11,7 @@ import (
 )
 
 type Querier interface {
-	GetRoleScopesByUserID(ctx context.Context, userID uuid.UUID) ([]GetRoleScopesByUserIDRow, error)
+	ListRoleScopes(ctx context.Context, userID uuid.UUID) ([]ListRoleScopesRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

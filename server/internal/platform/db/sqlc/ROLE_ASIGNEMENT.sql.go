@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-const getRoleScopesByUserID = `-- name: GetRoleScopesByUserID :many
+const ListRoleScopes = `-- name: ListRoleScopes :many
 SELECT
     role_id,
     scope_id,
@@ -20,21 +20,21 @@ FROM ROLE_ASSIGNMENTS
 WHERE user_id = $1
 `
 
-type GetRoleScopesByUserIDRow struct {
+type ListRoleScopesRow struct {
 	RoleID    uuid.UUID     `json:"role_id"`
 	ScopeID   *uuid.UUID    `json:"scope_id"`
 	ScopeType RoleScopeType `json:"scope_type"`
 }
 
-func (q *Queries) GetRoleScopesByUserID(ctx context.Context, userID uuid.UUID) ([]GetRoleScopesByUserIDRow, error) {
-	rows, err := q.db.Query(ctx, getRoleScopesByUserID, userID)
+func (q *Queries) ListRoleScopes(ctx context.Context, userID uuid.UUID) ([]ListRoleScopesRow, error) {
+	rows, err := q.db.Query(ctx, ListRoleScopes, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetRoleScopesByUserIDRow
+	var items []ListRoleScopesRow
 	for rows.Next() {
-		var i GetRoleScopesByUserIDRow
+		var i ListRoleScopesRow
 		if err := rows.Scan(&i.RoleID, &i.ScopeID, &i.ScopeType); err != nil {
 			return nil, err
 		}

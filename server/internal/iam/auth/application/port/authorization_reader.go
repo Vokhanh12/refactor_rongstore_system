@@ -8,7 +8,7 @@ import (
 )
 
 type AuthorizationReader interface {
-	GetRoleScopesByUserID(
+	ListTokenRoleScopes(
 		ctx context.Context,
 		userID uuid.UUID,
 	) ([]sec.TokenRoleScope, error)

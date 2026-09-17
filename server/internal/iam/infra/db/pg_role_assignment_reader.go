@@ -22,20 +22,20 @@ func NewPgRoleAsignmentReader(q *sqlc.Queries, p *pgxpool.Pool) reader.RoleAssig
 	return &PgRoleAsignmentReader{queries: q, pool: p}
 }
 
-func (p *PgRoleAsignmentReader) GetRoleScopesByUserID(
+func (p *PgRoleAsignmentReader) ListRoleScopes(
 	ctx context.Context,
 	userID uuid.UUID,
-) ([]query.GetRoleScopesByUserIDQueryResult, error) {
+) ([]query.ListRoleScopesQueryResult, error) {
 
-	rows, err := p.queries.GetRoleScopesByUserID(ctx, userID)
+	rows, err := p.queries.ListRoleScopes(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]query.GetRoleScopesByUserIDQueryResult, 0, len(rows))
+	result := make([]query.ListRoleScopesQueryResult, 0, len(rows))
 
 	for _, row := range rows {
-		result = append(result, query.GetRoleScopesByUserIDQueryResult{
+		result = append(result, query.ListRoleScopesQueryResult{
 			RoleID:    row.RoleID,
 			ScopeID:   row.ScopeID,
 			ScopeType: enum.RoleScopeType(row.ScopeType),

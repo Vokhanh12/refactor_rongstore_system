@@ -4,7 +4,7 @@ import (
 	"context"
 
 	authport "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/port"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
+	ser "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	authzrepo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/reader"
 
 	"github.com/google/uuid"
@@ -24,12 +24,12 @@ func NewAuthorizationReader(
 	}
 }
 
-func (a *AuthorizationReader) GetRoleScopesByUserID(
+func (a *AuthorizationReader) ListRoleScopes(
 	ctx context.Context,
 	userID uuid.UUID,
-) ([]security.TokenRole, error) {
+) ([]ser.TokenRoleScope, error) {
 
-	roleScopeResults, err := a.roleAssignmentRepo.GetRoleScopesByUserID(
+	roleScopeResults, err := a.roleAssignmentRepo.ListRoleScopes(
 		ctx,
 		userID,
 	)
@@ -37,10 +37,10 @@ func (a *AuthorizationReader) GetRoleScopesByUserID(
 		return nil, err
 	}
 
-	roleScopes := make([]security.TokenRole, 0, len(roleScopeResults))
+	roleScopes := make([]ser.TokenRoleScope, 0, len(roleScopeResults))
 
 	for _, result := range roleScopeResults {
-		roleScopes = append(roleScopes, security.TokenRole{
+		roleScopes = append(roleScopes, ser.TokenRoleScope{
 			RoleID:    result.RoleID,
 			ScopeID:   result.ScopeID,
 			ScopeType: string(result.ScopeType),

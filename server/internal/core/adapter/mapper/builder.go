@@ -45,7 +45,24 @@ func BuildMutateResponse(
 		MutateResults: results,
 	}
 
-	if !multiErr.Empty() {
+	if multiErr != nil && !multiErr.Empty() {
+		return resp, multiErr
+	}
+
+	return resp, nil
+}
+
+func BuildViewResponse(
+	ctx context.Context,
+	results []*comv1rs.ViewResult,
+	multiErr *dp.MultipleError,
+) (*comv1rs.ViewResponse, error) {
+
+	resp := &comv1rs.ViewResponse{
+		ViewResults: results,
+	}
+
+	if multiErr != nil && !multiErr.Empty() {
 		return resp, multiErr
 	}
 

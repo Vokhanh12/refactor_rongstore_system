@@ -1,4 +1,4 @@
--- name: GetRoleScopesByUserID :many
+-- name: ListRoleScopes :many
 SELECT
     role_id,
     scope_id,

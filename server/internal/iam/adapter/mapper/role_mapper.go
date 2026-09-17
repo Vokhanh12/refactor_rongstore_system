@@ -33,6 +33,62 @@ func ToMutateRoleCommand(
 	}
 }
 
+// FromMutateRoleResult maps an application command result
+// into the generic transport mutation result.
+func FromMutateRoleResult(
+	op dp.Operation,
+	result any,
+) (commonv1.MutateResult, error) {
+	var data proto.Message
+
+	switch op.Action {
+	case authzuc.RoleCreate:
+		r, ok := result.(*cmd.CreateRoleCommandResult)
+		if !ok {
+			return commonv1.MutateResult{}, aerrs.New(core.INTERNAL)
+		}
+
+		data = &authzrs.RoleMutationResult_CreateResult{
+			Id: r.Role.Id,
+		}
+
+	case authzuc.RoleUpdate:
+		r, ok := result.(*cmd.UpdateRoleCommandResult)
+		if !ok {
+			return commonv1.MutateResult{}, aerrs.New(core.INTERNAL)
+		}
+
+		data = &authzrs.RoleMutationResult_UpdateResult{
+			Id: r.Role.Id,
+		}
+
+	case authzuc.RoleDelete:
+		r, ok := result.(*cmd.DeleteRoleCommandResult)
+		if !ok {
+			return commonv1.MutateResult{}, aerrs.New(core.INTERNAL)
+		}
+
+		data = &authzrs.RoleMutationResult_DeleteResult{
+			Id: r.Role.Id,
+		}
+
+	default:
+		return commonv1.MutateResult{}, aerrs.New(core.INVALID_ARGUMENT)
+	}
+
+	anyData, err := anypb.New(data)
+	if err != nil {
+		return commonv1.MutateResult{}, err
+	}
+
+	return commonv1.MutateResult{
+		Metadata: &commonv1.MetadataReponse{
+			OpId: op.OpID,
+		},
+		Data: anyData,
+	}, nil
+}
+
 func mapCreateRole(
 	m *authzrs.RoleMutateRequest_Mutation,
 	req *authzrs.RoleMutateRequest_Mutation_Create,
@@ -124,61 +180,5 @@ func mapDeleteRole(
 		Payload: &cmd.DeleteRoleCommand{
 			ID: *id,
 		},
-	}, nil
-}
-
-// FromMutateRoleResult maps an application command result
-// into the generic transport mutation result.
-func FromMutateRoleResult(
-	op dp.Operation,
-	result any,
-) (commonv1.MutateResult, error) {
-	var data proto.Message
-
-	switch op.Action {
-	case authzuc.RoleCreate:
-		r, ok := result.(*cmd.CreateRoleCommandResult)
-		if !ok {
-			return commonv1.MutateResult{}, aerrs.New(core.INTERNAL)
-		}
-
-		data = &authzrs.RoleMutationResult_CreateResult{
-			Id: r.Role.Id,
-		}
-
-	case authzuc.RoleUpdate:
-		r, ok := result.(*cmd.UpdateRoleCommandResult)
-		if !ok {
-			return commonv1.MutateResult{}, aerrs.New(core.INTERNAL)
-		}
-
-		data = &authzrs.RoleMutationResult_UpdateResult{
-			Id: r.Role.Id,
-		}
-
-	case authzuc.RoleDelete:
-		r, ok := result.(*cmd.DeleteRoleCommandResult)
-		if !ok {
-			return commonv1.MutateResult{}, aerrs.New(core.INTERNAL)
-		}
-
-		data = &authzrs.RoleMutationResult_DeleteResult{
-			Id: r.Role.Id,
-		}
-
-	default:
-		return commonv1.MutateResult{}, aerrs.New(core.INVALID_ARGUMENT)
-	}
-
-	anyData, err := anypb.New(data)
-	if err != nil {
-		return commonv1.MutateResult{}, err
-	}
-
-	return commonv1.MutateResult{
-		Metadata: &commonv1.MetadataReponse{
-			OpId: op.OpID,
-		},
-		Data: anyData,
 	}, nil
 }

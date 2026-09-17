@@ -62,7 +62,7 @@ func (u *LoginUsecase) Execute(
 		)
 	}
 
-	roleScopes, err := u.authorizationReader.GetRoleScopesByUserID(
+	roleScopes, err := u.authorizationReader.ListRoleScopes(
 		ctx,
 		credential.UserID,
 	)
