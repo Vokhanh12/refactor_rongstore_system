@@ -3,8 +3,7 @@ package grpc
 import (
 	"context"
 
-	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/usecase"
+	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -13,7 +12,7 @@ import (
 )
 
 func AuthUnaryInterceptor(
-	authUsecase *usecase.AuthenticateUsecase,
+	tokenParser sec.TokenParser,
 ) grpc.UnaryServerInterceptor {
 
 	return func(
@@ -33,12 +32,14 @@ func AuthUnaryInterceptor(
 			return nil, status.Error(codes.Unauthenticated, "missing jwt payload")
 		}
 
-		result, err := authUsecase.Execute(
-			ctx,
-			cmd.AuthenticateCommand{
-				Payload: values[0],
-			},
-		)
+		claims, err := tokenParser.ParseAccessToken(values[0])
+
+		// result, err := authUsecase.Execute(
+		// 	ctx,
+		// 	cmd.AuthenticateCommand{
+		// 		Payload: values[0],
+		// 	},
+		// )
 
 		if err != nil {
 			return nil, err

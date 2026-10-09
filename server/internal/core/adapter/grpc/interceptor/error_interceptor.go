@@ -108,6 +108,7 @@ func translateDispatcherErrors(
 	resp any,
 	multipleErr *dp.MultipleError,
 ) (any, error) {
+
 	if multipleErr == nil || multipleErr.Empty() {
 		return resp, nil
 	}

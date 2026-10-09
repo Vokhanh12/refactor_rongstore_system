@@ -13,6 +13,7 @@ import (
 
 	iampb "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/v1/services"
 	wire "github.com/vokhanh12/refactor-rongstore-system/server/internal"
+	in "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/adapter/grpc/interceptor"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/platform/config"
 
 	obs_grpc "github.com/vokhanh12/refactor-rongstore-system/server/pkg/observability/grpc"
@@ -49,8 +50,8 @@ func main() {
 		),
 		grpc.ChainUnaryInterceptor(
 
-			ErrorUnaryInterceptor(logger),
-			RecoveryUnaryInterceptor(logger),
+			in.ErrorUnaryInterceptor(),
+			in.RecoveryUnaryInterceptor(),
 			obs_grpc.RequestContextInterceptor(),
 			obs_grpc.LoggingUnaryInterceptor("iam-service"),
 			obs_grpc.MetricsUnaryInterceptor("iam-service"),
