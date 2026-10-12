@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/mapper"
 	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 	"google.golang.org/grpc"
@@ -34,18 +35,11 @@ func AuthUnaryInterceptor(
 
 		claims, err := tokenParser.ParseAccessToken(values[0])
 
-		// result, err := authUsecase.Execute(
-		// 	ctx,
-		// 	cmd.AuthenticateCommand{
-		// 		Payload: values[0],
-		// 	},
-		// )
-
 		if err != nil {
 			return nil, err
 		}
 
-		ctx = ctxutil.WithIdentity(ctx, result.Identity)
+		ctx = ctxutil.WithIdentity(ctx, mapper.ToIdentityContext(claims))
 
 		return handler(ctx, req)
 	}

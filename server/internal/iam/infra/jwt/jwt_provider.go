@@ -43,7 +43,7 @@ func (j *JWTProvider) ParseAccessToken(payload string) (authsur.AccessTokenClaim
 
 func (j *JWTProvider) SignAccessToken(
 	userID string,
-	roles []authsur.TokenRole,
+	roles []authsur.TokenRoleScope,
 	authzVersion int,
 ) (string, error) {
 

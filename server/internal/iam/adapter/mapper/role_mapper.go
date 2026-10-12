@@ -8,7 +8,7 @@ import (
 	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
 	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/normalize"
 	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
+	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecase"
 	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 
 	"google.golang.org/protobuf/proto"
