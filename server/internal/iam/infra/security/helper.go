@@ -1,6 +1,6 @@
 package jwt
 
-import "fmt"
+import "../jwt/fmt"
 
 func wrap(operation string, err error) error {
 	if err == nil {

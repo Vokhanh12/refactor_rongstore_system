@@ -6,7 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/core/serializer"
-	authsur "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
+	authsur "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/port"
 )
 
 var _ authsur.TokenParser = (*JWTProvider)(nil)

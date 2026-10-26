@@ -1,16 +1,49 @@
 package entity
 
-import "../entities/time"
+import "time"
 
 type Session struct {
-	session_id       string
-	user_id          string
-	device_id        string
-	tenant_id        string
-	ip               string
-	user_agent       string
-	created_at       time.Time
-	last_activity_at time.Time
-	expires_at       time.Time
-	revoked_at       *time.Time
+	Id             string
+	UserID         string
+	DeviceID       string
+	TenantID       string
+	Ip             string
+	UserAgent      string
+	CreatedAt      time.Time
+	LastActivityAt time.Time
+	ExpiresAt      time.Time
+	RevokedAt      *time.Time
+	IsRevoked      bool
+}
+
+// Constructor đảm bảo khởi tạo đúng trạng thái
+func NewSession(id, userID, deviceID, tenantID, ip, userAgent string, ttl time.Duration) *Session {
+	now := time.Now()
+	return &Session{
+		Id:             id,
+		UserID:         userID,
+		DeviceID:       deviceID,
+		TenantID:       tenantID,
+		Ip:             ip,
+		UserAgent:      userAgent,
+		CreatedAt:      now,
+		LastActivityAt: now,
+		ExpiresAt:      now.Add(ttl),
+		IsRevoked:      false,
+	}
+}
+
+func (s *Session) IsExpired() bool {
+	return time.Now().After(s.ExpiresAt)
+}
+
+func (s *Session) Revoke() {
+	s.IsRevoked = true
+	now := time.Now()
+	s.RevokedAt = &now
+}
+
+// Thêm hành vi cập nhật hoạt động cuối (dùng khi user gọi API định kỳ)
+func (s *Session) Touch() {
+	s.LastActivityAt = time.Now()
 }
