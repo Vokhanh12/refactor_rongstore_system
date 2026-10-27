@@ -2,21 +2,15 @@ package valueobject
 
 import (
 	"uuid"
-
-	"github.com/golang-jwt/jwt/v5"
 )
 
-type AccessTokenClaims struct {
-	jwt.RegisteredClaims
-
+type AccessTokenData struct {
 	TenantID     uuid.UUID
 	Roles        []TokenRoleScope
 	AuthzVersion int
 	TokenType    TokenType
 }
 
-type RefreshTokenClaims struct {
-	jwt.RegisteredClaims
-
+type RefreshTokenData struct {
 	TokenType TokenType
 }

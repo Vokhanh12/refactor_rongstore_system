@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"strings"
 
-	authsur "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
+	as "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/security"
 	"golang.org/x/crypto/argon2"
 )
 
-var _ authsur.PasswordHasher = (*Argon2idHasher)(nil)
+var _ as.PasswordHasher = (*Argon2idHasher)(nil)
 
 type Argon2idHasher struct {
 	Memory      uint32
