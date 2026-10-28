@@ -15,12 +15,16 @@ type RequestContext struct {
 	TraceID   string
 	SpanID    string
 	SessionID string
+	ClientIP  string // 👈 Bổ sung IP
+	UserAgent string // 👈 Bổ sung User-Agent
+	TenantID  string // 👈 Bổ sung TenantID
 }
 
 func NewRequestContext() RequestContext {
 	return RequestContext{
 		RequestID: uuid.NewString(),
-		SessionID: uuid.NewString(),
+		// SessionID thường sẽ được gán sau khi Authenticated,
+		// hoặc giữ nguyên nếu bạn sinh sẵn session từ đầu.
 	}
 }
 

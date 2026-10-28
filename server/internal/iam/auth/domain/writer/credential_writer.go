@@ -1,8 +1,8 @@
-package repository
+package writer
 
 import "context"
 
-type CredentialRepository interface {
+type CredentialWriter interface {
 	FindByIdentifier(
 		ctx context.Context,
 		identifier string,

@@ -1,6 +1,11 @@
 package entity
 
-import "time"
+import (
+	"time"
+	"uuid"
+
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/valueobject"
+)
 
 type Session struct {
 	Id             string
@@ -13,14 +18,14 @@ type Session struct {
 	LastActivityAt time.Time
 	ExpiresAt      time.Time
 	RevokedAt      *time.Time
-	IsRevoked      bool
+	Status         vo.SessionStatus
 }
 
 // Constructor đảm bảo khởi tạo đúng trạng thái
-func NewSession(id, userID, deviceID, tenantID, ip, userAgent string, ttl time.Duration) *Session {
+func NewSession(userID, deviceID, tenantID, ip, userAgent string) *Session {
 	now := time.Now()
 	return &Session{
-		Id:             id,
+		Id:             uuid.New().String(),
 		UserID:         userID,
 		DeviceID:       deviceID,
 		TenantID:       tenantID,
@@ -28,22 +33,30 @@ func NewSession(id, userID, deviceID, tenantID, ip, userAgent string, ttl time.D
 		UserAgent:      userAgent,
 		CreatedAt:      now,
 		LastActivityAt: now,
-		ExpiresAt:      now.Add(ttl),
-		IsRevoked:      false,
+		ExpiresAt:      now.Add(7 * 24 * time.Hour),
+		Status:         vo.StatusActive,
 	}
 }
 
-func (s *Session) IsExpired() bool {
-	return time.Now().After(s.ExpiresAt)
+// Kiểm tra session còn sống và hợp lệ không
+func (s *Session) IsValid() bool {
+	// 1. Dùng hàm IsValid() của chính Value Object Status để kiểm tra xem trạng thái có hợp lệ không
+	if !s.Status.IsValid() || s.Status != vo.StatusActive {
+		return false
+	}
+	// 2. Kiểm tra thời gian hết hạn
+	if time.Now().After(s.ExpiresAt) {
+		return false
+	}
+	return true
 }
 
 func (s *Session) Revoke() {
-	s.IsRevoked = true
+	s.Status = vo.StatusRevoked
 	now := time.Now()
 	s.RevokedAt = &now
 }
 
-// Thêm hành vi cập nhật hoạt động cuối (dùng khi user gọi API định kỳ)
 func (s *Session) Touch() {
 	s.LastActivityAt = time.Now()
 }

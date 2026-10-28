@@ -3,8 +3,8 @@ package valueobject
 type TokenType string
 
 const (
-	TypeAccess  TokenType = "access"
-	TypeRefresh TokenType = "refresh"
+	TypeAccess  TokenType = "ACCESS"
+	TypeRefresh TokenType = "REFRESH"
 )
 
 func (t TokenType) IsValid() bool {

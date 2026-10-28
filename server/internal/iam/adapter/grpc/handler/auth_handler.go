@@ -12,11 +12,11 @@ import (
 )
 
 type AuthHandler struct {
-	loginUsecase uc.LoginUsecase
+	loginUsecase uc.LoginLocalUsecase
 	logger       logger.Logger
 }
 
-func NewAuthHandler(loginUc uc.LoginUsecase, logger logger.Logger) *AuthHandler {
+func NewAuthHandler(loginUc uc.LoginLocalUsecase, logger logger.Logger) *AuthHandler {
 	return &AuthHandler{
 		loginUsecase: loginUc,
 		logger:       logger,
