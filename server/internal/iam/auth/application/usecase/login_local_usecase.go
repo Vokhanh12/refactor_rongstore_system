@@ -5,28 +5,29 @@ import (
 	"time"
 
 	// Dùng để sinh ID cho session (nếu id trong entity là string UUID)
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/adapter/reader"
 	com "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
-	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/port"
-	sec "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/security"
 	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/entity" // <-- Import entity session
+	"github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/port"
+	vo "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/valueobject"
 	wr "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/domain/writer"
 	errs "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/errors"
 	aerr "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
 )
 
 type LoginLocalUsecase struct {
-	passwordHasher      sec.PasswordHasher
+	passwordHasher      port.PasswordHasher
 	credentialWriter    wr.CredentialWriter
-	tokenSigner         sec.TokenSigner
-	authorizationReader port.AuthorizationReader
+	tokenSigner         port.TokenSigner
+	authorizationReader reader.AuthorizationReader
 	sessionWriter       wr.SessionWriter
 }
 
 func NewLoginUsecase(
-	ph sec.PasswordHasher,
+	ph port.PasswordHasher,
 	cw wr.CredentialWriter,
-	ts sec.TokenSigner,
-	ar port.AuthorizationReader,
+	ts port.TokenSigner,
+	ar reader.AuthorizationReader,
 	sw wr.SessionWriter,
 ) *LoginLocalUsecase {
 	return &LoginLocalUsecase{
@@ -50,8 +51,9 @@ func (u *LoginLocalUsecase) Execute(
 
 	credential, err := u.credentialWriter.FindByIdentifier( // (Lưu ý: hình như đây là reader nhưng bạn đang đặt tên biến là credentialWriter, giữ nguyên theo code của bạn)
 		ctx,
-		identifier,
+		identifier.Value(),
 	)
+
 	if err != nil {
 		return com.LoginCommandResult{}, err
 	}

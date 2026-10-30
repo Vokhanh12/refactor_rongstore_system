@@ -33,6 +33,13 @@ func NewLoginIdentifier(value string) (LoginIdentifier, error) {
 
 	kind := detectLoginIdentifierType(value)
 
+	// Chuẩn hóa giá trị theo loại identifier
+	if kind == LoginIdentifierEmail {
+		value = strings.ToLower(value) // Đưa email về chữ thường
+	} else {
+		// value = normalizePhoneNumber(value) // Chuẩn hóa số điện thoại về dạng E.164 nếu cần
+	}
+
 	return LoginIdentifier{
 		value: value,
 		kind:  kind,

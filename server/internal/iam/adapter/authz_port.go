@@ -1,4 +1,4 @@
-package reader
+package port
 
 import (
 	"context"
@@ -10,8 +10,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type AuthorizationReader struct {
-	roleAssignmentRepo authzrepo.RoleAssignmentReader
+type RoleAssignmentPort struct {
+	Reader authzrepo.RoleAssignmentReader
 }
 
 var _ authport.AuthorizationReader = (*AuthorizationReader)(nil)

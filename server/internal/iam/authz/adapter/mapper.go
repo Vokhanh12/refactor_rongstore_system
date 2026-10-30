@@ -1,19 +1,35 @@
-package mapper
+package handler
 
 import (
-	commonv1 "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/core/common/v1/resources"
 	authzrs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/authz/v1/resources"
-
-	dp "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/application/dispatcher"
-	core "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/errors"
-	cif "github.com/vokhanh12/refactor-rongstore-system/server/internal/core/infra/normalize"
-	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/command"
-	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecase"
-	aerrs "github.com/vokhanh12/refactor-rongstore-system/server/pkg/apperrors"
-
+	authzuc "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/authz/application/usecases"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 )
+
+// ============================================================
+// PROTO → COMMAND / QUERY
+// ============================================================
+
+func PermissionMutateRequestToBatch(req *authzrs.PermissionMutateRequest) authzuc.PermissionMutationBatch {
+	return authzuc.PermissionMutationBatch{}
+}
+
+func RolePermissionMutateRequestToBatch(req *authzrs.RolePermissionMutateRequest) authzuc.RolePermissionMutationBatch {
+	return authzuc.RolePermissionMutationBatch{}
+}
+
+// func RoleViewRequestToBatch(req *authzrs.RoleViewRequest) authzuc.RoleViewBatch {
+// 	return authzuc.RoleViewBatch{}
+// }
+
+func PermissionViewRequestToBatch(req *authzrs.PermissionViewRequest) authzuc.PermissionViewBatch {
+	return authzuc.PermissionViewBatch{}
+}
+
+func RolePermissionViewRequestToBatch(req *authzrs.RolePermissionViewRequest) authzuc.RolePermissionViewBatch {
+	return authzuc.RolePermissionViewBatch{}
+}
 
 func ToMutateRoleCommand(
 	m *authzrs.RoleMutateRequest_Mutation,

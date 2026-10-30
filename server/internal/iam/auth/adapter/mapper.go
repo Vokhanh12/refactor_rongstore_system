@@ -1,10 +1,8 @@
-package mapper
+package adapter
 
 import (
 	"context"
 
-	authv1rs "github.com/vokhanh12/refactor-rongstore-system/server/gen/proto/iam/auth/v1/resources"
-	cmd "github.com/vokhanh12/refactor-rongstore-system/server/internal/iam/auth/application/command"
 	"github.com/vokhanh12/refactor-rongstore-system/server/pkg/ctxutil"
 )
 
